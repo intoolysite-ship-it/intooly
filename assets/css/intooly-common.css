@@ -1,0 +1,45 @@
+/* intooly Common Styles */
+.logo-icon { animation: logo-pulse 3s ease-in-out infinite; }
+@keyframes logo-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.search-input { transition: all 0.3s; }
+.search-input:focus {
+    width: 280px;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.footer-gradient { background: linear-gradient(180deg, #374151 0%, #1f2937 100%); }
+
+.footer-bottom {
+    background: linear-gradient(90deg, #111827 0%, #1f2937 50%, #111827 100%);
+    border-top: 1px solid rgba(59, 130, 246, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+.footer-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, #3b82f6, transparent);
+}
+
+.social-icon { transition: all 0.3s; }
+.social-icon:hover { transform: translateY(-3px) scale(1.1); }
+
+.footer-link { position: relative; transition: all 0.2s; }
+.footer-link:hover { color: #60a5fa; }
+
+.badge-soon {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #6b7280, #4b5563);
+    color: white;
+}

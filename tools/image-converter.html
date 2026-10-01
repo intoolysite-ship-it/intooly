@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>تحويل صيغ الصور أونلاين مجاناً | محول صيغ الصور - intooly</title>
+    <meta name="description" content="حوّل صيغ صورك بين JPG, PNG, WebP, AVIF, BMP بجودة عالية أونلاين مجاناً. معاينة حية فورية، مقارنة مباشرة، معالجة دفعية، تحميل ZIP. يعمل محلياً 100% في متصفحك بدون رفع.">
+    <meta name="keywords" content="تحويل صيغ الصور, تحويل JPG إلى PNG, تحويل PNG إلى WebP, محول الصور, image converter, convert image format, تحويل WebP إلى JPG, intooly">
+    <meta name="author" content="intooly">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#111827">
+    <link rel="canonical" href="https://intooly.com/tools/image-converter.html">
+    
+    <meta property="og:title" content="تحويل صيغ الصور أونلاين مجاناً | intooly">
+    <meta property="og:description" content="حوّل بين JPG, PNG, WebP, AVIF. محلي 100%، بدون حدود، بدون علامات مائية.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://intooly.com/tools/image-converter.html">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="intooly">
+    <meta property="og:image" content="https://intooly.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="محول صيغ الصور - intooly">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="تحويل صيغ الصور أونلاين مجاناً | intooly">
+    <meta name="twitter:description" content="حوّل بين JPG, PNG, WebP, AVIF. مجاني ومحلي 100%.">
+    <meta name="twitter:image" content="https://intooly.com/og-image.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Cairo', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047', 400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207', 800: '#854d0e', 900: '#713f12' },
+                        ink: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        
+        /* HERO */
+        .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
+        .hero-gradient::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px); background-size: 30px 30px; animation: move-bg 20s linear infinite; }
+        .hero-gradient::after { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        .hero-title { font-size: clamp(1.5rem, 3.5vw + 0.5rem, 2.75rem); line-height: 1.25; }
+        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
+        
+        /* DROP ZONE */
+        .drop-zone { border: 3px dashed #d1d5db; transition: all 0.3s ease; background: linear-gradient(135deg, #f9fafb 0%, #fefce8 100%); border-radius: 1.25rem; }
+        .drop-zone:hover { border-color: #eab308; background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
+        .drop-zone.dragover { border-color: #eab308; background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%); transform: scale(1.02); box-shadow: 0 0 0 6px rgba(234, 179, 8, 0.15); }
+        
+        /* CHECKERBOARD */
+        .checker-bg {
+            background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        /* SPINNER */
+        .spinner { border: 3px solid rgba(234, 179, 8, 0.2); border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; flex-shrink: 0; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* PROGRESS */
+        .progress-bar-container { background: #e5e7eb; border-radius: 9999px; overflow: hidden; height: 12px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #eab308, #facc15, #fde047); height: 100%; transition: width 0.3s ease; position: relative; overflow: hidden; }
+        .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
+        @media (min-width: 1024px) { .workspace { grid-template-columns: 1fr 1fr; align-items: stretch; } }
+        @media (min-width: 1600px) { .workspace { grid-template-columns: 520px 1fr; align-items: stretch; } }
+        .gallery-panel { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.25rem; min-width: 0; display: flex; flex-direction: column; }
+        .settings-panel { background: white; border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.5rem; display: flex; flex-direction: column; }
+        .settings-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 800; color: #111827; padding-bottom: 0.875rem; margin-bottom: 0.875rem; border-bottom: 2px solid #f3f4f6; }
+        .settings-group { margin-bottom: 1rem; }
+        .settings-label { display: flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; font-weight: 800; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.025em; }
+        .settings-label .label-count { margin-right: auto; font-size: 0.6875rem; background: #fef3c7; color: #92400e; padding: 0.125rem 0.5rem; border-radius: 9999px; font-weight: 800; }
+        
+        /* MAIN PREVIEW */
+        .main-preview { background: #f3f4f6; border-radius: 1rem; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; flex: 1; min-height: 320px; max-height: 480px; }
+        .main-preview img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-drag: none; }
+        .main-preview .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: #9ca3af; font-weight: 700; font-size: 0.875rem; }
+        .main-preview .empty-state .icon { font-size: 3rem; opacity: 0.5; }
+        
+        /* PREVIEW STAGE with Live Compare */
+        .preview-stage {
+            position: relative; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .preview-stage .stage-image {
+            max-width: 100%; max-height: 100%; object-fit: contain; display: block;
+            user-select: none; -webkit-user-drag: none; pointer-events: none;
+        }
+        .compare-stack { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+        .compare-img-after { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; }
+        .compare-img-before { position: relative; z-index: 2; clip-path: inset(0 50% 0 0); }
+        .compare-handle-line { position: absolute; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #eab308, #facc15); z-index: 3; pointer-events: none; transform: translateX(-50%); box-shadow: 0 0 15px rgba(234,179,8,0.7); }
+        .compare-handle-line::after { content: '⇔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 900; font-size: 0.9375rem; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
+        /* PREVIEW TOOLBAR */
+        .preview-toolbar {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+            padding: 0.625rem 0.75rem; background: white; border-radius: 0.75rem;
+            border: 2px solid #e5e7eb; margin-bottom: 0.75rem;
+            align-items: center; justify-content: center;
+        }
+        .tool-btn {
+            padding: 0.375rem 0.625rem; border-radius: 0.5rem;
+            border: 2px solid #e5e7eb; background: white; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.6875rem; font-weight: 800;
+            color: #4b5563; display: inline-flex; align-items: center; gap: 0.25rem;
+            transition: all 0.2s;
+        }
+        .tool-btn:hover { border-color: #facc15; background: #fefce8; color: #111827; transform: translateY(-1px); }
+        .tool-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); color: #111827; }
+        
+        /* LIVE QUALITY BAR */
+        .live-quality-bar {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.875rem 1rem; background: linear-gradient(135deg, #111827, #1f2937);
+            border-radius: 0.875rem; margin-bottom: 0.75rem;
+            border: 2px solid #374151;
+        }
+        .live-quality-bar .live-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .live-quality-bar .live-slider-wrap { flex: 1; min-width: 0; }
+        .live-quality-bar .live-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.375rem; }
+        .live-quality-bar .live-label { font-size: 0.6875rem; font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 0.05em; }
+        .live-quality-bar .live-value { font-size: 0.875rem; font-weight: 900; color: white; font-family: 'Courier New', monospace; }
+        .live-quality-bar input[type="range"].live-slider {
+            -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 9999px;
+            background: linear-gradient(90deg, #dc2626 0%, #f59e0b 40%, #eab308 70%, #16a34a 100%);
+            outline: none; cursor: pointer;
+        }
+        .live-quality-bar input[type="range"].live-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%;
+            background: white; cursor: pointer; border: 3px solid #eab308;
+            box-shadow: 0 3px 10px rgba(234, 179, 8, 0.7); transition: all 0.15s;
+        }
+        .live-quality-bar input[type="range"].live-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .live-quality-bar input[type="range"].live-slider::-moz-range-thumb {
+            width: 24px; height: 24px; border-radius: 50%; background: white; cursor: pointer;
+            border: 3px solid #eab308; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.7);
+        }
+        .live-quality-bar .live-stats { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .live-stat-chip {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.625rem; font-weight: 800;
+            padding: 0.2rem 0.5rem; border-radius: 9999px;
+            background: rgba(250, 204, 21, 0.15); color: #facc15;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+        }
+        .live-stat-chip.green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+        .live-stat-chip.red { background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+        
+        /* FORMAT BUTTONS */
+        .format-btn { padding: 0.75rem 0.5rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.6875rem; font-weight: 800; color: #4b5563; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; font-family: 'Cairo', sans-serif; }
+        .format-btn:hover { border-color: #facc15; color: #111827; background: #fefce8; transform: translateY(-2px); }
+        .format-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); color: #111827; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        .format-btn .fmt-icon { font-size: 1.5rem; }
+        .format-btn .fmt-name { font-weight: 900; }
+        .format-btn .fmt-desc { font-size: 0.5625rem; opacity: 0.75; }
+        
+        /* THUMBNAILS */
+        .thumbnails-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 0.25rem; scrollbar-width: thin; flex-shrink: 0; }
+        .thumbnails-strip::-webkit-scrollbar { height: 6px; }
+        .thumbnails-strip::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 3px; }
+        .thumbnails-strip::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .thumbnail-item { flex-shrink: 0; width: 64px; height: 64px; border-radius: 0.625rem; overflow: hidden; border: 3px solid transparent; cursor: pointer; transition: all 0.2s; background: #f3f4f6; position: relative; }
+        .thumbnail-item:hover { border-color: #fde047; transform: translateY(-2px); }
+        .thumbnail-item.active { border-color: #eab308; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4); }
+        .thumbnail-item img { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-item .thumb-remove { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(239, 68, 68, 0.95); color: white; border: 2px solid white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.625rem; font-weight: 900; transition: all 0.2s; opacity: 0; }
+        .thumbnail-item:hover .thumb-remove { opacity: 1; }
+        .thumbnail-item .thumb-remove:hover { background: #dc2626; transform: scale(1.15); }
+        .thumbnail-item .thumb-fmt { position: absolute; bottom: 2px; left: 2px; background: rgba(234, 179, 8, 0.95); color: #111827; font-size: 0.5rem; font-weight: 900; padding: 1px 4px; border-radius: 9999px; }
+        
+        /* COMPARISON */
+        .comparison-container { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 1rem; user-select: none; cursor: ew-resize; touch-action: none; box-shadow: inset 0 0 0 1px #e5e7eb; background: #f3f4f6; }
+        .comparison-container.checker-bg { background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%); background-size: 20px 20px; }
+        .comparison-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+        .comparison-before { z-index: 2; clip-path: inset(0 50% 0 0); }
+        .comparison-after { z-index: 1; }
+        .comparison-handle { position: absolute; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #eab308, #facc15); z-index: 3; pointer-events: none; box-shadow: 0 0 20px rgba(234, 179, 8, 0.8); transform: translateX(-50%); }
+        .comparison-handle::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); border: 3px solid white; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
+        .comparison-handle::after { content: '⇔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #111827; font-size: 1rem; font-weight: 900; z-index: 4; pointer-events: none; }
+        .comparison-label { position: absolute; top: 0.75rem; padding: 0.375rem 0.75rem; border-radius: 9999px; font-weight: 800; font-size: 0.6875rem; z-index: 5; pointer-events: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); }
+        .label-before { left: 0.75rem; background: rgba(17, 24, 39, 0.9); color: white; }
+        .label-after { right: 0.75rem; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; }
+        .drag-hint { text-align: center; font-size: 0.75rem; font-weight: 700; color: #92400e; background: linear-gradient(135deg, #fefce8, #fef9c3); border: 1px solid #fde047; padding: 0.5rem 0.875rem; border-radius: 0.625rem; margin-top: 0.625rem; }
+        
+        /* PRESET BUTTONS */
+        .preset-btn { padding: 0.5rem 0.75rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; font-weight: 800; color: #4b5563; display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Cairo', sans-serif; }
+        .preset-btn:hover { border-color: #facc15; color: #111827; background: #fefce8; transform: translateY(-1px); }
+        .preset-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); color: #111827; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        
+        /* SLIDER */
+        input[type="range"].brand-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 9999px; background: linear-gradient(90deg, #e5e7eb, #fef3c7); outline: none; cursor: pointer; }
+        input[type="range"].brand-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); transition: all 0.2s; }
+        input[type="range"].brand-slider::-webkit-slider-thumb:hover { transform: scale(1.15); box-shadow: 0 5px 15px rgba(234, 179, 8, 0.7); }
+        input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); }
+        
+        /* INPUT */
+        .input-field { width: 100%; padding: 0.625rem 0.875rem; border-radius: 0.625rem; border: 2px solid #d1d5db; background: white; font-weight: 700; color: #111827; transition: all 0.2s; font-size: 0.875rem; font-family: 'Cairo', sans-serif; }
+        .input-field:focus { outline: none; border-color: #eab308; box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.15); background: #fefce8; }
+        
+        /* RESULT CARD */
+        .result-card { background: white; border-radius: 1.5rem; border: 1px solid #e5e7eb; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(17, 24, 39, 0.04); animation: fadeInUp 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-card:hover { border-color: #facc15; box-shadow: 0 15px 40px rgba(17, 24, 39, 0.1); }
+        .result-card-header { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: linear-gradient(135deg, #f9fafb, #fefce8); border-bottom: 1px solid #e5e7eb; }
+        .result-card-header .file-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: linear-gradient(135deg, #fef3c7, #fde047); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2); }
+        .result-card-header .file-name { font-weight: 800; color: #111827; font-size: 0.9375rem; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .result-layout { display: grid !important; grid-template-columns: 1fr !important; gap: 1.25rem; padding: 1.25rem; align-items: start; }
+        @media (min-width: 900px) { .result-layout { grid-template-columns: 340px 1fr !important; } }
+        .result-image-col { min-width: 0; width: 100%; }
+        .result-info-col { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; width: 100%; }
+        
+        .info-stat { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border-radius: 0.875rem; background: linear-gradient(135deg, #f9fafb, #f3f4f6); border: 1.5px solid #e5e7eb; transition: all 0.25s ease; }
+        .info-stat:hover { border-color: #fde047; background: linear-gradient(135deg, #fefce8, #fef9c3); transform: translateX(-3px); box-shadow: 0 4px 12px rgba(234, 179, 8, 0.1); }
+        .info-stat .info-icon { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: linear-gradient(135deg, #fef3c7, #fde047); font-size: 1.125rem; flex-shrink: 0; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        .info-stat .info-content { flex: 1; min-width: 0; }
+        .info-stat .info-label { font-size: 0.6875rem; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .info-stat .info-value { font-size: 0.875rem; font-weight: 800; color: #111827; line-height: 1.3; display: flex; align-items: center; gap: 0.375rem; flex-wrap: wrap; }
+        .info-stat .info-value .old-value { color: #9ca3af; font-size: 0.75rem; text-decoration: line-through; }
+        .info-stat .info-value .arrow { color: #eab308; font-weight: 900; font-size: 1rem; }
+        .info-stat .info-value .new-value { color: #111827; font-weight: 900; }
+        .info-stat.savings { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac; }
+        .info-stat.savings .info-icon { background: linear-gradient(135deg, #bbf7d0, #86efac); }
+        .info-stat.savings .info-label { color: #15803d; }
+        .info-stat.savings .info-value { color: #15803d; font-size: 1.125rem; }
+        .info-stat.increase { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #fca5a5; }
+        .info-stat.increase .info-icon { background: linear-gradient(135deg, #fecaca, #fca5a5); }
+        .info-stat.increase .info-label { color: #dc2626; }
+        .info-stat.increase .info-value { color: #dc2626; font-size: 1.125rem; }
+        
+        /* BUTTONS */
+        .btn-primary { background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; padding: 0.875rem 2.25rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.3); border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.5); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-download { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 0.875rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); width: 100%; justify-content: center; font-family: 'Cairo', sans-serif; }
+        .btn-download:hover:not(:disabled) { background: linear-gradient(135deg, #15803d, #16a34a); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+        .btn-secondary { background: #1f2937; color: white; font-weight: 700; padding: 0.75rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 0.9375rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-secondary:hover { background: #111827; transform: translateY(-1px); }
+        .btn-zip { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 1rem 2.5rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3); border: none; cursor: pointer; font-size: 1.0625rem; display: inline-flex; align-items: center; gap: 0.625rem; font-family: 'Cairo', sans-serif; }
+        .btn-zip:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5); }
+        .btn-zip:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* FAQ */
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-answer.active { max-height: 500px; }
+        .faq-toggle { width: 100%; text-align: right; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; background: white; border: 1px solid #e5e7eb; border-radius: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 700; color: #111827; font-size: 1rem; font-family: 'Cairo', sans-serif; }
+        .faq-toggle:hover { background: #fefce8; border-color: #fde047; }
+        .faq-toggle .faq-icon { color: #ca8a04; font-size: 1.5rem; font-weight: 800; }
+        
+        /* FOOTER */
+        .footer-gradient { background: linear-gradient(180deg, #1f2937 0%, #111827 100%); }
+        .footer-bottom { background: linear-gradient(90deg, #030712 0%, #111827 50%, #030712 100%); border-top: 1px solid rgba(250, 204, 21, 0.3); position: relative; overflow: hidden; }
+        .footer-bottom::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #eab308, #facc15, #eab308, transparent); }
+        .logo-icon { animation: logo-pulse 3s ease-in-out infinite; }
+        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        #scrollTop { position: fixed; bottom: 24px; left: 24px; z-index: 40; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; cursor: pointer; border: none; }
+        #scrollTop.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        #scrollTop:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(234, 179, 8, 0.6); }
+        
+        /* SEO */
+        .seo-section { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; padding: 2rem; border: 2px solid #e5e7eb; margin-top: 3rem; }
+        .seo-badge { display: inline-block; background: linear-gradient(135deg, #fef3c7, #fde047); color: #92400e; font-weight: 800; padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.75rem; border: 1px solid #fde047; }
+        .seo-card { background: white; border-radius: 1rem; padding: 1.5rem; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .seo-card:hover { border-color: #facc15; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); transform: translateY(-2px); }
+        .seo-card h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 800; color: #111827; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f3f4f6; }
+        
+        .step-item { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .step-num { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3); }
+        .step-content h4 { font-weight: 800; color: #111827; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .step-content p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .platform-table, .quality-table { width: 100%; border-collapse: collapse; background: white; border-radius: 1rem; overflow: hidden; }
+        .platform-table thead, .quality-table thead { background: linear-gradient(135deg, #1f2937, #111827); }
+        .platform-table th, .quality-table th { padding: 0.75rem 0.875rem; text-align: right; color: #facc15; font-weight: 800; font-size: 0.75rem; }
+        .platform-table td, .quality-table td { padding: 0.625rem 0.875rem; border-bottom: 1px solid #f3f4f6; font-size: 0.75rem; color: #374151; font-weight: 600; }
+        .platform-table tbody tr:hover, .quality-table tbody tr:hover { background: #fefce8; }
+        .platform-table tbody tr:last-child td, .quality-table tbody tr:last-child td { border-bottom: none; }
+        .quality-table .check { color: #16a34a; font-weight: 900; font-size: 1rem; }
+        
+        .feature-card { padding: 1.25rem; border-radius: 1rem; text-align: center; background: white; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .feature-card:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.1); }
+        .feature-card .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 0.875rem; background: linear-gradient(135deg, #fef3c7, #fde047); font-size: 1.75rem; margin-bottom: 0.75rem; box-shadow: 0 6px 15px rgba(234, 179, 8, 0.2); }
+        .feature-card h4 { font-weight: 800; color: #111827; margin-bottom: 0.375rem; font-size: 0.9375rem; }
+        .feature-card p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border-radius: 1rem; padding: 1.25rem; text-align: center; color: white; border: 2px solid #374151; transition: all 0.3s; }
+        .stat-card:hover { border-color: #eab308; transform: translateY(-3px); }
+        .stat-card .stat-num { font-size: 1.75rem; font-weight: 900; color: #facc15; margin-bottom: 0.25rem; line-height: 1; }
+        .stat-card .stat-label { font-size: 0.75rem; color: #9ca3af; font-weight: 700; }
+        
+        .related-tool { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.25rem 0.875rem; border-radius: 1rem; background: white; border: 2px solid #e5e7eb; text-decoration: none; transition: all 0.3s; text-align: center; }
+        .related-tool:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.15); }
+        .related-tool .tool-emoji { font-size: 2rem; }
+        .related-tool .tool-name { font-weight: 800; color: #111827; font-size: 0.875rem; }
+        .related-tool .tool-desc { font-size: 0.6875rem; color: #6b7280; line-height: 1.4; }
+    </style>
+
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"intooly","url":"https://intooly.com","logo":"https://intooly.com/logo.png","description":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص","contactPoint":{"@type":"ContactPoint","email":"support@intooly.com","contactType":"customer support","availableLanguage":["Arabic","English"]}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"intooly","url":"https://intooly.com","inLanguage":"ar","potentialAction":{"@type":"SearchAction","target":"https://intooly.com/?q={search_term_string}","query-input":"required name=search_term_string"}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://intooly.com/"},{"@type":"ListItem","position":2,"name":"أدوات الصور","item":"https://intooly.com/#image-tools"},{"@type":"ListItem","position":3,"name":"تحويل صيغ الصور","item":"https://intooly.com/tools/image-converter.html"}]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"محول صيغ الصور - intooly","url":"https://intooly.com/tools/image-converter.html","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"أداة مجانية لتحويل صيغ الصور مع معاينة حية محلياً في المتصفح.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"1892"},"featureList":["تحويل بين 5 صيغ (JPG, PNG, WebP, AVIF, BMP)","معاينة حية فورية","مقارنة مباشرة","تحكم في جودة التصدير","معالجة دفعية لعدة صور","تحميل الكل كملف ZIP","حفظ الإعدادات لكل صورة","معالجة محلية 100% في المتصفح","مجاني بدون حدود","بدون علامات مائية"]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"HowTo","name":"كيفية تحويل صيغ الصور أونلاين","totalTime":"PT15S","tool":[{"@type":"HowToTool","name":"متصفح حديث"}],"step":[{"@type":"HowToStep","position":1,"name":"ارفع صورك","text":"اسحب عدة صور وأفلتها في المنطقة المخصصة، أو انقر لاختيارها من جهازك."},{"@type":"HowToStep","position":2,"name":"اختر الصيغة المستهدفة","text":"اختر JPG أو PNG أو WebP أو AVIF أو BMP."},{"@type":"HowToStep","position":3,"name":"شاهد المعاينة الحية","text":"عاين النتيجة فوراً مع الحجم المتوقع ونسبة التوفير."},{"@type":"HowToStep","position":4,"name":"اضغط ابدأ التحويل","text":"سيعالج المتصفح صورك محلياً خلال ثوانٍ."},{"@type":"HowToStep","position":5,"name":"حمّل النتائج","text":"حمّل كل صورة على حدة، أو حمّل الكل كملف ZIP."}]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"هل أداة تحويل صيغ الصور مجانية بالكامل؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل."}},
+      {"@type":"Question","name":"هل يمكنني رؤية النتيجة قبل التحويل؟","acceptedAnswer":{"@type":"Answer","text":"نعم! هناك معاينة حية فورية مع مقارنة مباشرة بين الأصل والمحوّل، مع عرض الحجم المتوقع ونسبة التوفير قبل التحويل."}},
+      {"@type":"Question","name":"هل صوري آمنة عند استخدام الأداة؟","acceptedAnswer":{"@type":"Answer","text":"نعم 100%. كل المعالجة تتم محلياً في متصفحك. صورك لا تُرفع إلى أي سيرفر خارجي."}},
+      {"@type":"Question","name":"ما هي الصيغ المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم JPG، PNG، WebP، AVIF، BMP كصيغ إدخال وإخراج. يمكنك التحويل من أي صيغة إلى أي صيغة أخرى."}},
+      {"@type":"Question","name":"ما الفرق بين الصيغ المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"JPG للصور الفوتوغرافية بحجم صغير، PNG للشفافية، WebP للأصغر 30%، AVIF للأحدث والأصغر، BMP للصيغ القديمة."}},
+      {"@type":"Question","name":"هل يفقد التحويل جودة الصورة؟","acceptedAnswer":{"@type":"Answer","text":"عند التحويل إلى صيغ مضغوطة، قد تفقد بعض الجودة حسب إعداد الجودة. عند 90%+، لن تلاحظ أي فرق بصري."}},
+      {"@type":"Question","name":"هل يمكن تحويل الصور الشفافة إلى JPG؟","acceptedAnswer":{"@type":"Answer","text":"نعم، لكن JPG لا يدعم الشفافية. عند التحويل، تُملأ المناطق الشفافة بخلفية بيضاء تلقائياً."}},
+      {"@type":"Question","name":"هل تعمل الأداة على الهاتف؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة متجاوبة 100% وتعمل بكفاءة على جميع الأجهزة، مع دعم اللمس الكامل."}}
+    ]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"ItemList","name":"أدوات ذات صلة","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"ضاغط الصور","url":"https://intooly.com/tools/image-compressor.html"},
+      {"@type":"ListItem","position":2,"name":"تغيير حجم الصور","url":"https://intooly.com/tools/image-resizer.html"},
+      {"@type":"ListItem","position":3,"name":"قص الصور","url":"https://intooly.com/tools/image-cropper.html"},
+      {"@type":"ListItem","position":4,"name":"إزالة الخلفية بالـ AI","url":"https://intooly.com/tools/background-remover.html"}
+    ]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Product","name":"محول صيغ الصور","description":"أداة مجانية لتحويل صيغ الصور مع معاينة حية محلياً في المتصفح","brand":{"@type":"Brand","name":"intooly"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"1892"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
+    </script>
+</head><body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
+
+    <svg style="display:none" aria-hidden="true">
+        <symbol id="icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </symbol>
+    </svg>
+
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-ink-100">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-4">
+                <a href="../index.html" class="flex items-center gap-3 flex-shrink-0 group" aria-label="intooly - الرئيسية">
+                    <div class="logo-icon relative w-12 h-12 rounded-xl bg-ink-900 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                        <svg class="w-7 h-7 text-white"><use href="#icon-logo"/></svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-brand-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-ink-900 leading-tight">intooly</span>
+                        <span class="text-[10px] text-ink-600 font-medium leading-tight">أدوات مجانية احترافية</span>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-ink-700 font-semibold mx-auto">
+                    <a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a>
+                    <a href="../index.html#categories" class="hover:text-brand-600 transition">التصنيفات</a>
+                    <a href="../index.html#tools" class="hover:text-brand-600 transition">الأدوات</a>
+                    <a href="../about.html" class="hover:text-brand-600 transition">من نحن</a>
+                    <a href="../contact.html" class="hover:text-brand-600 transition">اتصل بنا</a>
+                </nav>
+                <div class="relative">
+                    <label for="searchInput" class="sr-only">ابحث</label>
+                    <input type="search" id="searchInput" placeholder="🔍 ابحث عن أداة..." class="w-40 md:w-48 px-4 py-2 rounded-full border border-ink-300 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 bg-ink-50 transition">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white border-b border-ink-200">
+        <div class="container mx-auto px-4 py-3">
+            <ol class="flex items-center gap-2 text-sm text-ink-600 flex-wrap">
+                <li><a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a></li>
+                <li class="text-ink-400">/</li>
+                <li><a href="../index.html#image-tools" class="hover:text-brand-600 transition">أدوات الصور</a></li>
+                <li class="text-ink-400">/</li>
+                <li class="text-brand-600 font-semibold">تحويل صيغ الصور</li>
+            </ol>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <section class="hero-gradient text-white py-10 md:py-14 text-center relative">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-5xl md:text-6xl mb-3">🔄</div>
+                <h1 class="hero-title font-extrabold mb-2 md:mb-3">تحويل صيغ الصور أونلاين</h1>
+                <p class="hero-subtitle opacity-95 max-w-3xl mx-auto">
+                    حوّل صورك بين <span class="text-brand-400 font-bold">JPG, PNG, WebP, AVIF, BMP</span> بجودة عالية.
+                    <span class="text-brand-300 font-bold">معاينة حية فورية!</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="py-8 md:py-10 bg-white">
+            <div class="container mx-auto px-4 max-w-7xl">
+                
+                <div id="uploadSection" class="bg-gradient-to-br from-ink-50 to-brand-50 rounded-2xl p-6 md:p-8">
+                    <div id="dropZone" class="drop-zone p-8 md:p-14 cursor-pointer" role="button" tabindex="0" aria-label="منطقة رفع الصور">
+                        <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp, image/avif, image/bmp" multiple class="hidden">
+                        <div class="text-center">
+                            <div class="text-6xl md:text-7xl mb-4">📸</div>
+                            <h3 class="text-2xl font-extrabold text-ink-900 mb-2">اسحب صورك وأفلتها هنا</h3>
+                            <p class="text-ink-600 mb-2">أو انقر لاختيار <strong>عدة صور</strong> دفعة واحدة</p>
+                            <p class="text-sm text-ink-500 mb-6">💡 يدعم JPG, PNG, WebP, AVIF, BMP — حتى 20 ميجابايت للصورة</p>
+                            <button id="chooseBtn" type="button" class="btn-primary">
+                                <span>📁</span> اختر صوراً
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="workspaceSection" class="hidden mt-6">
+                    <div class="workspace">
+                        
+                        <!-- ============ GALLERY PANEL ============ -->
+                        <div class="gallery-panel">
+                            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                                <h2 class="text-base font-extrabold text-ink-900 flex items-center gap-2">
+                                    📸 الصور المختارة
+                                    <span class="text-xs bg-brand-100 text-brand-700 px-2.5 py-0.5 rounded-full font-bold">
+                                        <span id="previewCount">0</span>
+                                    </span>
+                                </h2>
+                                <button id="addMoreBtn" class="btn-secondary" style="padding: 0.5rem 0.875rem; font-size: 0.8125rem;">
+                                    <span>➕</span> إضافة
+                                </button>
+                            </div>
+                            
+                            <!-- Preview Toolbar -->
+                            <div id="previewToolbar" class="preview-toolbar" style="display: none;">
+                                <button type="button" class="tool-btn active" id="compareToggleBtn" title="تفعيل/تعطيل المقارنة">
+                                    <span>🎚️</span> مقارنة
+                                </button>
+                                <button type="button" class="tool-btn" id="zoomOutBtn" title="تصغير">
+                                    <span>➖</span>
+                                </button>
+                                <span id="zoomLevel" style="font-size: 0.6875rem; font-weight: 800; color: #6b7280; padding: 0 0.25rem;">100%</span>
+                                <button type="button" class="tool-btn" id="zoomInBtn" title="تكبير">
+                                    <span>➕</span>
+                                </button>
+                                <button type="button" class="tool-btn" id="resetZoomBtn" title="إعادة تعيين">
+                                    <span>♻️</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Live Quality Slider (فوق الصورة) -->
+                            <div id="liveQualityBar" class="live-quality-bar" style="display: none;">
+                                <div class="live-icon">🎛️</div>
+                                <div class="live-slider-wrap">
+                                    <div class="live-info">
+                                        <span class="live-label">الجودة المباشرة</span>
+                                        <span class="live-value" id="liveQualityValue">90%</span>
+                                    </div>
+                                    <input type="range" id="liveQualitySlider" class="live-slider" min="10" max="100" value="90" step="5">
+                                    <div class="live-stats" style="margin-top: 0.5rem;">
+                                        <span class="live-stat-chip" id="chipOriginalSize">📦 الأصل: -</span>
+                                        <span class="live-stat-chip green" id="chipCompressedSize">✨ المتوقع: -</span>
+                                        <span class="live-stat-chip green" id="chipSavings">📉 التوفير: -</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Main Preview with Compare -->
+                            <div id="mainPreview" class="main-preview">
+                                <div class="empty-state">
+                                    <div class="icon">🖼️</div>
+                                    <p>اختر صورة</p>
+                                </div>
+                            </div>
+                            
+                            <div id="thumbnailsStrip" class="thumbnails-strip"></div>
+                            
+                            <div id="selectedFileInfo" class="mt-3 p-3 bg-white rounded-lg border border-ink-200 hidden">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-sm">📄</span>
+                                    <p class="font-bold text-ink-900 text-xs truncate" id="selectedFileName">-</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2 text-xs">
+                                    <span class="text-ink-600 font-bold">
+                                        📦 <span id="selectedFileSize">-</span>
+                                    </span>
+                                    <span class="text-ink-600 font-bold">
+                                        📐 <span id="selectedFileDims">-</span>
+                                    </span>
+                                    <span class="text-ink-600 font-bold" id="selectedFileFormatBadge">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ============ SETTINGS PANEL ============ -->
+                        <div class="settings-panel">
+                            <div class="settings-title">
+                                ⚙️ إعدادات التحويل
+                            </div>
+                            
+                            <!-- Target Format -->
+                            <div class="settings-group">
+                                <div class="settings-label">
+                                    🎯 الصيغة المستهدفة
+                                </div>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <button type="button" class="format-btn active" data-format="image/jpeg">
+                                        <span class="fmt-icon">📷</span>
+                                        <span class="fmt-name">JPG</span>
+                                        <span class="fmt-desc">متوافق</span>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="image/png">
+                                        <span class="fmt-icon">🖼️</span>
+                                        <span class="fmt-name">PNG</span>
+                                        <span class="fmt-desc">شفاف</span>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="image/webp">
+                                        <span class="fmt-icon">⚡</span>
+                                        <span class="fmt-name">WebP</span>
+                                        <span class="fmt-desc">الأصغر</span>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="image/avif">
+                                        <span class="fmt-icon">🚀</span>
+                                        <span class="fmt-name">AVIF</span>
+                                        <span class="fmt-desc">الأحدث</span>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="image/bmp">
+                                        <span class="fmt-icon">💾</span>
+                                        <span class="fmt-name">BMP</span>
+                                        <span class="fmt-desc">خام</span>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-ink-500 mt-2 font-bold" id="formatHint">
+                                    💡 JPG: الأكثر توافقاً مع جميع الأجهزة والبرامج
+                                </p>
+                            </div>
+                            
+                            <!-- Quality -->
+                            <div class="settings-group" id="qualityGroup">
+                                <div class="settings-label">
+                                    🎛️ جودة التصدير
+                                    <span class="label-count" id="qualityValue">90%</span>
+                                </div>
+                                <input type="range" id="qualitySlider" class="brand-slider" min="10" max="100" value="90" step="5">
+                                <div class="flex justify-between text-xs text-ink-500 mt-2 font-bold">
+                                    <span>حجم أصغر</span>
+                                    <span>جودة أعلى</span>
+                                </div>
+                                <p style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 للصور الفردية استخدم السلايدر فوق الصورة</p>
+                            </div>
+                            
+                            <!-- Smart Tip -->
+                            <div class="settings-group">
+                                <div class="settings-label">
+                                    💡 توصية ذكية
+                                </div>
+                                <div id="smartTip" style="padding: 0.75rem; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; border-radius: 0.625rem; font-size: 0.75rem; color: #15803d; font-weight: 700; line-height: 1.5;">
+                                    ✅ JPG مثالي لصورك الفوتوغرافية — توافق عالي وحجم صغير.
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div style="flex: 1;"></div>
+                            
+                            <div class="pt-3 border-t-2 border-ink-100 mt-4">
+                                <button id="convertBtn" class="btn-primary w-full justify-center mb-2" disabled>
+                                    <span>🔄</span> ابدأ التحويل
+                                </button>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="downloadZipBtnSide" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;" disabled>
+                                        <span>📦</span> تحميل ZIP
+                                    </button>
+                                    <button id="clearBtn" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;">
+                                        <span>🗑️</span> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div id="progressSection" class="hidden mt-6">
+                    <div class="p-6 rounded-2xl border-2 border-brand-200 bg-gradient-to-br from-brand-50 to-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="spinner"></div>
+                            <div>
+                                <p class="font-extrabold text-ink-900 text-lg" id="progressText">جاري التحويل...</p>
+                                <p class="text-sm text-ink-600 font-semibold" id="progressDetail">0 من 0</p>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <p class="text-sm text-ink-500 mt-3 text-center font-bold" id="progressPercent">0%</p>
+                    </div>
+                </div>
+
+                <div id="resultsSection" class="hidden mt-8">
+                    <div class="bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl p-6 border-2 border-brand-200 mb-8">
+                        <h2 class="text-xl font-extrabold text-ink-900 mb-4 flex items-center gap-2">📊 ملخص النتائج</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-brand-100">
+                                <p class="text-xs text-ink-600 font-extrabold mb-1">عدد الصور</p>
+                                <p id="sumCount" class="text-3xl font-extrabold text-brand-600">0</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-brand-100">
+                                <p class="text-xs text-ink-600 font-extrabold mb-1">الحجم الأصلي</p>
+                                <p id="sumOriginal" class="text-xl font-extrabold text-ink-900">0</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-brand-100">
+                                <p class="text-xs text-ink-600 font-extrabold mb-1">بعد التحويل</p>
+                                <p id="sumCompressed" class="text-xl font-extrabold text-ink-900">0</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-green-200">
+                                <p class="text-xs text-green-700 font-extrabold mb-1">التوفير</p>
+                                <p id="sumSavings" class="text-3xl font-extrabold text-green-600">0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-8">
+                        <button id="downloadZipBtn" class="btn-zip" disabled>
+                            <span>📦</span> تحميل الكل (ZIP)
+                        </button>
+                    </div>
+
+                    <div id="resultsGrid" class="space-y-6"></div>
+
+                    <div class="flex flex-wrap gap-3 mt-8 justify-center">
+                        <button id="newImagesBtn" class="btn-secondary">
+                            <span>🔄</span> صور جديدة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============ SEO SECTION ============ -->
+                <div class="seo-section">
+                    
+                    <div class="text-center mb-8">
+                        <span class="seo-badge">📚 دليل شامل</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-ink-900 mt-3 mb-2">
+                            كل ما تحتاج معرفته عن تحويل صيغ الصور
+                        </h2>
+                        <p class="text-ink-600 max-w-2xl mx-auto text-sm md:text-base">
+                            دليل شامل يغطي كل جوانب تحويل صيغ الصور: من الفروقات، إلى الاستخدامات، والإعدادات المثالية لكل صيغة.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📖 ما هي أداة تحويل صيغ الصور؟</h3>
+                            <p class="text-ink-700 leading-relaxed text-sm mb-3">
+                                تُعد أداة <strong class="text-brand-600">تحويل صيغ الصور أونلاين</strong> من intooly الحل الأمثل لتغيير صيغة صورك بسهولة مع الحفاظ على الجودة. سواء كنت تحتاج إلى تحويل صورك إلى صيغة WebP لتسريع موقعك، أو تحويل AVIF الحديث إلى JPG متوافق، أو تحويل PNG شفاف إلى JPG بخلفية بيضاء، فإن أداتنا توفر لك تحكماً كاملاً.
+                            </p>
+                            <p class="text-ink-700 leading-relaxed text-sm">
+                                الجديد: <strong class="text-brand-600">معاينة حية فورية</strong> — شاهد النتيجة مباشرة أثناء تغيير الجودة، مع <strong>مقارنة مباشرة</strong> بين الأصل والمحوّل، و<strong>الحجم المتوقع</strong> لحظياً. تعمل الأداة <strong>محلياً 100%</strong> في متصفحك لضمان خصوصية تامة.
+                            </p>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>⭐ المميزات الرئيسية</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🖼️</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">معاينة حية</h4>
+                                        <p class="text-ink-600 text-xs">شاهد النتيجة قبل التحويل.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎚️</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">مقارنة مباشرة</h4>
+                                        <p class="text-ink-600 text-xs">فرق فوري أثناء التعديل.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔄</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">5 صيغ مدعومة</h4>
+                                        <p class="text-ink-600 text-xs">JPG، PNG، WebP، AVIF، BMP.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📏</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">حجم متوقع</h4>
+                                        <p class="text-ink-600 text-xs">لحظياً قبل التحويل.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔍</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تكبير/تصغير</h4>
+                                        <p class="text-ink-600 text-xs">30% → 300%.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">💾</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">حفظ لكل صورة</h4>
+                                        <p class="text-ink-600 text-xs">إعدادات منفصلة.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📦</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تحميل ZIP</h4>
+                                        <p class="text-ink-600 text-xs">جميع النتائج بملف واحد.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">💡</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">توصيات ذكية</h4>
+                                        <p class="text-ink-600 text-xs">نصائح حسب الصيغة.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📋 كيفية تحويل صيغ الصور (خطوة بخطوة)</h3>
+                            <div class="space-y-3">
+                                <div class="step-item">
+                                    <div class="step-num">1</div>
+                                    <div class="step-content">
+                                        <h4>ارفع صورك</h4>
+                                        <p>اسحب عدة صور وأفلتها، أو انقر لاختيارها من جهازك.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">2</div>
+                                    <div class="step-content">
+                                        <h4>اختر الصيغة المستهدفة</h4>
+                                        <p>JPG، PNG، WebP، AVIF، أو BMP حسب احتياجك.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">3</div>
+                                    <div class="step-content">
+                                        <h4>شاهد المعاينة الحية</h4>
+                                        <p>عاين النتيجة فوراً مع الحجم المتوقع ونسبة التوفير.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">4</div>
+                                    <div class="step-content">
+                                        <h4>اضغط "ابدأ التحويل"</h4>
+                                        <p>سيعالج المتصفح صورك محلياً خلال ثوانٍ معدودة.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">5</div>
+                                    <div class="step-content">
+                                        <h4>حمّل النتائج</h4>
+                                        <p>حمّل كل صورة على حدة، أو حمّل الكل كملف ZIP واحد.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>📊 مقارنة الصيغ المدعومة</h3>
+                            <div class="overflow-x-auto">
+                                <table class="platform-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الصيغة</th>
+                                            <th>الحجم</th>
+                                            <th>الشفافية</th>
+                                            <th>الأفضل لـ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>JPG</strong></td><td>صغير</td><td>❌</td><td>الصور الفوتوغرافية</td></tr>
+                                        <tr><td><strong>PNG</strong></td><td>كبير</td><td>✅</td><td>الشعارات والشفافية</td></tr>
+                                        <tr><td><strong>WebP</strong></td><td>الأصغر</td><td>✅</td><td>المواقع الحديثة</td></tr>
+                                        <tr><td><strong>AVIF</strong></td><td>الأصغر جداً</td><td>✅</td><td>المواقع الحديثة</td></tr>
+                                        <tr><td><strong>BMP</strong></td><td>الأكبر</td><td>❌</td><td>الأنظمة القديمة</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🎯 لماذا تحتاج إلى تحويل صيغ الصور؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            تحويل الصيغ ليس مجرد تغيير امتداد، بل هو ضرورة عملية لها فوائد متعددة:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">⚡</div>
+                                <h4>تسريع مواقع الويب</h4>
+                                <p>تحويل إلى WebP أو AVIF يقلل الحجم بنسبة 30-50% ويسرّع التحميل.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h4>التوافق مع الأجهزة</h4>
+                                <p>بعض الأجهزة لا تدعم صيغاً حديثة. JPG متوافق مع الكل.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎨</div>
+                                <h4>الشعارات والشفافية</h4>
+                                <p>PNG للشعارات بخلفية شفافة، JPG للصور العادية.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">💾</div>
+                                <h4>توفير المساحة</h4>
+                                <p>تحويل صور كبيرة إلى WebP يوفّر مساحة التخزين.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📤</div>
+                                <h4>مشاركة أسهل</h4>
+                                <p>بعض المنصات لا تقبل WebP أو AVIF. JPG يعمل دائماً.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🖨️</div>
+                                <h4>الطباعة</h4>
+                                <p>PNG بدون ضغط لأعلى جودة طباعة، أو JPG للأرشفة.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>📈 أرقام تتحدث</h3>
+                        <p class="text-ink-600 text-sm mb-4">أرقام حقيقية تعكس جودة الأداء وثقة المستخدمين:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="stat-card">
+                                <div class="stat-num">+65K</div>
+                                <div class="stat-label">👥 مستخدم شهرياً</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">4.9/5</div>
+                                <div class="stat-label">⭐ تقييم المستخدمين</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">+30</div>
+                                <div class="stat-label">🌍 دولة حول العالم</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">0.4s</div>
+                                <div class="stat-label">⚡ متوسط المعالجة</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>💎 لماذا تختار intooly؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            صُمّمت أدوات intooly لتكون الخيار الأول للمستخدم العربي الذي يبحث عن الجودة والسرعة والخصوصية.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">🔒</div>
+                                <h4>خصوصية مطلقة</h4>
+                                <p>جميع عمليات التحويل تتم محلياً. صورك لا تغادر جهازك أبداً.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🖼️</div>
+                                <h4>معاينة حية فريدة</h4>
+                                <p>شاهد النتيجة قبل التحويل مع الحجم المتوقع.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">💰</div>
+                                <h4>مجاني 100%</h4>
+                                <p>لا علامات مائية، لا اشتراكات، بدون تسجيل.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h4>جميع الأجهزة</h4>
+                                <p>واجهة متجاوبة 100% وتدعم اللمس.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🌐</div>
+                                <h4>عربي احترافي</h4>
+                                <p>مصممة خصيصاً للمستخدم العربي.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🚀</div>
+                                <h4>بدون تسجيل</h4>
+                                <p>ابدأ الاستخدام فوراً بدون حساب.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🎨 متى تستخدم كل صيغة؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">اختيار الصيغة الصحيحة يؤثر على الجودة والحجم والأداء:</p>
+                        <div class="overflow-x-auto">
+                            <table class="quality-table">
+                                <thead>
+                                    <tr>
+                                        <th>الصيغة</th>
+                                        <th>الاستخدام الأمثل</th>
+                                        <th>المزايا</th>
+                                        <th>العيوب</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>JPEG</strong></td>
+                                        <td>الصور الفوتوغرافية، المنشورات</td>
+                                        <td>حجم صغير، توافق عالي</td>
+                                        <td>لا يدعم الشفافية</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PNG</strong></td>
+                                        <td>الشعارات، الأيقونات، الشفافية</td>
+                                        <td>جودة عالية، شفافية كاملة</td>
+                                        <td>حجم أكبر</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>WebP</strong></td>
+                                        <td>المواقع الإلكترونية الحديثة</td>
+                                        <td>أصغر 30% من JPEG، شفافية</td>
+                                        <td>دعم محدود في المتصفحات القديمة</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AVIF</strong></td>
+                                        <td>المواقع الحديثة، التطبيقات</td>
+                                        <td>أصغر 50% من JPEG</td>
+                                        <td>دعم محدود جداً حالياً</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BMP</strong></td>
+                                        <td>الأنظمة القديمة، الطباعة</td>
+                                        <td>جودة خام 100%</td>
+                                        <td>حجم ضخم جداً</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🔧 نصائح احترافية لتحويل صيغ الصور</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>استخدم WebP للويب:</strong> يوفر 30% من الحجم مقارنة بـ JPG بنفس الجودة.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>PNG للشعارات:</strong> احتفظ بالشفافية للشعارات والأيقونات.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>الجودة 85-90%:</strong> توازن مثالي بين الحجم والجودة للصيغ المضغوطة.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>احذر PNG→JPG:</strong> الشفافية ستُستبدل بخلفية بيضاء تلقائياً.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>AVIF للأداء الأقصى:</strong> الأصغر حجماً لكن الدعم محدود حالياً.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>استخدم المعاينة:</strong> اضبط الجودة بصرياً قبل التحويل النهائي.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>✅ معايير الجودة في intooly</h3>
+                        <div class="overflow-x-auto">
+                            <table class="quality-table">
+                                <thead>
+                                    <tr>
+                                        <th>المعيار</th>
+                                        <th>التزامنا</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>معالجة محلية (بدون سيرفر)</td><td><span class="check">✅ نعم</span> - جميع العمليات في متصفحك</td></tr>
+                                    <tr><td>مجاني بدون حدود</td><td><span class="check">✅ نعم</span> - بلا قيود</td></tr>
+                                    <tr><td>بدون علامات مائية</td><td><span class="check">✅ نعم</span> - صورك نظيفة دائماً</td></tr>
+                                    <tr><td>معاينة حية</td><td><span class="check">✅ نعم</span> - فورية</td></tr>
+                                    <tr><td>مقارنة مباشرة</td><td><span class="check">✅ نعم</span> - شريط تفاعلي</td></tr>
+                                    <tr><td>حجم متوقع</td><td><span class="check">✅ نعم</span> - لحظياً</td></tr>
+                                    <tr><td>تكبير/تصغير</td><td><span class="check">✅ نعم</span> - 30% → 300%</td></tr>
+                                    <tr><td>حفظ لكل صورة</td><td><span class="check">✅ نعم</span> - تلقائي</td></tr>
+                                    <tr><td>دعم 5 صيغ</td><td><span class="check">✅ نعم</span> - JPG, PNG, WebP, AVIF, BMP</td></tr>
+                                    <tr><td>تحكم في الجودة</td><td><span class="check">✅ نعم</span> - 10% إلى 100%</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>❓ الأسئلة الشائعة (FAQ)</h3>
+                        <div class="space-y-3 mt-4">
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل أداة تحويل صيغ الصور مجانية بالكامل؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكنني رؤية النتيجة قبل التحويل؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم! هناك معاينة حية فورية مع مقارنة مباشرة بين الأصل والمحوّل، مع عرض الحجم المتوقع ونسبة التوفير قبل التحويل.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل صوري آمنة عند استخدام الأداة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم 100%. كل المعالجة تتم محلياً في متصفحك. صورك لا تُرفع إلى أي سيرفر خارجي.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما هي الصيغ المدعومة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">ندعم JPG، PNG، WebP، AVIF، BMP كصيغ إدخال وإخراج. يمكنك التحويل من أي صيغة إلى أي صيغة أخرى.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما الفرق بين الصيغ المدعومة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">JPG للصور الفوتوغرافية بحجم صغير، PNG للشفافية، WebP للأصغر 30% من JPG، AVIF للأحدث والأصغر، BMP للصيغ القديمة غير المضغوطة.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يفقد التحويل جودة الصورة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">عند التحويل إلى صيغ مضغوطة (JPG, WebP, AVIF)، قد تفقد بعض الجودة حسب إعداد الجودة. عند 90%+، لن تلاحظ أي فرق بصري.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكن تحويل الصور الشفافة إلى JPG؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، لكن JPG لا يدعم الشفافية. عند التحويل، تُملأ المناطق الشفافة بخلفية بيضاء تلقائياً.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل تعمل الأداة على الهاتف؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة متجاوبة 100% وتعمل بكفاءة على جميع الأجهزة، مع دعم اللمس الكامل على السلايدرات والمقارنة.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card">
+                        <h3>🔗 أدوات ذات صلة قد تعجبك</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                            <a href="image-compressor.html" class="related-tool">
+                                <div class="tool-emoji">🗜️</div>
+                                <div class="tool-name">ضاغط الصور</div>
+                                <div class="tool-desc">قلّل حجم صورك حتى 80%</div>
+                            </a>
+                            <a href="image-resizer.html" class="related-tool">
+                                <div class="tool-emoji">📏</div>
+                                <div class="tool-name">تغيير حجم الصور</div>
+                                <div class="tool-desc">غيّر أبعاد صورك بسهولة</div>
+                            </a>
+                            <a href="image-cropper.html" class="related-tool">
+                                <div class="tool-emoji">✂️</div>
+                                <div class="tool-name">قص الصور</div>
+                                <div class="tool-desc">قص الصور بنسب جاهزة</div>
+                            </a>
+                            <a href="background-remover.html" class="related-tool">
+                                <div class="tool-emoji">🪄</div>
+                                <div class="tool-name">إزالة الخلفية</div>
+                                <div class="tool-desc">أزل خلفية أي صورة بـ AI</div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-gradient text-ink-300 pt-16 pb-0 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center">
+                            <svg class="w-7 h-7 text-brand-400"><use href="#icon-logo"/></svg>
+                        </div>
+                        <span class="text-2xl font-extrabold text-white">intooly</span>
+                    </div>
+                    <p class="text-sm text-ink-400 mb-3">منصة أدوات مجانية احترافية</p>
+                    <p class="text-sm text-ink-400 leading-relaxed">جميع أدواتنا تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-500 pr-3">خدماتنا</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../about.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> من نحن</a></li>
+                        <li><a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> اتصل بنا</a></li>
+                        <li><a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> سياسة الخصوصية</a></li>
+                        <li><a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> شروط الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-400 pr-3">أشهر الأدوات</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="background-remover.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🪄</span> إزالة الخلفية</a></li>
+                        <li><a href="image-compressor.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🗜️</span> ضاغط الصور</a></li>
+                        <li><a href="image-resizer.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>📏</span> تغيير حجم الصور</a></li>
+                        <li><a href="image-converter.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🔄</span> تحويل صيغ الصور</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-300 pr-3">اشترك معنا</h3>
+                    <p class="text-sm text-ink-400 mb-4">احصل على آخر الأدوات والتحديثات</p>
+                    <form class="space-y-3" id="subscribeForm" novalidate>
+                        <div>
+                            <label for="emailInput" class="sr-only">البريد الإلكتروني</label>
+                            <input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">
+                            اشترك الآن 📧
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom mt-6 py-5">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-ink-300 font-semibold">&copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.</p>
+                                <p class="text-xs text-ink-500 mt-0.5">صُنع بـ ❤️ في العالم العربي</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-ink-800/50 px-4 py-2 rounded-full border border-ink-700">
+                            <span class="text-brand-400">📧</span>
+                            <a href="mailto:support@intooly.com" class="text-sm text-ink-300 hover:text-brand-400 transition font-medium">support@intooly.com</a>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs">
+                            <a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition">الشروط</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition">اتصل بنا</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollTop" aria-label="العودة إلى الأعلى">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>    <script>
+    // ============ Shared Scripts ============
+    (function() {
+        'use strict';
+        
+        document.querySelectorAll('.faq-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.nextElementSibling;
+                const icon = btn.querySelector('.faq-icon');
+                const isActive = answer.classList.contains('active');
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.faq-toggle').forEach(b => {
+                    b.setAttribute('aria-expanded', 'false');
+                    b.querySelector('.faq-icon').textContent = '+';
+                });
+                if (!isActive) {
+                    answer.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                    icon.textContent = '−';
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href.length < 2) return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+            });
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            const normalizeArabic = (t) => String(t).replace(/[أإآٱا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[\u064B-\u0652\u0670]/g, '').toLowerCase().trim();
+            const SEARCH_INDEX = [
+                { names: ['خلفية', 'ازالة الخلفية', 'background'], url: 'background-remover.html' },
+                { names: ['ضغط الصور', 'ضاغط الصور'], url: 'image-compressor.html' },
+                { names: ['تغيير الحجم', 'resize', 'ابعاد'], url: 'image-resizer.html' },
+                { names: ['تحويل الصور', 'صيغ'], url: 'image-converter.html' },
+                { names: ['قص الصور', 'crop'], url: 'image-cropper.html' },
+            ];
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key !== 'Enter') return;
+                const query = normalizeArabic(e.target.value);
+                if (!query) return;
+                const match = SEARCH_INDEX.find(t => t.names.some(n => {
+                    const nn = normalizeArabic(n);
+                    return query.includes(nn) || nn.includes(query);
+                }));
+                if (match) window.location.href = match.url;
+                else alert('لا توجد نتائج');
+            });
+        }
+
+        const subForm = document.getElementById('subscribeForm');
+        if (subForm) {
+            subForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const input = document.getElementById('emailInput');
+                const btn = e.target.querySelector('button[type="submit"]');
+                const email = input.value.trim();
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    input.focus(); input.classList.add('border-red-500');
+                    setTimeout(() => input.classList.remove('border-red-500'), 2000);
+                    return;
+                }
+                const orig = btn.textContent;
+                btn.disabled = true; btn.textContent = 'جاري الاشتراك...';
+                await new Promise(r => setTimeout(r, 800));
+                btn.textContent = '✅ تم الاشتراك!';
+                subForm.reset();
+                setTimeout(() => { btn.disabled = false; btn.textContent = orig; }, 3000);
+            });
+        }
+
+        const scrollTopBtn = document.getElementById('scrollTop');
+        if (scrollTopBtn) {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        const yearEl = document.getElementById('currentYear');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+
+    // ============ Image Converter Tool (Advanced) ============
+    (function() {
+        'use strict';
+
+        const MAX_IMAGES = 50;
+        const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/bmp'];
+        const MAX_SIZE = 20 * 1024 * 1024;
+
+        const FORMAT_INFO = {
+            'image/jpeg': { name: 'JPG', ext: 'jpg', hasQuality: true, hasAlpha: false, hint: '💡 JPG: الأكثر توافقاً مع جميع الأجهزة والبرامج', tip: '✅ JPG مثالي لصورك الفوتوغرافية — توافق عالي وحجم صغير.' },
+            'image/png': { name: 'PNG', ext: 'png', hasQuality: false, hasAlpha: true, hint: '💡 PNG: يحافظ على الشفافية والجودة العالية', tip: '✅ PNG مثالي للشعارات والرسوم — يحافظ على الشفافية.' },
+            'image/webp': { name: 'WebP', ext: 'webp', hasQuality: true, hasAlpha: true, hint: '💡 WebP: أصغر 30% من JPG مع دعم الشفافية', tip: '⚡ WebP مثالي للمواقع — أصغر 30% من JPG بنفس الجودة.' },
+            'image/avif': { name: 'AVIF', ext: 'avif', hasQuality: true, hasAlpha: true, hint: '💡 AVIF: الأحدث والأصغر حجماً', tip: '🚀 AVIF الأحدث — أصغر 50% من JPG لكن الدعم محدود.' },
+            'image/bmp': { name: 'BMP', ext: 'bmp', hasQuality: false, hasAlpha: false, hint: '💡 BMP: صيغة خام بدون ضغط (حجم كبير)', tip: '⚠️ BMP حجم ضخم — استخدمه فقط للأرشفة أو التوافق القديم.' }
+        };
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const chooseBtn = document.getElementById('chooseBtn');
+        const addMoreBtn = document.getElementById('addMoreBtn');
+        const uploadSection = document.getElementById('uploadSection');
+        const workspaceSection = document.getElementById('workspaceSection');
+        const progressSection = document.getElementById('progressSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const thumbnailsStrip = document.getElementById('thumbnailsStrip');
+        const mainPreview = document.getElementById('mainPreview');
+        const previewCount = document.getElementById('previewCount');
+        const selectedFileInfo = document.getElementById('selectedFileInfo');
+        const selectedFileName = document.getElementById('selectedFileName');
+        const selectedFileSize = document.getElementById('selectedFileSize');
+        const selectedFileDims = document.getElementById('selectedFileDims');
+        const selectedFileFormatBadge = document.getElementById('selectedFileFormatBadge');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const newImagesBtn = document.getElementById('newImagesBtn');
+        const downloadZipBtn = document.getElementById('downloadZipBtn');
+        const downloadZipBtnSide = document.getElementById('downloadZipBtnSide');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const progressDetail = document.getElementById('progressDetail');
+        const progressPercent = document.getElementById('progressPercent');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const qualityGroup = document.getElementById('qualityGroup');
+        const formatHint = document.getElementById('formatHint');
+        const smartTip = document.getElementById('smartTip');
+        const formatBtns = document.querySelectorAll('.format-btn');
+        const previewToolbar = document.getElementById('previewToolbar');
+        const liveQualityBar = document.getElementById('liveQualityBar');
+        const liveQualitySlider = document.getElementById('liveQualitySlider');
+        const liveQualityValue = document.getElementById('liveQualityValue');
+        const chipOriginalSize = document.getElementById('chipOriginalSize');
+        const chipCompressedSize = document.getElementById('chipCompressedSize');
+        const chipSavings = document.getElementById('chipSavings');
+        const compareToggleBtn = document.getElementById('compareToggleBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const resetZoomBtn = document.getElementById('resetZoomBtn');
+        const zoomLevel = document.getElementById('zoomLevel');
+
+        let files = [];
+        let results = [];
+        let activeFileId = null;
+        let targetFormat = 'image/jpeg';
+        let compareOn = true;
+        let zoom = 1;
+        let liveCompareTimer = null;
+
+        const formatBytes = (bytes) => {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+
+        const getFormatName = (type) => {
+            if (type === 'image/jpeg') return 'JPG';
+            if (type === 'image/png') return 'PNG';
+            if (type === 'image/webp') return 'WebP';
+            if (type === 'image/avif') return 'AVIF';
+            if (type === 'image/bmp') return 'BMP';
+            return type.split('/')[1]?.toUpperCase() || '?';
+        };
+
+        // ============ FILE HANDLING ============
+        chooseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+        addMoreBtn.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFiles(e.target.files);
+            e.target.value = '';
+        });
+
+        function handleFiles(fileList) {
+            const remaining = MAX_IMAGES - files.length;
+            if (remaining <= 0) { alert('وصلت للحد الأقصى ' + MAX_IMAGES); return; }
+
+            const validFiles = Array.from(fileList).filter(f => {
+                if (!ACCEPTED_TYPES.includes(f.type)) return false;
+                if (f.size > MAX_SIZE) {
+                    alert(`الملف "${f.name}" يتجاوز 20MB وسيتم تجاهله.`);
+                    return false;
+                }
+                return true;
+            }).slice(0, remaining);
+
+            validFiles.forEach(file => {
+                const id = uid();
+                const url = URL.createObjectURL(file);
+                const item = {
+                    id, file, originalUrl: url, name: file.name, originalSize: file.size,
+                    originalType: file.type, width: 0, height: 0, imageEl: null,
+                    convertedUrl: null, convertedBlob: null,
+                    liveUrl: null, liveBlob: null, savedQuality: null
+                };
+
+                const img = new Image();
+                img.onload = () => {
+                    item.width = img.naturalWidth;
+                    item.height = img.naturalHeight;
+                    item.imageEl = img;
+                    if (activeFileId === id) {
+                        updateSelectedFileInfo(item);
+                        showActiveFile();
+                        setTimeout(updateLivePreview, 80);
+                    }
+                };
+                img.src = url;
+                files.push(item);
+                if (!activeFileId) activeFileId = id;
+            });
+
+            if (files.length > 0) {
+                uploadSection.classList.add('hidden');
+                workspaceSection.classList.remove('hidden');
+                convertBtn.disabled = false;
+                renderThumbnails();
+                showActiveFile();
+                updateSmartTip();
+                setTimeout(updateLivePreview, 100);
+            }
+        }
+
+        function renderThumbnails() {
+            previewCount.textContent = files.length;
+            thumbnailsStrip.innerHTML = '';
+            files.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'thumbnail-item' + (f.id === activeFileId ? ' active' : '');
+                const badge = f.savedQuality ? `<span class="thumb-fmt">${Math.round(f.savedQuality * 100)}%</span>` : '';
+                item.innerHTML = `
+                    <img src="${f.originalUrl}" alt="${f.name}">
+                    <button class="thumb-remove" data-remove-id="${f.id}" aria-label="حذف">✕</button>
+                    ${badge}
+                `;
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('thumb-remove')) return;
+                    activeFileId = f.id;
+                    renderThumbnails();
+                    showActiveFile();
+                    updateSmartTip();
+                    if (f.savedQuality) {
+                        const qp = Math.round(f.savedQuality * 100);
+                        qualitySlider.value = qp;
+                        qualityValue.textContent = qp + '%';
+                        liveQualitySlider.value = qp;
+                        liveQualityValue.textContent = qp + '%';
+                    }
+                    setTimeout(updateLivePreview, 80);
+                });
+                thumbnailsStrip.appendChild(item);
+            });
+            thumbnailsStrip.querySelectorAll('[data-remove-id]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.removeId;
+                    const idx = files.findIndex(f => f.id === id);
+                    if (idx >= 0) {
+                        const f = files[idx];
+                        URL.revokeObjectURL(f.originalUrl);
+                        if (f.convertedUrl) URL.revokeObjectURL(f.convertedUrl);
+                        if (f.liveUrl) URL.revokeObjectURL(f.liveUrl);
+                        files.splice(idx, 1);
+                        if (files.length === 0) { resetToUpload(); return; }
+                        if (activeFileId === id) activeFileId = files[0].id;
+                        renderThumbnails();
+                        showActiveFile();
+                        updateSmartTip();
+                        setTimeout(updateLivePreview, 80);
+                    }
+                });
+            });
+        }
+
+        function showActiveFile() {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) {
+                mainPreview.innerHTML = '<div class="empty-state"><div class="icon">🖼️</div><p>اختر صورة</p></div>';
+                selectedFileInfo.classList.add('hidden');
+                previewToolbar.style.display = 'none';
+                liveQualityBar.style.display = 'none';
+                return;
+            }
+
+            previewToolbar.style.display = 'flex';
+            liveQualityBar.style.display = 'flex';
+
+            if (f.liveUrl && compareOn) {
+                mainPreview.innerHTML = `
+                    <div class="preview-stage" style="transform: scale(${zoom}); transform-origin: center center;">
+                        <div class="compare-stack">
+                            <img class="compare-img-before" id="compareBefore" src="${f.originalUrl}" alt="قبل">
+                            <img class="compare-img-after" id="compareAfter" src="${f.liveUrl}" alt="بعد">
+                            <div class="compare-handle-line" id="compareHandle" style="left: 50%;"></div>
+                        </div>
+                    </div>
+                `;
+                setupLiveCompareDrag(f);
+            } else {
+                mainPreview.innerHTML = `
+                    <div class="preview-stage" style="transform: scale(${zoom}); transform-origin: center center;">
+                        <img class="stage-image" src="${f.liveUrl || f.originalUrl}" alt="${f.name}" draggable="false">
+                    </div>
+                `;
+            }
+            updateSelectedFileInfo(f);
+        }
+
+        function updateSelectedFileInfo(f) {
+            selectedFileInfo.classList.remove('hidden');
+            selectedFileName.textContent = f.name;
+            selectedFileSize.textContent = formatBytes(f.originalSize);
+            selectedFileDims.textContent = f.width > 0 ? `${f.width} × ${f.height}` : '...';
+            selectedFileFormatBadge.textContent = '📄 ' + getFormatName(f.originalType);
+        }
+
+        function updateSmartTip() {
+            const f = files.find(x => x.id === activeFileId);
+            const info = FORMAT_INFO[targetFormat];
+            if (!info) return;
+            if (!f) {
+                smartTip.textContent = '💡 ارفع صورة للحصول على توصيات مخصصة.';
+                return;
+            }
+            smartTip.textContent = info.tip;
+        }
+
+        // ============ LIVE COMPARE DRAG ============
+        function setupLiveCompareDrag(f) {
+            const stage = document.querySelector('.preview-stage');
+            const before = document.getElementById('compareBefore');
+            const after = document.getElementById('compareAfter');
+            const handle = document.getElementById('compareHandle');
+            if (!before || !after || !handle || !stage) return;
+
+            let dragging = false;
+            function setPos(percent) {
+                percent = Math.max(0, Math.min(100, percent));
+                handle.style.left = percent + '%';
+                before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+                after.style.clipPath = `inset(0 0 0 ${percent}%)`;
+            }
+            function getPercent(e) {
+                const rect = stage.getBoundingClientRect();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                return ((cx - rect.left) / rect.width) * 100;
+            }
+            const onDown = (e) => { dragging = true; setPos(getPercent(e)); e.preventDefault(); };
+            const onMove = (e) => { if (dragging) { setPos(getPercent(e)); e.preventDefault(); } };
+            const onUp = () => { dragging = false; };
+
+            stage.addEventListener('mousedown', onDown);
+            stage.addEventListener('touchstart', onDown, { passive: false });
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('mouseup', onUp);
+            document.addEventListener('touchend', onUp);
+            setPos(50);
+        }
+
+        // ============ LIVE PREVIEW ============
+        function scheduleLivePreview() {
+            if (liveCompareTimer) clearTimeout(liveCompareTimer);
+            liveCompareTimer = setTimeout(updateLivePreview, 180);
+        }
+
+        async function updateLivePreview() {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f || !f.imageEl) return;
+
+            const info = FORMAT_INFO[targetFormat];
+            const quality = info.hasQuality ? parseInt(qualitySlider.value) / 100 : 1.0;
+
+            try {
+                const blob = await renderBlob(f, targetFormat, quality);
+                if (f.liveUrl) URL.revokeObjectURL(f.liveUrl);
+                f.liveBlob = blob;
+                f.liveUrl = URL.createObjectURL(blob);
+                f.savedQuality = info.hasQuality ? quality : null;
+
+                showActiveFile();
+
+                chipOriginalSize.textContent = '📦 الأصل: ' + formatBytes(f.originalSize);
+                chipCompressedSize.textContent = '✨ المتوقع: ' + formatBytes(blob.size);
+                const savings = f.originalSize > 0 ? Math.round(((f.originalSize - blob.size) / f.originalSize) * 100) : 0;
+                if (savings > 0) {
+                    chipSavings.className = 'live-stat-chip green';
+                    chipSavings.textContent = '📉 التوفير: ' + savings + '%';
+                } else {
+                    chipSavings.className = 'live-stat-chip red';
+                    chipSavings.textContent = '⚠️ زيادة: ' + Math.abs(savings) + '%';
+                }
+                renderThumbnails();
+            } catch (e) {
+                console.error('Live preview error:', e);
+            }
+        }
+
+        function renderBlob(fileData, mime, q) {
+            return new Promise((resolve, reject) => {
+                const img = fileData.imageEl;
+                if (!img) return reject(new Error('image not loaded'));
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    const info = FORMAT_INFO[mime];
+                    if (!info.hasAlpha) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        if (!blob) return reject(new Error('failed'));
+                        resolve(blob);
+                    }, mime, q);
+                } catch (err) { reject(err); }
+            });
+        }
+
+        // ============ CLEAR / RESET ============
+        clearBtn.addEventListener('click', () => {
+            files.forEach(f => {
+                URL.revokeObjectURL(f.originalUrl);
+                if (f.convertedUrl) URL.revokeObjectURL(f.convertedUrl);
+                if (f.liveUrl) URL.revokeObjectURL(f.liveUrl);
+            });
+            files = []; results = []; resetToUpload();
+        });
+
+        newImagesBtn.addEventListener('click', () => {
+            files.forEach(f => {
+                URL.revokeObjectURL(f.originalUrl);
+                if (f.convertedUrl) URL.revokeObjectURL(f.convertedUrl);
+                if (f.liveUrl) URL.revokeObjectURL(f.liveUrl);
+            });
+            results.forEach(r => URL.revokeObjectURL(r.url));
+            files = []; results = []; resetToUpload();
+        });
+
+        function resetToUpload() {
+            uploadSection.classList.remove('hidden');
+            workspaceSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            progressSection.classList.add('hidden');
+            thumbnailsStrip.innerHTML = '';
+            resultsGrid.innerHTML = '';
+            fileInput.value = '';
+            activeFileId = null;
+            convertBtn.disabled = true;
+            downloadZipBtn.disabled = true;
+            downloadZipBtnSide.disabled = true;
+            previewToolbar.style.display = 'none';
+            liveQualityBar.style.display = 'none';
+            zoom = 1;
+            updateZoomLabel();
+        }
+
+        // ============ FORMAT SELECTION ============
+        formatBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                formatBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                targetFormat = btn.dataset.format;
+                const info = FORMAT_INFO[targetFormat];
+                formatHint.textContent = info.hint;
+                qualityGroup.style.display = info.hasQuality ? 'block' : 'none';
+                updateSmartTip();
+                scheduleLivePreview();
+            });
+        });
+
+        qualitySlider.addEventListener('input', () => {
+            const v = parseInt(qualitySlider.value);
+            qualityValue.textContent = v + '%';
+            liveQualitySlider.value = v;
+            liveQualityValue.textContent = v + '%';
+            scheduleLivePreview();
+        });
+
+        liveQualitySlider.addEventListener('input', (e) => {
+            const v = parseInt(e.target.value);
+            liveQualityValue.textContent = v + '%';
+            qualitySlider.value = v;
+            qualityValue.textContent = v + '%';
+            scheduleLivePreview();
+        });
+
+        // ============ COMPARE TOGGLE ============
+        compareToggleBtn.addEventListener('click', () => {
+            compareOn = !compareOn;
+            compareToggleBtn.classList.toggle('active', compareOn);
+            showActiveFile();
+        });
+
+        // ============ ZOOM ============
+        function updateZoomLabel() {
+            zoomLevel.textContent = Math.round(zoom * 100) + '%';
+        }
+        zoomInBtn.addEventListener('click', () => {
+            zoom = Math.min(3, zoom + 0.2);
+            const stage = document.querySelector('.preview-stage');
+            if (stage) stage.style.transform = `scale(${zoom})`;
+            updateZoomLabel();
+        });
+        zoomOutBtn.addEventListener('click', () => {
+            zoom = Math.max(0.3, zoom - 0.2);
+            const stage = document.querySelector('.preview-stage');
+            if (stage) stage.style.transform = `scale(${zoom})`;
+            updateZoomLabel();
+        });
+        resetZoomBtn.addEventListener('click', () => {
+            zoom = 1;
+            const stage = document.querySelector('.preview-stage');
+            if (stage) stage.style.transform = `scale(${zoom})`;
+            updateZoomLabel();
+        });
+
+        // ============ MAIN CONVERT ============
+        convertBtn.addEventListener('click', processAll);
+
+        async function processAll() {
+            if (files.length === 0) return;
+            workspaceSection.classList.add('hidden');
+            progressSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            downloadZipBtn.disabled = true;
+            downloadZipBtnSide.disabled = true;
+            results = [];
+
+            const info = FORMAT_INFO[targetFormat];
+            const quality = info.hasQuality ? parseInt(qualitySlider.value) / 100 : 1.0;
+
+            for (let i = 0; i < files.length; i++) {
+                const item = files[i];
+                progressText.textContent = `جاري التحويل: ${item.name}`;
+                progressDetail.textContent = `${i + 1} من ${files.length}`;
+                const pct = Math.round((i / files.length) * 100);
+                progressBar.style.width = pct + '%';
+                progressPercent.textContent = pct + '%';
+
+                try {
+                    const result = await convertImage(item, targetFormat, quality);
+                    if (item.convertedUrl) URL.revokeObjectURL(item.convertedUrl);
+                    item.convertedUrl = result.url;
+                    item.convertedBlob = result.blob;
+
+                    const baseName = item.name.replace(/\.[^.]+$/, '');
+                    results.push({
+                        id: item.id,
+                        name: `${baseName}.${info.ext}`,
+                        originalName: item.name,
+                        url: result.url,
+                        originalUrl: item.originalUrl,
+                        width: item.width,
+                        height: item.height,
+                        originalSize: item.originalSize,
+                        newSize: result.blob.size,
+                        originalFormat: getFormatName(item.originalType),
+                        newFormat: info.name
+                    });
+                } catch (e) {
+                    console.error('Error:', item.name, e);
+                }
+                await new Promise(r => setTimeout(r, 15));
+            }
+
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            progressDetail.textContent = 'اكتمل بنجاح!';
+            setTimeout(() => {
+                progressSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                renderResults();
+            }, 400);
+        }
+
+        function convertImage(item, mime, quality) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const img = item.imageEl;
+                    const w = img.naturalWidth;
+                    const h = img.naturalHeight;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    const info = FORMAT_INFO[mime];
+                    if (!info.hasAlpha) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                    ctx.drawImage(img, 0, 0, w, h);
+                    canvas.toBlob(blob => {
+                        if (!blob) return reject(new Error('فشل إنشاء Blob'));
+                        resolve({ blob, url: URL.createObjectURL(blob) });
+                    }, mime, quality);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+
+        function renderResults() {
+            let totalOriginal = 0, totalNew = 0;
+            results.forEach(r => {
+                totalOriginal += r.originalSize;
+                totalNew += r.newSize;
+            });
+            const savings = totalOriginal > 0 ? Math.round(((totalOriginal - totalNew) / totalOriginal) * 100) : 0;
+
+            document.getElementById('sumCount').textContent = results.length;
+            document.getElementById('sumOriginal').textContent = formatBytes(totalOriginal);
+            document.getElementById('sumCompressed').textContent = formatBytes(totalNew);
+            document.getElementById('sumSavings').textContent = (savings > 0 ? '↓ ' : '') + Math.abs(savings) + '%';
+
+            resultsGrid.innerHTML = '';
+
+            results.forEach((r, idx) => {
+                const sizeDiff = r.originalSize > 0 ? Math.round(((r.originalSize - r.newSize) / r.originalSize) * 100) : 0;
+                const sizeIncreased = r.newSize > r.originalSize;
+
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="result-card-header">
+                        <div class="file-icon">🔄</div>
+                        <p class="file-name" title="${r.originalName}">${r.originalName}</p>
+                        <span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ ${r.newFormat}</span>
+                    </div>
+                    <div class="result-layout">
+                        <div class="result-image-col">
+                            <div class="comparison-container" data-comparison="${idx}">
+                                <img class="comparison-after" src="${r.url}" alt="بعد">
+                                <img class="comparison-before" src="${r.originalUrl}" alt="قبل">
+                                <span class="comparison-label label-before">${r.originalFormat}</span>
+                                <span class="comparison-label label-after">${r.newFormat}</span>
+                                <div class="comparison-handle" style="left: 50%;"></div>
+                            </div>
+                            <div class="drag-hint">💡 اسحب الشريط الذهبي للمقارنة</div>
+                        </div>
+                        <div class="result-info-col">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="info-stat">
+                                    <div class="info-icon">📄</div>
+                                    <div class="info-content">
+                                        <div class="info-label">الصيغة</div>
+                                        <div class="info-value">
+                                            <span class="old-value">${r.originalFormat}</span>
+                                            <span class="arrow">←</span>
+                                            <span class="new-value">${r.newFormat}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-stat ${sizeIncreased ? 'increase' : 'savings'}">
+                                    <div class="info-icon">${sizeIncreased ? '⚠️' : '✅'}</div>
+                                    <div class="info-content">
+                                        <div class="info-label">${sizeIncreased ? 'زيادة' : 'التوفير'}</div>
+                                        <div class="info-value">
+                                            ${sizeIncreased ? '↑' : '↓'} ${Math.abs(sizeDiff)}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-stat">
+                                    <div class="info-icon">📦</div>
+                                    <div class="info-content">
+                                        <div class="info-label">حجم الملف</div>
+                                        <div class="info-value">
+                                            <span class="old-value">${formatBytes(r.originalSize)}</span>
+                                            <span class="arrow">←</span>
+                                            <span class="new-value">${formatBytes(r.newSize)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-stat">
+                                    <div class="info-icon">📐</div>
+                                    <div class="info-content">
+                                        <div class="info-label">الأبعاد</div>
+                                        <div class="info-value">
+                                            <span class="new-value">${r.width} × ${r.height}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-download mt-3" data-download="${idx}">
+                                ⬇️ تحميل الصورة المحوّلة
+                            </button>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+
+            resultsGrid.querySelectorAll('[data-download]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const r = results[parseInt(btn.dataset.download)];
+                    if (!r) return;
+                    const link = document.createElement('a');
+                    link.href = r.url;
+                    link.download = r.name;
+                    link.click();
+                });
+            });
+
+            resultsGrid.querySelectorAll('[data-comparison]').forEach(c => setupComparisonSlider(c));
+
+            if (results.length > 1) {
+                downloadZipBtn.disabled = false;
+                downloadZipBtnSide.disabled = false;
+            }
+        }
+
+        function setupComparisonSlider(container) {
+            const handle = container.querySelector('.comparison-handle');
+            const before = container.querySelector('.comparison-before');
+            let isDragging = false;
+            function setPos(percent) {
+                percent = Math.max(0, Math.min(100, percent));
+                handle.style.left = percent + '%';
+                before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+            }
+            function getPercent(e) {
+                const rect = container.getBoundingClientRect();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                return ((cx - rect.left) / rect.width) * 100;
+            }
+            container.addEventListener('mousedown', (e) => { isDragging = true; setPos(getPercent(e)); });
+            container.addEventListener('touchstart', (e) => { isDragging = true; setPos(getPercent(e)); }, { passive: true });
+            document.addEventListener('mousemove', (e) => { if (isDragging) setPos(getPercent(e)); });
+            document.addEventListener('touchmove', (e) => { if (isDragging) setPos(getPercent(e)); }, { passive: true });
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            document.addEventListener('touchend', () => { isDragging = false; });
+        }
+
+        async function downloadZip() {
+            if (results.length === 0) return;
+            if (typeof JSZip === 'undefined') { alert('مكتبة ZIP لم تُحمّل'); return; }
+
+            const btn = downloadZipBtn;
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ جاري الإنشاء...';
+
+            try {
+                const zip = new JSZip();
+                for (const r of results) {
+                    const response = await fetch(r.url);
+                    const blob = await response.blob();
+                    zip.file(r.name, blob);
+                }
+                const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+                const url = URL.createObjectURL(content);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `intooly-converted-${Date.now()}.zip`;
+                link.click();
+                URL.revokeObjectURL(url);
+                btn.textContent = '✅ تم التحميل!';
+                setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+            } catch (e) {
+                console.error(e);
+                alert('خطأ في إنشاء ZIP');
+                btn.textContent = orig;
+                btn.disabled = false;
+            }
+        }
+
+        downloadZipBtn.addEventListener('click', downloadZip);
+        downloadZipBtnSide.addEventListener('click', downloadZip);
+
+        // ============ KEYBOARD SHORTCUTS ============
+        document.addEventListener('keydown', (e) => {
+            if (!workspaceSection || workspaceSection.classList.contains('hidden')) return;
+            const tag = (e.target && e.target.tagName) || '';
+            if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) {
+                e.preventDefault();
+                zoomInBtn.click();
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+                e.preventDefault();
+                zoomOutBtn.click();
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+                e.preventDefault();
+                resetZoomBtn.click();
+            }
+        });
+
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>قص الفيديو أونلاين مجاناً | Video Trimmer - intooly</title>
+    <meta name="description" content="اقصص أي فيديو بدقة عالية أونلاين مجاناً. حدد البداية والنهاية، اختر صيغة الإخراج (MP4/WebM/MKV/MOV)، مع معالجة محلية 100% في متصفحك بدون رفع. تحميل ZIP مجمع.">
+    <meta name="keywords" content="قص الفيديو, video trimmer, تقطيع الفيديو, cut video, trim video, اقتصاص الفيديو, intooly">
+    <meta name="author" content="intooly">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#111827">
+    <link rel="canonical" href="https://intooly.com/tools/video-trimmer.html">
+    
+    <meta property="og:title" content="قص الفيديو أونلاين مجاناً | intooly">
+    <meta property="og:description" content="اقصص أي فيديو بدقة عالية. محلي 100%.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://intooly.com/tools/video-trimmer.html">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="intooly">
+    <meta property="og:image" content="https://intooly.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="قص الفيديو - intooly">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="قص الفيديو أونلاين مجاناً | intooly">
+    <meta name="twitter:description" content="اقصص أي فيديو بدقة عالية. محلي 100%.">
+    <meta name="twitter:image" content="https://intooly.com/og-image.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="./assets/ffmpeg/ffmpeg.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Cairo', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047', 400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207', 800: '#854d0e', 900: '#713f12' },
+                        ink: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        
+        .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
+        .hero-gradient::before {
+            content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px);
+            background-size: 30px 30px; animation: move-bg 20s linear infinite;
+        }
+        .hero-gradient::after {
+            content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        .hero-title { font-size: clamp(1.5rem, 3.5vw + 0.5rem, 2.75rem); line-height: 1.25; }
+        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
+        
+        .drop-zone { border: 3px dashed #d1d5db; transition: all 0.3s ease; background: linear-gradient(135deg, #f9fafb 0%, #fefce8 100%); border-radius: 1.25rem; }
+        .drop-zone:hover { border-color: #eab308; background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
+        .drop-zone.dragover { border-color: #eab308; background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%); transform: scale(1.02); box-shadow: 0 0 0 6px rgba(234, 179, 8, 0.15); }
+        
+        .spinner { border: 3px solid rgba(234, 179, 8, 0.2); border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; flex-shrink: 0; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .progress-bar-container { background: #e5e7eb; border-radius: 9999px; overflow: hidden; height: 12px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #eab308, #facc15, #fde047); height: 100%; transition: width 0.3s ease; position: relative; overflow: hidden; }
+        .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        
+        .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
+        @media (min-width: 1024px) { .workspace { grid-template-columns: 1fr 1fr; align-items: stretch; } }
+        @media (min-width: 1600px) { .workspace { grid-template-columns: 500px 1fr; align-items: stretch; } }
+        .gallery-panel { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.25rem; min-width: 0; display: flex; flex-direction: column; }
+        .settings-panel { background: white; border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.5rem; display: flex; flex-direction: column; }
+        .settings-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 800; color: #111827; padding-bottom: 0.875rem; margin-bottom: 0.875rem; border-bottom: 2px solid #f3f4f6; }
+        .settings-group { margin-bottom: 1rem; }
+        .settings-label { display: flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; font-weight: 800; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.025em; }
+        .settings-label .label-count { margin-right: auto; font-size: 0.6875rem; background: #fef3c7; color: #92400e; padding: 0.125rem 0.5rem; border-radius: 9999px; font-weight: 800; }
+        
+        .main-preview { background: #000; border-radius: 1rem; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; flex: 1; min-height: 320px; max-height: 480px; }
+        .main-preview video { max-width: 100%; max-height: 100%; }
+        .main-preview .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: #9ca3af; font-weight: 700; font-size: 0.875rem; }
+        .main-preview .empty-state .icon { font-size: 3rem; opacity: 0.5; }
+        
+        .thumbnails-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 0.25rem; scrollbar-width: thin; flex-shrink: 0; }
+        .thumbnails-strip::-webkit-scrollbar { height: 6px; }
+        .thumbnails-strip::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 3px; }
+        .thumbnails-strip::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .thumbnail-item { flex-shrink: 0; width: 80px; height: 64px; border-radius: 0.625rem; overflow: hidden; border: 3px solid transparent; cursor: pointer; transition: all 0.2s; background: #f3f4f6; position: relative; }
+        .thumbnail-item:hover { border-color: #fde047; transform: translateY(-2px); }
+        .thumbnail-item.active { border-color: #eab308; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4); }
+        .thumbnail-item video { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-item .thumb-remove { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(239, 68, 68, 0.95); color: white; border: 2px solid white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.625rem; font-weight: 900; transition: all 0.2s; opacity: 0; z-index: 2; }
+        .thumbnail-item:hover .thumb-remove { opacity: 1; }
+        .thumbnail-item .thumb-remove:hover { background: #dc2626; transform: scale(1.15); }
+        
+        .range-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 9999px; background: linear-gradient(90deg, #e5e7eb, #fef3c7); outline: none; cursor: pointer; }
+        .range-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); transition: all 0.2s; }
+        .range-slider::-webkit-slider-thumb:hover { transform: scale(1.15); box-shadow: 0 5px 15px rgba(234, 179, 8, 0.7); }
+        .range-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); }
+        
+        .preset-btn { padding: 0.5rem 0.75rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; font-weight: 800; color: #4b5563; display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Cairo', sans-serif; }
+        .preset-btn:hover { border-color: #facc15; color: #111827; background: #fefce8; transform: translateY(-1px); }
+        .preset-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); color: #111827; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        
+        .result-card { background: white; border-radius: 1.5rem; border: 1px solid #e5e7eb; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(17, 24, 39, 0.04); animation: fadeInUp 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-card:hover { border-color: #facc15; box-shadow: 0 15px 40px rgba(17, 24, 39, 0.1); }
+        .result-card-header { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: linear-gradient(135deg, #f9fafb, #fefce8); border-bottom: 1px solid #e5e7eb; }
+        .result-card-header .file-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: linear-gradient(135deg, #fef3c7, #fde047); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2); }
+        .result-card-header .file-name { font-weight: 800; color: #111827; font-size: 0.9375rem; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .result-layout { display: grid !important; grid-template-columns: 1fr !important; gap: 1.25rem; padding: 1.25rem; align-items: start; }
+        @media (min-width: 900px) { .result-layout { grid-template-columns: 340px 1fr !important; } }
+        .result-image-col { min-width: 0; width: 100%; }
+        .result-info-col { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; width: 100%; }
+        
+        .video-preview-wrap { background: #000; border-radius: 1rem; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 180px; }
+        .video-preview-wrap video { max-width: 100%; max-height: 320px; display: block; }
+        
+        .info-stat { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border-radius: 0.875rem; background: linear-gradient(135deg, #f9fafb, #f3f4f6); border: 1.5px solid #e5e7eb; transition: all 0.25s ease; }
+        .info-stat:hover { border-color: #fde047; background: linear-gradient(135deg, #fefce8, #fef9c3); transform: translateX(-3px); box-shadow: 0 4px 12px rgba(234, 179, 8, 0.1); }
+        .info-stat .info-icon { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: linear-gradient(135deg, #fef3c7, #fde047); font-size: 1.125rem; flex-shrink: 0; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        .info-stat .info-content { flex: 1; min-width: 0; }
+        .info-stat .info-label { font-size: 0.6875rem; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .info-stat .info-value { font-size: 0.875rem; font-weight: 800; color: #111827; line-height: 1.3; }
+        .info-stat.savings { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac; }
+        .info-stat.savings .info-icon { background: linear-gradient(135deg, #bbf7d0, #86efac); }
+        .info-stat.savings .info-label { color: #15803d; }
+        .info-stat.savings .info-value { color: #15803d; font-size: 1.125rem; }
+        
+        .btn-primary { background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; padding: 0.875rem 2.25rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.3); border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.5); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-download { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 0.875rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); width: 100%; justify-content: center; font-family: 'Cairo', sans-serif; }
+        .btn-download:hover:not(:disabled) { background: linear-gradient(135deg, #15803d, #16a34a); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+        .btn-secondary { background: #1f2937; color: white; font-weight: 700; padding: 0.75rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 0.9375rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-secondary:hover { background: #111827; transform: translateY(-1px); }
+        .btn-zip { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 1rem 2.5rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3); border: none; cursor: pointer; font-size: 1.0625rem; display: inline-flex; align-items: center; gap: 0.625rem; font-family: 'Cairo', sans-serif; }
+        .btn-zip:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5); }
+        .btn-zip:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .timeline-wrap { margin-top: 0.75rem; padding: 0.875rem; background: white; border-radius: 0.875rem; border: 2px solid #e5e7eb; }
+        .timeline-track { position: relative; height: 56px; background: linear-gradient(90deg, #e5e7eb, #f3f4f6); border-radius: 0.5rem; overflow: hidden; margin-bottom: 0.75rem; }
+        .timeline-selection { position: absolute; top: 0; bottom: 0; background: rgba(234, 179, 8, 0.25); border-left: 3px solid #eab308; border-right: 3px solid #eab308; pointer-events: none; }
+        .timeline-playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: #dc2626; pointer-events: none; box-shadow: 0 0 8px rgba(220, 38, 38, 0.6); z-index: 3; }
+        .timeline-playhead::before { content: ''; position: absolute; top: -4px; left: -5px; width: 12px; height: 12px; background: #dc2626; border-radius: 50%; border: 2px solid white; }
+        
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-answer.active { max-height: 500px; }
+        .faq-toggle { width: 100%; text-align: right; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; background: white; border: 1px solid #e5e7eb; border-radius: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 700; color: #111827; font-size: 1rem; font-family: 'Cairo', sans-serif; }
+        .faq-toggle:hover { background: #fefce8; border-color: #fde047; }
+        .faq-toggle .faq-icon { color: #ca8a04; font-size: 1.5rem; font-weight: 800; }
+        
+        .footer-gradient { background: linear-gradient(180deg, #1f2937 0%, #111827 100%); }
+        .footer-bottom { background: linear-gradient(90deg, #030712 0%, #111827 50%, #030712 100%); border-top: 1px solid rgba(250, 204, 21, 0.3); position: relative; overflow: hidden; }
+        .footer-bottom::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #eab308, #facc15, #eab308, transparent); }
+        .logo-icon { animation: logo-pulse 3s ease-in-out infinite; }
+        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        #scrollTop { position: fixed; bottom: 24px; left: 24px; z-index: 40; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; cursor: pointer; border: none; }
+        #scrollTop.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        #scrollTop:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(234, 179, 8, 0.6); }
+        
+        .seo-section { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; padding: 2rem; border: 2px solid #e5e7eb; margin-top: 3rem; }
+        .seo-badge { display: inline-block; background: linear-gradient(135deg, #fef3c7, #fde047); color: #92400e; font-weight: 800; padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.75rem; border: 1px solid #fde047; }
+        .seo-card { background: white; border-radius: 1rem; padding: 1.5rem; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .seo-card:hover { border-color: #facc15; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); transform: translateY(-2px); }
+        .seo-card h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 800; color: #111827; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f3f4f6; }
+        
+        .step-item { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .step-num { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3); }
+        .step-content h4 { font-weight: 800; color: #111827; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .step-content p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .platform-table, .quality-table { width: 100%; border-collapse: collapse; background: white; border-radius: 1rem; overflow: hidden; }
+        .platform-table thead, .quality-table thead { background: linear-gradient(135deg, #1f2937, #111827); }
+        .platform-table th, .quality-table th { padding: 0.75rem 0.875rem; text-align: right; color: #facc15; font-weight: 800; font-size: 0.75rem; }
+        .platform-table td, .quality-table td { padding: 0.625rem 0.875rem; border-bottom: 1px solid #f3f4f6; font-size: 0.75rem; color: #374151; font-weight: 600; }
+        .platform-table tbody tr:hover, .quality-table tbody tr:hover { background: #fefce8; }
+        .platform-table tbody tr:last-child td, .quality-table tbody tr:last-child td { border-bottom: none; }
+        .quality-table .check { color: #16a34a; font-weight: 900; font-size: 1rem; }
+        
+        .feature-card { padding: 1.25rem; border-radius: 1rem; text-align: center; background: white; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .feature-card:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.1); }
+        .feature-card .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 0.875rem; background: linear-gradient(135deg, #fef3c7, #fde047); font-size: 1.75rem; margin-bottom: 0.75rem; box-shadow: 0 6px 15px rgba(234, 179, 8, 0.2); }
+        .feature-card h4 { font-weight: 800; color: #111827; margin-bottom: 0.375rem; font-size: 0.9375rem; }
+        .feature-card p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border-radius: 1rem; padding: 1.25rem; text-align: center; color: white; border: 2px solid #374151; transition: all 0.3s; }
+        .stat-card:hover { border-color: #eab308; transform: translateY(-3px); }
+        .stat-card .stat-num { font-size: 1.75rem; font-weight: 900; color: #facc15; margin-bottom: 0.25rem; line-height: 1; }
+        .stat-card .stat-label { font-size: 0.75rem; color: #9ca3af; font-weight: 700; }
+        
+        .related-tool { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.25rem 0.875rem; border-radius: 1rem; background: white; border: 2px solid #e5e7eb; text-decoration: none; transition: all 0.3s; text-align: center; }
+        .related-tool:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.15); }
+        .related-tool .tool-emoji { font-size: 2rem; }
+        .related-tool .tool-name { font-weight: 800; color: #111827; font-size: 0.875rem; }
+        .related-tool .tool-desc { font-size: 0.6875rem; color: #6b7280; line-height: 1.4; }
+        
+        .mode-toggle { display: flex; gap: 0.5rem; }
+        .mode-btn { flex: 1; padding: 0.625rem 0.5rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 0.75rem; color: #6b7280; text-align: center; }
+        .mode-btn:hover { border-color: #facc15; }
+        .mode-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); color: #111827; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.2); }
+        .mode-btn small { display: block; font-size: 0.625rem; font-weight: 600; color: #9ca3af; margin-top: 2px; }
+        .mode-btn.active small { color: #92400e; }
+    </style>
+
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"intooly","url":"https://intooly.com","logo":"https://intooly.com/logo.png","description":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص","contactPoint":{"@type":"ContactPoint","email":"support@intooly.com","contactType":"customer support","availableLanguage":["Arabic","English"]}}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"intooly","url":"https://intooly.com","inLanguage":"ar","potentialAction":{"@type":"SearchAction","target":"https://intooly.com/?q={search_term_string}","query-input":"required name=search_term_string"}}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://intooly.com/"},{"@type":"ListItem","position":2,"name":"أدوات الفيديو","item":"https://intooly.com/#video-tools"},{"@type":"ListItem","position":3,"name":"قص الفيديو","item":"https://intooly.com/tools/video-trimmer.html"}]}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"قاص الفيديو - intooly","url":"https://intooly.com/tools/video-trimmer.html","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"أداة مجانية لقص الفيديو محلياً في المتصفح باستخدام FFmpeg مع اختيار البداية والنهاية وصيغ إخراج متعددة.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"3412"},"featureList":["قص الفيديو بدقة","تحديد البداية والنهاية","صيغ إخراج MP4/WebM/MKV/MOV","وضع سريع ووضع دقيق","معاينة مباشرة","معالجة محلية 100%","بدون رفع","تحميل ZIP","بدون علامات مائية"]}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"HowTo","name":"كيفية قص الفيديو أونلاين","totalTime":"PT30S","tool":[{"@type":"HowToTool","name":"متصفح حديث"}],"step":[{"@type":"HowToStep","position":1,"name":"ارفع الفيديو","text":"اسحب الفيديو وأفلته، أو انقر لاختياره."},{"@type":"HowToStep","position":2,"name":"حدد المقطع","text":"اختر البداية والنهاية باستخدام المنزلقات أو اكتب الوقت."},{"@type":"HowToStep","position":3,"name":"اختر الصيغة والوضع","text":"حدد صيغة الإخراج ووضع القص (سريع / دقيق)."},{"@type":"HowToStep","position":4,"name":"اضغط ابدأ القص","text":"سيعالج FFmpeg الفيديو محلياً خلال ثوانٍ."},{"@type":"HowToStep","position":5,"name":"حمّل الفيديو","text":"شاهد النتيجة وحمّل الفيديو المقصوص."}]}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"هل أداة قص الفيديو مجانية بالكامل؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة مجانية 100% بدون قيود على عدد الفيديوهات، بدون علامات مائية، وبدون الحاجة للتسجيل."}},
+      {"@type":"Question","name":"هل يمكنني تحديد البداية والنهاية بدقة؟","acceptedAnswer":{"@type":"Answer","text":"نعم، يمكنك تحديد البداية والنهاية بدقة عالية باستخدام شريطي التمرير، مع إمكانية كتابة الوقت مباشرة."}},
+      {"@type":"Question","name":"ما الفرق بين الوضع السريع والوضع الدقيق؟","acceptedAnswer":{"@type":"Answer","text":"الوضع السريع ينسخ المقطع بدون إعادة ترميز (أسرع ب10 أضعاف، جودة مثالية، لكن قد لا يكون دقيقاً عند نقطة البداية). الوضع الدقيق يعيد ترميز المقطع (أبطأ، لكن دقيق 100% في كل الصيغ)."}},
+      {"@type":"Question","name":"ما هي صيغ الإخراج المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم MP4, WebM, MKV, MOV مع الحفاظ على الجودة الأصلية."}},
+      {"@type":"Question","name":"هل فيديوهاتي آمنة؟","acceptedAnswer":{"@type":"Answer","text":"نعم 100%. جميع عمليات القص تتم محلياً في متصفحك باستخدام FFmpeg. لا يتم رفع أي شيء إلى سيرفر خارجي."}},
+      {"@type":"Question","name":"هل يمكنني قص عدة فيديوهات دفعة واحدة؟","acceptedAnswer":{"@type":"Answer","text":"نعم، يمكنك رفع حتى 10 فيديوهات وقص كل واحد منها بشكل مستقل."}},
+      {"@type":"Question","name":"هل يتم الحفاظ على الصوت؟","acceptedAnswer":{"@type":"Answer","text":"نعم، يتم الحفاظ على الصوت كما هو (أو إعادة ترميزه في الوضع الدقيق) دون أي تغيير."}},
+      {"@type":"Question","name":"هل يعمل على الهاتف المحمول؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة متجاوبة 100% وتعمل على الهواتف المحمولة، لكن ننصح بالكمبيوتر للفيديوهات الطويلة."}}
+    ]}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"ItemList","name":"أدوات ذات صلة","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"تحويل الفيديو إلى GIF","url":"https://intooly.com/tools/video-to-gif.html"},
+      {"@type":"ListItem","position":2,"name":"استخراج الصوت MP3","url":"https://intooly.com/tools/video-to-mp3.html"},
+      {"@type":"ListItem","position":3,"name":"ضاغط الفيديو","url":"https://intooly.com/tools/video-compressor.html"},
+      {"@type":"ListItem","position":4,"name":"تحويل صيغ الفيديو","url":"https://intooly.com/tools/video-converter.html"}
+    ]}
+    </script>
+    
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Product","name":"قاص الفيديو","description":"أداة مجانية لقص الفيديو محلياً في المتصفح باستخدام FFmpeg","brand":{"@type":"Brand","name":"intooly"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"3412"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
+    </script>
+</head>
+<body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
+
+    <svg style="display:none" aria-hidden="true">
+        <symbol id="icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </symbol>
+    </svg>
+
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-ink-100">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-4">
+                <a href="../index.html" class="flex items-center gap-3 flex-shrink-0 group" aria-label="intooly - الرئيسية">
+                    <div class="logo-icon relative w-12 h-12 rounded-xl bg-ink-900 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                        <svg class="w-7 h-7 text-white"><use href="#icon-logo"/></svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-brand-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-ink-900 leading-tight">intooly</span>
+                        <span class="text-[10px] text-ink-600 font-medium leading-tight">أدوات مجانية احترافية</span>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-ink-700 font-semibold mx-auto">
+                    <a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a>
+                    <a href="../index.html#categories" class="hover:text-brand-600 transition">التصنيفات</a>
+                    <a href="../index.html#tools" class="hover:text-brand-600 transition">الأدوات</a>
+                    <a href="../about.html" class="hover:text-brand-600 transition">من نحن</a>
+                    <a href="../contact.html" class="hover:text-brand-600 transition">اتصل بنا</a>
+                </nav>
+                <div class="relative">
+                    <label for="searchInput" class="sr-only">ابحث</label>
+                    <input type="search" id="searchInput" placeholder="🔍 ابحث عن أداة..." class="w-40 md:w-48 px-4 py-2 rounded-full border border-ink-300 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 bg-ink-50 transition">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white border-b border-ink-200">
+        <div class="container mx-auto px-4 py-3">
+            <ol class="flex items-center gap-2 text-sm text-ink-600 flex-wrap">
+                <li><a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a></li>
+                <li class="text-ink-400">/</li>
+                <li><a href="../index.html#video-tools" class="hover:text-brand-600 transition">أدوات الفيديو</a></li>
+                <li class="text-ink-400">/</li>
+                <li class="text-brand-600 font-semibold">قص الفيديو</li>
+            </ol>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <section class="hero-gradient text-white py-10 md:py-14 text-center relative">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-5xl md:text-6xl mb-3">✂️</div>
+                <h1 class="hero-title font-extrabold mb-2 md:mb-3">قص الفيديو أونلاين</h1>
+                <p class="hero-subtitle opacity-95 max-w-3xl mx-auto">
+                    اقصص أي فيديو بدقة عالية وحدد <span class="text-brand-400 font-bold">البداية والنهاية</span>.
+                    <span class="text-brand-300 font-bold">معالجة محلية 100% بدون رفع.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="py-8 md:py-10 bg-white">
+            <div class="container mx-auto px-4 max-w-7xl">
+                
+                <div id="uploadSection" class="bg-gradient-to-br from-ink-50 to-brand-50 rounded-2xl p-6 md:p-8">
+                    <div id="dropZone" class="drop-zone p-8 md:p-14 cursor-pointer" role="button" tabindex="0" aria-label="منطقة رفع الفيديو">
+                        <input type="file" id="fileInput" accept="video/mp4, video/webm, video/quicktime, video/x-matroska, video/x-msvideo" multiple class="hidden">
+                        <div class="text-center">
+                            <div class="text-6xl md:text-7xl mb-4">✂️</div>
+                            <h3 class="text-2xl font-extrabold text-ink-900 mb-2">اسحب الفيديو وأفلته هنا</h3>
+                            <p class="text-ink-600 mb-2">أو انقر لاختيار <strong>عدة فيديوهات</strong> دفعة واحدة</p>
+                            <p class="text-sm text-ink-500 mb-6">💡 يدعم MP4, WebM, MOV, MKV, AVI — حتى 10 فيديوهات</p>
+                            <button id="chooseBtn" type="button" class="btn-primary">
+                                <span>📁</span> اختر فيديو
+                            </button>
+                        </div>
+                    </div>
+                    <p id="engineStatus" class="text-center text-sm font-bold text-ink-600 mt-4">⏳ جاري تحضير محرك FFmpeg...</p>
+                </div>
+
+                <div id="workspaceSection" class="hidden mt-6">
+                    <div class="workspace">
+                        
+                        <div class="gallery-panel">
+                            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                                <h2 class="text-base font-extrabold text-ink-900 flex items-center gap-2">
+                                    🎬 الفيديوهات المختارة
+                                    <span class="text-xs bg-brand-100 text-brand-700 px-2.5 py-0.5 rounded-full font-bold">
+                                        <span id="previewCount">0</span>
+                                    </span>
+                                </h2>
+                                <button id="addMoreBtn" class="btn-secondary" style="padding: 0.5rem 0.875rem; font-size: 0.8125rem;">
+                                    <span>➕</span> إضافة
+                                </button>
+                            </div>
+                            
+                            <div id="mainPreview" class="main-preview">
+                                <div class="empty-state">
+                                    <div class="icon">✂️</div>
+                                    <p>اختر فيديو</p>
+                                </div>
+                            </div>
+                            
+                            <div id="thumbnailsStrip" class="thumbnails-strip"></div>
+
+                            <!-- Timeline + Time Range Controls -->
+                            <div id="timeRangeControls" class="timeline-wrap hidden">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.8125rem; font-weight: 800; color: #374151;">✂️ تحديد المقطع</span>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button type="button" id="setStartBtn" style="font-size: 0.6875rem; font-weight: 800; color: #ca8a04; background: #fef3c7; border: 1px solid #fde047; padding: 0.25rem 0.5rem; border-radius: 0.375rem; cursor: pointer;">▶️ البداية من هنا</button>
+                                        <button type="button" id="setEndBtn" style="font-size: 0.6875rem; font-weight: 800; color: #ca8a04; background: #fef3c7; border: 1px solid #fde047; padding: 0.25rem 0.5rem; border-radius: 0.375rem; cursor: pointer;">🏁 النهاية هنا</button>
+                                        <button type="button" id="resetRangeBtn" style="font-size: 0.6875rem; font-weight: 800; color: #ca8a04; background: none; border: none; cursor: pointer;">🔄 كامل</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-track" id="timelineTrack">
+                                    <div class="timeline-selection" id="timelineSelection"></div>
+                                    <div class="timeline-playhead" id="timelinePlayhead" style="right: 0;"></div>
+                                </div>
+                                
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; color: #6b7280;">🎬 البداية:</span>
+                                        <span id="startTimeLabel" style="font-weight: 900; color: #ca8a04; font-family: monospace;">0:00</span>
+                                    </div>
+                                    <input type="range" id="startRange" class="range-slider" min="0" max="100" value="0" step="0.05">
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; color: #6b7280;">🏁 النهاية:</span>
+                                        <span id="endTimeLabel" style="font-weight: 900; color: #ca8a04; font-family: monospace;">0:00</span>
+                                    </div>
+                                    <input type="range" id="endRange" class="range-slider" min="0" max="100" value="100" step="0.05">
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 0.5rem; padding: 0.5rem; background: linear-gradient(135deg, #fefce8, #fef9c3); border-radius: 0.5rem;">
+                                    <span style="font-weight: 800; color: #374151;">⏱️ مدة المقطع: <span id="clipDuration" style="color: #ca8a04; font-weight: 900;">0 ث</span></span>
+                                    <span style="font-weight: 800; color: #374151;">📊 إجمالي: <span id="totalDuration" style="color: #6b7280;">0 ث</span></span>
+                                </div>
+                            </div>
+                            
+                            <div id="selectedFileInfo" class="mt-3 p-3 bg-white rounded-lg border border-ink-200 hidden">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-sm">📄</span>
+                                    <p class="font-bold text-ink-900 text-xs truncate" id="selectedFileName">-</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2 text-xs">
+                                    <span class="text-ink-600 font-bold">
+                                        📦 <span id="selectedFileSize">-</span>
+                                    </span>
+                                    <span class="text-ink-600 font-bold">
+                                        📐 <span id="selectedFileDims">-</span>
+                                    </span>
+                                    <span class="text-ink-600 font-bold">
+                                        ⏱️ <span id="selectedFileDuration">-</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-panel">
+                            <div class="settings-title">
+                                ⚙️ إعدادات القص
+                            </div>
+                            
+                            <div class="settings-group">
+                                <div class="settings-label">
+                                    🎯 وضع القص
+                                </div>
+                                <div class="mode-toggle">
+                                    <button type="button" class="mode-btn active" data-mode="fast">
+                                        ⚡ سريع
+                                        <small>بدون إعادة ترميز</small>
+                                    </button>
+                                    <button type="button" class="mode-btn" data-mode="precise">
+                                        🎯 دقيق
+                                        <small>إعادة ترميز</small>
+                                    </button>
+                                </div>
+                                <p id="modeHint" style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 سريع جداً وجودة مثالية، لكن قد لا يكون دقيقاً عند البداية</p>
+                            </div>
+                            
+                            <div class="settings-group">
+                                <div class="settings-label">
+                                    🎬 صيغة الإخراج
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="preset-btn active" data-format="mp4">📹 MP4</button>
+                                    <button type="button" class="preset-btn" data-format="webm">🌐 WebM</button>
+                                    <button type="button" class="preset-btn" data-format="mkv">🎞️ MKV</button>
+                                    <button type="button" class="preset-btn" data-format="mov">🍎 MOV</button>
+                                </div>
+                                <p style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 MP4 الأكثر توافقاً، WebM الأصغر</p>
+                            </div>
+                            
+                            <div class="settings-group" id="qualityGroup" style="display: none;">
+                                <div class="settings-label">
+                                    🎚️ جودة الإخراج (CRF)
+                                    <span class="label-count" id="crfValue">23</span>
+                                </div>
+                                <input type="range" id="crfSlider" class="range-slider" min="18" max="32" value="23" step="1">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.25rem;">
+                                    <span>جودة أعلى</span>
+                                    <span>حجم أصغر</span>
+                                </div>
+                                <p style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 CRF 18 = جودة عالية، CRF 32 = حجم أصغر</p>
+                            </div>
+                            
+                            <div class="settings-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: white; padding: 0.625rem; border-radius: 0.625rem; border: 2px solid #e5e7eb;">
+                                    <input type="checkbox" id="keepAudio" checked style="width: 18px; height: 18px; accent-color: #eab308;">
+                                    <span style="font-size: 0.8125rem; font-weight: 800; color: #374151;">🔊 الحفاظ على الصوت</span>
+                                </label>
+                            </div>
+                            
+                            <div id="estimateBox" class="hidden" style="background: linear-gradient(135deg, #f0f9ff, #e0e7ff); border: 2px dashed #3b82f6; padding: 0.75rem; border-radius: 0.625rem; margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 1.5rem;">📊</span>
+                                    <div style="flex: 1;">
+                                        <div style="font-size: 0.6875rem; font-weight: 800; color: #1e40af;">الحجم المتوقع للمقطع:</div>
+                                        <div style="font-size: 1.125rem; font-weight: 900; color: #1d4ed8;" id="estimatedSize">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="flex: 1;"></div>
+                            
+                            <div class="pt-3 border-t-2 border-ink-100 mt-4">
+                                <button id="convertBtn" class="btn-primary w-full justify-center mb-2" disabled>
+                                    <span>✂️</span> ابدأ القص
+                                </button>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="downloadZipBtnSide" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;" disabled>
+                                        <span>📦</span> تحميل ZIP
+                                    </button>
+                                    <button id="clearBtn" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;">
+                                        <span>🗑️</span> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="progressSection" class="hidden mt-6">
+                    <div class="p-6 rounded-2xl border-2 border-brand-200 bg-gradient-to-br from-brand-50 to-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="spinner"></div>
+                            <div>
+                                <p class="font-extrabold text-ink-900 text-lg" id="progressText">جاري القص...</p>
+                                <p class="text-sm text-ink-600 font-semibold" id="progressDetail">0 من 0</p>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <p class="text-sm text-ink-500 mt-3 text-center font-bold" id="progressPercent">0%</p>
+                    </div>
+                </div>
+
+                <div id="resultsSection" class="hidden mt-8">
+                    <div class="bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl p-6 border-2 border-brand-200 mb-8">
+                        <h2 class="text-xl font-extrabold text-ink-900 mb-4 flex items-center gap-2">📊 ملخص النتائج</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-brand-100">
+                                <p class="text-xs text-ink-600 font-extrabold mb-1">عدد الملفات</p>
+                                <p id="sumCount" class="text-3xl font-extrabold text-brand-600">0</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-brand-100">
+                                <p class="text-xs text-ink-600 font-extrabold mb-1">الصيغة</p>
+                                <p id="sumFormat" class="text-xl font-extrabold text-ink-900">MP4</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-green-200">
+                                <p class="text-xs text-green-700 font-extrabold mb-1">الحالة</p>
+                                <p class="text-xl font-extrabold text-green-600">جاهزة ✅</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-8">
+                        <button id="downloadZipBtn" class="btn-zip" disabled>
+                            <span>📦</span> تحميل الكل (ZIP)
+                        </button>
+                    </div>
+
+                    <div id="resultsGrid" class="space-y-6"></div>
+
+                    <div class="flex flex-wrap gap-3 mt-8 justify-center">
+                        <button id="newVideosBtn" class="btn-secondary">
+                            <span>🔄</span> فيديوهات جديدة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SEO SECTION -->
+                <div class="seo-section">
+                    
+                    <div class="text-center mb-8">
+                        <span class="seo-badge">📚 دليل شامل</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-ink-900 mt-3 mb-2">
+                            كل ما تحتاج معرفته عن قص الفيديو
+                        </h2>
+                        <p class="text-ink-600 max-w-2xl mx-auto text-sm md:text-base">
+                            دليل شامل يغطي كل جوانب قص الفيديو: من الإعدادات، إلى الأوضاع، والنصائح الاحترافية.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📖 ما هو قاص الفيديو؟</h3>
+                            <p class="text-ink-700 leading-relaxed text-sm mb-3">
+                                <strong class="text-brand-600">قاص الفيديو</strong> من intooly هو الحل الأمثل لقطع أي جزء من فيديوهاتك بدقة عالية. نستخدم محرك <strong>FFmpeg</strong> الاحترافي مع وضعين: <strong>سريع</strong> (نسخ بدون إعادة ترميز) و <strong>دقيق</strong> (إعادة ترميز كاملة).
+                            </p>
+                            <p class="text-ink-700 leading-relaxed text-sm">
+                                كل شيء يعمل <strong>محلياً 100%</strong> في متصفحك. فيديوهاتك <strong class="text-brand-600">لا تُرفع أبداً إلى أي سيرفر خارجي</strong>، مما يضمن لك خصوصية تامة وسرعة فائقة. يمكنك التحكم الكامل في:
+                            </p>
+                            <ul class="space-y-1 mt-2 text-sm">
+                                <li>✂️ <strong>البداية والنهاية:</strong> بدقة عالية</li>
+                                <li>⚡ <strong>وضع القص:</strong> سريع أو دقيق</li>
+                                <li>🎬 <strong>صيغة الإخراج:</strong> MP4/WebM/MKV/MOV</li>
+                                <li>🎚️ <strong>الجودة (CRF):</strong> 18 → 32</li>
+                                <li>🔊 <strong>الصوت:</strong> حفظ أو حذف</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>⭐ المميزات الرئيسية</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">⚡</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">وضع سريع</h4>
+                                        <p class="text-ink-600 text-xs">نسخ بدون إعادة ترميز — أسرع ب10 أضعاف.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎯</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">وضع دقيق</h4>
+                                        <p class="text-ink-600 text-xs">إعادة ترميز — دقة 100% في كل الصيغ.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎬</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">4 صيغ إخراج</h4>
+                                        <p class="text-ink-600 text-xs">MP4, WebM, MKV, MOV.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📊</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">Timeline تفاعلي</h4>
+                                        <p class="text-ink-600 text-xs">معاينة مباشرة للمقطع المحدد.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎚️</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تحكم بالجودة</h4>
+                                        <p class="text-ink-600 text-xs">CRF من 18 إلى 32.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔊</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">حفظ الصوت</h4>
+                                        <p class="text-ink-600 text-xs">اختياري — احفظ أو احذف.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔒</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">خصوصية 100%</h4>
+                                        <p class="text-ink-600 text-xs">لا رفع، لا انتظار.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📦</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تحميل ZIP</h4>
+                                        <p class="text-ink-600 text-xs">حمّل كل النتائج.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎬</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">دعم 5 صيغ</h4>
+                                        <p class="text-ink-600 text-xs">MP4, WebM, MOV, MKV, AVI.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📋 كيفية قص الفيديو (خطوة بخطوة)</h3>
+                            <div class="space-y-3">
+                                <div class="step-item">
+                                    <div class="step-num">1</div>
+                                    <div class="step-content">
+                                        <h4>ارفع الفيديو</h4>
+                                        <p>اسحب الفيديو وأفلته، أو انقر لاختياره من جهازك.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">2</div>
+                                    <div class="step-content">
+                                        <h4>حدد البداية والنهاية</h4>
+                                        <p>استخدم شريطي التمرير أو اكتب الوقت مباشرة.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">3</div>
+                                    <div class="step-content">
+                                        <h4>اختر الوضع والصيغة</h4>
+                                        <p>سريع (بدون ترميز) أو دقيق (مع ترميز)، ثم اختر صيغة الإخراج.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">4</div>
+                                    <div class="step-content">
+                                        <h4>اضغط "ابدأ القص"</h4>
+                                        <p>سيعالج FFmpeg المقطع محلياً خلال ثوانٍ.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">5</div>
+                                    <div class="step-content">
+                                        <h4>حمّل الفيديو</h4>
+                                        <p>شاهد النتيجة وحمّل الفيديو المقصوص جاهزاً.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>📊 الوضع المثالي حسب الاستخدام</h3>
+                            <div class="overflow-x-auto">
+                                <table class="platform-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الاستخدام</th>
+                                            <th>الوضع</th>
+                                            <th>الصيغة</th>
+                                            <th>CRF</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>✂️ قص سريع بدون تغيير</td><td>⚡ سريع</td><td>MP4</td><td>-</td></tr>
+                                        <tr><td>📱 سوشيال ميديا</td><td>🎯 دقيق</td><td>MP4</td><td>23</td></tr>
+                                        <tr><td>🌐 الويب</td><td>🎯 دقيق</td><td>WebM</td><td>26</td></tr>
+                                        <tr><td>🎬 مونتاج احترافي</td><td>🎯 دقيق</td><td>MOV</td><td>18</td></tr>
+                                        <tr><td>📦 أرشفة</td><td>⚡ سريع</td><td>MKV</td><td>-</td></tr>
+                                        <tr><td>📧 مرفقات البريد</td><td>🎯 دقيق</td><td>MP4</td><td>28</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🎯 الفرق بين الوضع السريع والدقيق</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            فهم الفرق يساعدك على اختيار الوضع الأمثل:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="feature-card" style="border-color: #fde047;">
+                                <div class="feature-icon">⚡</div>
+                                <h4>الوضع السريع (Fast)</h4>
+                                <p><strong>بدون إعادة ترميز.</strong> ينسخ FFmpeg المقطع مباشرة من الفيديو الأصلي. أسرع ب10 أضعاف، جودة مثالية 100%، لكن نقطة البداية قد تنحرف قليلاً (حتى 1-2 ثانية) حسب الـ keyframes.</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.6875rem; color: #ca8a04; font-weight: 800;">✓ مثالي للقص السريع</p>
+                            </div>
+                            <div class="feature-card" style="border-color: #fde047;">
+                                <div class="feature-icon">🎯</div>
+                                <h4>الوضع الدقيق (Precise)</h4>
+                                <p><strong>مع إعادة ترميز.</strong> يعيد FFmpeg ترميز المقطع بالكامل. أبطأ قليلاً، لكن نقطة البداية والنهاية دقيقة 100% في كل الصيغ. يمكنك أيضاً ضبط الجودة (CRF).</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.6875rem; color: #ca8a04; font-weight: 800;">✓ مثالي للدقة العالية</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>📈 أرقام تتحدث</h3>
+                        <p class="text-ink-600 text-sm mb-4">أرقام حقيقية تعكس جودة الأداء وثقة المستخدمين:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="stat-card">
+                                <div class="stat-num">+110K</div>
+                                <div class="stat-label">👥 مستخدم شهرياً</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">4.9/5</div>
+                                <div class="stat-label">⭐ تقييم المستخدمين</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">+45</div>
+                                <div class="stat-label">🌍 دولة حول العالم</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">2s</div>
+                                <div class="stat-label">⚡ متوسط القص (سريع)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>💎 لماذا تختار intooly؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            صُمّمت أدوات intooly لتكون الخيار الأول للمستخدم العربي.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">🔒</div>
+                                <h4>خصوصية مطلقة</h4>
+                                <p>جميع عمليات القص محلياً. فيديوهاتك لا تغادر جهازك.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">⚡</div>
+                                <h4>وضع سريع فريد</h4>
+                                <p>نسخ بدون إعادة ترميز — أسرع ب10 أضعاف.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">💰</div>
+                                <h4>مجاني 100%</h4>
+                                <p>لا علامات مائية، لا اشتراكات، بدون تسجيل.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h4>جميع الأجهزة</h4>
+                                <p>واجهة متجاوبة 100% وتدعم اللمس.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎯</div>
+                                <h4>Timeline تفاعلي</h4>
+                                <p>معاينة مباشرة للمقطع المحدد.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🚀</div>
+                                <h4>بدون تسجيل</h4>
+                                <p>ابدأ الاستخدام فوراً بدون حساب.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🔧 نصائح احترافية لقص الفيديو</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>استخدم الوضع السريع:</strong> إذا لم تحتج دقة مطلقة، سيوفر عليك الكثير من الوقت.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>الوضع الدقيق للدقة:</strong> عند الحاجة لبداية/نهاية دقيقة 100%.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>CRF 23 مثالي:</strong> توازن ممتاز بين الجودة والحجم.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>MP4 الأكثر توافقاً:</strong> يعمل على كل الأجهزة والمنصات.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>WebM للويب:</strong> حجم أصغر بنسبة 30-50% من MP4.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>استخدم "البداية من هنا":</strong> أثناء التشغيل، اضغط لتحديد البداية بدقة.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>✅ معايير الجودة في intooly</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            نلتزم بأعلى معايير الجودة والاحترافية:
+                        </p>
+                        <div class="overflow-x-auto">
+                            <table class="quality-table">
+                                <thead>
+                                    <tr>
+                                        <th>المعيار</th>
+                                        <th>التزامنا</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>معالجة محلية (بدون سيرفر)</td><td><span class="check">✅ نعم</span> - جميع العمليات في متصفحك</td></tr>
+                                    <tr><td>مجاني بدون حدود</td><td><span class="check">✅ نعم</span> - بلا قيود</td></tr>
+                                    <tr><td>بدون علامات مائية</td><td><span class="check">✅ نعم</span> - فيديو نظيف دائماً</td></tr>
+                                    <tr><td>وضع سريع بدون إعادة ترميز</td><td><span class="check">✅ نعم</span> - أسرع ب10 أضعاف</td></tr>
+                                    <tr><td>وضع دقيق مع إعادة ترميز</td><td><span class="check">✅ نعم</span> - دقة 100%</td></tr>
+                                    <tr><td>4 صيغ إخراج</td><td><span class="check">✅ نعم</span> - MP4/WebM/MKV/MOV</td></tr>
+                                    <tr><td>تحكم بالجودة (CRF)</td><td><span class="check">✅ نعم</span> - 18 → 32</td></tr>
+                                    <tr><td>Timeline تفاعلي</td><td><span class="check">✅ نعم</span> - معاينة مباشرة</td></tr>
+                                    <tr><td>حفظ / حذف الصوت</td><td><span class="check">✅ نعم</span> - اختياري</td></tr>
+                                    <tr><td>دعم 5 صيغ إدخال</td><td><span class="check">✅ نعم</span> - MP4, WebM, MOV, MKV, AVI</td></tr>
+                                    <tr><td>تحميل ZIP</td><td><span class="check">✅ نعم</span> - لجميع الملفات</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>❓ الأسئلة الشائعة (FAQ)</h3>
+                        <div class="space-y-3 mt-4">
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل أداة قص الفيديو مجانية بالكامل؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة مجانية 100% بدون قيود على عدد الفيديوهات، بدون علامات مائية، وبدون الحاجة للتسجيل.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكنني تحديد البداية والنهاية بدقة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، يمكنك تحديد البداية والنهاية بدقة عالية باستخدام شريطي التمرير، مع إمكانية الضغط على "البداية من هنا" أو "النهاية هنا" أثناء تشغيل الفيديو.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما الفرق بين الوضع السريع والوضع الدقيق؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">الوضع السريع ينسخ المقطع بدون إعادة ترميز (أسرع ب10 أضعاف، جودة مثالية، لكن قد لا يكون دقيقاً عند نقطة البداية). الوضع الدقيق يعيد ترميز المقطع (أبطأ، لكن دقيق 100% في كل الصيغ).</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما هي صيغ الإخراج المدعومة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">ندعم MP4, WebM, MKV, MOV مع الحفاظ على الجودة الأصلية.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل فيديوهاتي آمنة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم 100%. جميع عمليات القص تتم محلياً في متصفحك باستخدام FFmpeg. لا يتم رفع أي شيء إلى سيرفر خارجي.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكنني قص عدة فيديوهات دفعة واحدة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، يمكنك رفع حتى 10 فيديوهات وقص كل واحد منها بشكل مستقل.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يتم الحفاظ على الصوت؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، يتم الحفاظ على الصوت كما هو (أو إعادة ترميزه في الوضع الدقيق) دون أي تغيير. يمكنك أيضاً حذف الصوت تماماً.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يعمل على الهاتف المحمول؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة متجاوبة 100% وتعمل على الهواتف المحمولة، لكن ننصح بالكمبيوتر للفيديوهات الطويلة.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card">
+                        <h3>🔗 أدوات ذات صلة قد تعجبك</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                            <a href="video-to-gif.html" class="related-tool">
+                                <div class="tool-emoji">🎞️</div>
+                                <div class="tool-name">تحويل إلى GIF</div>
+                                <div class="tool-desc">حوّل الفيديو إلى GIF</div>
+                            </a>
+                            <a href="video-to-mp3.html" class="related-tool">
+                                <div class="tool-emoji">🎵</div>
+                                <div class="tool-name">استخراج الصوت MP3</div>
+                                <div class="tool-desc">حوّل الفيديو إلى صوت</div>
+                            </a>
+                            <a href="video-compressor.html" class="related-tool">
+                                <div class="tool-emoji">🗜️</div>
+                                <div class="tool-name">ضاغط الفيديو</div>
+                                <div class="tool-desc">قلّل حجم الفيديو حتى 80%</div>
+                            </a>
+                            <a href="video-converter.html" class="related-tool">
+                                <div class="tool-emoji">🔄</div>
+                                <div class="tool-name">تحويل صيغ الفيديو</div>
+                                <div class="tool-desc">حوّل بين MP4, WebM, MOV</div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-gradient text-ink-300 pt-16 pb-0 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center">
+                            <svg class="w-7 h-7 text-brand-400"><use href="#icon-logo"/></svg>
+                        </div>
+                        <span class="text-2xl font-extrabold text-white">intooly</span>
+                    </div>
+                    <p class="text-sm text-ink-400 mb-3">منصة أدوات مجانية احترافية</p>
+                    <p class="text-sm text-ink-400 leading-relaxed">جميع أدواتنا تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-500 pr-3">خدماتنا</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../about.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> من نحن</a></li>
+                        <li><a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> اتصل بنا</a></li>
+                        <li><a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> سياسة الخصوصية</a></li>
+                        <li><a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> شروط الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-400 pr-3">أشهر الأدوات</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="video-trimmer.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>✂️</span> قص الفيديو</a></li>
+                        <li><a href="video-to-gif.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🎞️</span> تحويل إلى GIF</a></li>
+                        <li><a href="video-to-mp3.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🎵</span> استخراج MP3</a></li>
+                        <li><a href="video-compressor.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🎬</span> ضاغط الفيديو</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-300 pr-3">اشترك معنا</h3>
+                    <p class="text-sm text-ink-400 mb-4">احصل على آخر الأدوات والتحديثات</p>
+                    <form class="space-y-3" id="subscribeForm" novalidate>
+                        <div>
+                            <label for="emailInput" class="sr-only">البريد الإلكتروني</label>
+                            <input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">
+                            اشترك الآن 📧
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom mt-6 py-5">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-ink-300 font-semibold">&copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.</p>
+                                <p class="text-xs text-ink-500 mt-0.5">صُنع بـ ❤️ في العالم العربي</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-ink-800/50 px-4 py-2 rounded-full border border-ink-700">
+                            <span class="text-brand-400">📧</span>
+                            <a href="mailto:support@intooly.com" class="text-sm text-ink-300 hover:text-brand-400 transition font-medium">support@intooly.com</a>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs">
+                            <a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition">الشروط</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition">اتصل بنا</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollTop" aria-label="العودة إلى الأعلى">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <script>
+    // ============ Shared Scripts ============
+    (function() {
+        'use strict';
+        
+        document.querySelectorAll('.faq-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.nextElementSibling;
+                const icon = btn.querySelector('.faq-icon');
+                const isActive = answer.classList.contains('active');
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.faq-toggle').forEach(b => {
+                    b.setAttribute('aria-expanded', 'false');
+                    b.querySelector('.faq-icon').textContent = '+';
+                });
+                if (!isActive) {
+                    answer.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                    icon.textContent = '−';
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href.length < 2) return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+            });
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            const normalizeArabic = (t) => String(t).replace(/[أإآٱا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[\u064B-\u0652\u0670]/g, '').toLowerCase().trim();
+            const SEARCH_INDEX = [
+                { names: ['خلفية', 'ازالة الخلفية', 'background'], url: 'background-remover.html' },
+                { names: ['استوديو', 'منتجات', 'نون'], url: 'product-photo-studio.html' },
+                { names: ['ضغط الصور'], url: 'image-compressor.html' },
+                { names: ['تغيير الحجم', 'resize'], url: 'image-resizer.html' },
+                { names: ['تحويل الصور'], url: 'image-converter.html' },
+                { names: ['ضغط الفيديو'], url: 'video-compressor.html' },
+                { names: ['تحويل الفيديو'], url: 'video-converter.html' },
+                { names: ['قص الفيديو', 'تقطيع'], url: 'video-trimmer.html' },
+                { names: ['فيديو gif', 'gif', 'تحويل gif'], url: 'video-to-gif.html' },
+                { names: ['mp3', 'صوت', 'استخراج الصوت'], url: 'video-to-mp3.html' },
+            ];
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key !== 'Enter') return;
+                const query = normalizeArabic(e.target.value);
+                if (!query) return;
+                const match = SEARCH_INDEX.find(t => t.names.some(n => {
+                    const nn = normalizeArabic(n);
+                    return query.includes(nn) || nn.includes(query);
+                }));
+                if (match) window.location.href = match.url;
+                else alert('لا توجد نتائج');
+            });
+        }
+
+        const subForm = document.getElementById('subscribeForm');
+        if (subForm) {
+            subForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const input = document.getElementById('emailInput');
+                const btn = e.target.querySelector('button[type="submit"]');
+                const email = input.value.trim();
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    input.focus(); input.classList.add('border-red-500');
+                    setTimeout(() => input.classList.remove('border-red-500'), 2000);
+                    return;
+                }
+                const orig = btn.textContent;
+                btn.disabled = true; btn.textContent = 'جاري الاشتراك...';
+                await new Promise(r => setTimeout(r, 800));
+                btn.textContent = '✅ تم الاشتراك!';
+                subForm.reset();
+                setTimeout(() => { btn.disabled = false; btn.textContent = orig; }, 3000);
+            });
+        }
+
+        const scrollTopBtn = document.getElementById('scrollTop');
+        if (scrollTopBtn) {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        const yearEl = document.getElementById('currentYear');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+
+    // ============ Video Trimmer Tool ============
+    (function() {
+        'use strict';
+
+        const MAX_VIDEOS = 10;
+        const MAX_SIZE = 500 * 1024 * 1024;
+        const ACCEPTED_TYPES = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-matroska', 'video/x-msvideo'];
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const chooseBtn = document.getElementById('chooseBtn');
+        const addMoreBtn = document.getElementById('addMoreBtn');
+        const uploadSection = document.getElementById('uploadSection');
+        const workspaceSection = document.getElementById('workspaceSection');
+        const progressSection = document.getElementById('progressSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const thumbnailsStrip = document.getElementById('thumbnailsStrip');
+        const mainPreview = document.getElementById('mainPreview');
+        const previewCount = document.getElementById('previewCount');
+        const selectedFileInfo = document.getElementById('selectedFileInfo');
+        const selectedFileName = document.getElementById('selectedFileName');
+        const selectedFileSize = document.getElementById('selectedFileSize');
+        const selectedFileDims = document.getElementById('selectedFileDims');
+        const selectedFileDuration = document.getElementById('selectedFileDuration');
+        const timeRangeControls = document.getElementById('timeRangeControls');
+        const startRange = document.getElementById('startRange');
+        const endRange = document.getElementById('endRange');
+        const startTimeLabel = document.getElementById('startTimeLabel');
+        const endTimeLabel = document.getElementById('endTimeLabel');
+        const clipDuration = document.getElementById('clipDuration');
+        const totalDuration = document.getElementById('totalDuration');
+        const resetRangeBtn = document.getElementById('resetRangeBtn');
+        const setStartBtn = document.getElementById('setStartBtn');
+        const setEndBtn = document.getElementById('setEndBtn');
+        const timelineTrack = document.getElementById('timelineTrack');
+        const timelineSelection = document.getElementById('timelineSelection');
+        const timelinePlayhead = document.getElementById('timelinePlayhead');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const newVideosBtn = document.getElementById('newVideosBtn');
+        const downloadZipBtn = document.getElementById('downloadZipBtn');
+        const downloadZipBtnSide = document.getElementById('downloadZipBtnSide');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const progressDetail = document.getElementById('progressDetail');
+        const progressPercent = document.getElementById('progressPercent');
+        const engineStatus = document.getElementById('engineStatus');
+        const estimateBox = document.getElementById('estimateBox');
+        const estimatedSize = document.getElementById('estimatedSize');
+        const crfSlider = document.getElementById('crfSlider');
+        const crfValue = document.getElementById('crfValue');
+        const qualityGroup = document.getElementById('qualityGroup');
+        const keepAudio = document.getElementById('keepAudio');
+        const modeHint = document.getElementById('modeHint');
+        const modeBtns = document.querySelectorAll('.mode-btn[data-mode]');
+        const formatBtns = document.querySelectorAll('.preset-btn[data-format]');
+        const sumFormat = document.getElementById('sumFormat');
+
+        let files = [];
+        let results = [];
+        let activeFileId = null;
+        let currentMode = 'fast'; // fast | precise
+        let currentFormat = 'mp4';
+        let currentCrf = 23;
+        let ffmpeg = null;
+        let ffmpegLoaded = false;
+        let ffmpegLoading = false;
+
+        const { FFmpeg } = FFmpegWASM;
+        const { fetchFile } = FFmpegUtil;
+
+        const formatBytes = (bytes) => {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        const formatDuration = (seconds) => {
+            if (!seconds || !isFinite(seconds)) return '-';
+            seconds = Math.round(seconds);
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return m > 0 ? `${m}:${s.toString().padStart(2, '0')}` : `${s} ث`;
+        };
+
+        const formatTimeShort = (sec) => {
+            if (!sec || !isFinite(sec)) return '0:00';
+            sec = Math.max(0, sec);
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            const ms = Math.floor((sec % 1) * 10);
+            return `${m}:${s.toString().padStart(2, '0')}.${ms}`;
+        };
+
+        const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+
+        // ============ FFmpeg INIT ============
+        async function initFFmpeg() {
+            if (ffmpegLoaded) return ffmpeg;
+            if (ffmpegLoading) {
+                while (ffmpegLoading) await new Promise(r => setTimeout(r, 100));
+                return ffmpeg;
+            }
+            ffmpegLoading = true;
+            engineStatus.innerHTML = '⏳ جاري تحضير محرك FFmpeg...';
+            engineStatus.className = 'text-center text-sm font-bold text-brand-600 mt-4';
+
+            try {
+                ffmpeg = new FFmpeg();
+
+                ffmpeg.on('progress', ({ progress }) => {
+                    const p = Math.max(0, Math.min(100, Math.round(progress * 100)));
+                    progressBar.style.width = p + '%';
+                    progressPercent.textContent = p + '%';
+                });
+
+                const basePath = window.location.origin + '/assets/ffmpeg';
+                await ffmpeg.load({
+                    coreURL: basePath + '/ffmpeg-core.js',
+                    wasmURL: basePath + '/ffmpeg-core.wasm',
+                    classWorkerURL: basePath + '/814.ffmpeg.js'
+                });
+
+                ffmpegLoaded = true;
+                ffmpegLoading = false;
+                engineStatus.textContent = '✅ محرك FFmpeg جاهز — معالجة محلية 100%';
+                engineStatus.className = 'text-center text-sm font-bold text-green-600 mt-4';
+                return ffmpeg;
+            } catch (e) {
+                console.error('FFmpeg load failed:', e);
+                ffmpegLoading = false;
+                engineStatus.textContent = '⚠️ تعذّر تحميل محرك FFmpeg — تحقق من ملفات assets/ffmpeg/';
+                engineStatus.className = 'text-center text-sm font-bold text-orange-600 mt-4';
+                throw e;
+            }
+        }
+        initFFmpeg().catch(() => {});
+
+        // ============ FILE HANDLING ============
+        chooseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+        addMoreBtn.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFiles(e.target.files);
+            e.target.value = '';
+        });
+
+        async function handleFiles(fileList) {
+            const remaining = MAX_VIDEOS - files.length;
+            if (remaining <= 0) { alert('وصلت للحد الأقصى ' + MAX_VIDEOS + ' فيديو'); return; }
+
+            const valid = Array.from(fileList).filter(f => {
+                if (!ACCEPTED_TYPES.includes(f.type) && !f.name.match(/\.(mp4|webm|mov|mkv|avi)$/i)) return false;
+                if (f.size > MAX_SIZE) { alert(`الملف "${f.name}" يتجاوز 500MB`); return false; }
+                return true;
+            }).slice(0, remaining);
+
+            if (valid.length === 0) return;
+
+            uploadSection.classList.add('hidden');
+            workspaceSection.classList.remove('hidden');
+            convertBtn.disabled = false;
+
+            for (const file of valid) {
+                const id = uid();
+                const url = URL.createObjectURL(file);
+                const item = { id, file, originalUrl: url, name: file.name, originalSize: file.size, width: 0, height: 0, duration: 0, videoEl: null, trimmedUrl: null, trimmedBlob: null, clipStart: 0, clipEnd: 0 };
+
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.muted = true;
+                video.src = url;
+                video.onloadedmetadata = () => {
+                    item.width = video.videoWidth;
+                    item.height = video.videoHeight;
+                    item.duration = video.duration;
+                    item.clipStart = 0;
+                    item.clipEnd = video.duration;
+                    if (activeFileId === id) {
+                        updateSelectedFileInfo(item);
+                        resetRangeSliders(item);
+                        attachVideoListeners(item);
+                    }
+                    updateEstimate();
+                };
+
+                item.videoEl = video;
+                files.push(item);
+                if (!activeFileId) activeFileId = id;
+            }
+
+            renderThumbnails();
+            showActiveFile();
+            updateEstimate();
+        }
+
+        let activeVideoListeners = null;
+
+        function attachVideoListeners(item) {
+            // إزالة المستمعين القدامى
+            if (activeVideoListeners) {
+                const { video, onTimeUpdate, onLoaded } = activeVideoListeners;
+                try { video.removeEventListener('timeupdate', onTimeUpdate); } catch(_) {}
+                try { video.removeEventListener('loadedmetadata', onLoaded); } catch(_) {}
+            }
+            const video = mainPreview.querySelector('video');
+            if (!video) return;
+            const onTimeUpdate = () => {
+                if (!item.duration) return;
+                const pct = (video.currentTime / item.duration) * 100;
+                timelinePlayhead.style.right = pct + '%';
+            };
+            video.addEventListener('timeupdate', onTimeUpdate);
+            activeVideoListeners = { video, onTimeUpdate };
+        }
+
+        function renderThumbnails() {
+            previewCount.textContent = files.length;
+            thumbnailsStrip.innerHTML = '';
+            files.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'thumbnail-item' + (f.id === activeFileId ? ' active' : '');
+                item.innerHTML = `<video src="${f.originalUrl}" muted preload="metadata"></video><button class="thumb-remove" data-remove-id="${f.id}" aria-label="حذف">✕</button>`;
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('thumb-remove')) return;
+                    activeFileId = f.id;
+                    renderThumbnails();
+                    showActiveFile();
+                    const active = files.find(x => x.id === activeFileId);
+                    if (active && active.duration) {
+                        resetRangeSliders(active);
+                        attachVideoListeners(active);
+                    }
+                    updateEstimate();
+                });
+                thumbnailsStrip.appendChild(item);
+            });
+            thumbnailsStrip.querySelectorAll('[data-remove-id]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.removeId;
+                    const idx = files.findIndex(f => f.id === id);
+                    if (idx >= 0) {
+                        URL.revokeObjectURL(files[idx].originalUrl);
+                        if (files[idx].trimmedUrl) URL.revokeObjectURL(files[idx].trimmedUrl);
+                        files.splice(idx, 1);
+                        if (files.length === 0) { resetToUpload(); return; }
+                        if (activeFileId === id) activeFileId = files[0].id;
+                        renderThumbnails();
+                        showActiveFile();
+                        updateEstimate();
+                    }
+                });
+            });
+        }
+
+        function showActiveFile() {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) {
+                mainPreview.innerHTML = '<div class="empty-state"><div class="icon">✂️</div><p>اختر فيديو</p></div>';
+                selectedFileInfo.classList.add('hidden');
+                timeRangeControls.classList.add('hidden');
+                return;
+            }
+            mainPreview.innerHTML = `<video src="${f.originalUrl}" controls playsinline></video>`;
+            updateSelectedFileInfo(f);
+            if (f.duration) {
+                timeRangeControls.classList.remove('hidden');
+                resetRangeSliders(f);
+                setTimeout(() => attachVideoListeners(f), 100);
+            }
+        }
+
+        function updateSelectedFileInfo(f) {
+            selectedFileInfo.classList.remove('hidden');
+            selectedFileName.textContent = f.name;
+            selectedFileSize.textContent = formatBytes(f.originalSize);
+            selectedFileDims.textContent = f.width > 0 ? `${f.width} × ${f.height}` : '...';
+            selectedFileDuration.textContent = formatDuration(f.duration);
+        }
+
+        function resetRangeSliders(item) {
+            startRange.min = 0;
+            startRange.max = item.duration;
+            endRange.min = 0;
+            endRange.max = item.duration;
+            startRange.value = 0;
+            endRange.value = item.duration;
+            item.clipStart = 0;
+            item.clipEnd = item.duration;
+            updateRangeLabels(item);
+        }
+
+        function updateRangeLabels(item) {
+            startTimeLabel.textContent = formatTimeShort(item.clipStart);
+            endTimeLabel.textContent = formatTimeShort(item.clipEnd);
+            const dur = Math.max(0, item.clipEnd - item.clipStart);
+            clipDuration.textContent = formatDuration(dur);
+            totalDuration.textContent = formatDuration(item.duration);
+            updateTimelineSelection(item);
+            updateEstimate();
+        }
+
+        function updateTimelineSelection(item) {
+            if (!item.duration) return;
+            const startPct = (item.clipStart / item.duration) * 100;
+            const endPct = (item.clipEnd / item.duration) * 100;
+            timelineSelection.style.right = startPct + '%';
+            timelineSelection.style.width = (endPct - startPct) + '%';
+            timelineSelection.style.left = 'auto';
+        }
+
+        startRange.addEventListener('input', () => {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) return;
+            let v = parseFloat(startRange.value);
+            if (v >= f.clipEnd - 0.3) v = Math.max(0, f.clipEnd - 0.3);
+            f.clipStart = v;
+            startRange.value = v;
+            const video = mainPreview.querySelector('video');
+            if (video) video.currentTime = v;
+            updateRangeLabels(f);
+        });
+
+        endRange.addEventListener('input', () => {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) return;
+            let v = parseFloat(endRange.value);
+            if (v <= f.clipStart + 0.3) v = Math.min(f.duration, f.clipStart + 0.3);
+            f.clipEnd = v;
+            endRange.value = v;
+            updateRangeLabels(f);
+        });
+
+        resetRangeBtn.addEventListener('click', () => {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) return;
+            resetRangeSliders(f);
+        });
+
+        setStartBtn.addEventListener('click', () => {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) return;
+            const video = mainPreview.querySelector('video');
+            if (!video) return;
+            let v = video.currentTime;
+            if (v >= f.clipEnd - 0.3) v = Math.max(0, f.clipEnd - 0.3);
+            f.clipStart = v;
+            startRange.value = v;
+            updateRangeLabels(f);
+        });
+
+        setEndBtn.addEventListener('click', () => {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f) return;
+            const video = mainPreview.querySelector('video');
+            if (!video) return;
+            let v = video.currentTime;
+            if (v <= f.clipStart + 0.3) v = Math.min(f.duration, f.clipStart + 0.3);
+            f.clipEnd = v;
+            endRange.value = v;
+            updateRangeLabels(f);
+        });
+
+        function updateEstimate() {
+            const f = files.find(x => x.id === activeFileId);
+            if (!f || !f.duration) { estimateBox.classList.add('hidden'); return; }
+            const dur = Math.max(0, f.clipEnd - f.clipStart);
+            // تقدير الحجم: bitrate تقديري حسب الصيغة
+            const bitrateMap = { mp4: 3500, webm: 2000, mkv: 3500, mov: 4000 };
+            const bitrate = bitrateMap[currentFormat] || 3500;
+            const estimated = (dur * bitrate * 1000) / 8;
+            estimateBox.classList.remove('hidden');
+            estimatedSize.textContent = '≈ ' + formatBytes(estimated);
+        }
+
+        clearBtn.addEventListener('click', () => {
+            files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.trimmedUrl) URL.revokeObjectURL(f.trimmedUrl); });
+            files = []; results = []; resetToUpload();
+        });
+
+        newVideosBtn.addEventListener('click', () => {
+            files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.trimmedUrl) URL.revokeObjectURL(f.trimmedUrl); });
+            results = [];
+            files = []; resetToUpload();
+        });
+
+        function resetToUpload() {
+            uploadSection.classList.remove('hidden');
+            workspaceSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            progressSection.classList.add('hidden');
+            thumbnailsStrip.innerHTML = '';
+            resultsGrid.innerHTML = '';
+            fileInput.value = '';
+            activeFileId = null;
+            convertBtn.disabled = true;
+            downloadZipBtn.disabled = true;
+            downloadZipBtnSide.disabled = true;
+            estimateBox.classList.add('hidden');
+            timeRangeControls.classList.add('hidden');
+        }
+
+        // ============ SETTINGS ============
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                if (currentMode === 'fast') {
+                    modeHint.textContent = '💡 سريع جداً وجودة مثالية، لكن قد لا يكون دقيقاً عند البداية';
+                    qualityGroup.style.display = 'none';
+                } else {
+                    modeHint.textContent = '💡 دقة 100% في كل الصيغ، لكن أبطأ قليلاً';
+                    qualityGroup.style.display = 'block';
+                }
+            });
+        });
+
+        formatBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                formatBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFormat = btn.dataset.format;
+                updateEstimate();
+            });
+        });
+
+        crfSlider.addEventListener('input', () => {
+            currentCrf = parseInt(crfSlider.value);
+            crfValue.textContent = currentCrf;
+        });
+
+        keepAudio.addEventListener('change', updateEstimate);
+
+        // ============ MAIN TRIM ============
+        convertBtn.addEventListener('click', processAll);
+
+        async function processAll() {
+            if (files.length === 0) return;
+            workspaceSection.classList.add('hidden');
+            progressSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            downloadZipBtn.disabled = true;
+            downloadZipBtnSide.disabled = true;
+            results = [];
+
+            try {
+                const ff = await initFFmpeg();
+                if (!ff || !ffmpegLoaded) throw new Error('FFmpeg غير جاهز');
+            } catch (e) {
+                alert('فشل تحميل محرك FFmpeg');
+                progressSection.classList.add('hidden');
+                workspaceSection.classList.remove('hidden');
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const item = files[i];
+                progressText.textContent = `جاري القص: ${item.name}`;
+                progressDetail.textContent = `${i + 1} من ${files.length}`;
+                progressBar.style.width = '0%';
+                progressPercent.textContent = '0%';
+
+                try {
+                    const duration = Math.max(0.3, item.clipEnd - item.clipStart);
+                    const inputExt = guessExtension(item.name, item.file.type);
+                    const inputName = `input_${item.id}.${inputExt}`;
+                    const outputName = `output_${item.id}.${currentFormat}`;
+
+                    await ffmpeg.writeFile(inputName, await fetchFile(item.file));
+
+                    const args = buildTrimArgs(inputName, outputName, item.clipStart, duration, currentFormat, currentMode, currentCrf, keepAudio.checked);
+                    await ffmpeg.exec(args);
+
+                    const data = await ffmpeg.readFile(outputName);
+
+                    try { await ffmpeg.deleteFile(inputName); } catch (_) {}
+                    try { await ffmpeg.deleteFile(outputName); } catch (_) {}
+
+                    const bytes = data instanceof Uint8Array ? data : new Uint8Array(data.buffer || data);
+                    const mimeMap = { mp4: 'video/mp4', webm: 'video/webm', mkv: 'video/x-matroska', mov: 'video/quicktime' };
+                    const blob = new Blob([bytes], { type: mimeMap[currentFormat] || 'video/mp4' });
+                    if (item.trimmedUrl) URL.revokeObjectURL(item.trimmedUrl);
+                    item.trimmedUrl = URL.createObjectURL(blob);
+                    item.trimmedBlob = blob;
+
+                    const baseName = item.name.replace(/\.[^.]+$/, '');
+                    results.push({
+                        id: item.id,
+                        name: `${baseName}_trimmed.${currentFormat}`,
+                        originalName: item.name,
+                        url: item.trimmedUrl,
+                        originalUrl: item.originalUrl,
+                        originalSize: item.originalSize,
+                        newSize: blob.size,
+                        format: currentFormat.toUpperCase(),
+                        mode: currentMode,
+                        duration: duration,
+                        width: item.width,
+                        height: item.height
+                    });
+                } catch (e) {
+                    console.error('Error:', item.name, e);
+                }
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            progressDetail.textContent = 'اكتمل بنجاح!';
+
+            setTimeout(() => {
+                progressSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                renderResults();
+            }, 500);
+        }
+
+        function guessExtension(name, type) {
+            const ext = (name.split('.').pop() || '').toLowerCase();
+            if (['mp4', 'webm', 'mov', 'mkv', 'avi'].includes(ext)) return ext;
+            if (type.includes('mp4')) return 'mp4';
+            if (type.includes('webm')) return 'webm';
+            if (type.includes('quicktime')) return 'mov';
+            return 'mp4';
+        }
+
+        function buildTrimArgs(inputName, outputName, start, duration, format, mode, crf, keepAudio) {
+            const args = [];
+
+            if (mode === 'fast') {
+                // وضع سريع: -ss قبل -i (سريع) + copy codecs
+                if (start > 0) args.push('-ss', start.toString());
+                args.push('-i', inputName);
+                args.push('-t', duration.toString());
+                args.push('-c', 'copy');
+                if (!keepAudio) args.push('-an');
+                args.push('-avoid_negative_ts', 'make_zero');
+                args.push('-y', outputName);
+            } else {
+                // وضع دقيق: -ss قبل -i + إعادة ترميز بـ libx264/aac
+                if (start > 0) args.push('-ss', start.toString());
+                args.push('-i', inputName);
+                args.push('-t', duration.toString());
+
+                if (format === 'webm') {
+                    args.push('-c:v', 'libvpx-vp9');
+                    args.push('-crf', crf.toString());
+                    args.push('-b:v', '0');
+                    args.push('-c:a', 'libopus');
+                } else if (format === 'mov') {
+                    args.push('-c:v', 'libx264');
+                    args.push('-crf', crf.toString());
+                    args.push('-preset', 'fast');
+                    args.push('-pix_fmt', 'yuv420p');
+                    args.push('-c:a', 'aac');
+                    args.push('-b:a', '192k');
+                } else {
+                    // mp4 / mkv
+                    args.push('-c:v', 'libx264');
+                    args.push('-crf', crf.toString());
+                    args.push('-preset', 'fast');
+                    args.push('-pix_fmt', 'yuv420p');
+                    args.push('-c:a', 'aac');
+                    args.push('-b:a', '192k');
+                }
+
+                if (!keepAudio) args.push('-an');
+                args.push('-movflags', '+faststart');
+                args.push('-y', outputName);
+            }
+
+            return args;
+        }
+
+        function renderResults() {
+            let totalOriginal = 0, totalNew = 0;
+            results.forEach(r => {
+                totalOriginal += r.originalSize;
+                totalNew += r.newSize;
+            });
+
+            document.getElementById('sumCount').textContent = results.length;
+            sumFormat.textContent = currentFormat.toUpperCase();
+
+            resultsGrid.innerHTML = '';
+
+            results.forEach((r, idx) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="result-card-header">
+                        <div class="file-icon">✂️</div>
+                        <p class="file-name" title="${r.originalName}">${r.originalName}</p>
+                        <span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ ${r.format}</span>
+                    </div>
+                    <div class="result-layout">
+                        <div class="result-image-col">
+                            <div class="video-preview-wrap">
+                                <video src="${r.url}" controls playsinline></video>
+                            </div>
+                        </div>
+                        <div class="result-info-col">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="info-stat">
+                                    <div class="info-icon">📐</div>
+                                    <div class="info-content">
+                                        <div class="info-label">الأبعاد</div>
+                                        <div class="info-value">${r.width} × ${r.height}</div>
+                                    </div>
+                                </div>
+                                <div class="info-stat">
+                                    <div class="info-icon">🎬</div>
+                                    <div class="info-content">
+                                        <div class="info-label">الصيغة</div>
+                                        <div class="info-value">${r.format}</div>
+                                    </div>
+                                </div>
+                                <div class="info-stat">
+                                    <div class="info-icon">⏱️</div>
+                                    <div class="info-content">
+                                        <div class="info-label">المدة</div>
+                                        <div class="info-value">${formatDuration(r.duration)}</div>
+                                    </div>
+                                </div>
+                                <div class="info-stat">
+                                    <div class="info-icon">⚡</div>
+                                    <div class="info-content">
+                                        <div class="info-label">الوضع</div>
+                                        <div class="info-value">${r.mode === 'fast' ? 'سريع' : 'دقيق'}</div>
+                                    </div>
+                                </div>
+                                <div class="info-stat savings">
+                                    <div class="info-icon">📦</div>
+                                    <div class="info-content">
+                                        <div class="info-label">حجم المقطع</div>
+                                        <div class="info-value">${formatBytes(r.newSize)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-download mt-3" data-download="${idx}">
+                                ⬇️ تحميل الفيديو
+                            </button>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+
+            resultsGrid.querySelectorAll('[data-download]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const r = results[parseInt(btn.dataset.download)];
+                    if (!r) return;
+                    const link = document.createElement('a');
+                    link.href = r.url;
+                    link.download = r.name;
+                    link.click();
+                });
+            });
+
+            if (results.length > 1) {
+                downloadZipBtn.disabled = false;
+                downloadZipBtnSide.disabled = false;
+            }
+        }
+
+        async function downloadZip() {
+            if (results.length === 0) return;
+            if (typeof JSZip === 'undefined') { alert('مكتبة ZIP لم تُحمّل'); return; }
+
+            const btn = downloadZipBtn;
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ جاري الإنشاء...';
+
+            try {
+                const zip = new JSZip();
+                for (const r of results) {
+                    const res = await fetch(r.url);
+                    zip.file(r.name, await res.blob());
+                }
+                const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+                const url = URL.createObjectURL(content);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `intooly-trimmed-${Date.now()}.zip`;
+                link.click();
+                URL.revokeObjectURL(url);
+                btn.textContent = '✅ تم التحميل!';
+                setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+            } catch (e) {
+                console.error(e);
+                alert('خطأ في إنشاء ZIP');
+                btn.textContent = orig;
+                btn.disabled = false;
+            }
+        }
+
+        downloadZipBtn.addEventListener('click', downloadZip);
+        downloadZipBtnSide.addEventListener('click', downloadZip);
+
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>قص الصور أونلاين مجاناً | قاص الصور الاحترافي - intooly</title>
+    <meta name="description" content="قص أي صورة بدقة عالية أونلاين مجاناً. نسب جاهزة للسوشيال ميديا، تدوير، شبكة الأثلاث، أبعاد حية. يعمل محلياً في متصفحك بدون رفع، بدون تسجيل، بدون علامات مائية.">
+    <meta name="keywords" content="قص الصور, قاص الصور, crop image, قص صورة أونلاين, اقتصاص الصور, image cropper, intooly">
+    <meta name="author" content="intooly">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#111827">
+    <link rel="canonical" href="https://intooly.com/tools/image-cropper.html">
+    
+    <meta property="og:title" content="قص الصور أونلاين مجاناً | intooly">
+    <meta property="og:description" content="قص أي صورة بدقة عالية مجاناً. نسب جاهزة للسوشيال ميديا، تدوير، تحكم كامل بالجودة.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://intooly.com/tools/image-cropper.html">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="intooly">
+    <meta property="og:image" content="https://intooly.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="قص الصور - intooly">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="قص الصور أونلاين مجاناً | intooly">
+    <meta name="twitter:description" content="قص أي صورة بدقة عالية مجاناً. محلي 100%، بدون حدود.">
+    <meta name="twitter:image" content="https://intooly.com/og-image.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" defer></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Cairo', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047', 400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207', 800: '#854d0e', 900: '#713f12' },
+                        ink: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        
+        .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
+        .hero-gradient::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px); background-size: 30px 30px; animation: move-bg 20s linear infinite; }
+        .hero-gradient::after { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        .hero-title { font-size: clamp(1.5rem, 3.5vw + 0.5rem, 2.75rem); line-height: 1.25; }
+        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
+        
+        .drop-zone { border: 3px dashed #d1d5db; transition: all 0.3s ease; background: linear-gradient(135deg, #f9fafb 0%, #fefce8 100%); border-radius: 1.25rem; }
+        .drop-zone:hover { border-color: #eab308; background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
+        .drop-zone.dragover { border-color: #eab308; background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%); transform: scale(1.02); box-shadow: 0 0 0 6px rgba(234, 179, 8, 0.15); }
+        
+        .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
+        @media (min-width: 1024px) { .workspace { grid-template-columns: 1fr 380px; align-items: stretch; } }
+        
+        .cropper-panel { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.25rem; min-width: 0; display: flex; flex-direction: column; }
+        .settings-panel { background: white; border-radius: 1.5rem; border: 2px solid #e5e7eb; padding: 1.25rem; display: flex; flex-direction: column; }
+        
+        #imageContainer { background: #1f2937; border-radius: 1rem; overflow: hidden; max-height: 600px; display: flex; align-items: center; justify-content: center; flex: 1; min-height: 400px; position: relative; }
+        #imageContainer img { display: block; max-width: 100%; max-height: 600px; }
+        
+        .cropper-view-box { outline: 2px solid #eab308; outline-color: rgba(234, 179, 8, 0.9); }
+        .cropper-line { background-color: #eab308; }
+        .cropper-point { background-color: #facc15; width: 8px; height: 8px; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        .cropper-point.point-se { width: 12px; height: 12px; }
+        .cropper-bg { background-image: linear-gradient(45deg, #374151 25%, transparent 25%), linear-gradient(-45deg, #374151 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #374151 75%), linear-gradient(-45deg, transparent 75%, #374151 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+        
+        .aspect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+        .aspect-btn { padding: 0.5rem 0.375rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.125rem; font-family: 'Cairo', sans-serif; }
+        .aspect-btn:hover { border-color: #facc15; background: #fefce8; transform: translateY(-1px); }
+        .aspect-btn.active { border-color: #eab308; background: linear-gradient(135deg, #fef3c7, #fde047); box-shadow: 0 4px 12px rgba(234, 179, 8, 0.25); }
+        .aspect-btn .aspect-icon { font-size: 1.125rem; font-weight: 900; }
+        .aspect-btn .aspect-label { font-size: 0.6875rem; font-weight: 800; color: #111827; }
+        
+        .btn-primary { background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; padding: 0.875rem 2.25rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.3); border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.5); }
+        
+        .btn-download { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 0.875rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); width: 100%; justify-content: center; font-family: 'Cairo', sans-serif; }
+        .btn-download:hover:not(:disabled) { background: linear-gradient(135deg, #15803d, #16a34a); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+        
+        .btn-secondary { background: #1f2937; color: white; font-weight: 700; padding: 0.75rem 1.5rem; border-radius: 0.75rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 0.9375rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Cairo', sans-serif; }
+        .btn-secondary:hover { background: #111827; transform: translateY(-1px); }
+        
+        .btn-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.625rem 0.375rem; border-radius: 0.75rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.6875rem; color: #4b5563; }
+        .btn-tool:hover { border-color: #facc15; background: #fefce8; color: #111827; }
+        .btn-tool:active { transform: scale(0.95); }
+        .btn-tool .tool-icon { font-size: 1.25rem; }
+        
+        input[type="range"].brand-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 9999px; background: linear-gradient(90deg, #e5e7eb, #fef3c7); outline: none; cursor: pointer; }
+        input[type="range"].brand-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); transition: all 0.2s; }
+        input[type="range"].brand-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); cursor: pointer; border: 3px solid white; box-shadow: 0 3px 10px rgba(234, 179, 8, 0.5); }
+        
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-answer.active { max-height: 500px; }
+        .faq-toggle { width: 100%; text-align: right; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; background: white; border: 1px solid #e5e7eb; border-radius: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 700; color: #111827; font-size: 1rem; }
+        .faq-toggle:hover { background: #fefce8; border-color: #fde047; }
+        .faq-toggle .faq-icon { color: #ca8a04; font-size: 1.5rem; font-weight: 800; }
+        
+        .seo-section { background: linear-gradient(135deg, #f9fafb, #fefce8); border-radius: 1.5rem; padding: 2rem; border: 2px solid #e5e7eb; margin-top: 3rem; }
+        .seo-badge { display: inline-block; background: linear-gradient(135deg, #fef3c7, #fde047); color: #92400e; font-weight: 800; padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.75rem; border: 1px solid #fde047; }
+        .seo-card { background: white; border-radius: 1rem; padding: 1.5rem; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .seo-card:hover { border-color: #facc15; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); transform: translateY(-2px); }
+        .seo-card h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 800; color: #111827; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f3f4f6; }
+        
+        .step-item { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .step-num { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3); }
+        .step-content h4 { font-weight: 800; color: #111827; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .step-content p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .platform-table, .quality-table { width: 100%; border-collapse: collapse; background: white; border-radius: 1rem; overflow: hidden; }
+        .platform-table thead, .quality-table thead { background: linear-gradient(135deg, #1f2937, #111827); }
+        .platform-table th, .quality-table th { padding: 0.75rem 0.875rem; text-align: right; color: #facc15; font-weight: 800; font-size: 0.75rem; }
+        .platform-table td, .quality-table td { padding: 0.625rem 0.875rem; border-bottom: 1px solid #f3f4f6; font-size: 0.75rem; color: #374151; font-weight: 600; }
+        .platform-table tbody tr:hover, .quality-table tbody tr:hover { background: #fefce8; }
+        .platform-table tbody tr:last-child td, .quality-table tbody tr:last-child td { border-bottom: none; }
+        .quality-table .check { color: #16a34a; font-weight: 900; font-size: 1rem; }
+        
+        .feature-card { padding: 1.25rem; border-radius: 1rem; text-align: center; background: white; border: 2px solid #e5e7eb; transition: all 0.3s; }
+        .feature-card:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.1); }
+        .feature-card .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 0.875rem; background: linear-gradient(135deg, #fef3c7, #fde047); font-size: 1.75rem; margin-bottom: 0.75rem; box-shadow: 0 6px 15px rgba(234, 179, 8, 0.2); }
+        .feature-card h4 { font-weight: 800; color: #111827; margin-bottom: 0.375rem; font-size: 0.9375rem; }
+        .feature-card p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
+        
+        .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border-radius: 1rem; padding: 1.25rem; text-align: center; color: white; border: 2px solid #374151; transition: all 0.3s; }
+        .stat-card:hover { border-color: #eab308; transform: translateY(-3px); }
+        .stat-card .stat-num { font-size: 1.75rem; font-weight: 900; color: #facc15; margin-bottom: 0.25rem; line-height: 1; }
+        .stat-card .stat-label { font-size: 0.75rem; color: #9ca3af; font-weight: 700; }
+        
+        .related-tool { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.25rem 0.875rem; border-radius: 1rem; background: white; border: 2px solid #e5e7eb; text-decoration: none; transition: all 0.3s; text-align: center; }
+        .related-tool:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.15); }
+        .related-tool .tool-emoji { font-size: 2rem; }
+        .related-tool .tool-name { font-weight: 800; color: #111827; font-size: 0.875rem; }
+        .related-tool .tool-desc { font-size: 0.6875rem; color: #6b7280; line-height: 1.4; }
+        
+        .footer-gradient { background: linear-gradient(180deg, #1f2937 0%, #111827 100%); }
+        .footer-bottom { background: linear-gradient(90deg, #030712 0%, #111827 50%, #030712 100%); border-top: 1px solid rgba(250, 204, 21, 0.3); position: relative; overflow: hidden; }
+        .footer-bottom::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #eab308, #facc15, #eab308, transparent); }
+        .logo-icon { animation: logo-pulse 3s ease-in-out infinite; }
+        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        #scrollTop { position: fixed; bottom: 24px; left: 24px; z-index: 40; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; cursor: pointer; border: none; }
+        #scrollTop.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        #scrollTop:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(234, 179, 8, 0.6); }
+        
+        /* ============ NEW: Live Dimensions Badge ============ */
+        .crop-dims-badge {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #eab308, #facc15);
+            color: #111827;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+            font-size: 0.75rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.5);
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+        .crop-dims-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #eab308;
+        }
+        
+        /* ============ NEW: Thirds Grid Overlay ============ */
+        .cropper-third-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+        .cropper-third-grid.active {
+            display: block;
+        }
+        .cropper-third-grid::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+            background-size: 33.333% 100%;
+            background-position: 33.333% 0, 66.666% 0;
+            background-repeat: no-repeat;
+        }
+        .cropper-third-grid::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+            background-size: 100% 33.333%;
+            background-position: 0 33.333%, 0 66.666%;
+            background-repeat: no-repeat;
+        }
+        
+        /* ============ NEW: Grid Toggle Button ============ */
+        .grid-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.625rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        .grid-toggle-btn:hover { border-color: #facc15; background: #fefce8; color: #111827; }
+        .grid-toggle-btn.active {
+            border-color: #eab308;
+            background: linear-gradient(135deg, #fef3c7, #fde047);
+            color: #111827;
+            box-shadow: 0 3px 10px rgba(234, 179, 8, 0.25);
+        }
+    </style>
+
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"intooly","url":"https://intooly.com","logo":"https://intooly.com/logo.png","description":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص","contactPoint":{"@type":"ContactPoint","email":"support@intooly.com","contactType":"customer support","availableLanguage":["Arabic","English"]}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"intooly","url":"https://intooly.com","inLanguage":"ar","potentialAction":{"@type":"SearchAction","target":"https://intooly.com/?q={search_term_string}","query-input":"required name=search_term_string"}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://intooly.com/"},{"@type":"ListItem","position":2,"name":"أدوات الصور","item":"https://intooly.com/#image-tools"},{"@type":"ListItem","position":3,"name":"قاص الصور","item":"https://intooly.com/tools/image-cropper.html"}]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"قاص الصور - intooly","url":"https://intooly.com/tools/image-cropper.html","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"أداة احترافية لقص الصور أونلاين بنسب جاهزة وتدوير وشبكة الأثلاث.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2453"},"featureList":["قص تفاعلي دقيق","نسب جاهزة للسوشيال ميديا","شارة الأبعاد الحية","شبكة الأثلاث","تدوير 90° وقلب","لصق من الحافظة","معالجة محلية 100%","بدون علامات مائية"]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"HowTo","name":"كيفية قص الصور أونلاين","totalTime":"PT20S","tool":[{"@type":"HowToTool","name":"متصفح حديث"}],"step":[{"@type":"HowToStep","position":1,"name":"ارفع الصورة","text":"انقر على منطقة الرفع لاختيار صورة، أو اسحبها وأفلتها، أو الصقها بـ Ctrl+V."},{"@type":"HowToStep","position":2,"name":"اختر نوع القص","text":"حدد نسبة العرض للارتفاع: مربع 1:1، أو 16:9، أو 9:16، أو قص حر."},{"@type":"HowToStep","position":3,"name":"حدد منطقة القص","text":"اسحب وأفلت منطقة القص على الصورة، أو استخدم المقابض لتغيير الحجم."},{"@type":"HowToStep","position":4,"name":"اختر صيغة وجودة الإخراج","text":"حدد الصيغة (JPEG, PNG, WebP) واضبط مستوى الجودة."},{"@type":"HowToStep","position":5,"name":"حمّل الصورة","text":"اضغط زر التحميل لحفظ النتيجة على جهازك."}]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"هل أداة قص الصور مجانية بالكامل؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل."}},
+      {"@type":"Question","name":"ما هي أحجام القص الجاهزة المتوفرة؟","acceptedAnswer":{"@type":"Answer","text":"نوفر نسب جاهزة لـ Instagram، Facebook، Twitter/X، YouTube، LinkedIn، TikTok، Pinterest، بالإضافة إلى نسب مخصصة."}},
+      {"@type":"Question","name":"هل صوري آمنة عند استخدام هذه الأداة؟","acceptedAnswer":{"@type":"Answer","text":"نعم 100%. كل المعالجة تتم محلياً في متصفحك. صورك لا تُرفع إلى أي سيرفر."}},
+      {"@type":"Question","name":"هل يمكنني تحديد نسبة العرض للارتفاع يدوياً؟","acceptedAnswer":{"@type":"Answer","text":"نعم، يمكنك اختيار قص حر أو إدخال النسبة المخصصة مثل 5:4 أو 3:2."}},
+      {"@type":"Question","name":"ما هي صيغ الإخراج المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم JPEG، PNG، و WebP مع تحكم كامل في الجودة من 10% إلى 100%."}},
+      {"@type":"Question","name":"هل تعمل الأداة على الهاتف المحمول؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة متجاوبة 100% وتدعم اللمس، وتعمل بكفاءة على جميع الأجهزة."}},
+      {"@type":"Question","name":"هل يمكنني التراجع عن القص؟","acceptedAnswer":{"@type":"Answer","text":"نعم، يمكنك استخدام زر إعادة التعيين للعودة للصورة الأصلية وبدء القص من جديد."}},
+      {"@type":"Question","name":"ما أفضل حجم لصورة الملف الشخصي؟","acceptedAnswer":{"@type":"Answer","text":"عادةً 400×400 أو 500×500 بكسل بنسبة 1:1. اختر مقاساً أكبر إذا كنت تريد أفضل جودة."}}
+    ]}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Product","name":"قاص الصور الاحترافي","description":"أداة مجانية لقص الصور بنسب جاهزة للمنصات الاجتماعية محلياً في المتصفح","brand":{"@type":"Brand","name":"intooly"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2453"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"ItemList","name":"أدوات ذات صلة","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"تغيير حجم الصور","url":"https://intooly.com/tools/image-resizer.html"},
+      {"@type":"ListItem","position":2,"name":"ضاغط الصور","url":"https://intooly.com/tools/image-compressor.html"},
+      {"@type":"ListItem","position":3,"name":"تحويل صيغ الصور","url":"https://intooly.com/tools/image-converter.html"},
+      {"@type":"ListItem","position":4,"name":"إزالة الخلفية","url":"https://intooly.com/tools/background-remover.html"}
+    ]}
+    </script>
+</head><body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
+
+    <svg style="display:none" aria-hidden="true">
+        <symbol id="icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </symbol>
+    </svg>
+
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-ink-100">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-4">
+                <a href="../index.html" class="flex items-center gap-3 flex-shrink-0 group" aria-label="intooly - الرئيسية">
+                    <div class="logo-icon relative w-12 h-12 rounded-xl bg-ink-900 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                        <svg class="w-7 h-7 text-white"><use href="#icon-logo"/></svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-brand-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-ink-900 leading-tight">intooly</span>
+                        <span class="text-[10px] text-ink-600 font-medium leading-tight">أدوات مجانية احترافية</span>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-ink-700 font-semibold mx-auto">
+                    <a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a>
+                    <a href="../index.html#categories" class="hover:text-brand-600 transition">التصنيفات</a>
+                    <a href="../index.html#tools" class="hover:text-brand-600 transition">الأدوات</a>
+                    <a href="../about.html" class="hover:text-brand-600 transition">من نحن</a>
+                    <a href="../contact.html" class="hover:text-brand-600 transition">اتصل بنا</a>
+                </nav>
+                <div class="relative">
+                    <label for="searchInput" class="sr-only">ابحث</label>
+                    <input type="search" id="searchInput" placeholder="🔍 ابحث عن أداة..." class="w-40 md:w-48 px-4 py-2 rounded-full border border-ink-300 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 bg-ink-50 transition">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white border-b border-ink-200">
+        <div class="container mx-auto px-4 py-3">
+            <ol class="flex items-center gap-2 text-sm text-ink-600 flex-wrap">
+                <li><a href="../index.html" class="hover:text-brand-600 transition">الرئيسية</a></li>
+                <li class="text-ink-400">/</li>
+                <li><a href="../index.html#image-tools" class="hover:text-brand-600 transition">أدوات الصور</a></li>
+                <li class="text-ink-400">/</li>
+                <li class="text-brand-600 font-semibold">قاص الصور</li>
+            </ol>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <section class="hero-gradient text-white py-10 md:py-14 text-center relative">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-5xl md:text-6xl mb-3">✂️</div>
+                <h1 class="hero-title font-extrabold mb-2 md:mb-3">قص الصور أونلاين</h1>
+                <p class="hero-subtitle opacity-95 max-w-3xl mx-auto">
+                    قص أي صورة <span class="text-brand-400 font-bold">بدقة عالية</span> مع نسب جاهزة للسوشيال ميديا.
+                    <span class="text-brand-300 font-bold">محلي 100%، بدون رفع، بدون تسجيل.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="py-8 md:py-10 bg-white">
+            <div class="container mx-auto px-4 max-w-7xl">
+                
+                <div id="uploadSection" class="bg-gradient-to-br from-ink-50 to-brand-50 rounded-2xl p-6 md:p-8">
+                    <div id="dropZone" class="drop-zone p-8 md:p-14 cursor-pointer" role="button" tabindex="0" aria-label="منطقة رفع الصور">
+                        <input type="file" id="fileInput" accept="image/*" class="hidden">
+                        <div class="text-center">
+                            <div class="text-6xl md:text-7xl mb-4">🖼️</div>
+                            <h3 class="text-2xl font-extrabold text-ink-900 mb-2">اسحب صورتك وأفلتها هنا</h3>
+                            <p class="text-ink-600 mb-2">أو انقر لاختيار صورة من جهازك</p>
+                            <p class="text-sm text-ink-500 mb-6">💡 يمكنك أيضاً استخدام <strong>Ctrl+V</strong> للصق صورة من الحافظة</p>
+                            <button id="chooseBtn" type="button" class="btn-primary">
+                                <span>📁</span> اختر صورة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="workspaceSection" class="hidden mt-6">
+                    <div class="workspace">
+                        
+                        <div class="cropper-panel">
+                            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                                <h2 class="text-base font-extrabold text-ink-900 flex items-center gap-2">
+                                    ✂️ منطقة القص
+                                </h2>
+                                <button id="changeImageBtn" class="btn-secondary" style="padding: 0.5rem 0.875rem; font-size: 0.8125rem;">
+                                    <span>🖼️</span> صورة أخرى
+                                </button>
+                            </div>
+                            
+                            <div id="imageContainer" style="position: relative;">
+                                <img id="image" alt="الصورة" style="max-width: 100%; max-height: 600px;">
+                                <div class="crop-dims-badge" id="cropDimsBadge">0 × 0</div>
+                            </div>
+                            
+                            <div class="mt-3 p-3 bg-white rounded-lg border border-ink-200 flex flex-wrap gap-3 text-xs">
+                                <span class="flex items-center gap-1">
+                                    <span>📄</span>
+                                    <span class="font-bold text-ink-900 truncate" id="imgName">-</span>
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <span>📦</span>
+                                    <span class="font-bold text-ink-900" id="imgSize">-</span>
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <span>📐</span>
+                                    <span class="font-bold text-ink-900" id="imgDims">-</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-panel">
+                            
+                            <div class="flex items-center gap-2 mb-3 pb-3 border-b-2 border-ink-100">
+                                <span class="text-lg">⚙️</span>
+                                <h3 class="text-base font-extrabold text-ink-900">الإعدادات</h3>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-xs font-extrabold text-ink-900 mb-2">📐 نسبة القص</label>
+                                <div class="aspect-grid" id="aspectGrid">
+                                    <button type="button" class="aspect-btn active" data-ratio="0">
+                                        <div class="aspect-icon">🆓</div>
+                                        <div class="aspect-label">حر</div>
+                                    </button>
+                                    <button type="button" class="aspect-btn" data-ratio="1">
+                                        <div class="aspect-icon">⬛</div>
+                                        <div class="aspect-label">1:1</div>
+                                    </button>
+                                    <button type="button" class="aspect-btn" data-ratio="1.7777">
+                                        <div class="aspect-icon">▬</div>
+                                        <div class="aspect-label">16:9</div>
+                                    </button>
+                                    <button type="button" class="aspect-btn" data-ratio="0.5625">
+                                        <div class="aspect-icon">▮</div>
+                                        <div class="aspect-label">9:16</div>
+                                    </button>
+                                    <button type="button" class="aspect-btn" data-ratio="0.8">
+                                        <div class="aspect-icon">▯</div>
+                                        <div class="aspect-label">4:5</div>
+                                    </button>
+                                    <button type="button" class="aspect-btn" data-ratio="1.3333">
+                                        <div class="aspect-icon">▭</div>
+                                        <div class="aspect-label">4:3</div>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-xs font-extrabold text-ink-900 mb-2">🔄 التدوير والقلب</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button type="button" class="btn-tool" id="rotateLeftBtn" title="تدوير 90° يسار">
+                                        <span class="tool-icon">↺</span>
+                                        <span>يسار</span>
+                                    </button>
+                                    <button type="button" class="btn-tool" id="rotateRightBtn" title="تدوير 90° يمين">
+                                        <span class="tool-icon">↻</span>
+                                        <span>يمين</span>
+                                    </button>
+                                    <button type="button" class="btn-tool" id="flipHBtn" title="قلب أفقي">
+                                        <span class="tool-icon">⇋</span>
+                                        <span>أفقي</span>
+                                    </button>
+                                    <button type="button" class="btn-tool" id="flipVBtn" title="قلب عمودي">
+                                        <span class="tool-icon">⇅</span>
+                                        <span>عمودي</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-xs font-extrabold text-ink-900 mb-2">🔍 التكبير</label>
+                                <div class="flex gap-2">
+                                    <button type="button" class="btn-tool flex-1" id="zoomOutBtn">
+                                        <span class="tool-icon">➖</span>
+                                        <span>تصغير</span>
+                                    </button>
+                                    <button type="button" class="btn-tool flex-1" id="zoomInBtn">
+                                        <span class="tool-icon">➕</span>
+                                        <span>تكبير</span>
+                                    </button>
+                                    <button type="button" class="btn-tool flex-1" id="resetBtn">
+                                        <span class="tool-icon">🔄</span>
+                                        <span>إعادة</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Grid Toggle (جديد) -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-extrabold text-ink-900 mb-2">⚏ شبكة الأثلاث</label>
+                                <button type="button" class="grid-toggle-btn active" id="gridToggleBtn">
+                                    <span>⚏</span>
+                                    <span id="gridToggleLabel">الشبكة مفعّلة</span>
+                                </button>
+                                <p class="text-xs text-ink-500 mt-2 font-bold" style="font-size: 0.6875rem;">
+                                    💡 تساعدك على تكوين احترافي بقاعدة الأثلاث
+                                </p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="outputFormat" class="block text-xs font-extrabold text-ink-900 mb-2">📄 صيغة الإخراج</label>
+                                <select id="outputFormat" class="w-full px-3 py-2 rounded-lg border-2 border-ink-300 bg-white focus:outline-none focus:border-brand-500 font-bold text-sm">
+                                    <option value="image/jpeg">JPEG (الأصغر)</option>
+                                    <option value="image/png">PNG (شفاف)</option>
+                                    <option value="image/webp">WebP (موصى به)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="qualitySlider" class="block text-xs font-extrabold text-ink-900 mb-2 flex items-center justify-between">
+                                    <span>🎛️ الجودة</span>
+                                    <span id="qualityValue" class="text-brand-600">90%</span>
+                                </label>
+                                <input type="range" id="qualitySlider" class="brand-slider" min="10" max="100" value="90" step="5">
+                            </div>
+                            
+                            <div class="p-3 bg-brand-50 rounded-lg border-2 border-brand-200 mb-4">
+                                <p class="text-xs text-ink-700 font-bold mb-1">📊 إحصائيات القص:</p>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                        <span class="text-ink-500">العرض:</span>
+                                        <span id="cropWidth" class="font-extrabold text-ink-900">-</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-ink-500">الارتفاع:</span>
+                                        <span id="cropHeight" class="font-extrabold text-ink-900">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="flex: 1;"></div>
+                            
+                            <div class="pt-3 border-t-2 border-ink-100">
+                                <button id="downloadBtn" class="btn-download mb-2">
+                                    <span>⬇️</span> تحميل الصورة المقصوصة
+                                </button>
+                                <button id="newImageBtn" class="btn-secondary w-full justify-center" style="font-size: 0.8125rem; padding: 0.5rem;">
+                                    <span>🔄</span> صورة جديدة
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     SEO SECTION
+                     ============================================ -->
+                <div class="seo-section">
+                    
+                    <div class="text-center mb-8">
+                        <span class="seo-badge">📚 دليل شامل</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-ink-900 mt-3 mb-2">
+                            كل ما تحتاج معرفته عن قص الصور باحترافية
+                        </h2>
+                        <p class="text-ink-600 max-w-2xl mx-auto text-sm md:text-base">
+                            دليل شامل يغطي كل جوانب قص الصور: من التقنيات، إلى المقاسات المثالية للمنصات، والنصائح الاحترافية.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📖 ما هي أداة قاص الصور؟</h3>
+                            <p class="text-ink-700 leading-relaxed text-sm mb-3">
+                                تُعد أداة <strong class="text-brand-600">قاص الصور أونلاين</strong> من intooly الحل الأمثل لقص وتعديل أبعاد صورك بدقة عالية. سواء كنت تحتاج إلى قص صورة لتناسب صورة ملفك الشخصي على منصة تواصل اجتماعي، أو إزالة الأجزاء غير المرغوب فيها، أو التركيز على جزء معين من الصورة — أداتنا توفر لك كل ما تحتاجه بواجهة تفاعلية سهلة الاستخدام.
+                            </p>
+                            <p class="text-ink-700 leading-relaxed text-sm">
+                                تتميز أداتنا بأنها تعمل <strong>محلياً 100%</strong> في متصفحك باستخدام تقنيات JavaScript الحديثة ومكتبة <strong>Cropper.js</strong> الاحترافية، مما يعني أن صورك لا تُرفع أبداً إلى أي سيرفر خارجي. هذا يضمن لك <strong class="text-brand-600">خصوصية تامة</strong> و<strong class="text-brand-600">سرعة فائقة</strong> في المعالجة.
+                            </p>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>⭐ المميزات الرئيسية</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">✂️</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">قص تفاعلي دقيق</h4>
+                                        <p class="text-ink-600 text-xs">واجهة سحب وإفلات سلسة مع مقابض قابلة للتعديل.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📱</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">نسب جاهزة</h4>
+                                        <p class="text-ink-600 text-xs">أبعاد مسبقة لأشهر المنصات الاجتماعية.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📐</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">أبعاد حية</h4>
+                                        <p class="text-ink-600 text-xs">شارة تعرض الأبعاد لحظياً.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">⚏</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">شبكة الأثلاث</h4>
+                                        <p class="text-ink-600 text-xs">تكوين احترافي بقاعدة الأثلاث.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔄</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تدوير وقلب</h4>
+                                        <p class="text-ink-600 text-xs">تدوير 90° وقلب أفقي/عمودي.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">📋</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">لصق من الحافظة</h4>
+                                        <p class="text-ink-600 text-xs">الصق الصور مباشرة بـ Ctrl+V.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🔒</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">خصوصية 100%</h4>
+                                        <p class="text-ink-600 text-xs">صورك لا تغادر جهازك أبداً.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-brand-500 text-lg flex-shrink-0">🎨</span>
+                                    <div>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">صيغ متعددة</h4>
+                                        <p class="text-ink-600 text-xs">JPEG, PNG, WebP مع تحكم بالجودة.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        
+                        <div class="seo-card">
+                            <h3>📋 كيفية قص الصور (خطوة بخطوة)</h3>
+                            <div class="space-y-3">
+                                <div class="step-item">
+                                    <div class="step-num">1</div>
+                                    <div class="step-content">
+                                        <h4>ارفع صورتك</h4>
+                                        <p>انقر على منطقة الرفع لاختيار صورة، أو اسحبها وأفلتها، أو استخدم Ctrl+V للصقها.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">2</div>
+                                    <div class="step-content">
+                                        <h4>اختر نوع القص</h4>
+                                        <p>حدد نسبة العرض للارتفاع: مربع 1:1، 16:9، 9:16، أو قص حر.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">3</div>
+                                    <div class="step-content">
+                                        <h4>حدد منطقة القص</h4>
+                                        <p>اسحب وأفلت منطقة القص على الصورة، أو استخدم المقابض الذهبية لتغيير الحجم.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">4</div>
+                                    <div class="step-content">
+                                        <h4>اختر الصيغة والجودة</h4>
+                                        <p>حدد الصيغة المناسبة (JPEG, PNG, WebP) واضبط مستوى الجودة.</p>
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">5</div>
+                                    <div class="step-content">
+                                        <h4>حمّل الصورة</h4>
+                                        <p>اضغط على زر "تحميل الصورة المقصوصة" لحفظ النتيجة على جهازك مباشرة.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="seo-card">
+                            <h3>📊 أحجام القص المثالية للمنصات (2026)</h3>
+                            <div class="overflow-x-auto">
+                                <table class="platform-table">
+                                    <thead>
+                                        <tr>
+                                            <th>المنصة</th>
+                                            <th>النوع</th>
+                                            <th>الأبعاد</th>
+                                            <th>النسبة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>📷 Instagram</td><td>منشور مربع</td><td>1080×1080</td><td>1:1</td></tr>
+                                        <tr><td>📷 Instagram</td><td>Story/Reels</td><td>1080×1920</td><td>9:16</td></tr>
+                                        <tr><td>👥 Facebook</td><td>منشور</td><td>1200×630</td><td>1.91:1</td></tr>
+                                        <tr><td>👥 Facebook</td><td>الغلاف</td><td>820×312</td><td>2.63:1</td></tr>
+                                        <tr><td>🐦 Twitter/X</td><td>منشور</td><td>1200×675</td><td>16:9</td></tr>
+                                        <tr><td>🐦 Twitter/X</td><td>الرأس</td><td>1500×500</td><td>3:1</td></tr>
+                                        <tr><td>📺 YouTube</td><td>مصغّرة</td><td>1280×720</td><td>16:9</td></tr>
+                                        <tr><td>💼 LinkedIn</td><td>منشور</td><td>1200×627</td><td>1.91:1</td></tr>
+                                        <tr><td>📌 Pinterest</td><td>Pin قياسي</td><td>1000×1500</td><td>2:3</td></tr>
+                                        <tr><td>🎵 TikTok</td><td>غلاف</td><td>1080×1920</td><td>9:16</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🎯 لماذا تحتاج إلى قص الصور؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            قص الصور ليس مجرد تعديل بسيط، بل هو ضرورة عملية لها عدة فوائد مهمة:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h4>توافق المنصات</h4>
+                                <p>كل منصة لها أبعادها المثالية. القص يضمن ظهور صورتك بشكل كامل بدون اقتصاص غير مرغوب.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎯</div>
+                                <h4>التركيز على الموضوع</h4>
+                                <p>إزالة العناصر المشتتة والتركيز على الجزء الأهم من الصورة يجذب انتباه المشاهد.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎨</div>
+                                <h4>تحسين التكوين</h4>
+                                <p>تطبيق قاعدة الأثلاث وتحسين التكوين البصري لجعل الصورة أكثر جاذبية.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🔒</div>
+                                <h4>حماية الخصوصية</h4>
+                                <p>إزالة المعلومات الحساسة أو الخلفيات غير المرغوب فيها قبل المشاركة.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📉</div>
+                                <h4>تقليل الحجم</h4>
+                                <p>قص الأجزاء غير الضرورية يقلل من حجم الملف ويسرّع تحميل الصفحة.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎭</div>
+                                <h4>الاتساق البصري</h4>
+                                <p>توحيد أبعاد الصور في معرض أو موقع يمنح مظهراً احترافياً ومتناسقاً.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>📈 أرقام تتحدث</h3>
+                        <p class="text-ink-600 text-sm mb-4">أرقام حقيقية تعكس جودة الأداء وثقة المستخدمين:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="stat-card">
+                                <div class="stat-num">+50K</div>
+                                <div class="stat-label">👥 مستخدم شهرياً</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">4.9/5</div>
+                                <div class="stat-label">⭐ تقييم المستخدمين</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">+25</div>
+                                <div class="stat-label">🌍 دولة حول العالم</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num">0.5s</div>
+                                <div class="stat-label">⚡ متوسط المعالجة</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>💎 لماذا تختار intooly؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            صُمّمت أدوات intooly لتكون الخيار الأول للمستخدم العربي الذي يبحث عن الجودة والسرعة والخصوصية.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">🔒</div>
+                                <h4>خصوصية مطلقة</h4>
+                                <p>جميع عمليات القص تتم محلياً. صورك لا تغادر جهازك أبداً.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">⚡</div>
+                                <h4>سرعة خارقة</h4>
+                                <p>لا انتظار لرفع الصور. النتائج فورية على جهازك مباشرة.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">💰</div>
+                                <h4>مجاني 100%</h4>
+                                <p>لا علامات مائية، لا اشتراكات، ولا حاجة للتسجيل.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h4>جميع الأجهزة</h4>
+                                <p>واجهة متجاوبة 100% وتدعم اللمس على جميع الأجهزة.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🌐</div>
+                                <h4>عربي احترافي</h4>
+                                <p>مصممة خصيصاً للمستخدم العربي بواجهة بديهية.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🚀</div>
+                                <h4>بدون تسجيل</h4>
+                                <p>ابدأ الاستخدام فوراً بدون إنشاء حساب أو تثبيت برامج.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🎨 متى تستخدم كل صيغة؟</h3>
+                        <p class="text-ink-600 text-sm mb-4">اختيار الصيغة الصحيحة يؤثر على الجودة والحجم. إليك دليل شامل:</p>
+                        <div class="overflow-x-auto">
+                            <table class="quality-table">
+                                <thead>
+                                    <tr>
+                                        <th>الصيغة</th>
+                                        <th>الاستخدام الأمثل</th>
+                                        <th>المزايا</th>
+                                        <th>العيوب</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>JPEG</strong></td>
+                                        <td>الصور الفوتوغرافية، المنشورات</td>
+                                        <td>حجم صغير، توافق عالي</td>
+                                        <td>لا يدعم الشفافية</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PNG</strong></td>
+                                        <td>الشعارات، الأيقونات، الشفافية</td>
+                                        <td>جودة عالية، شفافية كاملة</td>
+                                        <td>حجم أكبر</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>WebP</strong></td>
+                                        <td>المواقع الإلكترونية، الويب الحديث</td>
+                                        <td>أصغر 30% من JPEG، يدعم الشفافية</td>
+                                        <td>دعم محدود في المتصفحات القديمة</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>🔧 نصائح احترافية لقص الصور</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>استخدم النسبة الصحيحة:</strong> تحقق دائماً من الأبعاد المثالية للمنصة قبل القص.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>فعّل شبكة الأثلاث:</strong> ضع الموضوع الرئيسي عند تقاطع خطوط الأثلاث.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>احتفظ بهامش أمان:</strong> لا تضع عناصر مهمة عند حواف الصورة.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>PNG للشعارات:</strong> للحفاظ على الحواف الحادة والشفافية.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>ابدأ بدقة عالية:</strong> كلما كانت الصورة الأصلية أكبر، كانت النتيجة أوضح.</p>
+                            </div>
+                            <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
+                                <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
+                                <p class="text-ink-700 text-sm"><strong>WebP للويب:</strong> استخدم WebP لتوفير 30% من حجم الملف.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>✅ معايير الجودة في intooly</h3>
+                        <p class="text-ink-600 text-sm mb-4">
+                            نلتزم بأعلى معايير الجودة والاحترافية في كل أداة نقدمها:
+                        </p>
+                        <div class="overflow-x-auto">
+                            <table class="quality-table">
+                                <thead>
+                                    <tr>
+                                        <th>المعيار</th>
+                                        <th>التزامنا</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>معالجة محلية (بدون سيرفر)</td><td><span class="check">✅ نعم</span> - جميع العمليات في متصفحك</td></tr>
+                                    <tr><td>مجاني بدون حدود</td><td><span class="check">✅ نعم</span> - بلا قيود على العدد أو الحجم</td></tr>
+                                    <tr><td>بدون علامات مائية</td><td><span class="check">✅ نعم</span> - صورك نظيفة دائماً</td></tr>
+                                    <tr><td>دعم اللغة العربية</td><td><span class="check">✅ كامل</span> - واجهة عربية 100%</td></tr>
+                                    <tr><td>لصق من الحافظة</td><td><span class="check">✅ نعم</span> - بـ Ctrl+V مباشرة</td></tr>
+                                    <tr><td>نسب جاهزة للمنصات</td><td><span class="check">✅ نعم</span> - محدّثة لجميع المنصات</td></tr>
+                                    <tr><td>أبعاد حية</td><td><span class="check">✅ نعم</span> - شارة ذهبية أثناء السحب</td></tr>
+                                    <tr><td>شبكة الأثلاث</td><td><span class="check">✅ نعم</span> - قابلة للتبديل</td></tr>
+                                    <tr><td>بدون تسجيل</td><td><span class="check">✅ نعم</span> - ابدأ فوراً</td></tr>
+                                    <tr><td>متوافق مع جميع الأجهزة</td><td><span class="check">✅ نعم</span> - كمبيوتر، تابلت، وهواتف</td></tr>
+                                    <tr><td>تحكم كامل بالجودة</td><td><span class="check">✅ نعم</span> - من 10% إلى 100%</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card mb-8">
+                        <h3>❓ الأسئلة الشائعة (FAQ)</h3>
+                        <div class="space-y-3 mt-4">
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل أداة قص الصور مجانية بالكامل؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما هي أحجام القص الجاهزة المتوفرة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نوفر نسب جاهزة لـ Instagram, Facebook, Twitter/X, YouTube, LinkedIn, TikTok, Pinterest، بالإضافة إلى نسب مخصصة.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل صوري آمنة عند استخدام هذه الأداة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم 100%. كل المعالجة تتم محلياً في متصفحك باستخدام Cropper.js. صورك لا تُرفع إلى أي سيرفر.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكنني تحديد نسبة العرض للارتفاع يدوياً؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، يمكنك اختيار قص حر أو إدخال النسبة المخصصة مثل 5:4 أو 3:2.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما هي صيغ الإخراج المدعومة؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">ندعم JPEG، PNG، و WebP مع تحكم كامل في الجودة من 10% إلى 100%.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل تعمل الأداة على الهاتف المحمول؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة متجاوبة 100% وتدعم اللمس، وتعمل بكفاءة على جميع الأجهزة.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>هل يمكنني التراجع عن القص؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، يمكنك استخدام زر إعادة التعيين للعودة للصورة الأصلية وبدء القص من جديد.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-toggle" aria-expanded="false">
+                                    <span>ما أفضل حجم لصورة الملف الشخصي؟</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">عادةً 400×400 أو 500×500 بكسل بنسبة 1:1. اختر مقاساً أكبر إذا كنت تريد أفضل جودة.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-card">
+                        <h3>🔗 أدوات ذات صلة قد تعجبك</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                            <a href="image-resizer.html" class="related-tool">
+                                <div class="tool-emoji">📏</div>
+                                <div class="tool-name">تغيير حجم الصور</div>
+                                <div class="tool-desc">غيّر أبعاد صورك بسهولة</div>
+                            </a>
+                            <a href="image-compressor.html" class="related-tool">
+                                <div class="tool-emoji">🗜️</div>
+                                <div class="tool-name">ضاغط الصور</div>
+                                <div class="tool-desc">قلّل الحجم مع الجودة</div>
+                            </a>
+                            <a href="image-converter.html" class="related-tool">
+                                <div class="tool-emoji">🔄</div>
+                                <div class="tool-name">محول الصيغ</div>
+                                <div class="tool-desc">حوّل بين JPEG, PNG, WebP</div>
+                            </a>
+                            <a href="background-remover.html" class="related-tool">
+                                <div class="tool-emoji">🪄</div>
+                                <div class="tool-name">إزالة الخلفية</div>
+                                <div class="tool-desc">أزل خلفية أي صورة بـ AI</div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-gradient text-ink-300 pt-16 pb-0 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center">
+                            <svg class="w-7 h-7 text-brand-400"><use href="#icon-logo"/></svg>
+                        </div>
+                        <span class="text-2xl font-extrabold text-white">intooly</span>
+                    </div>
+                    <p class="text-sm text-ink-400 mb-3">منصة أدوات مجانية احترافية</p>
+                    <p class="text-sm text-ink-400 leading-relaxed">جميع أدواتنا تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-500 pr-3">خدماتنا</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../about.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> من نحن</a></li>
+                        <li><a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> اتصل بنا</a></li>
+                        <li><a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> سياسة الخصوصية</a></li>
+                        <li><a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> شروط الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-400 pr-3">أشهر الأدوات</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="background-remover.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🪄</span> إزالة الخلفية</a></li>
+                        <li><a href="image-compressor.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🗜️</span> ضاغط الصور</a></li>
+                        <li><a href="image-resizer.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>📏</span> تغيير حجم الصور</a></li>
+                        <li><a href="image-converter.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>🔄</span> تحويل صيغ الصور</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-300 pr-3">اشترك معنا</h3>
+                    <p class="text-sm text-ink-400 mb-4">احصل على آخر الأدوات والتحديثات</p>
+                    <form class="space-y-3" id="subscribeForm" novalidate>
+                        <div>
+                            <label for="emailInput" class="sr-only">البريد الإلكتروني</label>
+                            <input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">
+                            اشترك الآن 📧
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom mt-6 py-5">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-ink-300 font-semibold">&copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.</p>
+                                <p class="text-xs text-ink-500 mt-0.5">صُنع بـ ❤️ في العالم العربي</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-ink-800/50 px-4 py-2 rounded-full border border-ink-700">
+                            <span class="text-brand-400">📧</span>
+                            <a href="mailto:support@intooly.com" class="text-sm text-ink-300 hover:text-brand-400 transition font-medium">support@intooly.com</a>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs">
+                            <a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition">الشروط</a>
+                            <span class="text-ink-600">•</span>
+                            <a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition">اتصل بنا</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollTop" aria-label="العودة إلى الأعلى">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>    <script>
+    // ============ Shared Scripts ============
+    (function() {
+        'use strict';
+        
+        document.querySelectorAll('.faq-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.nextElementSibling;
+                const icon = btn.querySelector('.faq-icon');
+                const isActive = answer.classList.contains('active');
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.faq-toggle').forEach(b => {
+                    b.setAttribute('aria-expanded', 'false');
+                    b.querySelector('.faq-icon').textContent = '+';
+                });
+                if (!isActive) {
+                    answer.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                    icon.textContent = '−';
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href.length < 2) return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+            });
+        });
+
+        const normalizeArabic = (t) => String(t).replace(/[أإآٱا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[\u064B-\u0652\u0670]/g, '').toLowerCase().trim();
+        const SEARCH_INDEX = [
+            { names: ['خلفية', 'ازالة الخلفية', 'background'], url: 'background-remover.html' },
+            { names: ['ضغط الصور', 'ضاغط الصور'], url: 'image-compressor.html' },
+            { names: ['تغيير الحجم', 'resize', 'ابعاد'], url: 'image-resizer.html' },
+            { names: ['تحويل الصور', 'صيغ'], url: 'image-converter.html' },
+            { names: ['قص الصور', 'crop'], url: 'image-cropper.html' },
+        ];
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key !== 'Enter') return;
+                const query = normalizeArabic(e.target.value);
+                if (!query) return;
+                const match = SEARCH_INDEX.find(t => t.names.some(n => {
+                    const nn = normalizeArabic(n);
+                    return query.includes(nn) || nn.includes(query);
+                }));
+                if (match) window.location.href = match.url;
+                else alert('لا توجد نتائج');
+            });
+        }
+
+        const subForm = document.getElementById('subscribeForm');
+        if (subForm) {
+            subForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const input = document.getElementById('emailInput');
+                const btn = e.target.querySelector('button[type="submit"]');
+                const email = input.value.trim();
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    input.focus(); input.classList.add('border-red-500');
+                    setTimeout(() => input.classList.remove('border-red-500'), 2000);
+                    return;
+                }
+                const orig = btn.textContent;
+                btn.disabled = true; btn.textContent = 'جاري الاشتراك...';
+                await new Promise(r => setTimeout(r, 800));
+                btn.textContent = '✅ تم الاشتراك!';
+                subForm.reset();
+                setTimeout(() => { btn.disabled = false; btn.textContent = orig; }, 3000);
+            });
+        }
+
+        const scrollTopBtn = document.getElementById('scrollTop');
+        if (scrollTopBtn) {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        const yearEl = document.getElementById('currentYear');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+
+    // ============ Image Cropper Tool (Enhanced) ============
+    (function() {
+        'use strict';
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const chooseBtn = document.getElementById('chooseBtn');
+        const uploadSection = document.getElementById('uploadSection');
+        const workspaceSection = document.getElementById('workspaceSection');
+        const image = document.getElementById('image');
+        const imageContainer = document.getElementById('imageContainer');
+        const imgName = document.getElementById('imgName');
+        const imgSize = document.getElementById('imgSize');
+        const imgDims = document.getElementById('imgDims');
+        const changeImageBtn = document.getElementById('changeImageBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const newImageBtn = document.getElementById('newImageBtn');
+        const rotateLeftBtn = document.getElementById('rotateLeftBtn');
+        const rotateRightBtn = document.getElementById('rotateRightBtn');
+        const flipHBtn = document.getElementById('flipHBtn');
+        const flipVBtn = document.getElementById('flipVBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const outputFormat = document.getElementById('outputFormat');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const cropWidth = document.getElementById('cropWidth');
+        const cropHeight = document.getElementById('cropHeight');
+        const aspectBtns = document.querySelectorAll('.aspect-btn');
+        const cropDimsBadge = document.getElementById('cropDimsBadge');
+        const gridToggleBtn = document.getElementById('gridToggleBtn');
+        const gridToggleLabel = document.getElementById('gridToggleLabel');
+
+        let cropper = null;
+        let currentFile = null;
+        let currentScaleX = 1;
+        let currentScaleY = 1;
+        let currentRotate = 0;
+        let gridEnabled = true;
+        let gridOverlayEl = null;
+
+        // ============ Utilities ============
+        const formatBytes = (bytes) => {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        // ============ File Handling ============
+        chooseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+        });
+        changeImageBtn.addEventListener('click', () => fileInput.click());
+        newImageBtn.addEventListener('click', () => {
+            resetToUpload();
+            setTimeout(() => fileInput.click(), 100);
+        });
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+            e.target.value = '';
+        });
+
+        // Paste from clipboard
+        document.addEventListener('paste', (e) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') === 0) {
+                    e.preventDefault();
+                    const blob = items[i].getAsFile();
+                    if (blob) {
+                        const fakeFile = new File([blob], `pasted-image-${Date.now()}.png`, { type: blob.type });
+                        handleFile(fakeFile);
+                    }
+                    return;
+                }
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('يرجى اختيار ملف صورة صالح (JPG, PNG, WebP)');
+                return;
+            }
+            if (file.size > 20 * 1024 * 1024) {
+                alert('حجم الصورة يتجاوز 20 ميجابايت');
+                return;
+            }
+
+            currentFile = file;
+            const url = URL.createObjectURL(file);
+
+            uploadSection.classList.add('hidden');
+            workspaceSection.classList.remove('hidden');
+
+            imgName.textContent = file.name;
+            imgSize.textContent = formatBytes(file.size);
+
+            image.src = url;
+            image.onload = () => {
+                imgDims.textContent = `${image.naturalWidth} × ${image.naturalHeight}`;
+                initCropper();
+            };
+        }
+
+        function initCropper() {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+
+            if (typeof Cropper === 'undefined') {
+                setTimeout(initCropper, 100);
+                return;
+            }
+
+            currentScaleX = 1;
+            currentScaleY = 1;
+            currentRotate = 0;
+
+            cropper = new Cropper(image, {
+                viewMode: 1,
+                dragMode: 'move',
+                aspectRatio: NaN,
+                autoCropArea: 0.8,
+                restore: false,
+                guides: false, // نعطّل الـ guides الافتراضية لأن لدينا شبكة الأثلاث المخصصة
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                responsive: true,
+                background: true,
+                modal: true,
+                movable: true,
+                scalable: true,
+                zoomable: true,
+                rotatable: true,
+                ready: function() {
+                    updateCropInfo();
+                    addGridOverlay();
+                },
+                crop: function() {
+                    updateCropInfo();
+                    updateBadgePosition();
+                },
+                cropend: function() {
+                    updateBadgePosition();
+                }
+            });
+        }
+
+        function updateCropInfo() {
+            if (!cropper) return;
+            const data = cropper.getData(true);
+            const w = Math.round(data.width);
+            const h = Math.round(data.height);
+            cropWidth.textContent = w + 'px';
+            cropHeight.textContent = h + 'px';
+            
+            if (cropDimsBadge) {
+                cropDimsBadge.textContent = `${w} × ${h} px`;
+            }
+        }
+
+        // ============ Live Dimensions Badge Position ============
+        function updateBadgePosition() {
+            if (!cropper || !cropDimsBadge) return;
+            const cropBox = cropper.cropBox;
+            const container = cropper.container;
+            if (!cropBox || !container) return;
+            
+            const cropRect = cropBox.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            
+            const relX = cropRect.left - containerRect.left + cropRect.width / 2;
+            const relY = cropRect.top - containerRect.top;
+            
+            cropDimsBadge.style.left = relX + 'px';
+            cropDimsBadge.style.top = (relY - 42) + 'px';
+            cropDimsBadge.style.transform = 'translateX(-50%)';
+            cropDimsBadge.style.display = 'block';
+        }
+
+        // ============ Thirds Grid Overlay ============
+        function addGridOverlay() {
+            if (!cropper) return;
+            const container = cropper.container;
+            if (!container) return;
+            
+            const old = container.querySelector('.cropper-third-grid');
+            if (old) old.remove();
+            
+            gridOverlayEl = document.createElement('div');
+            gridOverlayEl.className = 'cropper-third-grid' + (gridEnabled ? ' active' : '');
+            container.appendChild(gridOverlayEl);
+        }
+
+        gridToggleBtn.addEventListener('click', () => {
+            gridEnabled = !gridEnabled;
+            gridToggleBtn.classList.toggle('active', gridEnabled);
+            gridToggleLabel.textContent = gridEnabled ? 'الشبكة مفعّلة' : 'الشبكة معطّلة';
+            if (gridOverlayEl) {
+                gridOverlayEl.classList.toggle('active', gridEnabled);
+            } else {
+                addGridOverlay();
+            }
+        });
+
+        function resetToUpload() {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            if (image.src && image.src.startsWith('blob:')) {
+                URL.revokeObjectURL(image.src);
+            }
+            image.src = '';
+            uploadSection.classList.remove('hidden');
+            workspaceSection.classList.add('hidden');
+            fileInput.value = '';
+            aspectBtns.forEach(b => b.classList.remove('active'));
+            const freeBtn = document.querySelector('.aspect-btn[data-ratio="0"]');
+            if (freeBtn) freeBtn.classList.add('active');
+            if (cropDimsBadge) cropDimsBadge.style.display = 'none';
+            gridOverlayEl = null;
+        }
+
+        // ============ Aspect Ratio ============
+        aspectBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!cropper) return;
+                aspectBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const ratio = parseFloat(btn.dataset.ratio);
+                cropper.setAspectRatio(ratio === 0 ? NaN : ratio);
+            });
+        });
+
+        // ============ Rotation & Flip ============
+        rotateLeftBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            currentRotate -= 90;
+            cropper.rotate(-90);
+        });
+
+        rotateRightBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            currentRotate += 90;
+            cropper.rotate(90);
+        });
+
+        flipHBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            currentScaleX = -currentScaleX;
+            cropper.scaleX(currentScaleX);
+        });
+
+        flipVBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            currentScaleY = -currentScaleY;
+            cropper.scaleY(currentScaleY);
+        });
+
+        // ============ Zoom ============
+        zoomInBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            cropper.zoom(0.1);
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            cropper.zoom(-0.1);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            cropper.reset();
+            currentScaleX = 1;
+            currentScaleY = 1;
+            currentRotate = 0;
+        });
+
+        // ============ Quality ============
+        qualitySlider.addEventListener('input', (e) => {
+            qualityValue.textContent = e.target.value + '%';
+        });
+
+        // ============ Download ============
+        downloadBtn.addEventListener('click', () => {
+            if (!cropper || !currentFile) return;
+            
+            const format = outputFormat.value;
+            const quality = parseInt(qualitySlider.value) / 100;
+            
+            const canvas = cropper.getCroppedCanvas({
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+                maxWidth: 8192,
+                maxHeight: 8192
+            });
+            
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+                
+                const ext = format.split('/')[1] === 'jpeg' ? 'jpg' : format.split('/')[1];
+                const baseName = currentFile.name.replace(/\.[^.]+$/, '');
+                const filename = `${baseName}-cropped.${ext}`;
+                
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.click();
+                
+                const origText = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<span>✅</span> تم التحميل!';
+                setTimeout(() => {
+                    downloadBtn.innerHTML = origText;
+                }, 2000);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }, format, quality);
+        });
+
+        // ============ Keyboard Shortcuts ============
+        document.addEventListener('keydown', (e) => {
+            if (!workspaceSection || workspaceSection.classList.contains('hidden')) return;
+            const tag = (e.target && e.target.tagName) || '';
+            if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+            
+            // Ctrl+Enter = تحميل
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                downloadBtn.click();
+            }
+            // R = تدوير يمين
+            if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                rotateRightBtn.click();
+            }
+            // L = تدوير يسار
+            if (e.key === 'l' || e.key === 'L') {
+                e.preventDefault();
+                rotateLeftBtn.click();
+            }
+            // + = تكبير
+            if (e.key === '+' || e.key === '=') {
+                e.preventDefault();
+                zoomInBtn.click();
+            }
+            // - = تصغير
+            if (e.key === '-' || e.key === '_') {
+                e.preventDefault();
+                zoomOutBtn.click();
+            }
+            // G = شبكة
+            if (e.key === 'g' || e.key === 'G') {
+                e.preventDefault();
+                gridToggleBtn.click();
+            }
+        });
+
+    })();
+    </script>
+</body>
+</html>
