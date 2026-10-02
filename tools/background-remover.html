@@ -1187,13 +1187,11 @@
         // ============================================
         const CONFIG = {
             MODEL_URLS: [
-                '../assets/models/u2netp.onnx',                                              // 1. محلي (الأفضل)
-                'https://huggingface.co/datasets/Xenova/transformers.js/resolve/main/u2netp.onnx', // 2. HuggingFace
-                'https://hf-mirror.com/datasets/Xenova/transformers.js/resolve/main/u2netp.onnx',  // 3. HuggingFace Mirror
-                'https://cdn.jsdelivr.net/gh/danielgatis/rembg@main/u2netp.onnx',           // 4. jsDelivr
-                'https://raw.githubusercontent.com/danielgatis/rembg/main/u2netp.onnx'      // 5. GitHub Raw
-            ],
-            CACHE_NAME: 'intooly-u2netp-v2',
+    '/assets/models/u2netp.onnx',
+    'https://huggingface.co/skytnt/u2net/resolve/main/u2netp.onnx',
+    'https://cdn.jsdelivr.net/gh/sony/model-zoo@master/models/image_segmentation/u2netp/u2netp.onnx'
+],
+CACHE_NAME: 'intooly-u2netp-v3-local',
             MODEL_SIZE: 320,
             MAX_IMAGES: 50,
             CONCURRENT: 2

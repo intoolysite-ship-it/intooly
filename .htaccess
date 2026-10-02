@@ -1,3 +1,36 @@
+# ==========================================
+# إعدادات نماذج الذكاء الاصطناعي (AI Models)
+# ==========================================
+
+# 1. تعريف نوع ملف ONNX الصحيح
+<IfModule mod_mime.c>
+    AddType application/octet-stream .onnx
+    AddType application/wasm .wasm
+</IfModule>
+
+# 2. تفعيل ضغط Gzip لتسريع تحميل النماذج (يقلل الحجم بنسبة 70%)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/octet-stream application/wasm
+</IfModule>
+
+# 3. تفعيل التخزين المؤقت (Caching) لمدة سنة كاملة
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/octet-stream "access plus 1 year"
+    ExpiresByType application/wasm "access plus 1 year"
+</IfModule>
+
+# 4. السماح بطلبات CORS (مهم جداً لعمل النماذج في المتصفح)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(onnx|wasm)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# ==========================================
+# إعدادات الروابط النظيفة (Clean URLs)
+# ==========================================
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
@@ -5,12 +38,9 @@
     RewriteCond %{THE_REQUEST} /index\.html [NC]
     RewriteRule ^(.*?)index\.html$ /$1 [L,R=301,NC,NE]
     
-    # إزالة .html من جميع الروابط (صفحات + أدوات)
-    RewriteCond %{THE_REQUEST} \.html [NC]
-    RewriteRule ^(.*?)\.html$ /$1 [L,R=301,NC,NE]
-    
-    # إعادة كتابة الروابط النظيفة لتعمل فعلياً
+    # إزالة امتداد .html من جميع الروابط
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.+)$ $1.html [NC,L]
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.+)$ $1.html [L]
 </IfModule>
