@@ -1097,9 +1097,9 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 'use strict';
 const CONFIG = {
     MODEL_URLS: [
-        './assets/models/u2netp.onnx',
         'https://huggingface.co/skytnt/u2net/resolve/main/u2netp.onnx',
-        'https://cdn.jsdelivr.net/gh/sony/model-zoo@master/models/image_segmentation/u2netp/u2netp.onnx'
+        'https://cdn.jsdelivr.net/gh/sony/model-zoo@master/models/image_segmentation/u2netp/u2netp.onnx',
+        'https://raw.githubusercontent.com/skytnt/u2net/main/u2netp.onnx'
     ],
     CACHE_NAME: 'intooly-product-studio-u2netp-v2',
     MODEL_SIZE: 640,
