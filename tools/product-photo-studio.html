@@ -1214,7 +1214,8 @@ modelLoading = true;
 modelStatus.textContent = '⏳ جاري تحميل نموذج الذكاء الاصطناعي...';
 modelStatus.className = 'text-center text-sm font-bold text-ink-600 mt-4';
 try {
-ort.env.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 2);
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
+ort.env.wasm.numThreads = 1;
 ort.env.wasm.simd = true;
 const buf = await fetchModelBuffer();
 session = await ort.InferenceSession.create(new Uint8Array(buf), {
@@ -1826,3 +1827,4 @@ renderResults();
 </script>
 </body>
 </html>
+
