@@ -1,8 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # إزالة index.html من الرابط الرئيسي
     RewriteCond %{THE_REQUEST} /index\.html [NC]
     RewriteRule ^(.*?)index\.html$ /$1 [L,R=301,NC,NE]
+    
+    # إزالة .html من جميع الروابط (صفحات + أدوات)
+    RewriteCond %{THE_REQUEST} \.html [NC]
+    RewriteRule ^(.*?)\.html$ /$1 [L,R=301,NC,NE]
+    
+    # إعادة كتابة الروابط النظيفة لتعمل فعلياً
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([^.]+)$ $1.html [NC,L]
+    RewriteRule ^(.+)$ $1.html [NC,L]
 </IfModule>
