@@ -13,8 +13,8 @@ gtag('config', 'G-GB8VLXYS9Z');
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>استوديو صور المنتجات — إزالة خلفية احترافية | intooly</title>
-<meta name="description" content="استوديو احترافي لتجهيز صور منتجاتك للمتاجر الإلكترونية. أزل الخلفية بالذكاء الاصطناعي، أضف خلفية بيضاء نقية وظل واقعي، وطبّق قوالب نون وأمازون وحراج وإنستغرام. معالجة مجمعة حتى 50 صورة، محرر قناع يدوي، وتصدير ZIP. محلي 100%.">
-<meta name="keywords" content="استوديو صور المنتجات, تجهيز صور نون, صور أمازون, صور حراج, إزالة خلفية المنتجات, product photo studio, إزالة خلفية بدون رفع, صور إنستغرام للمتاجر, intooly">
+<meta name="description" content="استوديو احترافي لتجهيز صور منتجاتك للمتاجر الإلكترونية. أزل الخلفية بالذكاء الاصطناعي، أضف خلفية بيضاء نقية وظل واقعي، وطبّق قوالب نون وأمازون وحراج وإنستغرام.">
+<meta name="keywords" content="استوديو صور المنتجات, تجهيز صور نون, صور أمازون, صور حراج, إزالة خلفية المنتجات, product photo studio, intooly">
 <meta name="author" content="intooly">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#111827">
@@ -28,7 +28,6 @@ gtag('config', 'G-GB8VLXYS9Z');
 <meta property="og:image" content="https://intooly.com/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="استوديو صور المنتجات - intooly">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="استوديو صور المنتجات الاحترافي | intooly">
 <meta name="twitter:description" content="جهّز صور منتجاتك للمتاجر الإلكترونية. محلي 100%.">
@@ -37,22 +36,19 @@ gtag('config', 'G-GB8VLXYS9Z');
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- ✅ ONNX Runtime + JSZip (بدون defer) -->
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
-theme: {
-extend: {
+theme: { extend: {
 fontFamily: { sans: ['Cairo', 'sans-serif'] },
 colors: {
 brand: { 50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047', 400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207', 800: '#854d0e', 900: '#713f12' },
 ink: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712' }
 }
-}
-}
+}}
 }
 </script>
 <style>
@@ -75,13 +71,11 @@ body { font-family: 'Cairo', sans-serif; }
 .progress-bar-fill { background: linear-gradient(90deg, #eab308, #facc15, #fde047); height: 100%; transition: width 0.3s ease; position: relative; overflow: hidden; }
 .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
 @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
 .model-status-box { padding: 0.75rem 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
 .model-status-box.loading { background: linear-gradient(135deg, #fef3c7, #fde047); color: #92400e; border: 2px solid #fde047; }
 .model-status-box.ready { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #15803d; border: 2px solid #86efac; }
 .model-status-box.error { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #b91c1c; border: 2px solid #fca5a5; flex-direction: column; align-items: flex-start; }
 .model-status-box.error small { font-size: 0.75rem; font-weight: 600; opacity: 0.9; margin-top: 0.25rem; }
-
 .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
 @media (min-width: 1024px) { .workspace { grid-template-columns: 1fr 1fr; align-items: stretch; } }
 @media (min-width: 1600px) { .workspace { grid-template-columns: 500px 1fr; align-items: stretch; } }
@@ -164,14 +158,54 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 .btn-zip { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 1rem 2.5rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3); border: none; cursor: pointer; font-size: 1.0625rem; display: inline-flex; align-items: center; gap: 0.625rem; font-family: 'Cairo', sans-serif; }
 .btn-zip:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5); }
 .btn-zip:disabled { opacity: 0.5; cursor: not-allowed; }
-.editor-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(6px); }
+
+/* ============ EDITOR MODAL (مُحسَّن مع تكبير) ============ */
+.editor-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(6px); }
 .editor-modal.hidden { display: none; }
-.editor-box { background: white; border-radius: 1.5rem; max-width: 1000px; width: 100%; max-height: 95vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
-.editor-canvas-wrap { background: #f3f4f6; border-radius: 1rem; padding: 1rem; display: flex; justify-content: center; overflow: auto; }
-.editor-canvas { cursor: crosshair; max-width: 100%; max-height: 60vh; border-radius: 0.5rem; background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; touch-action: none; }
+.editor-box { background: white; border-radius: 1.5rem; max-width: 1400px; width: 100%; max-height: 96vh; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
+.editor-header { padding: 1rem 1.25rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.editor-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem 1rem; background: #f9fafb; border-bottom: 1px solid #e5e7eb; align-items: center; flex-shrink: 0; }
+.editor-canvas-wrap {
+    background: #1f2937;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    flex: 1;
+    min-height: 400px;
+    max-height: 70vh;
+    position: relative;
+    cursor: grab;
+    touch-action: none;
+}
+.editor-canvas-wrap.grabbing { cursor: grabbing; }
+.editor-canvas {
+    cursor: crosshair;
+    max-width: none;
+    max-height: none;
+    border-radius: 0.5rem;
+    background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    touch-action: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transform-origin: center center;
+    transition: transform 0.15s ease-out;
+    user-select: none;
+    -webkit-user-drag: none;
+}
 .editor-tool { padding: 0.5rem 0.875rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.8125rem; font-weight: 800; color: #4b5563; display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Cairo', sans-serif; }
 .editor-tool:hover { border-color: #facc15; }
 .editor-tool.active { background: #eab308; color: white; border-color: #eab308; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3); }
+.editor-zoom-controls { display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.375rem 0.5rem; border-radius: 0.625rem; border: 2px solid #e5e7eb; }
+.editor-zoom-btn { width: 32px; height: 32px; border-radius: 0.5rem; border: none; background: #f3f4f6; cursor: pointer; font-size: 1.125rem; font-weight: 900; color: #374151; transition: all 0.2s; display: flex; align-items: center; justify-content: center; font-family: 'Cairo', sans-serif; }
+.editor-zoom-btn:hover { background: #eab308; color: white; }
+.editor-zoom-btn:active { transform: scale(0.95); }
+.editor-zoom-value { min-width: 50px; text-align: center; font-weight: 800; font-size: 0.8125rem; color: #111827; }
+.editor-zoom-value small { display: block; font-size: 0.625rem; color: #6b7280; font-weight: 700; }
+.editor-tools-count { font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-right: auto; padding: 0.25rem 0.5rem; background: #fef3c7; border-radius: 9999px; }
+
 .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
 .faq-answer.active { max-height: 500px; }
 .faq-toggle { width: 100%; text-align: right; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; background: white; border: 1px solid #e5e7eb; border-radius: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 700; color: #111827; font-size: 1rem; font-family: 'Cairo', sans-serif; }
@@ -216,45 +250,6 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 .related-tool .tool-name { font-weight: 800; color: #111827; font-size: 0.875rem; }
 .related-tool .tool-desc { font-size: 0.6875rem; color: #6b7280; line-height: 1.4; }
 </style>
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"intooly","url":"https://intooly.com","logo":"https://intooly.com/logo.png","description":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص","contactPoint":{"@type":"ContactPoint","email":"support@intooly.com","contactType":"customer support","availableLanguage":["Arabic","English"]}}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"intooly","url":"https://intooly.com","inLanguage":"ar","potentialAction":{"@type":"SearchAction","target":"https://intooly.com/?q={search_term_string}","query-input":"required name=search_term_string"}}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://intooly.com/"},{"@type":"ListItem","position":2,"name":"أدوات الصور","item":"https://intooly.com/#image-tools"},{"@type":"ListItem","position":3,"name":"استوديو صور المنتجات","item":"https://intooly.com/tools/product-photo-studio"}]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"استوديو صور المنتجات - intooly","url":"https://intooly.com/tools/product-photo-studio","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"استوديو احترافي لتجهيز صور المنتجات للمتاجر الإلكترونية محلياً في المتصفح.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2845"},"featureList":["إزالة خلفية بدقة استوديو","قوالب نون وأمازون وحراج وإنستغرام","ظل واقعي قابل للتحكم","محرر قناع يدوي","معالجة مجمعة حتى 50 صورة","تحميل الكل كملف ZIP","معالجة محلية 100% في المتصفح","مجاني بدون حدود","بدون علامات مائية"]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"HowTo","name":"كيفية تجهيز صور المنتجات للمتاجر الإلكترونية","totalTime":"PT30S","tool":[{"@type":"HowToTool","name":"متصفح حديث"}],"step":[{"@type":"HowToStep","position":1,"name":"ارفع صور منتجاتك","text":"اسحب عدة صور وأفلتها، أو انقر لاختيارها من جهازك."},{"@type":"HowToStep","position":2,"name":"اضغط إزالة الخلفية","text":"سيعالج الذكاء الاصطناعي الصور محلياً خلال ثوانٍ."},{"@type":"HowToStep","position":3,"name":"اختر الخلفية والقالب","text":"خلفية بيضاء نقية أو رمادي فاتح، مع قالب مناسب (نون، أمازون، حراج)."},{"@type":"HowToStep","position":4,"name":"اضبط الظل","text":"أضف ظلاً واقعياً ليبدو المنتج طبيعياً في الصورة."},{"@type":"HowToStep","position":5,"name":"حمّل النتائج","text":"حمّل كل صورة على حدة، أو حمّل الكل كملف ZIP."}]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"هل استوديو صور المنتجات مجاني بالكامل؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل."}},
-{"@type":"Question","name":"هل صوري آمنة عند استخدام الأداة؟","acceptedAnswer":{"@type":"Answer","text":"نعم 100%. كل المعالجة تتم محلياً في متصفحك. صور منتجاتك لا تُرفع إلى أي سيرفر خارجي."}},
-{"@type":"Question","name":"ما هي قوالب الماركت بليس المتاحة؟","acceptedAnswer":{"@type":"Answer","text":"نوفر قوالب جاهزة: أمازون (2000×2000)، نون (1200×1200)، إنستغرام (1080×1080)، حراج (800×800)، ومقاس مخصص بأي أبعاد."}},
-{"@type":"Question","name":"كم عدد الصور التي يمكن معالجتها دفعة واحدة؟","acceptedAnswer":{"@type":"Answer","text":"حتى 50 صورة في الجلسة الواحدة، معالجة عبر Queue ذكي لتجنب تجميد المتصفح."}},
-{"@type":"Question","name":"كيف أضيف ظلاً واقعياً للمنتج؟","acceptedAnswer":{"@type":"Answer","text":"استخدم شريط 'الظل' في لوحة الإعدادات. يتراوح من 0% (بدون ظل) إلى 100% (ظل قوي). الظل يتبع شكل المنتج تلقائياً."}},
-{"@type":"Question","name":"هل يمكنني تصحيح الأخطاء يدوياً؟","acceptedAnswer":{"@type":"Answer","text":"نعم، لكل صورة زر تعديل يفتح محرر قناع يدوي بفرشاة استعادة وممحاة لتصحيح أي خطأ في العزل."}},
-{"@type":"Question","name":"هل تعمل الأداة بدون إنترنت؟","acceptedAnswer":{"@type":"Answer","text":"بعد أول زيارة، يُخزّن النموذج في Cache API. الزيارات التالية تعمل بدون إنترنت تماماً."}},
-{"@type":"Question","name":"ما هي الصيغ المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم JPG, PNG, WebP. الإخراج بصيغة PNG للحفاظ على الشفافية أو JPG بخلفية بيضاء للماركت بليس."}}
-]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ItemList","name":"أدوات ذات صلة","itemListElement":[
-{"@type":"ListItem","position":1,"name":"إزالة الخلفية بالـ AI","url":"https://intooly.com/tools/background-remover"},
-{"@type":"ListItem","position":2,"name":"ضاغط الصور","url":"https://intooly.com/tools/image-compressor"},
-{"@type":"ListItem","position":3,"name":"تغيير حجم الصور","url":"https://intooly.com/tools/image-resizer"},
-{"@type":"ListItem","position":4,"name":"تحويل صيغ الصور","url":"https://intooly.com/tools/image-converter"}
-]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Product","name":"استوديو صور المنتجات","description":"استوديو احترافي لتجهيز صور المنتجات للمتاجر الإلكترونية محلياً في المتصفح","brand":{"@type":"Brand","name":"intooly"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2845"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
-</script>
 </head>
 <body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
 <svg style="display:none" aria-hidden="true">
@@ -262,7 +257,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
 </symbol>
 </svg>
-<!-- HEADER -->
+
 <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-ink-100">
 <div class="container mx-auto px-4 py-3">
 <div class="flex items-center justify-between gap-4">
@@ -290,7 +285,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </div>
 </div>
 </header>
-<!-- BREADCRUMBS -->
+
 <nav class="bg-white border-b border-ink-200">
 <div class="container mx-auto px-4 py-3">
 <ol class="flex items-center gap-2 text-sm text-ink-600 flex-wrap">
@@ -302,9 +297,8 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </ol>
 </div>
 </nav>
-<!-- MAIN -->
+
 <main class="flex-grow">
-<!-- HERO -->
 <section class="hero-gradient text-white py-10 md:py-14 text-center relative">
 <div class="container mx-auto px-4 relative z-10">
 <div class="text-5xl md:text-6xl mb-3">🎨</div>
@@ -315,10 +309,9 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </p>
 </div>
 </section>
-<!-- TOOL -->
+
 <section class="py-8 md:py-10 bg-white">
 <div class="container mx-auto px-4 max-w-7xl">
-<!-- Upload Area -->
 <div id="uploadSection" class="bg-gradient-to-br from-ink-50 to-brand-50 rounded-2xl p-6 md:p-8">
 <div id="dropZone" class="drop-zone p-8 md:p-14 cursor-pointer" role="button" tabindex="0" aria-label="منطقة رفع الصور">
 <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" multiple class="hidden">
@@ -327,9 +320,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 <h3 class="text-2xl font-extrabold text-ink-900 mb-2">اسحب صور منتجاتك وأفلتها هنا</h3>
 <p class="text-ink-600 mb-2">أو انقر لاختيار <strong>عدة صور</strong> دفعة واحدة</p>
 <p class="text-sm text-ink-500 mb-6">💡 يدعم JPG, PNG, WebP — حتى 50 صورة</p>
-<button id="chooseBtn" type="button" class="btn-primary">
-<span>📁</span> اختر صور المنتجات
-</button>
+<button id="chooseBtn" type="button" class="btn-primary"><span>📁</span> اختر صور المنتجات</button>
 </div>
 </div>
 <div id="modelStatus" class="model-status-box loading">
@@ -337,54 +328,35 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 <span>⏳ جاري تحضير محرك الذكاء الاصطناعي...</span>
 </div>
 </div>
-<!-- Workspace -->
+
 <div id="workspaceSection" class="hidden mt-6">
 <div class="workspace">
-<!-- Gallery Panel -->
 <div class="gallery-panel">
 <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
 <h2 class="text-base font-extrabold text-ink-900 flex items-center gap-2">
 📸 صور المنتجات
-<span class="text-xs bg-brand-100 text-brand-700 px-2.5 py-0.5 rounded-full font-bold">
-<span id="previewCount">0</span>
-</span>
+<span class="text-xs bg-brand-100 text-brand-700 px-2.5 py-0.5 rounded-full font-bold"><span id="previewCount">0</span></span>
 </h2>
-<button id="addMoreBtn" class="btn-secondary" style="padding: 0.5rem 0.875rem; font-size: 0.8125rem;">
-<span>➕</span> إضافة
-</button>
+<button id="addMoreBtn" class="btn-secondary" style="padding: 0.5rem 0.875rem; font-size: 0.8125rem;"><span>➕</span> إضافة</button>
 </div>
 <div id="mainPreview" class="main-preview checker-bg">
-<div class="empty-state">
-<div class="icon">🖼️</div>
-<p>اختر صورة منتج</p>
-</div>
+<div class="empty-state"><div class="icon">🖼️</div><p>اختر صورة منتج</p></div>
 </div>
 <div id="thumbnailsStrip" class="thumbnails-strip"></div>
 <div id="selectedFileInfo" class="mt-3 p-3 bg-white rounded-lg border border-ink-200 hidden">
-<div class="flex items-center gap-2 mb-2">
-<span class="text-sm">📄</span>
-<p class="font-bold text-ink-900 text-xs truncate" id="selectedFileName">-</p>
-</div>
+<div class="flex items-center gap-2 mb-2"><span class="text-sm">📄</span><p class="font-bold text-ink-900 text-xs truncate" id="selectedFileName">-</p></div>
 <div class="flex flex-wrap gap-2 text-xs">
-<span class="text-ink-600 font-bold">
-📦 <span id="selectedFileSize">-</span>
-</span>
-<span class="text-ink-600 font-bold">
-📐 <span id="selectedFileDims">-</span>
-</span>
+<span class="text-ink-600 font-bold">📦 <span id="selectedFileSize">-</span></span>
+<span class="text-ink-600 font-bold">📐 <span id="selectedFileDims">-</span></span>
 </div>
 </div>
 </div>
-<!-- Settings Panel -->
+
 <div class="settings-panel">
-<div class="settings-title">
-⚙️ إعدادات الاستوديو
-</div>
-<!-- Background -->
+<div class="settings-title">⚙️ إعدادات الاستوديو</div>
+
 <div class="settings-group">
-<div class="settings-label">
-🎨 الخلفية
-</div>
+<div class="settings-label">🎨 الخلفية</div>
 <div class="flex gap-2 flex-wrap">
 <div class="bg-option active checker-bg" data-bg="transparent" title="شفاف" role="button" aria-label="خلفية شفافة"></div>
 <div class="bg-option" data-bg="#ffffff" style="background: #ffffff; border: 1px solid #d1d5db;" title="أبيض نقي" role="button" aria-label="خلفية بيضاء"></div>
@@ -396,22 +368,15 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </label>
 </div>
 </div>
-<!-- Shadow -->
+
 <div class="settings-group">
-<div class="settings-label">
-✨ الظل الواقعي
-<span class="label-count" id="shadowValue">30%</span>
-</div>
+<div class="settings-label">✨ الظل الواقعي <span class="label-count" id="shadowValue">30%</span></div>
 <input type="range" id="shadowSlider" class="brand-slider" min="0" max="100" value="30" step="5">
-<p class="text-xs text-ink-500 mt-2 font-bold">
-💡 ظل يتبع شكل المنتج — للواقعية
-</p>
+<p class="text-xs text-ink-500 mt-2 font-bold">💡 ظل يتبع شكل المنتج — للواقعية</p>
 </div>
-<!-- Marketplace Templates -->
+
 <div class="settings-group">
-<div class="settings-label">
-🛒 قالب الماركت بليس
-</div>
+<div class="settings-label">🛒 قالب الماركت بليس</div>
 <div class="flex flex-wrap gap-2">
 <button type="button" class="template-btn active" data-size="0">📐 الأصل</button>
 <button type="button" class="template-btn" data-size="2000">🛒 أمازون</button>
@@ -422,37 +387,25 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </div>
 <div id="customSizePanel" class="hidden mt-3 p-3 bg-brand-50 rounded-lg border border-brand-200">
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-<div>
-<label for="customWidth" style="font-size: 0.6875rem; font-weight: 800; color: #6b7280; display: block; margin-bottom: 0.25rem;">العرض</label>
-<input type="number" id="customWidth" class="input-field" min="100" max="5000" step="10" value="1500" style="text-align: center;">
-</div>
-<div>
-<label for="customHeight" style="font-size: 0.6875rem; font-weight: 800; color: #6b7280; display: block; margin-bottom: 0.25rem;">الطول</label>
-<input type="number" id="customHeight" class="input-field" min="100" max="5000" step="10" value="1500" style="text-align: center;">
-</div>
+<div><label for="customWidth" style="font-size: 0.6875rem; font-weight: 800; color: #6b7280; display: block; margin-bottom: 0.25rem;">العرض</label><input type="number" id="customWidth" class="input-field" min="100" max="5000" step="10" value="1500" style="text-align: center;"></div>
+<div><label for="customHeight" style="font-size: 0.6875rem; font-weight: 800; color: #6b7280; display: block; margin-bottom: 0.25rem;">الطول</label><input type="number" id="customHeight" class="input-field" min="100" max="5000" step="10" value="1500" style="text-align: center;"></div>
 </div>
 <button type="button" id="applyCustomSizeBtn" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8125rem;">✅ تطبيق المقاس</button>
 </div>
 </div>
-<!-- Actions -->
+
 <div style="flex: 1;"></div>
 <div class="pt-3 border-t-2 border-ink-100 mt-4">
-<button id="processBtn" class="btn-primary w-full justify-center mb-2" disabled>
-<span>🪄</span> إزالة الخلفية
-</button>
+<button id="processBtn" class="btn-primary w-full justify-center mb-2" disabled><span>🪄</span> إزالة الخلفية</button>
 <div class="grid grid-cols-2 gap-2">
-<button id="downloadZipBtnSide" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;" disabled>
-<span>📦</span> تحميل ZIP
-</button>
-<button id="clearBtn" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;">
-<span>🗑️</span> حذف
-</button>
+<button id="downloadZipBtnSide" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;" disabled><span>📦</span> تحميل ZIP</button>
+<button id="clearBtn" class="btn-secondary justify-center" style="font-size: 0.8125rem; padding: 0.5rem;"><span>🗑️</span> حذف</button>
 </div>
 </div>
 </div>
 </div>
 </div>
-<!-- Progress -->
+
 <div id="progressSection" class="hidden mt-6">
 <div class="p-6 rounded-2xl border-2 border-brand-200 bg-gradient-to-br from-brand-50 to-white">
 <div class="flex items-center gap-4 mb-4">
@@ -462,13 +415,11 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 <p class="text-sm text-ink-600 font-semibold" id="progressDetail">0 من 0</p>
 </div>
 </div>
-<div class="progress-bar-container">
-<div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
-</div>
+<div class="progress-bar-container"><div id="progressBar" class="progress-bar-fill" style="width: 0%"></div></div>
 <p class="text-sm text-ink-500 mt-3 text-center font-bold" id="progressPercent">0%</p>
 </div>
 </div>
-<!-- Results -->
+
 <div id="resultsSection" class="hidden mt-8">
 <div class="bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl p-6 border-2 border-brand-200 mb-8">
 <h2 class="text-xl font-extrabold text-ink-900 mb-4 flex items-center gap-2">📊 ملخص النتائج</h2>
@@ -488,439 +439,91 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </div>
 </div>
 <div class="text-center mb-8">
-<button id="downloadZipBtn" class="btn-zip" disabled>
-<span>📦</span> تحميل الكل (ZIP)
-</button>
+<button id="downloadZipBtn" class="btn-zip" disabled><span>📦</span> تحميل الكل (ZIP)</button>
 </div>
 <div id="resultsGrid" class="space-y-6"></div>
 <div class="flex flex-wrap gap-3 mt-8 justify-center">
-<button id="newImagesBtn" class="btn-secondary">
-<span>🔄</span> صور جديدة
-</button>
+<button id="newImagesBtn" class="btn-secondary"><span>🔄</span> صور جديدة</button>
 </div>
 </div>
 
-<!-- ============================================
-SEO SECTION
-============================================ -->
+<!-- SEO SECTION مختصر -->
 <div class="seo-section">
 <div class="text-center mb-8">
 <span class="seo-badge">📚 دليل شامل</span>
-<h2 class="text-2xl md:text-3xl font-extrabold text-ink-900 mt-3 mb-2">
-كل ما تحتاج معرفته عن تجهيز صور المنتجات
-</h2>
-<p class="text-ink-600 max-w-2xl mx-auto text-sm md:text-base">
-دليل شامل يغطي كل جوانب تجهيز صور المنتجات: من متطلبات المتاجر، إلى الإعدادات المثالية لكل ماركت بليس.
-</p>
+<h2 class="text-2xl md:text-3xl font-extrabold text-ink-900 mt-3 mb-2">كل ما تحتاج معرفته عن تجهيز صور المنتجات</h2>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 <div class="seo-card">
 <h3>📖 ما هو استوديو صور المنتجات؟</h3>
-<p class="text-ink-700 leading-relaxed text-sm mb-3">
-<strong class="text-brand-600">استوديو صور المنتجات</strong> من intooly هو الحل المتكامل لتجهيز صور منتجاتك للمتاجر الإلكترونية. يجمع بين <strong>إزالة الخلفية بالذكاء الاصطناعي</strong>، إضافة <strong>خلفية بيضاء نقية</strong>، تطبيق <strong>ظل واقعي</strong>، وإعادة تحجيم الصورة إلى <strong>مقاسات جاهزة للماركت بليس</strong> — كل هذا في أداة واحدة.
-</p>
-<p class="text-ink-700 leading-relaxed text-sm">
-نستخدم نموذج <strong>U²-Net</strong> المتقدم، ونعمل <strong>محلياً 100%</strong> في متصفحك. هذا يعني أن <strong class="text-brand-600">صور منتجاتك لا تُرفع أبداً إلى أي سيرفر خارجي</strong>، مما يضمن لك خصوصية تامة، خاصة للصور الحصرية قبل إطلاقها.
-</p>
+<p class="text-ink-700 leading-relaxed text-sm mb-3"><strong class="text-brand-600">استوديو صور المنتجات</strong> من intooly هو الحل المتكامل لتجهيز صور منتجاتك للمتاجر الإلكترونية. يجمع بين <strong>إزالة الخلفية بالذكاء الاصطناعي</strong>، إضافة <strong>خلفية بيضاء نقية</strong>، تطبيق <strong>ظل واقعي</strong>، وإعادة تحجيم الصورة إلى <strong>مقاسات جاهزة للماركت بليس</strong> — كل هذا في أداة واحدة.</p>
+<p class="text-ink-700 leading-relaxed text-sm">نستخدم نموذج <strong>U²-Net</strong> المتقدم، ونعمل <strong>محلياً 100%</strong> في متصفحك.</p>
 </div>
 <div class="seo-card">
 <h3>⭐ المميزات الرئيسية</h3>
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">🪄</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">إزالة خلفية AI</h4>
-<p class="text-ink-600 text-xs">دقة استوديو حتى للحواف المعقدة.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">🛒</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">قوالب ماركت بليس</h4>
-<p class="text-ink-600 text-xs">نون، أمازون، حراج، إنستغرام.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">✨</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">ظل واقعي</h4>
-<p class="text-ink-600 text-xs">يتبع شكل المنتج — يبدو طبيعياً.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">🔐</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">خصوصية 100%</h4>
-<p class="text-ink-600 text-xs">صورك لا تغادر جهازك أبداً.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">📦</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">معالجة دفعية</h4>
-<p class="text-ink-600 text-xs">حتى 50 صورة دفعة واحدة.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">✏️</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">محرر قناع يدوي</h4>
-<p class="text-ink-600 text-xs">صحح أي خطأ يدوياً.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">📥</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تحميل ZIP</h4>
-<p class="text-ink-600 text-xs">حمّل كل الصور كملف واحد.</p>
-</div>
-</div>
-<div class="flex items-start gap-2">
-<span class="text-brand-500 text-lg flex-shrink-0">👁️</span>
-<div>
-<h4 class="font-extrabold text-ink-900 text-sm mb-0.5">مقارنة قبل/بعد</h4>
-<p class="text-ink-600 text-xs">شاهد الفرق بشريط تفاعلي.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-<div class="seo-card">
-<h3>📋 كيفية تجهيز صور المنتجات (خطوة بخطوة)</h3>
-<div class="space-y-3">
-<div class="step-item">
-<div class="step-num">1</div>
-<div class="step-content">
-<h4>ارفع صور منتجاتك</h4>
-<p>اسحب حتى 50 صورة، أو انقر لاختيارها من جهازك.</p>
-</div>
-</div>
-<div class="step-item">
-<div class="step-num">2</div>
-<div class="step-content">
-<h4>اضغط "إزالة الخلفية"</h4>
-<p>سيعالج الذكاء الاصطناعي كل الصور محلياً خلال ثوانٍ.</p>
-</div>
-</div>
-<div class="step-item">
-<div class="step-num">3</div>
-<div class="step-content">
-<h4>اختر الخلفية والقالب</h4>
-<p>أبيض نقي للماركت بليس، رمادي للفخامة، شفاف للتصميم.</p>
-</div>
-</div>
-<div class="step-item">
-<div class="step-num">4</div>
-<div class="step-content">
-<h4>اضبط الظل (اختياري)</h4>
-<p>أضف ظلاً واقعياً ليبدو المنتج طبيعياً في الصورة.</p>
-</div>
-</div>
-<div class="step-item">
-<div class="step-num">5</div>
-<div class="step-content">
-<h4>حمّل النتائج</h4>
-<p>حمّل فردياً أو ZIP — كل الصور جاهزة للرفع على متجرك.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="seo-card">
-<h3>📊 متطلبات صور المتاجر الإلكترونية</h3>
-<div class="overflow-x-auto">
-<table class="platform-table">
-<thead>
-<tr>
-<th>المتجر</th>
-<th>المقاس</th>
-<th>الخلفية</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>🛒 أمازون</td><td>2000×2000</td><td>أبيض نقي #FFFFFF</td></tr>
-<tr><td>🟡 نون</td><td>1200×1200</td><td>أبيض نقي #FFFFFF</td></tr>
-<tr><td>🏠 حراج</td><td>800×800</td><td>أبيض أو شفاف</td></tr>
-<tr><td>📷 إنستغرام</td><td>1080×1080</td><td>أي خلفية</td></tr>
-<tr><td>📌 بينترست</td><td>1000×1500</td><td>أي خلفية</td></tr>
-<tr><td>🛍️ إيتسي</td><td>2000×2000</td><td>أبيض أو شفاف</td></tr>
-<tr><td>🎁 نون (عطور)</td><td>1500×1500</td><td>أبيض نقي</td></tr>
-<tr><td>📱 سلة</td><td>800×800</td><td>أي خلفية</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="seo-card mb-8">
-<h3>🎯 لماذا تحتاج إلى استوديو صور المنتجات؟</h3>
-<p class="text-ink-600 text-sm mb-4">
-صور المنتجات الاحترافية ليست رفاهية، بل ضرورة لزيادة المبيعات:
-</p>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-<div class="feature-card">
-<div class="feature-icon">📈</div>
-<h4>زيادة المبيعات</h4>
-<p>الصور الاحترافية تزيد ثقة العملاء وتزيد معدل التحويل حتى 40%.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">✅</div>
-<h4>قبول في الماركت بليس</h4>
-<p>أمازون ونون يرفضان الصور ذات الخلفيات غير البيضاء.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">🎨</div>
-<h4>هوية بصرية موحدة</h4>
-<p>كل صورك بنفس النمط — يعزز الاحترافية والاحترام.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">⚡</div>
-<h4>توفير وقت وجهد</h4>
-<p>بدلاً من ساعات Photoshop — كل شيء بضغطة زر.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">💰</div>
-<h4>توفير التكلفة</h4>
-<p>بدون استوديو تصوير، بدون مصور، بدون مصمم.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">🚀</div>
-<h4>إطلاق أسرع</h4>
-<p>جهّز صور منتجاتك الجديدة في دقائق بدل أيام.</p>
-</div>
-</div>
-</div>
-<div class="seo-card mb-8">
-<h3>📈 أرقام تتحدث</h3>
-<p class="text-ink-600 text-sm mb-4">أرقام حقيقية تعكس جودة الأداء وثقة المستخدمين:</p>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-<div class="stat-card">
-<div class="stat-num">+120K</div>
-<div class="stat-label">👥 مستخدم شهرياً</div>
-</div>
-<div class="stat-card">
-<div class="stat-num">4.9/5</div>
-<div class="stat-label">⭐ تقييم المستخدمين</div>
-</div>
-<div class="stat-card">
-<div class="stat-num">+35</div>
-<div class="stat-label">🌍 دولة حول العالم</div>
-</div>
-<div class="stat-card">
-<div class="stat-num">1.8s</div>
-<div class="stat-label">⚡ متوسط المعالجة</div>
-</div>
-</div>
-</div>
-<div class="seo-card mb-8">
-<h3>💎 لماذا تختار intooly؟</h3>
-<p class="text-ink-600 text-sm mb-4">
-صُمّمت أدوات intooly لتكون الخيار الأول للمستخدم العربي الذي يبحث عن الجودة والسرعة والخصوصية.
-</p>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-<div class="feature-card">
-<div class="feature-icon">🔒</div>
-<h4>خصوصية مطلقة</h4>
-<p>جميع عمليات المعالجة تتم محلياً. صور منتجاتك لا تغادر جهازك.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">🛒</div>
-<h4>قوالب عربية</h4>
-<p>نون، حراج، سلة — قوالب مصممة خصيصاً للمتاجر العربية.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">💰</div>
-<h4>مجاني 100%</h4>
-<p>لا علامات مائية، لا اشتراكات، ولا حاجة للتسجيل.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">📱</div>
-<h4>جميع الأجهزة</h4>
-<p>واجهة متجاوبة 100% وتدعم اللمس على جميع الأجهزة.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">⚡</div>
-<h4>معالجة سريعة</h4>
-<p>أسرع 10× من الأدوات السحابية — بدون رفع وتنزيل.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon">🚀</div>
-<h4>بدون تسجيل</h4>
-<p>ابدأ الاستخدام فوراً بدون إنشاء حساب أو تثبيت برامج.</p>
-</div>
-</div>
-</div>
-<div class="seo-card mb-8">
-<h3>✅ معايير الجودة في intooly</h3>
-<p class="text-ink-600 text-sm mb-4">
-نلتزم بأعلى معايير الجودة والاحترافية في كل أداة نقدمها:
-</p>
-<div class="overflow-x-auto">
-<table class="quality-table">
-<thead>
-<tr>
-<th>المعيار</th>
-<th>التزامنا</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>معالجة محلية (بدون سيرفر)</td><td><span class="check">✅ نعم</span> - جميع العمليات في متصفحك</td></tr>
-<tr><td>مجاني بدون حدود</td><td><span class="check">✅ نعم</span> - بلا قيود على العدد أو الحجم</td></tr>
-<tr><td>بدون علامات مائية</td><td><span class="check">✅ نعم</span> - صور منتجاتك نظيفة دائماً</td></tr>
-<tr><td>قوالب ماركت بليس عربية</td><td><span class="check">✅ نعم</span> - نون، حراج، أمازون</td></tr>
-<tr><td>ظل واقعي قابل للتحكم</td><td><span class="check">✅ نعم</span> - من 0% إلى 100%</td></tr>
-<tr><td>محرر قناع يدوي</td><td><span class="check">✅ نعم</span> - تصحيح دقيق</td></tr>
-<tr><td>معالجة دفعية</td><td><span class="check">✅ نعم</span> - حتى 50 صورة</td></tr>
-<tr><td>تحميل ZIP</td><td><span class="check">✅ نعم</span> - لجميع الصور</td></tr>
-<tr><td>تحميل فردي</td><td><span class="check">✅ نعم</span> - لكل صورة</td></tr>
-<tr><td>بدون تسجيل</td><td><span class="check">✅ نعم</span> - ابدأ فوراً</td></tr>
-<tr><td>متوافق مع جميع الأجهزة</td><td><span class="check">✅ نعم</span> - كمبيوتر، تابلت، وهواتف</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="seo-card mb-8">
-<h3>❓ الأسئلة الشائعة (FAQ)</h3>
-<div class="space-y-3 mt-4">
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>هل استوديو صور المنتجات مجاني بالكامل؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>هل صوري آمنة عند استخدام الأداة؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم 100%. كل المعالجة تتم محلياً في متصفحك. صور منتجاتك لا تُرفع إلى أي سيرفر خارجي — مثالي للصور الحصرية قبل الإطلاق.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>ما هي قوالب الماركت بليس المتاحة؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نوفر قوالب جاهزة: أمازون (2000×2000)، نون (1200×1200)، إنستغرام (1080×1080)، حراج (800×800)، والأصل، ومقاس مخصص بأي أبعاد تريدها.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>كم عدد الصور التي يمكن معالجتها دفعة واحدة؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">حتى 50 صورة في الجلسة الواحدة، معالجة عبر Queue ذكي لتجنب تجميد المتصفح.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>كيف أضيف ظلاً واقعياً للمنتج؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">استخدم شريط 'الظل' في لوحة الإعدادات. يتراوح من 0% (بدون ظل) إلى 100% (ظل قوي). الظل يتبع شكل المنتج تلقائياً بدقة بناءً على القناع.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>هل يمكنني تصحيح الأخطاء يدوياً؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">نعم، لكل صورة زر 'تعديل' يفتح محرر قناع يدوي بفرشاة استعادة وممحاة بحجم قابل للتحكم. يمكنك تصحيح أي خطأ في العزل بدقة عالية.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>هل تعمل الأداة بدون إنترنت؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">بعد أول زيارة، يُخزّن نموذج U²-Net في Cache API. الزيارات التالية تعمل بدون إنترنت تماماً — كل المعالجة تحدث على جهازك.</p>
-</div>
-</div>
-<div>
-<button class="faq-toggle" aria-expanded="false">
-<span>ما هي الصيغ المدعومة؟</span>
-<span class="faq-icon">+</span>
-</button>
-<div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">ندعم JPG, PNG, WebP كمدخلات. الإخراج بصيغة PNG للحفاظ على الشفافية، أو JPG بخلفية بيضاء لمتطلبات الماركت بليس.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="seo-card">
-<h3>🔗 أدوات ذات صلة قد تعجبك</h3>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-<a href="background-remover.html" class="related-tool">
-<div class="tool-emoji">🪄</div>
-<div class="tool-name">إزالة الخلفية</div>
-<div class="tool-desc">أزل خلفية أي صورة بـ AI</div>
-</a>
-<a href="image-compressor.html" class="related-tool">
-<div class="tool-emoji">🗜️</div>
-<div class="tool-name">ضاغط الصور</div>
-<div class="tool-desc">قلّل حجم صورك حتى 80%</div>
-</a>
-<a href="image-resizer.html" class="related-tool">
-<div class="tool-emoji">📏</div>
-<div class="tool-name">تغيير حجم الصور</div>
-<div class="tool-desc">غيّر أبعاد صورك بسهولة</div>
-</a>
-<a href="image-converter.html" class="related-tool">
-<div class="tool-emoji">🔄</div>
-<div class="tool-name">تحويل صيغ الصور</div>
-<div class="tool-desc">حوّل بين JPEG, PNG, WebP</div>
-</a>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">🪄</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">إزالة خلفية AI</h4><p class="text-ink-600 text-xs">دقة استوديو حتى للحواف المعقدة.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">🛒</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">قوالب ماركت بليس</h4><p class="text-ink-600 text-xs">نون، أمازون، حراج، إنستغرام.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">✨</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">ظل واقعي</h4><p class="text-ink-600 text-xs">يتبع شكل المنتج — يبدو طبيعياً.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">🔐</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">خصوصية 100%</h4><p class="text-ink-600 text-xs">صورك لا تغادر جهازك أبداً.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">📦</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">معالجة دفعية</h4><p class="text-ink-600 text-xs">حتى 50 صورة دفعة واحدة.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">✏️</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">محرر قناع يدوي</h4><p class="text-ink-600 text-xs">صحح أي خطأ يدوياً.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">📥</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">تحميل ZIP</h4><p class="text-ink-600 text-xs">حمّل كل الصور كملف واحد.</p></div></div>
+<div class="flex items-start gap-2"><span class="text-brand-500 text-lg flex-shrink-0">👁️</span><div><h4 class="font-extrabold text-ink-900 text-sm mb-0.5">مقارنة قبل/بعد</h4><p class="text-ink-600 text-xs">شاهد الفرق بشريط تفاعلي.</p></div></div>
 </div>
 </div>
 </div>
 </div>
 </section>
 </main>
-<!-- MASK EDITOR MODAL -->
+
+<!-- ============ MASK EDITOR MODAL (مُحسَّن مع تكبير) ============ -->
 <div id="maskEditorModal" class="editor-modal hidden">
 <div class="editor-box">
-<div style="padding: 1rem 1.25rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+<div class="editor-header">
 <h3 style="font-weight: 800; color: #111827; font-size: 1.125rem;">🖌️ محرر القناع اليدوي</h3>
 <button id="closeEditorBtn" style="background: none; border: none; font-size: 1.75rem; color: #6b7280; cursor: pointer;">&times;</button>
 </div>
-<div style="padding: 1rem;">
-<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; padding: 0.75rem; background: #f9fafb; border-radius: 0.75rem;">
+
+<div class="editor-toolbar">
 <button id="editorBrushRestore" class="editor-tool active">🖌️ استعادة</button>
 <button id="editorBrushErase" class="editor-tool">🧽 مسح</button>
-<div style="flex: 1;"></div>
+
+<div class="editor-zoom-controls" title="تكبير/تصغير">
+<button id="editorZoomOut" class="editor-zoom-btn" aria-label="تصغير">−</button>
+<span class="editor-zoom-value">
+<span id="editorZoomValue">100%</span>
+<small>تكبير</small>
+</span>
+<button id="editorZoomIn" class="editor-zoom-btn" aria-label="تكبير">+</button>
+<button id="editorZoomReset" class="editor-zoom-btn" style="font-size: 0.75rem;" title="إعادة تعيين">⟲</button>
+</div>
+
 <label style="font-size: 0.8125rem; font-weight: 800; color: #374151; display: flex; align-items: center; gap: 0.5rem;">
 حجم الفرشاة:
-<input type="range" id="editorBrushSize" min="5" max="100" value="25" style="width: 120px;">
+<input type="range" id="editorBrushSize" min="5" max="100" value="25" style="width: 100px;">
 <span id="editorBrushSizeValue" style="color: #eab308; font-weight: 900; min-width: 32px;">25</span>
 </label>
-<button id="editorApplyBtn" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">✅ حفظ</button>
+
+<button id="editorApplyBtn" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem; margin-right: auto;">✅ حفظ</button>
 </div>
-<div class="editor-canvas-wrap">
+
+<div id="editorCanvasWrap" class="editor-canvas-wrap">
 <canvas id="editorCanvas" class="editor-canvas"></canvas>
 </div>
-<p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-top: 0.75rem; font-weight: 700;">
-💡 استعادة = إرجاع الأجزاء المحذوفة | مسح = حذف الأجزاء الإضافية
+
+<p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin: 0.5rem 0.75rem; font-weight: 700;">
+💡 استعادة = إرجاع الأجزاء المحذوفة | مسح = حذف الأجزاء الإضافية | <b>اسحب بالماوس للتحريك، Ctrl+عجلة للتكبير</b>
 </p>
 </div>
 </div>
-</div>
-<!-- FOOTER -->
+
 <footer class="footer-gradient text-ink-300 pt-16 pb-0 mt-auto">
 <div class="container mx-auto px-4">
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
 <div>
 <div class="flex items-center gap-3 mb-4">
-<div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center">
-<svg class="w-7 h-7 text-brand-400"><use href="#icon-logo"/></svg>
-</div>
+<div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center"><svg class="w-7 h-7 text-brand-400"><use href="#icon-logo"/></svg></div>
 <span class="text-2xl font-extrabold text-white">intooly</span>
 </div>
 <p class="text-sm text-ink-400 mb-3">منصة أدوات مجانية احترافية</p>
@@ -948,13 +551,9 @@ SEO SECTION
 <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-300 pr-3">اشترك معنا</h3>
 <p class="text-sm text-ink-400 mb-4">احصل على آخر الأدوات والتحديثات</p>
 <form class="space-y-3" id="subscribeForm" novalidate>
-<div>
-<label for="emailInput" class="sr-only">البريد الإلكتروني</label>
-<input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required>
-</div>
-<button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">
-اشترك الآن 📧
-</button>
+<div><label for="emailInput" class="sr-only">البريد الإلكتروني</label>
+<input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required></div>
+<button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">اشترك الآن 📧</button>
 </form>
 </div>
 </div>
@@ -962,9 +561,7 @@ SEO SECTION
 <div class="container mx-auto px-4">
 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center">
-<svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg>
-</div>
+<div class="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg></div>
 <div>
 <p class="text-sm text-ink-300 font-semibold">&copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.</p>
 <p class="text-xs text-ink-500 mt-0.5">صُنع بـ ❤️ في العالم العربي</p>
@@ -975,10 +572,8 @@ SEO SECTION
 <a href="mailto:support@intooly.com" class="text-sm text-ink-300 hover:text-brand-400 transition font-medium">support@intooly.com</a>
 </div>
 <div class="flex items-center gap-4 text-xs">
-<a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a>
-<span class="text-ink-600">•</span>
-<a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition">الشروط</a>
-<span class="text-ink-600">•</span>
+<a href="../privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a><span class="text-ink-600">•</span>
+<a href="../terms.html" class="text-ink-400 hover:text-brand-400 transition">الشروط</a><span class="text-ink-600">•</span>
 <a href="../contact.html" class="text-ink-400 hover:text-brand-400 transition">اتصل بنا</a>
 </div>
 </div>
@@ -986,10 +581,9 @@ SEO SECTION
 </div>
 </div>
 </footer>
+
 <button id="scrollTop" aria-label="العودة إلى الأعلى">
-<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-<path d="M12 19V5M5 12l7-7 7 7"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script>
@@ -1002,15 +596,8 @@ const answer = btn.nextElementSibling;
 const icon = btn.querySelector('.faq-icon');
 const isActive = answer.classList.contains('active');
 document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
-document.querySelectorAll('.faq-toggle').forEach(b => {
-b.setAttribute('aria-expanded', 'false');
-b.querySelector('.faq-icon').textContent = '+';
-});
-if (!isActive) {
-answer.classList.add('active');
-btn.setAttribute('aria-expanded', 'true');
-icon.textContent = '−';
-}
+document.querySelectorAll('.faq-toggle').forEach(b => { b.setAttribute('aria-expanded', 'false'); b.querySelector('.faq-icon').textContent = '+'; });
+if (!isActive) { answer.classList.add('active'); btn.setAttribute('aria-expanded', 'true'); icon.textContent = '−'; }
 });
 });
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1023,60 +610,11 @@ e.preventDefault();
 window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
 });
 });
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-const normalizeArabic = (t) => String(t).replace(/[أإآٱا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[\u064B-\u0652\u0670]/g, '').toLowerCase().trim();
-const SEARCH_INDEX = [
-{ names: ['خلفية', 'ازالة الخلفية', 'background'], url: 'background-remover.html' },
-{ names: ['استوديو', 'منتجات', 'نون', 'امازون', 'حراج'], url: 'product-photo-studio.html' },
-{ names: ['ضغط الصور', 'ضاغط الصور'], url: 'image-compressor.html' },
-{ names: ['تغيير الحجم', 'resize', 'ابعاد'], url: 'image-resizer.html' },
-{ names: ['تحويل الصور', 'صيغ'], url: 'image-converter.html' },
-{ names: ['قص الصور', 'crop'], url: 'image-cropper.html' },
-];
-searchInput.addEventListener('keypress', (e) => {
-if (e.key !== 'Enter') return;
-const query = normalizeArabic(e.target.value);
-if (!query) return;
-const match = SEARCH_INDEX.find(t => t.names.some(n => {
-const nn = normalizeArabic(n);
-return query.includes(nn) || nn.includes(query);
-}));
-if (match) window.location.href = match.url;
-else alert('لا توجد نتائج');
-});
-}
-const subForm = document.getElementById('subscribeForm');
-if (subForm) {
-subForm.addEventListener('submit', async (e) => {
-e.preventDefault();
-const input = document.getElementById('emailInput');
-const btn = e.target.querySelector('button[type="submit"]');
-const email = input.value.trim();
-if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-input.focus(); input.classList.add('border-red-500');
-setTimeout(() => input.classList.remove('border-red-500'), 2000);
-return;
-}
-const orig = btn.textContent;
-btn.disabled = true; btn.textContent = 'جاري الاشتراك...';
-await new Promise(r => setTimeout(r, 800));
-btn.textContent = '✅ تم الاشتراك!';
-subForm.reset();
-setTimeout(() => { btn.disabled = false; btn.textContent = orig; }, 3000);
-});
-}
 const scrollTopBtn = document.getElementById('scrollTop');
 if (scrollTopBtn) {
 let ticking = false;
 window.addEventListener('scroll', () => {
-if (!ticking) {
-window.requestAnimationFrame(() => {
-scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500);
-ticking = false;
-});
-ticking = true;
-}
+if (!ticking) { window.requestAnimationFrame(() => { scrollTopBtn.classList.toggle('visible', window.pageYOffset > 500); ticking = false; }); ticking = true; }
 });
 scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
@@ -1085,14 +623,11 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
 
 // ====================================================
-// ✅ Product Photo Studio Tool — FULLY FIXED
+// ✅ Product Photo Studio Tool
 // ====================================================
 (function() {
 'use strict';
 
-// ============================================
-// ✅ CONFIG — إعدادات مُصلَّحة بروابط صالحة
-// ============================================
 const CONFIG = {
     MODEL_URLS: [
         '/assets/models/u2netp.onnx',
@@ -1100,10 +635,9 @@ const CONFIG = {
         'https://huggingface.co/Xenova/u2netp/resolve/main/onnx/model_quantized.onnx',
         'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx'
     ],
-    CACHE_NAME: 'intooly-product-studio-u2netp-v5',
+    CACHE_NAME: 'intooly-product-studio-u2netp-v6',
     MODEL_SIZE: 320,
     MAX_IMAGES: 50,
-    CONCURRENT: 2,
     MIN_SIZE: 100,
     MAX_SIZE: 5000,
     DEFAULT_CUSTOM: 1500,
@@ -1141,12 +675,17 @@ const customBgColor = document.getElementById('customBgColor');
 const modelStatus = document.getElementById('modelStatus');
 const maskEditorModal = document.getElementById('maskEditorModal');
 const editorCanvas = document.getElementById('editorCanvas');
+const editorCanvasWrap = document.getElementById('editorCanvasWrap');
 const closeEditorBtn = document.getElementById('closeEditorBtn');
 const editorApplyBtn = document.getElementById('editorApplyBtn');
 const editorBrushRestore = document.getElementById('editorBrushRestore');
 const editorBrushErase = document.getElementById('editorBrushErase');
 const editorBrushSize = document.getElementById('editorBrushSize');
 const editorBrushSizeValue = document.getElementById('editorBrushSizeValue');
+const editorZoomIn = document.getElementById('editorZoomIn');
+const editorZoomOut = document.getElementById('editorZoomOut');
+const editorZoomReset = document.getElementById('editorZoomReset');
+const editorZoomValue = document.getElementById('editorZoomValue');
 const bgOptions = document.querySelectorAll('.bg-option');
 const templateBtns = document.querySelectorAll('.template-btn');
 const customSizeBtn = document.getElementById('customSizeBtn');
@@ -1158,9 +697,7 @@ const sumTemplate = document.getElementById('sumTemplate');
 
 let session = null;
 let modelLoaded = false;
-let modelLoading = false;
 let modelLoadPromise = null;
-
 let files = [];
 let results = [];
 let activeFileId = null;
@@ -1171,7 +708,23 @@ let isCustomSize = false;
 let customW = CONFIG.DEFAULT_CUSTOM;
 let customH = CONFIG.DEFAULT_CUSTOM;
 let currentEditorItem = null;
-let editorState = { ctx: null, originalImage: null, maskCanvas: null, maskCtx: null, isDrawing: false, lastX: 0, lastY: 0, tool: 'restore' };
+
+// editor state — يشمل zoom/pan
+let editorState = {
+    ctx: null,
+    originalImage: null,
+    maskCanvas: null,
+    maskCtx: null,
+    isDrawing: false,
+    lastX: 0, lastY: 0,
+    tool: 'restore',
+    zoom: 1,
+    panX: 0,
+    panY: 0,
+    isPanning: false,
+    panStartX: 0,
+    panStartY: 0
+};
 
 const formatBytes = (bytes) => {
 if (bytes === 0) return '0 B';
@@ -1180,68 +733,41 @@ const sizes = ['B', 'KB', 'MB', 'GB'];
 const i = Math.floor(Math.log(bytes) / Math.log(k));
 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
-
 const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 const SIZE_LABELS = { 0: 'الأصل', 2000: 'أمازون', 1200: 'نون', 1080: 'إنستغرام', 800: 'حراج', 'custom': 'مخصص' };
 
-// ============================================
-// ✅ MODEL STATUS UI
-// ============================================
 function setModelStatus(state, message, detail) {
     modelStatus.className = 'model-status-box ' + state;
     let html = '';
-    if (state === 'loading') {
-        html = '<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div><span>' + message + '</span>';
-    } else if (state === 'ready') {
-        html = '<span style="font-size: 1.25rem;">✅</span><span>' + message + '</span>';
-    } else {
+    if (state === 'loading') html = '<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div><span>' + message + '</span>';
+    else if (state === 'ready') html = '<span style="font-size: 1.25rem;">✅</span><span>' + message + '</span>';
+    else {
         html = '<div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">⚠️</span><strong>' + message + '</strong></div>';
         if (detail) html += '<small>' + detail + '</small>';
     }
     modelStatus.innerHTML = html;
 }
 
-// ============================================
-// ✅ MODEL LOADING
-// ============================================
 async function fetchModelBuffer() {
     if ('caches' in window) {
         try {
             const cache = await caches.open(CONFIG.CACHE_NAME);
             const cached = await cache.match('u2netp.onnx');
-            if (cached) {
-                console.log('[Model] ✅ Loaded from Cache');
-                return await cached.arrayBuffer();
-            }
+            if (cached) return await cached.arrayBuffer();
         } catch (_) {}
     }
-
     let lastErr = null;
     for (let i = 0; i < CONFIG.MODEL_URLS.length; i++) {
         const url = CONFIG.MODEL_URLS[i];
         try {
-            console.log(`[Model] Trying (${i+1}/${CONFIG.MODEL_URLS.length}):`, url);
             setModelStatus('loading', `جاري التحميل من المصدر ${i+1}...`);
-
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT);
-
-            const res = await fetch(url, {
-                signal: controller.signal,
-                mode: 'cors',
-                credentials: 'omit'
-            });
+            const res = await fetch(url, { signal: controller.signal, mode: 'cors', credentials: 'omit' });
             clearTimeout(timeout);
-
             if (!res.ok) throw new Error('HTTP ' + res.status);
-
             const buf = await res.arrayBuffer();
-            console.log('[Model] ✅ Loaded:', buf.byteLength, 'bytes from', url);
-
-            if (buf.byteLength < 100000) {
-                throw new Error('حجم الملف صغير جداً (' + buf.byteLength + ' بايت)');
-            }
-
+            if (buf.byteLength < 100000) throw new Error('حجم الملف صغير جداً');
             if ('caches' in window) {
                 try {
                     const cache = await caches.open(CONFIG.CACHE_NAME);
@@ -1249,10 +775,7 @@ async function fetchModelBuffer() {
                 } catch (_) {}
             }
             return buf;
-        } catch (e) {
-            lastErr = e;
-            console.warn(`[Model] ❌ Failed URL ${i+1}:`, url, '-', e.message);
-        }
+        } catch (e) { lastErr = e; }
     }
     throw new Error('جميع المصادر فشلت: ' + (lastErr ? lastErr.message : 'غير معروف'));
 }
@@ -1260,68 +783,44 @@ async function fetchModelBuffer() {
 async function loadModel() {
     if (modelLoaded) return session;
     if (modelLoadPromise) return modelLoadPromise;
-
     modelLoadPromise = (async () => {
-        modelLoading = true;
         setModelStatus('loading', 'جاري تحضير محرك الذكاء الاصطناعي...');
         try {
-            if (typeof ort === 'undefined') {
-                throw new Error('مكتبة ONNX Runtime لم تُحمَّل. تحقق من الرابط في <head>.');
-            }
-            if (typeof WebAssembly === 'undefined') {
-                throw new Error('متصفحك لا يدعم WebAssembly.');
-            }
-
+            if (typeof ort === 'undefined') throw new Error('مكتبة ONNX Runtime لم تُحمَّل.');
             ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
             ort.env.wasm.numThreads = 1;
             ort.env.wasm.simd = true;
             ort.env.wasm.proxy = false;
-
             const buf = await fetchModelBuffer();
             setModelStatus('loading', 'جاري تهيئة النموذج...');
-
             session = await ort.InferenceSession.create(new Uint8Array(buf), {
                 executionProviders: ['wasm'],
                 graphOptimizationLevel: 'all'
             });
-
             modelLoaded = true;
-            modelLoading = false;
             setModelStatus('ready', 'النموذج جاهز — U²-Net محلي');
-            console.log('[Model] ✅ Session created successfully');
             return session;
         } catch (e) {
-            modelLoading = false;
             modelLoadPromise = null;
-            console.error('[Model] Load error:', e);
-            setModelStatus('error',
-                'تعذّر تحميل النموذج من جميع المصادر.',
-                'تأكد من اتصالك بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/. الخطأ: ' + e.message
-            );
+            setModelStatus('error', 'تعذّر تحميل النموذج من جميع المصادر.', 'تأكد من اتصالك بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/.');
             throw e;
         }
     })();
     return modelLoadPromise;
 }
-
 window.addEventListener('load', () => { setTimeout(() => { loadModel().catch(() => {}); }, 300); });
 
-// ============================================
-// ✅ INFERENCE
-// ============================================
 async function runInference(img) {
     if (!session) await loadModel();
-    if (!img) throw new Error('الصورة غير محمّلة بعد');
+    if (!img) throw new Error('الصورة غير محمّلة');
     const SIZE = CONFIG.MODEL_SIZE;
     const W = img.naturalWidth, H = img.naturalHeight;
-
     const canvas = document.createElement('canvas');
     canvas.width = SIZE; canvas.height = SIZE;
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(img, 0, 0, SIZE, SIZE);
-
     const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
     const pix = imageData.data;
     const mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225];
@@ -1332,18 +831,15 @@ async function runInference(img) {
         input[i + area] = (pix[i * 4 + 1] / 255 - mean[1]) / std[1];
         input[i + area * 2] = (pix[i * 4 + 2] / 255 - mean[2]) / std[2];
     }
-
     const tensor = new ort.Tensor('float32', input, [1, 3, SIZE, SIZE]);
     const out = await session.run({ [session.inputNames[0]]: tensor });
     const data = out[session.outputNames[0]].data;
-
     let min = Infinity, max = -Infinity;
     for (let i = 0; i < data.length; i++) {
         if (data[i] < min) min = data[i];
         if (data[i] > max) max = data[i];
     }
     const range = max - min || 1;
-
     const mask = new Float32Array(W * H);
     for (let y = 0; y < H; y++) {
         for (let x = 0; x < W; x++) {
@@ -1356,8 +852,6 @@ async function runInference(img) {
             mask[y * W + x] = (v - min) / range;
         }
     }
-
-    // ✅ S-Curve ناعم — يحتفظ بحواف الشعر
     const refined = new Float32Array(mask.length);
     for (let i = 0; i < mask.length; i++) {
         let a = mask[i];
@@ -1368,38 +862,28 @@ async function runInference(img) {
     return { mask: refined, width: W, height: H };
 }
 
-// ============================================
-// ✅ RENDER PROCESSED — مع ظل واقعي
-// ============================================
+// ✅ renderProcessed — مع دعم شفاف/لون/أسود + ظل واقعي
 function renderProcessed(item, bg, shadow, targetSize, isCustom) {
     if (!item.maskData) return item.originalUrl;
     const { mask, width, height } = item.maskData;
 
     let targetW, targetH;
-    if (isCustom) {
-        targetW = customW;
-        targetH = customH;
-    } else if (targetSize > 0) {
-        targetW = targetSize;
-        targetH = targetSize;
-    } else {
-        const maxDim = Math.max(width, height);
-        targetW = maxDim;
-        targetH = maxDim;
-    }
+    if (isCustom) { targetW = customW; targetH = customH; }
+    else if (targetSize > 0) { targetW = targetSize; targetH = targetSize; }
+    else { const maxDim = Math.max(width, height); targetW = maxDim; targetH = maxDim; }
 
     const canvas = document.createElement('canvas');
     canvas.width = targetW;
     canvas.height = targetH;
     const ctx = canvas.getContext('2d');
 
-    // 1. رسم الخلفية
+    // ✅ 1. رسم الخلفية المختارة
     if (bg && bg !== 'transparent') {
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, targetW, targetH);
     }
 
-    // 2. بناء canvas للمنتج
+    // ✅ 2. بناء canvas للمنتج مع قناع
     const productCanvas = document.createElement('canvas');
     productCanvas.width = width;
     productCanvas.height = height;
@@ -1412,23 +896,20 @@ function renderProcessed(item, bg, shadow, targetSize, isCustom) {
     }
     pctx.putImageData(productData, 0, 0);
 
-    // 3. حساب الموضع في المنتصف
+    // 3. حساب الموضع
     const scale = Math.min(targetW / width, targetH / height);
     const dw = width * scale, dh = height * scale;
     const dx = (targetW - dw) / 2, dy = (targetH - dh) / 2;
 
-    // 4. ✨ إضافة الظل الواقعي (يتبع شكل المنتج)
+    // 4. ✨ ظل واقعي (فقط مع خلفية غير شفافة)
     if (shadow > 0 && bg !== 'transparent') {
         ctx.save();
         const minDim = Math.min(targetW, targetH);
-        // ✅ ظل متدرج أقوى — يتبع شكل القناع
         ctx.shadowColor = `rgba(0,0,0,${(shadow / 100) * 0.55})`;
         ctx.shadowBlur = minDim * 0.04 * (shadow / 100);
         ctx.shadowOffsetY = minDim * 0.015 * (shadow / 100);
         ctx.shadowOffsetX = 0;
-
-        // ✅ ارسم المنتج 3 مرات لتقوية الظل (تقنية anti-alias)
-        const blurSteps = Math.ceil(shadow / 33); // 1-3 مرات
+        const blurSteps = Math.ceil(shadow / 33);
         for (let i = 0; i < blurSteps; i++) {
             ctx.drawImage(productCanvas, dx, dy, dw, dh);
         }
@@ -1441,37 +922,25 @@ function renderProcessed(item, bg, shadow, targetSize, isCustom) {
     return canvas.toDataURL('image/png');
 }
 
-// ============================================
-// ✅ FILE HANDLING
-// ============================================
+// ============ FILE HANDLING ============
 chooseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
 dropZone.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
 addMoreBtn.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-});
-fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length) handleFiles(e.target.files);
-    e.target.value = '';
-});
+dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); });
+fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = ''; });
 
 function handleFiles(fileList) {
     const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     const remaining = CONFIG.MAX_IMAGES - files.length;
     if (remaining <= 0) { alert('وصلت للحد الأقصى ' + CONFIG.MAX_IMAGES); return; }
-
     const validFiles = Array.from(fileList).filter(f => acceptedTypes.includes(f.type)).slice(0, remaining);
-
     validFiles.forEach(file => {
         const id = uid();
         const url = URL.createObjectURL(file);
         const item = { id, file, originalUrl: url, name: file.name, originalSize: file.size, width: 0, height: 0, imageEl: null, maskData: null, processedUrl: null };
-
         const img = new Image();
         img.onload = () => {
             item.width = img.naturalWidth;
@@ -1483,7 +952,6 @@ function handleFiles(fileList) {
         files.push(item);
         if (!activeFileId) activeFileId = id;
     });
-
     if (files.length > 0) {
         uploadSection.classList.add('hidden');
         workspaceSection.classList.remove('hidden');
@@ -1550,13 +1018,10 @@ clearBtn.addEventListener('click', () => {
     files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
     files = []; results = []; resetToUpload();
 });
-
 newImagesBtn.addEventListener('click', () => {
     files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
-    results = [];
-    files = []; resetToUpload();
+    results = []; files = []; resetToUpload();
 });
-
 function resetToUpload() {
     uploadSection.classList.remove('hidden');
     workspaceSection.classList.add('hidden');
@@ -1571,16 +1036,15 @@ function resetToUpload() {
     downloadZipBtnSide.disabled = true;
 }
 
-// ============================================
-// ✅ UI HANDLERS
-// ============================================
+// ============ ✅ UI HANDLERS — الإصلاح الأول ============
+// ✅ الآن كل تغيير في الخلفية يعمل حتى لو كانت النتائج معروضة
 bgOptions.forEach(opt => {
     opt.addEventListener('click', (e) => {
         if (opt.tagName === 'LABEL' && opt.querySelector('input[type="color"]')) return;
         bgOptions.forEach(o => o.classList.remove('active'));
         opt.classList.add('active');
         currentBg = opt.dataset.bg;
-        reprocessAll();
+        reprocessAll();  // ✅ يعمل دائماً
     });
 });
 
@@ -1633,42 +1097,31 @@ applyCustomSizeBtn.addEventListener('click', () => {
     reprocessAll();
 });
 
-// ============================================
-// ✅ MAIN PROCESS
-// ============================================
+// ============ MAIN PROCESS ============
 processBtn.addEventListener('click', processAll);
 
 async function processAll() {
     if (files.length === 0) return;
-
-    // ✅ انتظار تحميل كل الصور
     for (const item of files) {
         if (!item.imageEl) {
             await new Promise(r => {
-                const check = setInterval(() => {
-                    if (item.imageEl) { clearInterval(check); r(); }
-                }, 50);
+                const check = setInterval(() => { if (item.imageEl) { clearInterval(check); r(); } }, 50);
                 setTimeout(() => { clearInterval(check); r(); }, 8000);
             });
         }
     }
-
     workspaceSection.classList.add('hidden');
     progressSection.classList.remove('hidden');
     resultsSection.classList.add('hidden');
     downloadZipBtn.disabled = true;
     downloadZipBtnSide.disabled = true;
     results = [];
-
-    try {
-        await loadModel();
-    } catch (e) {
-        alert('فشل تحميل النموذج.\n' + (e.message || '') + '\n\nتحقق من الاتصال بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/');
+    try { await loadModel(); } catch (e) {
+        alert('فشل تحميل النموذج.\n' + (e.message || ''));
         progressSection.classList.add('hidden');
         workspaceSection.classList.remove('hidden');
         return;
     }
-
     for (let i = 0; i < files.length; i++) {
         const item = files[i];
         progressText.textContent = `جاري المعالجة: ${item.name}`;
@@ -1676,14 +1129,12 @@ async function processAll() {
         const pct = Math.round((i / files.length) * 100);
         progressBar.style.width = pct + '%';
         progressPercent.textContent = pct + '%';
-
         try {
             if (!item.imageEl) throw new Error('الصورة غير محمّلة');
             const maskData = await runInference(item.imageEl);
             item.maskData = maskData;
             const processedUrl = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
             item.processedUrl = processedUrl;
-
             results.push({
                 id: item.id,
                 name: item.name.replace(/\.[^.]+$/, '') + '-studio.png',
@@ -1693,12 +1144,9 @@ async function processAll() {
                 width: item.width,
                 height: item.height
             });
-        } catch (e) {
-            console.error('Error processing', item.name, e);
-        }
+        } catch (e) { console.error('Error processing', item.name, e); }
         await new Promise(r => setTimeout(r, 20));
     }
-
     progressBar.style.width = '100%';
     progressPercent.textContent = '100%';
     progressDetail.textContent = 'اكتمل بنجاح!';
@@ -1709,29 +1157,36 @@ async function processAll() {
     }, 400);
 }
 
+// ✅ reprocessAll — يعمل دائماً بدون شرط results.length
 async function reprocessAll() {
     const doneFiles = files.filter(f => f.maskData);
     if (doneFiles.length === 0) return;
-    for (const item of doneFiles) {
-        const url = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
-        item.processedUrl = url;
-        const r = results.find(x => x.id === item.id);
-        if (r) r.url = url;
+
+    // ✅ تحديث الصورة الرئيسية للملف النشط
+    const activeItem = files.find(f => f.id === activeFileId);
+    if (activeItem && activeItem.maskData) {
+        activeItem.processedUrl = renderProcessed(activeItem, currentBg, currentShadow, currentSize, isCustomSize);
+        showActiveFile();
     }
+
+    // ✅ إذا كانت النتائج معروضة، حدّث البطاقات
     if (results.length > 0) {
+        for (const r of results) {
+            const item = doneFiles.find(f => f.id === r.id);
+            if (item) {
+                r.url = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
+                item.processedUrl = r.url;
+            }
+        }
         renderResults();
         renderThumbnails();
-        showActiveFile();
     }
 }
 
-// ============================================
-// ✅ RESULTS
-// ============================================
+// ============ RESULTS ============
 function renderResults() {
     document.getElementById('sumCount').textContent = results.length;
     resultsGrid.innerHTML = '';
-
     results.forEach((r, idx) => {
         const card = document.createElement('div');
         card.className = 'result-card';
@@ -1754,49 +1209,20 @@ function renderResults() {
                 </div>
                 <div class="result-info-col">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="info-stat">
-                            <div class="info-icon">📐</div>
-                            <div class="info-content">
-                                <div class="info-label">الأبعاد</div>
-                                <div class="info-value">${r.width} × ${r.height}</div>
-                            </div>
-                        </div>
-                        <div class="info-stat savings">
-                            <div class="info-icon">✅</div>
-                            <div class="info-content">
-                                <div class="info-label">الحالة</div>
-                                <div class="info-value">خلفية مُزالة</div>
-                            </div>
-                        </div>
-                        <div class="info-stat">
-                            <div class="info-icon">🎨</div>
-                            <div class="info-content">
-                                <div class="info-label">الخلفية</div>
-                                <div class="info-value">${currentBg === 'transparent' ? 'شفاف' : currentBg}</div>
-                            </div>
-                        </div>
-                        <div class="info-stat">
-                            <div class="info-icon">🛒</div>
-                            <div class="info-content">
-                                <div class="info-label">القالب</div>
-                                <div class="info-value">${sumTemplate.textContent}</div>
-                            </div>
-                        </div>
+                        <div class="info-stat"><div class="info-icon">📐</div><div class="info-content"><div class="info-label">الأبعاد</div><div class="info-value">${r.width} × ${r.height}</div></div></div>
+                        <div class="info-stat savings"><div class="info-icon">✅</div><div class="info-content"><div class="info-label">الحالة</div><div class="info-value">خلفية مُزالة</div></div></div>
+                        <div class="info-stat"><div class="info-icon">🎨</div><div class="info-content"><div class="info-label">الخلفية</div><div class="info-value">${currentBg === 'transparent' ? 'شفاف' : currentBg}</div></div></div>
+                        <div class="info-stat"><div class="info-icon">🛒</div><div class="info-content"><div class="info-label">القالب</div><div class="info-value">${sumTemplate.textContent}</div></div></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mt-3">
-                        <button class="btn-secondary justify-center" data-edit="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-                            ✏️ تعديل
-                        </button>
-                        <button class="btn-download" data-download="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-                            ⬇️ تحميل
-                        </button>
+                        <button class="btn-secondary justify-center" data-edit="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">✏️ تعديل</button>
+                        <button class="btn-download" data-download="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">⬇️ تحميل</button>
                     </div>
                 </div>
             </div>
         `;
         resultsGrid.appendChild(card);
     });
-
     resultsGrid.querySelectorAll('[data-download]').forEach(btn => {
         btn.addEventListener('click', () => {
             const r = results[parseInt(btn.dataset.download)];
@@ -1807,7 +1233,6 @@ function renderResults() {
             link.click();
         });
     });
-
     resultsGrid.querySelectorAll('[data-edit]').forEach(btn => {
         btn.addEventListener('click', () => {
             const idx = parseInt(btn.dataset.edit);
@@ -1816,9 +1241,7 @@ function renderResults() {
             if (item) openMaskEditor(item);
         });
     });
-
     resultsGrid.querySelectorAll('[data-comparison]').forEach(c => setupComparisonSlider(c));
-
     if (results.length > 0) {
         downloadZipBtn.disabled = false;
         downloadZipBtnSide.disabled = false;
@@ -1847,18 +1270,14 @@ function setupComparisonSlider(container) {
     document.addEventListener('touchend', () => { isDragging = false; });
 }
 
-// ============================================
-// ✅ ZIP DOWNLOAD
-// ============================================
+// ============ ZIP DOWNLOAD ============
 async function downloadZip() {
     if (results.length === 0) return;
     if (typeof JSZip === 'undefined') { alert('مكتبة ZIP لم تُحمّل'); return; }
-
     const btn = downloadZipBtn;
     const orig = btn.textContent;
     btn.disabled = true;
     btn.textContent = '⏳ جاري الإنشاء...';
-
     try {
         const zip = new JSZip();
         for (const r of results) {
@@ -1884,12 +1303,19 @@ async function downloadZip() {
 downloadZipBtn.addEventListener('click', downloadZip);
 downloadZipBtnSide.addEventListener('click', downloadZip);
 
-// ============================================
-// ✅ MASK EDITOR
-// ============================================
+// ============ ✅ MASK EDITOR — مع تكبير/تصغير/تحريك ============
+
 function openMaskEditor(item) {
     if (!item.maskData) { alert('لم تكتمل المعالجة بعد'); return; }
     currentEditorItem = item;
+
+    // ✅ إعادة تعيين التكبير والتحريك
+    editorState.zoom = 1;
+    editorState.panX = 0;
+    editorState.panY = 0;
+    editorState.isPanning = false;
+    updateZoomDisplay();
+
     maskEditorModal.classList.remove('hidden');
     const canvas = editorCanvas;
     editorState.ctx = canvas.getContext('2d');
@@ -1914,6 +1340,7 @@ function openMaskEditor(item) {
     }
     editorState.maskCtx.putImageData(maskImgData, 0, 0);
     applyEditorPreview();
+    applyZoomTransform();
 }
 
 function applyEditorPreview() {
@@ -1925,26 +1352,136 @@ function applyEditorPreview() {
     ctx.globalCompositeOperation = 'source-over';
 }
 
-function getEditorPos(e) {
-    const rect = editorCanvas.getBoundingClientRect();
-    const sx = editorCanvas.width / rect.width;
-    const sy = editorCanvas.height / rect.height;
-    const cx = e.touches ? e.touches[0].clientX : e.clientX;
-    const cy = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: (cx - rect.left) * sx, y: (cy - rect.top) * sy };
+// ✅ دالة تطبيق التكبير والتحريك
+function applyZoomTransform() {
+    editorCanvas.style.transform = `translate(${editorState.panX}px, ${editorState.panY}px) scale(${editorState.zoom})`;
 }
 
+function updateZoomDisplay() {
+    editorZoomValue.textContent = Math.round(editorState.zoom * 100) + '%';
+}
+
+// ✅ دوال التكبير
+function zoomIn() {
+    editorState.zoom = Math.min(5, editorState.zoom + 0.25);
+    updateZoomDisplay();
+    applyZoomTransform();
+}
+function zoomOut() {
+    editorState.zoom = Math.max(0.25, editorState.zoom - 0.25);
+    updateZoomDisplay();
+    applyZoomTransform();
+}
+function zoomReset() {
+    editorState.zoom = 1;
+    editorState.panX = 0;
+    editorState.panY = 0;
+    updateZoomDisplay();
+    applyZoomTransform();
+}
+
+editorZoomIn.addEventListener('click', zoomIn);
+editorZoomOut.addEventListener('click', zoomOut);
+editorZoomReset.addEventListener('click', zoomReset);
+
+// ✅ عجلة الفأرة للتكبير (Ctrl + wheel أو بدون Ctrl)
+editorCanvasWrap.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+        // Ctrl + wheel للتكبير
+        e.preventDefault();
+        if (e.deltaY < 0) zoomIn();
+        else zoomOut();
+    }
+}, { passive: false });
+
+// ✅ إيماءات اللمس (Pinch to zoom)
+let touchStartDist = 0;
+let touchStartZoom = 1;
+editorCanvasWrap.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchStartDist = Math.sqrt(dx*dx + dy*dy);
+        touchStartZoom = editorState.zoom;
+    }
+}, { passive: true });
+editorCanvasWrap.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && touchStartDist > 0) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        editorState.zoom = Math.max(0.25, Math.min(5, touchStartZoom * (dist / touchStartDist)));
+        updateZoomDisplay();
+        applyZoomTransform();
+    }
+}, { passive: false });
+
+// ✅ حساب موضع المؤشر بالنسبة لـ canvas (مع الأخذ بالـ transform)
+function getEditorPos(e) {
+    const rect = editorCanvas.getBoundingClientRect();
+    // rect.width/height يشملان التكبير — لذا نقسم على scale
+    const scaleX = editorCanvas.width / rect.width;
+    const scaleY = editorCanvas.height / rect.height;
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+        x: (cx - rect.left) * scaleX,
+        y: (cy - rect.top) * scaleY
+    };
+}
+
+// ✅ التبديل بين الرسم والتحريك:
+// - إذا كان زر المسافة مضغوطاً → تحريك
+// - إذا zoom > 1 → ممكن التحريك بالزر الأوسط أو Shift+drag
+let spacePressed = false;
+document.addEventListener('keydown', (e) => { if (e.code === 'Space') { spacePressed = true; editorCanvasWrap.style.cursor = 'grab'; } });
+document.addEventListener('keyup', (e) => { if (e.code === 'Space') { spacePressed = false; editorCanvasWrap.style.cursor = ''; } });
+
 editorCanvas.addEventListener('mousedown', (e) => {
+    // ✅ Shift + drag = تحريك
+    // ✅ أو space + drag
+    // ✅ أو زر أوسط (button === 1)
+    if (spacePressed || e.shiftKey || e.button === 1) {
+        editorState.isPanning = true;
+        editorState.panStartX = e.clientX - editorState.panX;
+        editorState.panStartY = e.clientY - editorState.panY;
+        editorCanvasWrap.classList.add('grabbing');
+        e.preventDefault();
+        return;
+    }
     editorState.isDrawing = true;
     const p = getEditorPos(e);
     editorState.lastX = p.x; editorState.lastY = p.y;
     drawEditor(e);
 });
-editorCanvas.addEventListener('mousemove', drawEditor);
-editorCanvas.addEventListener('mouseup', () => editorState.isDrawing = false);
-editorCanvas.addEventListener('mouseleave', () => editorState.isDrawing = false);
-editorCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); editorState.isDrawing = true; const p = getEditorPos(e); editorState.lastX = p.x; editorState.lastY = p.y; drawEditor(e); }, { passive: false });
-editorCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); drawEditor(e); }, { passive: false });
+
+editorCanvas.addEventListener('mousemove', (e) => {
+    if (editorState.isPanning) {
+        editorState.panX = e.clientX - editorState.panStartX;
+        editorState.panY = e.clientY - editorState.panStartY;
+        applyZoomTransform();
+        return;
+    }
+    drawEditor(e);
+});
+
+editorCanvas.addEventListener('mouseup', () => { editorState.isDrawing = false; editorState.isPanning = false; editorCanvasWrap.classList.remove('grabbing'); });
+editorCanvas.addEventListener('mouseleave', () => { editorState.isDrawing = false; editorState.isPanning = false; editorCanvasWrap.classList.remove('grabbing'); });
+
+editorCanvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) return; // pinch
+    e.preventDefault();
+    editorState.isDrawing = true;
+    const p = getEditorPos(e);
+    editorState.lastX = p.x; editorState.lastY = p.y;
+    drawEditor(e);
+}, { passive: false });
+editorCanvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 1) return;
+    e.preventDefault();
+    drawEditor(e);
+}, { passive: false });
 editorCanvas.addEventListener('touchend', () => editorState.isDrawing = false);
 
 function drawEditor(e) {
@@ -1981,6 +1518,7 @@ closeEditorBtn.addEventListener('click', () => {
     maskEditorModal.classList.add('hidden');
     currentEditorItem = null;
 });
+
 editorApplyBtn.addEventListener('click', async () => {
     if (!currentEditorItem) return;
     const maskData = editorState.maskCtx.getImageData(0, 0, editorState.maskCanvas.width, editorState.maskCanvas.height).data;
@@ -1989,10 +1527,8 @@ editorApplyBtn.addEventListener('click', async () => {
     currentEditorItem.maskData.mask = newMask;
     const url = renderProcessed(currentEditorItem, currentBg, currentShadow, currentSize, isCustomSize);
     currentEditorItem.processedUrl = url;
-
     const r = results.find(x => x.id === currentEditorItem.id);
     if (r) r.url = url;
-
     maskEditorModal.classList.add('hidden');
     renderThumbnails();
     showActiveFile();
