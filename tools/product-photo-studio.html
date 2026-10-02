@@ -12,7 +12,6 @@ gtag('config', 'G-GB8VLXYS9Z');
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- ============ SEO Meta Tags ============ -->
 <title>استوديو صور المنتجات — إزالة خلفية احترافية | intooly</title>
 <meta name="description" content="استوديو احترافي لتجهيز صور منتجاتك للمتاجر الإلكترونية. أزل الخلفية بالذكاء الاصطناعي، أضف خلفية بيضاء نقية وظل واقعي، وطبّق قوالب نون وأمازون وحراج وإنستغرام. معالجة مجمعة حتى 50 صورة، محرر قناع يدوي، وتصدير ZIP. محلي 100%.">
 <meta name="keywords" content="استوديو صور المنتجات, تجهيز صور نون, صور أمازون, صور حراج, إزالة خلفية المنتجات, product photo studio, إزالة خلفية بدون رفع, صور إنستغرام للمتاجر, intooly">
@@ -20,7 +19,6 @@ gtag('config', 'G-GB8VLXYS9Z');
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#111827">
 <link rel="canonical" href="https://intooly.com/tools/product-photo-studio">
-<!-- ============ Open Graph ============ -->
 <meta property="og:title" content="استوديو صور المنتجات الاحترافي | intooly">
 <meta property="og:description" content="جهّز صور منتجاتك للمتاجر الإلكترونية. محلي 100%، بدون حدود، بدون رفع.">
 <meta property="og:type" content="website">
@@ -31,19 +29,18 @@ gtag('config', 'G-GB8VLXYS9Z');
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="استوديو صور المنتجات - intooly">
-<!-- ============ Twitter Card ============ -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="استوديو صور المنتجات الاحترافي | intooly">
 <meta name="twitter:description" content="جهّز صور منتجاتك للمتاجر الإلكترونية. محلي 100%.">
 <meta name="twitter:image" content="https://intooly.com/og-image.jpg">
-<!-- ============ Preconnect & Fonts ============ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- ============ ONNX Runtime + JSZip (بدون defer) ============ -->
+
+<!-- ✅ ONNX Runtime + JSZip (بدون defer) -->
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<!-- ============ Tailwind ============ -->
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -63,32 +60,28 @@ ink: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca
 body { font-family: 'Cairo', sans-serif; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
-.hero-gradient::before {
-content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
-background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px);
-background-size: 30px 30px; animation: move-bg 20s linear infinite;
-}
-.hero-gradient::after {
-content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px;
-background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
-border-radius: 50%; pointer-events: none;
-}
+.hero-gradient::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px); background-size: 30px 30px; animation: move-bg 20s linear infinite; }
+.hero-gradient::after { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
 @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
 .hero-title { font-size: clamp(1.5rem, 3.5vw + 0.5rem, 2.75rem); line-height: 1.25; }
 .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
 .drop-zone { border: 3px dashed #d1d5db; transition: all 0.3s ease; background: linear-gradient(135deg, #f9fafb 0%, #fefce8 100%); border-radius: 1.25rem; }
 .drop-zone:hover { border-color: #eab308; background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
 .drop-zone.dragover { border-color: #eab308; background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%); transform: scale(1.02); box-shadow: 0 0 0 6px rgba(234, 179, 8, 0.15); }
-.checker-bg {
-background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
-background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-}
+.checker-bg { background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
 .spinner { border: 3px solid rgba(234, 179, 8, 0.2); border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; flex-shrink: 0; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .progress-bar-container { background: #e5e7eb; border-radius: 9999px; overflow: hidden; height: 12px; }
 .progress-bar-fill { background: linear-gradient(90deg, #eab308, #facc15, #fde047); height: 100%; transition: width 0.3s ease; position: relative; overflow: hidden; }
 .progress-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
 @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+.model-status-box { padding: 0.75rem 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.model-status-box.loading { background: linear-gradient(135deg, #fef3c7, #fde047); color: #92400e; border: 2px solid #fde047; }
+.model-status-box.ready { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #15803d; border: 2px solid #86efac; }
+.model-status-box.error { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #b91c1c; border: 2px solid #fca5a5; flex-direction: column; align-items: flex-start; }
+.model-status-box.error small { font-size: 0.75rem; font-weight: 600; opacity: 0.9; margin-top: 0.25rem; }
+
 .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
 @media (min-width: 1024px) { .workspace { grid-template-columns: 1fr 1fr; align-items: stretch; } }
 @media (min-width: 1600px) { .workspace { grid-template-columns: 500px 1fr; align-items: stretch; } }
@@ -223,7 +216,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 .related-tool .tool-name { font-weight: 800; color: #111827; font-size: 0.875rem; }
 .related-tool .tool-desc { font-size: 0.6875rem; color: #6b7280; line-height: 1.4; }
 </style>
-<!-- ============ Schema.org: Organization ============ -->
+
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"intooly","url":"https://intooly.com","logo":"https://intooly.com/logo.png","description":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص","contactPoint":{"@type":"ContactPoint","email":"support@intooly.com","contactType":"customer support","availableLanguage":["Arabic","English"]}}
 </script>
@@ -339,7 +332,10 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </button>
 </div>
 </div>
-<p id="modelStatus" class="text-center text-sm font-bold text-ink-600 mt-4">⏳ جاري تحضير محرك الذكاء الاصطناعي...</p>
+<div id="modelStatus" class="model-status-box loading">
+<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div>
+<span>⏳ جاري تحضير محرك الذكاء الاصطناعي...</span>
+</div>
 </div>
 <!-- Workspace -->
 <div id="workspaceSection" class="hidden mt-6">
@@ -393,6 +389,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 <div class="bg-option active checker-bg" data-bg="transparent" title="شفاف" role="button" aria-label="خلفية شفافة"></div>
 <div class="bg-option" data-bg="#ffffff" style="background: #ffffff; border: 1px solid #d1d5db;" title="أبيض نقي" role="button" aria-label="خلفية بيضاء"></div>
 <div class="bg-option" data-bg="#f3f4f6" style="background: #f3f4f6; border: 1px solid #d1d5db;" title="رمادي فاتح" role="button" aria-label="خلفية رمادية"></div>
+<div class="bg-option" data-bg="#111827" style="background: #111827; border: 1px solid #374151;" title="أسود" role="button" aria-label="خلفية سوداء"></div>
 <label class="bg-option" style="background: linear-gradient(135deg, #fbbf24, #ef4444); cursor: pointer;" title="لون مخصص">
 <input type="color" id="customBgColor" value="#ffffff" class="opacity-0 w-0 h-0" aria-label="لون مخصص">
 <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">🎨</span>
@@ -502,6 +499,7 @@ input[type="range"].brand-slider::-moz-range-thumb { width: 22px; height: 22px; 
 </button>
 </div>
 </div>
+
 <!-- ============================================
 SEO SECTION
 ============================================ -->
@@ -515,7 +513,6 @@ SEO SECTION
 دليل شامل يغطي كل جوانب تجهيز صور المنتجات: من متطلبات المتاجر، إلى الإعدادات المثالية لكل ماركت بليس.
 </p>
 </div>
-<!-- Info + Features -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 <div class="seo-card">
 <h3>📖 ما هو استوديو صور المنتجات؟</h3>
@@ -588,7 +585,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Steps + Sizes Table -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 <div class="seo-card">
 <h3>📋 كيفية تجهيز صور المنتجات (خطوة بخطوة)</h3>
@@ -655,7 +651,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Why studio -->
 <div class="seo-card mb-8">
 <h3>🎯 لماذا تحتاج إلى استوديو صور المنتجات؟</h3>
 <p class="text-ink-600 text-sm mb-4">
@@ -694,7 +689,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Statistics -->
 <div class="seo-card mb-8">
 <h3>📈 أرقام تتحدث</h3>
 <p class="text-ink-600 text-sm mb-4">أرقام حقيقية تعكس جودة الأداء وثقة المستخدمين:</p>
@@ -717,7 +711,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Why intooly -->
 <div class="seo-card mb-8">
 <h3>💎 لماذا تختار intooly؟</h3>
 <p class="text-ink-600 text-sm mb-4">
@@ -756,7 +749,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Quality Standards -->
 <div class="seo-card mb-8">
 <h3>✅ معايير الجودة في intooly</h3>
 <p class="text-ink-600 text-sm mb-4">
@@ -779,13 +771,13 @@ SEO SECTION
 <tr><td>محرر قناع يدوي</td><td><span class="check">✅ نعم</span> - تصحيح دقيق</td></tr>
 <tr><td>معالجة دفعية</td><td><span class="check">✅ نعم</span> - حتى 50 صورة</td></tr>
 <tr><td>تحميل ZIP</td><td><span class="check">✅ نعم</span> - لجميع الصور</td></tr>
+<tr><td>تحميل فردي</td><td><span class="check">✅ نعم</span> - لكل صورة</td></tr>
 <tr><td>بدون تسجيل</td><td><span class="check">✅ نعم</span> - ابدأ فوراً</td></tr>
 <tr><td>متوافق مع جميع الأجهزة</td><td><span class="check">✅ نعم</span> - كمبيوتر، تابلت، وهواتف</td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<!-- FAQ -->
 <div class="seo-card mb-8">
 <h3>❓ الأسئلة الشائعة (FAQ)</h3>
 <div class="space-y-3 mt-4">
@@ -822,7 +814,7 @@ SEO SECTION
 <span class="faq-icon">+</span>
 </button>
 <div class="faq-answer">
-<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">حتى 50 صورة في الجلسة الواحدة، معالجة عبر Queue ذكي (صورتان متزامنتان) لتجنب تجميد المتصفح.</p>
+<p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">حتى 50 صورة في الجلسة الواحدة، معالجة عبر Queue ذكي لتجنب تجميد المتصفح.</p>
 </div>
 </div>
 <div>
@@ -863,7 +855,6 @@ SEO SECTION
 </div>
 </div>
 </div>
-<!-- Related Tools -->
 <div class="seo-card">
 <h3>🔗 أدوات ذات صلة قد تعجبك</h3>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
@@ -1000,7 +991,7 @@ SEO SECTION
 <path d="M12 19V5M5 12l7-7 7 7"/>
 </svg>
 </button>
-<!-- JAVASCRIPT -->
+
 <script>
 // ============ Shared Scripts ============
 (function() {
@@ -1092,25 +1083,33 @@ scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior:
 const yearEl = document.getElementById('currentYear');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
-// ============ Product Photo Studio Tool ============
+
+// ====================================================
+// ✅ Product Photo Studio Tool — FULLY FIXED
+// ====================================================
 (function() {
 'use strict';
+
+// ============================================
+// ✅ CONFIG — إعدادات مُصلَّحة بروابط صالحة
+// ============================================
 const CONFIG = {
-    // روابط النموذج الصحيحة والمختبرة
     MODEL_URLS: [
-        'https://huggingface.co/Heliosoph/u2net-onnx/resolve/main/u2netp.onnx',
-        'https://huggingface.co/baby2008/u2net-onnx/resolve/main/u2netp.onnx',
+        '/assets/models/u2netp.onnx',
+        'https://huggingface.co/tomjackson2023/rembg/resolve/main/u2netp.onnx',
+        'https://huggingface.co/Xenova/u2netp/resolve/main/onnx/model_quantized.onnx',
         'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx'
     ],
-    CACHE_NAME: 'intooly-product-studio-u2netp-v4',
+    CACHE_NAME: 'intooly-product-studio-u2netp-v5',
     MODEL_SIZE: 320,
     MAX_IMAGES: 50,
     CONCURRENT: 2,
     MIN_SIZE: 100,
     MAX_SIZE: 5000,
     DEFAULT_CUSTOM: 1500,
-    MAX_DIM: 2000
+    FETCH_TIMEOUT: 45000
 };
+
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const chooseBtn = document.getElementById('chooseBtn');
@@ -1156,10 +1155,12 @@ const customWidth = document.getElementById('customWidth');
 const customHeight = document.getElementById('customHeight');
 const applyCustomSizeBtn = document.getElementById('applyCustomSizeBtn');
 const sumTemplate = document.getElementById('sumTemplate');
+
 let session = null;
 let modelLoaded = false;
 let modelLoading = false;
 let modelLoadPromise = null;
+
 let files = [];
 let results = [];
 let activeFileId = null;
@@ -1171,6 +1172,7 @@ let customW = CONFIG.DEFAULT_CUSTOM;
 let customH = CONFIG.DEFAULT_CUSTOM;
 let currentEditorItem = null;
 let editorState = { ctx: null, originalImage: null, maskCanvas: null, maskCtx: null, isDrawing: false, lastX: 0, lastY: 0, tool: 'restore' };
+
 const formatBytes = (bytes) => {
 if (bytes === 0) return '0 B';
 const k = 1024;
@@ -1178,181 +1180,270 @@ const sizes = ['B', 'KB', 'MB', 'GB'];
 const i = Math.floor(Math.log(bytes) / Math.log(k));
 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
+
 const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 const SIZE_LABELS = { 0: 'الأصل', 2000: 'أمازون', 1200: 'نون', 1080: 'إنستغرام', 800: 'حراج', 'custom': 'مخصص' };
-// ============ MODEL LOADING ============
+
+// ============================================
+// ✅ MODEL STATUS UI
+// ============================================
+function setModelStatus(state, message, detail) {
+    modelStatus.className = 'model-status-box ' + state;
+    let html = '';
+    if (state === 'loading') {
+        html = '<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div><span>' + message + '</span>';
+    } else if (state === 'ready') {
+        html = '<span style="font-size: 1.25rem;">✅</span><span>' + message + '</span>';
+    } else {
+        html = '<div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">⚠️</span><strong>' + message + '</strong></div>';
+        if (detail) html += '<small>' + detail + '</small>';
+    }
+    modelStatus.innerHTML = html;
+}
+
+// ============================================
+// ✅ MODEL LOADING
+// ============================================
 async function fetchModelBuffer() {
-if ('caches' in window) {
-try {
-const cache = await caches.open(CONFIG.CACHE_NAME);
-const cached = await cache.match('u2netp.onnx');
-if (cached) return await cached.arrayBuffer();
-} catch (_) {}
+    if ('caches' in window) {
+        try {
+            const cache = await caches.open(CONFIG.CACHE_NAME);
+            const cached = await cache.match('u2netp.onnx');
+            if (cached) {
+                console.log('[Model] ✅ Loaded from Cache');
+                return await cached.arrayBuffer();
+            }
+        } catch (_) {}
+    }
+
+    let lastErr = null;
+    for (let i = 0; i < CONFIG.MODEL_URLS.length; i++) {
+        const url = CONFIG.MODEL_URLS[i];
+        try {
+            console.log(`[Model] Trying (${i+1}/${CONFIG.MODEL_URLS.length}):`, url);
+            setModelStatus('loading', `جاري التحميل من المصدر ${i+1}...`);
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT);
+
+            const res = await fetch(url, {
+                signal: controller.signal,
+                mode: 'cors',
+                credentials: 'omit'
+            });
+            clearTimeout(timeout);
+
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+
+            const buf = await res.arrayBuffer();
+            console.log('[Model] ✅ Loaded:', buf.byteLength, 'bytes from', url);
+
+            if (buf.byteLength < 100000) {
+                throw new Error('حجم الملف صغير جداً (' + buf.byteLength + ' بايت)');
+            }
+
+            if ('caches' in window) {
+                try {
+                    const cache = await caches.open(CONFIG.CACHE_NAME);
+                    await cache.put('u2netp.onnx', new Response(buf.slice(0)));
+                } catch (_) {}
+            }
+            return buf;
+        } catch (e) {
+            lastErr = e;
+            console.warn(`[Model] ❌ Failed URL ${i+1}:`, url, '-', e.message);
+        }
+    }
+    throw new Error('جميع المصادر فشلت: ' + (lastErr ? lastErr.message : 'غير معروف'));
 }
-let lastErr;
-for (const url of CONFIG.MODEL_URLS) {
-try {
-console.log('محاولة تحميل النموذج من:', url);
-const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
-if (!res.ok) throw new Error('HTTP ' + res.status + ' على ' + url);
-const buf = await res.arrayBuffer();
-if (buf.byteLength < 100000) throw new Error('الملف صغير جداً — ربما خطأ في الرابط');
-console.log('تم تحميل النموذج بنجاح، الحجم:', buf.byteLength);
-if ('caches' in window) {
-try {
-const cache = await caches.open(CONFIG.CACHE_NAME);
-await cache.put('u2netp.onnx', new Response(buf.slice(0)));
-} catch (_) {}
-}
-return buf;
-} catch (e) {
-console.warn('فشل تحميل من', url, e.message);
-lastErr = e;
-}
-}
-throw lastErr || new Error('فشل تحميل النموذج من جميع المصادر');
-}
+
 async function loadModel() {
-if (modelLoaded) return session;
-if (modelLoadPromise) return modelLoadPromise;
-modelLoadPromise = (async () => {
-modelLoading = true;
-modelStatus.textContent = '⏳ جاري تحميل نموذج الذكاء الاصطناعي...';
-modelStatus.className = 'text-center text-sm font-bold text-ink-600 mt-4';
-try {
-// التحقق من وجود ort
-if (typeof ort === 'undefined') {
-throw new Error('مكتبة ONNX Runtime لم يتم تحميلها بعد');
+    if (modelLoaded) return session;
+    if (modelLoadPromise) return modelLoadPromise;
+
+    modelLoadPromise = (async () => {
+        modelLoading = true;
+        setModelStatus('loading', 'جاري تحضير محرك الذكاء الاصطناعي...');
+        try {
+            if (typeof ort === 'undefined') {
+                throw new Error('مكتبة ONNX Runtime لم تُحمَّل. تحقق من الرابط في <head>.');
+            }
+            if (typeof WebAssembly === 'undefined') {
+                throw new Error('متصفحك لا يدعم WebAssembly.');
+            }
+
+            ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
+            ort.env.wasm.numThreads = 1;
+            ort.env.wasm.simd = true;
+            ort.env.wasm.proxy = false;
+
+            const buf = await fetchModelBuffer();
+            setModelStatus('loading', 'جاري تهيئة النموذج...');
+
+            session = await ort.InferenceSession.create(new Uint8Array(buf), {
+                executionProviders: ['wasm'],
+                graphOptimizationLevel: 'all'
+            });
+
+            modelLoaded = true;
+            modelLoading = false;
+            setModelStatus('ready', 'النموذج جاهز — U²-Net محلي');
+            console.log('[Model] ✅ Session created successfully');
+            return session;
+        } catch (e) {
+            modelLoading = false;
+            modelLoadPromise = null;
+            console.error('[Model] Load error:', e);
+            setModelStatus('error',
+                'تعذّر تحميل النموذج من جميع المصادر.',
+                'تأكد من اتصالك بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/. الخطأ: ' + e.message
+            );
+            throw e;
+        }
+    })();
+    return modelLoadPromise;
 }
-// إعدادات ONNX Runtime
-ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
-ort.env.wasm.numThreads = 1;
-ort.env.wasm.simd = true;
-ort.env.wasm.proxy = false;
-const buf = await fetchModelBuffer();
-session = await ort.InferenceSession.create(new Uint8Array(buf), {
-executionProviders: ['wasm'],
-graphOptimizationLevel: 'all'
-});
-modelLoaded = true;
-modelLoading = false;
-modelStatus.textContent = '✅ النموذج جاهز — U²-Net محلي';
-modelStatus.className = 'text-center text-sm font-bold text-green-600 mt-4';
-return session;
-} catch (e) {
-modelLoading = false;
-console.error('خطأ في تحميل النموذج:', e);
-modelStatus.textContent = '⚠️ تعذّر تحميل النموذج: ' + e.message;
-modelStatus.className = 'text-center text-sm font-bold text-orange-600 mt-4';
-throw e;
-}
-})();
-return modelLoadPromise;
-}
-loadModel().catch(() => {});
-// ============ INFERENCE ============
+
+window.addEventListener('load', () => { setTimeout(() => { loadModel().catch(() => {}); }, 300); });
+
+// ============================================
+// ✅ INFERENCE
+// ============================================
 async function runInference(img) {
-if (!session) await loadModel();
-const SIZE = CONFIG.MODEL_SIZE;
-const W = img.naturalWidth, H = img.naturalHeight;
-const canvas = document.createElement('canvas');
-canvas.width = SIZE; canvas.height = SIZE;
-const ctx = canvas.getContext('2d');
-ctx.imageSmoothingEnabled = true;
-ctx.imageSmoothingQuality = 'high';
-ctx.drawImage(img, 0, 0, SIZE, SIZE);
-const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
-const pix = imageData.data;
-const mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225];
-const area = SIZE * SIZE;
-const input = new Float32Array(3 * area);
-for (let i = 0; i < area; i++) {
-input[i] = (pix[i * 4] / 255 - mean[0]) / std[0];
-input[i + area] = (pix[i * 4 + 1] / 255 - mean[1]) / std[1];
-input[i + area * 2] = (pix[i * 4 + 2] / 255 - mean[2]) / std[2];
+    if (!session) await loadModel();
+    if (!img) throw new Error('الصورة غير محمّلة بعد');
+    const SIZE = CONFIG.MODEL_SIZE;
+    const W = img.naturalWidth, H = img.naturalHeight;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = SIZE; canvas.height = SIZE;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, SIZE, SIZE);
+
+    const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
+    const pix = imageData.data;
+    const mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225];
+    const area = SIZE * SIZE;
+    const input = new Float32Array(3 * area);
+    for (let i = 0; i < area; i++) {
+        input[i] = (pix[i * 4] / 255 - mean[0]) / std[0];
+        input[i + area] = (pix[i * 4 + 1] / 255 - mean[1]) / std[1];
+        input[i + area * 2] = (pix[i * 4 + 2] / 255 - mean[2]) / std[2];
+    }
+
+    const tensor = new ort.Tensor('float32', input, [1, 3, SIZE, SIZE]);
+    const out = await session.run({ [session.inputNames[0]]: tensor });
+    const data = out[session.outputNames[0]].data;
+
+    let min = Infinity, max = -Infinity;
+    for (let i = 0; i < data.length; i++) {
+        if (data[i] < min) min = data[i];
+        if (data[i] > max) max = data[i];
+    }
+    const range = max - min || 1;
+
+    const mask = new Float32Array(W * H);
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+            const sx = (x / W) * SIZE, sy = (y / H) * SIZE;
+            const x0 = Math.floor(sx), y0 = Math.floor(sy);
+            const x1 = Math.min(x0 + 1, SIZE - 1), y1 = Math.min(y0 + 1, SIZE - 1);
+            const fx = sx - x0, fy = sy - y0;
+            const v = (data[y0 * SIZE + x0] * (1 - fx) + data[y0 * SIZE + x1] * fx) * (1 - fy) +
+                      (data[y1 * SIZE + x0] * (1 - fx) + data[y1 * SIZE + x1] * fx) * fy;
+            mask[y * W + x] = (v - min) / range;
+        }
+    }
+
+    // ✅ S-Curve ناعم — يحتفظ بحواف الشعر
+    const refined = new Float32Array(mask.length);
+    for (let i = 0; i < mask.length; i++) {
+        let a = mask[i];
+        a = Math.max(0, Math.min(1, (a - 0.1) / 0.7));
+        a = a * a * (3 - 2 * a);
+        refined[i] = a;
+    }
+    return { mask: refined, width: W, height: H };
 }
-const tensor = new ort.Tensor('float32', input, [1, 3, SIZE, SIZE]);
-const out = await session.run({ [session.inputNames[0]]: tensor });
-const data = out[session.outputNames[0]].data;
-let min = Infinity, max = -Infinity;
-for (let i = 0; i < data.length; i++) {
-if (data[i] < min) min = data[i];
-if (data[i] > max) max = data[i];
-}
-const range = max - min || 1;
-const mask = new Float32Array(W * H);
-for (let y = 0; y < H; y++) {
-for (let x = 0; x < W; x++) {
-const sx = (x / W) * SIZE, sy = (y / H) * SIZE;
-const x0 = Math.floor(sx), y0 = Math.floor(sy);
-const x1 = Math.min(x0 + 1, SIZE - 1), y1 = Math.min(y0 + 1, SIZE - 1);
-const fx = sx - x0, fy = sy - y0;
-const v = (data[y0 * SIZE + x0] * (1 - fx) + data[y0 * SIZE + x1] * fx) * (1 - fy) +
-(data[y1 * SIZE + x0] * (1 - fx) + data[y1 * SIZE + x1] * fx) * fy;
-mask[y * W + x] = (v - min) / range;
-}
-}
-// S-Curve
-const refined = new Float32Array(mask.length);
-for (let i = 0; i < mask.length; i++) {
-let a = mask[i];
-a = Math.max(0, Math.min(1, (a - 0.3) / 0.4));
-a = a * a * (3 - 2 * a);
-refined[i] = a;
-}
-return { mask: refined, width: W, height: H };
-}
-// ============ RENDER PROCESSED ============
+
+// ============================================
+// ✅ RENDER PROCESSED — مع ظل واقعي
+// ============================================
 function renderProcessed(item, bg, shadow, targetSize, isCustom) {
-if (!item.maskData) return item.originalUrl;
-const { mask, width, height } = item.maskData;
-let targetW, targetH;
-if (isCustom) {
-targetW = customW;
-targetH = customH;
-} else if (targetSize > 0) {
-targetW = targetSize;
-targetH = targetSize;
-} else {
-const maxDim = Math.max(width, height);
-targetW = maxDim;
-targetH = maxDim;
+    if (!item.maskData) return item.originalUrl;
+    const { mask, width, height } = item.maskData;
+
+    let targetW, targetH;
+    if (isCustom) {
+        targetW = customW;
+        targetH = customH;
+    } else if (targetSize > 0) {
+        targetW = targetSize;
+        targetH = targetSize;
+    } else {
+        const maxDim = Math.max(width, height);
+        targetW = maxDim;
+        targetH = maxDim;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+
+    // 1. رسم الخلفية
+    if (bg && bg !== 'transparent') {
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, targetW, targetH);
+    }
+
+    // 2. بناء canvas للمنتج
+    const productCanvas = document.createElement('canvas');
+    productCanvas.width = width;
+    productCanvas.height = height;
+    const pctx = productCanvas.getContext('2d');
+    pctx.drawImage(item.imageEl, 0, 0, width, height);
+    const productData = pctx.getImageData(0, 0, width, height);
+    const pd = productData.data;
+    for (let i = 0; i < mask.length; i++) {
+        pd[i * 4 + 3] = Math.round(mask[i] * 255);
+    }
+    pctx.putImageData(productData, 0, 0);
+
+    // 3. حساب الموضع في المنتصف
+    const scale = Math.min(targetW / width, targetH / height);
+    const dw = width * scale, dh = height * scale;
+    const dx = (targetW - dw) / 2, dy = (targetH - dh) / 2;
+
+    // 4. ✨ إضافة الظل الواقعي (يتبع شكل المنتج)
+    if (shadow > 0 && bg !== 'transparent') {
+        ctx.save();
+        const minDim = Math.min(targetW, targetH);
+        // ✅ ظل متدرج أقوى — يتبع شكل القناع
+        ctx.shadowColor = `rgba(0,0,0,${(shadow / 100) * 0.55})`;
+        ctx.shadowBlur = minDim * 0.04 * (shadow / 100);
+        ctx.shadowOffsetY = minDim * 0.015 * (shadow / 100);
+        ctx.shadowOffsetX = 0;
+
+        // ✅ ارسم المنتج 3 مرات لتقوية الظل (تقنية anti-alias)
+        const blurSteps = Math.ceil(shadow / 33); // 1-3 مرات
+        for (let i = 0; i < blurSteps; i++) {
+            ctx.drawImage(productCanvas, dx, dy, dw, dh);
+        }
+        ctx.restore();
+    }
+
+    // 5. رسم المنتج فوق الظل
+    ctx.drawImage(productCanvas, dx, dy, dw, dh);
+
+    return canvas.toDataURL('image/png');
 }
-const canvas = document.createElement('canvas');
-canvas.width = targetW;
-canvas.height = targetH;
-const ctx = canvas.getContext('2d');
-if (bg && bg !== 'transparent') {
-ctx.fillStyle = bg;
-ctx.fillRect(0, 0, targetW, targetH);
-}
-const productCanvas = document.createElement('canvas');
-productCanvas.width = width;
-productCanvas.height = height;
-const pctx = productCanvas.getContext('2d');
-pctx.drawImage(item.imageEl, 0, 0, width, height);
-const productData = pctx.getImageData(0, 0, width, height);
-const pd = productData.data;
-for (let i = 0; i < mask.length; i++) {
-pd[i * 4 + 3] = Math.round(mask[i] * 255);
-}
-pctx.putImageData(productData, 0, 0);
-const scale = Math.min(targetW / width, targetH / height);
-const dw = width * scale, dh = height * scale;
-const dx = (targetW - dw) / 2, dy = (targetH - dh) / 2;
-if (shadow > 0 && bg !== 'transparent') {
-ctx.save();
-const minDim = Math.min(targetW, targetH);
-ctx.shadowColor = `rgba(0,0,0,${shadow / 100 * 0.5})`;
-ctx.shadowBlur = minDim * 0.05 * (shadow / 100);
-ctx.shadowOffsetY = minDim * 0.02 * (shadow / 100);
-ctx.drawImage(productCanvas, dx, dy, dw, dh);
-ctx.restore();
-}
-ctx.drawImage(productCanvas, dx, dy, dw, dh);
-return canvas.toDataURL('image/png');
-}
-// ============ FILE HANDLING ============
+
+// ============================================
+// ✅ FILE HANDLING
+// ============================================
 chooseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
 dropZone.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
@@ -1360,435 +1451,494 @@ addMoreBtn.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
 dropZone.addEventListener('drop', (e) => {
-e.preventDefault();
-dropZone.classList.remove('dragover');
-if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
 });
 fileInput.addEventListener('change', (e) => {
-if (e.target.files.length) handleFiles(e.target.files);
-e.target.value = '';
+    if (e.target.files.length) handleFiles(e.target.files);
+    e.target.value = '';
 });
+
 function handleFiles(fileList) {
-const accepted = ['image/jpeg', 'image/png', 'image/webp'];
-const remaining = CONFIG.MAX_IMAGES - files.length;
-if (remaining <= 0) { alert('وصلت للحد الأقصى ' + CONFIG.MAX_IMAGES); return; }
-const valid = Array.from(fileList).filter(f => accepted.includes(f.type)).slice(0, remaining);
-valid.forEach(file => {
-const id = uid();
-const url = URL.createObjectURL(file);
-const item = { id, file, originalUrl: url, name: file.name, originalSize: file.size, width: 0, height: 0, imageEl: null, maskData: null, processedUrl: null };
-const img = new Image();
-img.onload = () => {
-item.width = img.naturalWidth;
-item.height = img.naturalHeight;
-item.imageEl = img;
-if (activeFileId === id) updateSelectedFileInfo(item);
-};
-img.src = url;
-files.push(item);
-if (!activeFileId) activeFileId = id;
-});
-if (files.length > 0) {
-uploadSection.classList.add('hidden');
-workspaceSection.classList.remove('hidden');
-processBtn.disabled = false;
-renderThumbnails();
-showActiveFile();
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const remaining = CONFIG.MAX_IMAGES - files.length;
+    if (remaining <= 0) { alert('وصلت للحد الأقصى ' + CONFIG.MAX_IMAGES); return; }
+
+    const validFiles = Array.from(fileList).filter(f => acceptedTypes.includes(f.type)).slice(0, remaining);
+
+    validFiles.forEach(file => {
+        const id = uid();
+        const url = URL.createObjectURL(file);
+        const item = { id, file, originalUrl: url, name: file.name, originalSize: file.size, width: 0, height: 0, imageEl: null, maskData: null, processedUrl: null };
+
+        const img = new Image();
+        img.onload = () => {
+            item.width = img.naturalWidth;
+            item.height = img.naturalHeight;
+            item.imageEl = img;
+            if (activeFileId === id) updateSelectedFileInfo(item);
+        };
+        img.src = url;
+        files.push(item);
+        if (!activeFileId) activeFileId = id;
+    });
+
+    if (files.length > 0) {
+        uploadSection.classList.add('hidden');
+        workspaceSection.classList.remove('hidden');
+        processBtn.disabled = false;
+        renderThumbnails();
+        showActiveFile();
+    }
 }
-}
+
 function renderThumbnails() {
-previewCount.textContent = files.length;
-thumbnailsStrip.innerHTML = '';
-files.forEach(f => {
-const item = document.createElement('div');
-item.className = 'thumbnail-item' + (f.id === activeFileId ? ' active' : '');
-item.innerHTML = `<img src="${f.originalUrl}" alt="${f.name}"><button class="thumb-remove" data-remove-id="${f.id}" aria-label="حذف">✕</button>`;
-item.addEventListener('click', (e) => {
-if (e.target.classList.contains('thumb-remove')) return;
-activeFileId = f.id;
-renderThumbnails();
-showActiveFile();
-});
-thumbnailsStrip.appendChild(item);
-});
-thumbnailsStrip.querySelectorAll('[data-remove-id]').forEach(btn => {
-btn.addEventListener('click', (e) => {
-e.stopPropagation();
-const id = btn.dataset.removeId;
-const idx = files.findIndex(f => f.id === id);
-if (idx >= 0) {
-URL.revokeObjectURL(files[idx].originalUrl);
-files.splice(idx, 1);
-if (files.length === 0) { resetToUpload(); return; }
-if (activeFileId === id) activeFileId = files[0].id;
-renderThumbnails();
-showActiveFile();
+    previewCount.textContent = files.length;
+    thumbnailsStrip.innerHTML = '';
+    files.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'thumbnail-item' + (f.id === activeFileId ? ' active' : '');
+        item.innerHTML = `<img src="${f.processedUrl || f.originalUrl}" alt="${f.name}"><button class="thumb-remove" data-remove-id="${f.id}" aria-label="حذف">✕</button>`;
+        item.addEventListener('click', (e) => {
+            if (e.target.classList.contains('thumb-remove')) return;
+            activeFileId = f.id;
+            renderThumbnails();
+            showActiveFile();
+        });
+        thumbnailsStrip.appendChild(item);
+    });
+    thumbnailsStrip.querySelectorAll('[data-remove-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.removeId;
+            const idx = files.findIndex(f => f.id === id);
+            if (idx >= 0) {
+                URL.revokeObjectURL(files[idx].originalUrl);
+                files.splice(idx, 1);
+                if (files.length === 0) { resetToUpload(); return; }
+                if (activeFileId === id) activeFileId = files[0].id;
+                renderThumbnails();
+                showActiveFile();
+            }
+        });
+    });
 }
-});
-});
-}
+
 function showActiveFile() {
-const f = files.find(x => x.id === activeFileId);
-if (!f) {
-mainPreview.classList.add('checker-bg');
-mainPreview.innerHTML = '<div class="empty-state"><div class="icon">🖼️</div><p>اختر صورة منتج</p></div>';
-selectedFileInfo.classList.add('hidden');
-return;
+    const f = files.find(x => x.id === activeFileId);
+    if (!f) {
+        mainPreview.classList.add('checker-bg');
+        mainPreview.innerHTML = '<div class="empty-state"><div class="icon">🖼️</div><p>اختر صورة منتج</p></div>';
+        selectedFileInfo.classList.add('hidden');
+        return;
+    }
+    const displayUrl = f.processedUrl || f.originalUrl;
+    mainPreview.classList.toggle('checker-bg', !f.processedUrl || currentBg === 'transparent');
+    mainPreview.innerHTML = `<img src="${displayUrl}" alt="${f.name}">`;
+    updateSelectedFileInfo(f);
 }
-const displayUrl = f.processedUrl || f.originalUrl;
-mainPreview.classList.toggle('checker-bg', !f.processedUrl || currentBg === 'transparent');
-mainPreview.innerHTML = `<img src="${displayUrl}" alt="${f.name}">`;
-updateSelectedFileInfo(f);
-}
+
 function updateSelectedFileInfo(f) {
-selectedFileInfo.classList.remove('hidden');
-selectedFileName.textContent = f.name;
-selectedFileSize.textContent = formatBytes(f.originalSize);
-selectedFileDims.textContent = f.width > 0 ? `${f.width} × ${f.height}` : '...';
+    selectedFileInfo.classList.remove('hidden');
+    selectedFileName.textContent = f.name;
+    selectedFileSize.textContent = formatBytes(f.originalSize);
+    selectedFileDims.textContent = f.width > 0 ? `${f.width} × ${f.height}` : '...';
 }
+
 clearBtn.addEventListener('click', () => {
-files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
-files = []; results = []; resetToUpload();
+    files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
+    files = []; results = []; resetToUpload();
 });
+
 newImagesBtn.addEventListener('click', () => {
-files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
-results = [];
-files = []; resetToUpload();
+    files.forEach(f => { URL.revokeObjectURL(f.originalUrl); if (f.processedUrl) URL.revokeObjectURL(f.processedUrl); });
+    results = [];
+    files = []; resetToUpload();
 });
+
 function resetToUpload() {
-uploadSection.classList.remove('hidden');
-workspaceSection.classList.add('hidden');
-resultsSection.classList.add('hidden');
-progressSection.classList.add('hidden');
-thumbnailsStrip.innerHTML = '';
-resultsGrid.innerHTML = '';
-fileInput.value = '';
-activeFileId = null;
-processBtn.disabled = true;
-downloadZipBtn.disabled = true;
-downloadZipBtnSide.disabled = true;
+    uploadSection.classList.remove('hidden');
+    workspaceSection.classList.add('hidden');
+    resultsSection.classList.add('hidden');
+    progressSection.classList.add('hidden');
+    thumbnailsStrip.innerHTML = '';
+    resultsGrid.innerHTML = '';
+    fileInput.value = '';
+    activeFileId = null;
+    processBtn.disabled = true;
+    downloadZipBtn.disabled = true;
+    downloadZipBtnSide.disabled = true;
 }
-// ============ UI HANDLERS ============
+
+// ============================================
+// ✅ UI HANDLERS
+// ============================================
 bgOptions.forEach(opt => {
-opt.addEventListener('click', () => {
-if (opt.tagName === 'LABEL') return;
-bgOptions.forEach(o => o.classList.remove('active'));
-opt.classList.add('active');
-currentBg = opt.dataset.bg;
-reprocessAll();
+    opt.addEventListener('click', (e) => {
+        if (opt.tagName === 'LABEL' && opt.querySelector('input[type="color"]')) return;
+        bgOptions.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        currentBg = opt.dataset.bg;
+        reprocessAll();
+    });
 });
-});
+
 customBgColor.addEventListener('input', (e) => {
-currentBg = e.target.value;
-bgOptions.forEach(o => o.classList.remove('active'));
-reprocessAll();
+    currentBg = e.target.value;
+    bgOptions.forEach(o => o.classList.remove('active'));
+    const parentLabel = e.target.closest('.bg-option');
+    if (parentLabel) parentLabel.classList.add('active');
+    reprocessAll();
 });
+
 shadowSlider.addEventListener('input', () => {
-currentShadow = parseInt(shadowSlider.value);
-shadowValue.textContent = currentShadow + '%';
-reprocessAll();
+    currentShadow = parseInt(shadowSlider.value);
+    shadowValue.textContent = currentShadow + '%';
+    reprocessAll();
 });
+
 templateBtns.forEach(btn => {
-btn.addEventListener('click', () => {
-templateBtns.forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-const sizeVal = btn.dataset.size;
-if (sizeVal === 'custom') {
-isCustomSize = true;
-currentSize = 0;
-customSizePanel.classList.remove('hidden');
-sumTemplate.textContent = 'مخصص';
-reprocessAll();
-return;
-}
-isCustomSize = false;
-customSizePanel.classList.add('hidden');
-currentSize = parseInt(sizeVal) || 0;
-sumTemplate.textContent = SIZE_LABELS[currentSize] || 'الأصل';
-reprocessAll();
+    btn.addEventListener('click', () => {
+        templateBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sizeVal = btn.dataset.size;
+        if (sizeVal === 'custom') {
+            isCustomSize = true;
+            currentSize = 0;
+            customSizePanel.classList.remove('hidden');
+            sumTemplate.textContent = 'مخصص';
+            reprocessAll();
+            return;
+        }
+        isCustomSize = false;
+        customSizePanel.classList.add('hidden');
+        currentSize = parseInt(sizeVal) || 0;
+        sumTemplate.textContent = SIZE_LABELS[currentSize] || 'الأصل';
+        reprocessAll();
+    });
 });
-});
+
 applyCustomSizeBtn.addEventListener('click', () => {
-const w = parseInt(customWidth.value, 10);
-const h = parseInt(customHeight.value, 10);
-if (isNaN(w) || w < CONFIG.MIN_SIZE || w > CONFIG.MAX_SIZE || isNaN(h) || h < CONFIG.MIN_SIZE || h > CONFIG.MAX_SIZE) {
-alert(`المقاس يجب أن يكون بين ${CONFIG.MIN_SIZE}-${CONFIG.MAX_SIZE}`);
-return;
-}
-customW = w; customH = h;
-isCustomSize = true;
-currentSize = 0;
-sumTemplate.textContent = `${w}×${h}`;
-reprocessAll();
+    const w = parseInt(customWidth.value, 10);
+    const h = parseInt(customHeight.value, 10);
+    if (isNaN(w) || w < CONFIG.MIN_SIZE || w > CONFIG.MAX_SIZE || isNaN(h) || h < CONFIG.MIN_SIZE || h > CONFIG.MAX_SIZE) {
+        alert(`المقاس يجب أن يكون بين ${CONFIG.MIN_SIZE}-${CONFIG.MAX_SIZE}`);
+        return;
+    }
+    customW = w; customH = h;
+    isCustomSize = true;
+    currentSize = 0;
+    sumTemplate.textContent = `${w}×${h}`;
+    reprocessAll();
 });
-// ============ MAIN PROCESS ============
+
+// ============================================
+// ✅ MAIN PROCESS
+// ============================================
 processBtn.addEventListener('click', processAll);
+
 async function processAll() {
-if (files.length === 0) return;
-// التأكد من تحميل الصور
-for (const item of files) {
-if (!item.imageEl) {
-await new Promise(r => {
-const check = setInterval(() => { if (item.imageEl || !item.file) { clearInterval(check); r(); } }, 50);
-setTimeout(() => { clearInterval(check); r(); }, 5000);
-});
+    if (files.length === 0) return;
+
+    // ✅ انتظار تحميل كل الصور
+    for (const item of files) {
+        if (!item.imageEl) {
+            await new Promise(r => {
+                const check = setInterval(() => {
+                    if (item.imageEl) { clearInterval(check); r(); }
+                }, 50);
+                setTimeout(() => { clearInterval(check); r(); }, 8000);
+            });
+        }
+    }
+
+    workspaceSection.classList.add('hidden');
+    progressSection.classList.remove('hidden');
+    resultsSection.classList.add('hidden');
+    downloadZipBtn.disabled = true;
+    downloadZipBtnSide.disabled = true;
+    results = [];
+
+    try {
+        await loadModel();
+    } catch (e) {
+        alert('فشل تحميل النموذج.\n' + (e.message || '') + '\n\nتحقق من الاتصال بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/');
+        progressSection.classList.add('hidden');
+        workspaceSection.classList.remove('hidden');
+        return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        const item = files[i];
+        progressText.textContent = `جاري المعالجة: ${item.name}`;
+        progressDetail.textContent = `${i + 1} من ${files.length}`;
+        const pct = Math.round((i / files.length) * 100);
+        progressBar.style.width = pct + '%';
+        progressPercent.textContent = pct + '%';
+
+        try {
+            if (!item.imageEl) throw new Error('الصورة غير محمّلة');
+            const maskData = await runInference(item.imageEl);
+            item.maskData = maskData;
+            const processedUrl = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
+            item.processedUrl = processedUrl;
+
+            results.push({
+                id: item.id,
+                name: item.name.replace(/\.[^.]+$/, '') + '-studio.png',
+                originalName: item.name,
+                url: processedUrl,
+                originalUrl: item.originalUrl,
+                width: item.width,
+                height: item.height
+            });
+        } catch (e) {
+            console.error('Error processing', item.name, e);
+        }
+        await new Promise(r => setTimeout(r, 20));
+    }
+
+    progressBar.style.width = '100%';
+    progressPercent.textContent = '100%';
+    progressDetail.textContent = 'اكتمل بنجاح!';
+    setTimeout(() => {
+        progressSection.classList.add('hidden');
+        resultsSection.classList.remove('hidden');
+        renderResults();
+    }, 400);
 }
-}
-workspaceSection.classList.add('hidden');
-progressSection.classList.remove('hidden');
-resultsSection.classList.add('hidden');
-downloadZipBtn.disabled = true;
-downloadZipBtnSide.disabled = true;
-results = [];
-try { await loadModel(); } catch (e) {
-alert('فشل تحميل النموذج: ' + e.message + '\nيرجى التحقق من اتصال الإنترنت أو تحديث الصفحة.');
-progressSection.classList.add('hidden');
-workspaceSection.classList.remove('hidden');
-return;
-}
-for (let i = 0; i < files.length; i++) {
-const item = files[i];
-progressText.textContent = `جاري المعالجة: ${item.name}`;
-progressDetail.textContent = `${i + 1} من ${files.length}`;
-const pct = Math.round((i / files.length) * 100);
-progressBar.style.width = pct + '%';
-progressPercent.textContent = pct + '%';
-try {
-const maskData = await runInference(item.imageEl);
-item.maskData = maskData;
-const processedUrl = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
-item.processedUrl = processedUrl;
-results.push({
-id: item.id,
-name: item.name.replace(/\.[^.]+$/, '') + '-studio.png',
-originalName: item.name,
-url: processedUrl,
-originalUrl: item.originalUrl,
-width: item.width,
-height: item.height
-});
-} catch (e) {
-console.error('Error:', item.name, e);
-}
-await new Promise(r => setTimeout(r, 20));
-}
-progressBar.style.width = '100%';
-progressPercent.textContent = '100%';
-progressDetail.textContent = 'اكتمل بنجاح!';
-setTimeout(() => {
-progressSection.classList.add('hidden');
-resultsSection.classList.remove('hidden');
-renderResults();
-}, 400);
-}
+
 async function reprocessAll() {
-const doneFiles = files.filter(f => f.maskData);
-if (doneFiles.length === 0) return;
-for (const item of doneFiles) {
-const url = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
-if (item.processedUrl) URL.revokeObjectURL(item.processedUrl);
-item.processedUrl = url;
-const r = results.find(x => x.id === item.id);
-if (r) r.url = url;
-updateThumbnailImage(item);
+    const doneFiles = files.filter(f => f.maskData);
+    if (doneFiles.length === 0) return;
+    for (const item of doneFiles) {
+        const url = renderProcessed(item, currentBg, currentShadow, currentSize, isCustomSize);
+        item.processedUrl = url;
+        const r = results.find(x => x.id === item.id);
+        if (r) r.url = url;
+    }
+    if (results.length > 0) {
+        renderResults();
+        renderThumbnails();
+        showActiveFile();
+    }
 }
-renderResults();
-showActiveFile();
-}
-function updateThumbnailImage(item) {
-if (activeFileId === item.id) showActiveFile();
-}
+
+// ============================================
+// ✅ RESULTS
+// ============================================
 function renderResults() {
-document.getElementById('sumCount').textContent = results.length;
-resultsGrid.innerHTML = '';
-results.forEach((r, idx) => {
-const card = document.createElement('div');
-card.className = 'result-card';
-card.innerHTML = `
-<div class="result-card-header">
-<div class="file-icon">🎨</div>
-<p class="file-name" title="${r.originalName}">${r.originalName}</p>
-<span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ جاهز</span>
-</div>
-<div class="result-layout">
-<div class="result-image-col">
-<div class="comparison-container ${currentBg === 'transparent' ? 'checker-bg' : ''}" data-comparison="${idx}">
-<img class="comparison-after" src="${r.url}" alt="بعد">
-<img class="comparison-before" src="${r.originalUrl}" alt="قبل">
-<span class="comparison-label label-before">قبل</span>
-<span class="comparison-label label-after">بعد</span>
-<div class="comparison-handle" style="left: 50%;"></div>
-</div>
-<div class="drag-hint">💡 اسحب الشريط الذهبي للمقارنة</div>
-</div>
-<div class="result-info-col">
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-<div class="info-stat">
-<div class="info-icon">📐</div>
-<div class="info-content">
-<div class="info-label">الأبعاد</div>
-<div class="info-value">${r.width} × ${r.height}</div>
-</div>
-</div>
-<div class="info-stat savings">
-<div class="info-icon">✅</div>
-<div class="info-content">
-<div class="info-label">الحالة</div>
-<div class="info-value">خلفية مُزالة</div>
-</div>
-</div>
-<div class="info-stat">
-<div class="info-icon">🎨</div>
-<div class="info-content">
-<div class="info-label">الخلفية</div>
-<div class="info-value">${currentBg === 'transparent' ? 'شفاف' : currentBg}</div>
-</div>
-</div>
-<div class="info-stat">
-<div class="info-icon">🛒</div>
-<div class="info-content">
-<div class="info-label">القالب</div>
-<div class="info-value">${sumTemplate.textContent}</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-2 mt-3">
-<button class="btn-secondary justify-center" data-edit="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-✏️ تعديل
-</button>
-<button class="btn-download" data-download="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-⬇️ تحميل
-</button>
-</div>
-</div>
-</div>
-`;
-resultsGrid.appendChild(card);
-});
-resultsGrid.querySelectorAll('[data-download]').forEach(btn => {
-btn.addEventListener('click', () => {
-const r = results[parseInt(btn.dataset.download)];
-if (!r) return;
-const link = document.createElement('a');
-link.href = r.url;
-link.download = r.name;
-link.click();
-});
-});
-resultsGrid.querySelectorAll('[data-edit]').forEach(btn => {
-btn.addEventListener('click', () => {
-const idx = parseInt(btn.dataset.edit);
-const r = results[idx];
-const item = files.find(f => f.id === r.id);
-if (item) openMaskEditor(item);
-});
-});
-resultsGrid.querySelectorAll('[data-comparison]').forEach(c => setupComparisonSlider(c));
-if (results.length > 1) {
-downloadZipBtn.disabled = false;
-downloadZipBtnSide.disabled = false;
+    document.getElementById('sumCount').textContent = results.length;
+    resultsGrid.innerHTML = '';
+
+    results.forEach((r, idx) => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+            <div class="result-card-header">
+                <div class="file-icon">🎨</div>
+                <p class="file-name" title="${r.originalName}">${r.originalName}</p>
+                <span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ جاهز</span>
+            </div>
+            <div class="result-layout">
+                <div class="result-image-col">
+                    <div class="comparison-container ${currentBg === 'transparent' ? 'checker-bg' : ''}" data-comparison="${idx}">
+                        <img class="comparison-after" src="${r.url}" alt="بعد">
+                        <img class="comparison-before" src="${r.originalUrl}" alt="قبل">
+                        <span class="comparison-label label-before">قبل</span>
+                        <span class="comparison-label label-after">بعد</span>
+                        <div class="comparison-handle" style="left: 50%;"></div>
+                    </div>
+                    <div class="drag-hint">💡 اسحب الشريط الذهبي للمقارنة</div>
+                </div>
+                <div class="result-info-col">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="info-stat">
+                            <div class="info-icon">📐</div>
+                            <div class="info-content">
+                                <div class="info-label">الأبعاد</div>
+                                <div class="info-value">${r.width} × ${r.height}</div>
+                            </div>
+                        </div>
+                        <div class="info-stat savings">
+                            <div class="info-icon">✅</div>
+                            <div class="info-content">
+                                <div class="info-label">الحالة</div>
+                                <div class="info-value">خلفية مُزالة</div>
+                            </div>
+                        </div>
+                        <div class="info-stat">
+                            <div class="info-icon">🎨</div>
+                            <div class="info-content">
+                                <div class="info-label">الخلفية</div>
+                                <div class="info-value">${currentBg === 'transparent' ? 'شفاف' : currentBg}</div>
+                            </div>
+                        </div>
+                        <div class="info-stat">
+                            <div class="info-icon">🛒</div>
+                            <div class="info-content">
+                                <div class="info-label">القالب</div>
+                                <div class="info-value">${sumTemplate.textContent}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <button class="btn-secondary justify-center" data-edit="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
+                            ✏️ تعديل
+                        </button>
+                        <button class="btn-download" data-download="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
+                            ⬇️ تحميل
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        resultsGrid.appendChild(card);
+    });
+
+    resultsGrid.querySelectorAll('[data-download]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const r = results[parseInt(btn.dataset.download)];
+            if (!r) return;
+            const link = document.createElement('a');
+            link.href = r.url;
+            link.download = r.name;
+            link.click();
+        });
+    });
+
+    resultsGrid.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.edit);
+            const r = results[idx];
+            const item = files.find(f => f.id === r.id);
+            if (item) openMaskEditor(item);
+        });
+    });
+
+    resultsGrid.querySelectorAll('[data-comparison]').forEach(c => setupComparisonSlider(c));
+
+    if (results.length > 0) {
+        downloadZipBtn.disabled = false;
+        downloadZipBtnSide.disabled = false;
+    }
 }
-}
+
 function setupComparisonSlider(container) {
-const handle = container.querySelector('.comparison-handle');
-const before = container.querySelector('.comparison-before');
-let isDragging = false;
-function setPos(percent) {
-percent = Math.max(0, Math.min(100, percent));
-handle.style.left = percent + '%';
-before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    const handle = container.querySelector('.comparison-handle');
+    const before = container.querySelector('.comparison-before');
+    let isDragging = false;
+    function setPos(percent) {
+        percent = Math.max(0, Math.min(100, percent));
+        handle.style.left = percent + '%';
+        before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    }
+    function getPercent(e) {
+        const rect = container.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        return ((cx - rect.left) / rect.width) * 100;
+    }
+    container.addEventListener('mousedown', (e) => { isDragging = true; setPos(getPercent(e)); });
+    container.addEventListener('touchstart', (e) => { isDragging = true; setPos(getPercent(e)); }, { passive: true });
+    document.addEventListener('mousemove', (e) => { if (isDragging) setPos(getPercent(e)); });
+    document.addEventListener('touchmove', (e) => { if (isDragging) setPos(getPercent(e)); }, { passive: true });
+    document.addEventListener('mouseup', () => { isDragging = false; });
+    document.addEventListener('touchend', () => { isDragging = false; });
 }
-function getPercent(e) {
-const rect = container.getBoundingClientRect();
-const cx = e.touches ? e.touches[0].clientX : e.clientX;
-return ((cx - rect.left) / rect.width) * 100;
-}
-container.addEventListener('mousedown', (e) => { isDragging = true; setPos(getPercent(e)); });
-container.addEventListener('touchstart', (e) => { isDragging = true; setPos(getPercent(e)); }, { passive: true });
-document.addEventListener('mousemove', (e) => { if (isDragging) setPos(getPercent(e)); });
-document.addEventListener('touchmove', (e) => { if (isDragging) setPos(getPercent(e)); }, { passive: true });
-document.addEventListener('mouseup', () => { isDragging = false; });
-document.addEventListener('touchend', () => { isDragging = false; });
-}
-// ============ ZIP DOWNLOAD ============
+
+// ============================================
+// ✅ ZIP DOWNLOAD
+// ============================================
 async function downloadZip() {
-if (results.length === 0) return;
-if (typeof JSZip === 'undefined') { alert('مكتبة ZIP لم تُحمّل'); return; }
-const btn = downloadZipBtn;
-const orig = btn.textContent;
-btn.disabled = true;
-btn.textContent = '⏳ جاري الإنشاء...';
-try {
-const zip = new JSZip();
-for (const r of results) {
-const base64 = r.url.split(',')[1];
-zip.file(r.name, base64, { base64: true });
-}
-const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-const url = URL.createObjectURL(content);
-const link = document.createElement('a');
-link.href = url;
-link.download = `intooly-studio-${Date.now()}.zip`;
-link.click();
-URL.revokeObjectURL(url);
-btn.textContent = '✅ تم التحميل!';
-setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
-} catch (e) {
-console.error(e);
-alert('خطأ في إنشاء ZIP');
-btn.textContent = orig;
-btn.disabled = false;
-}
+    if (results.length === 0) return;
+    if (typeof JSZip === 'undefined') { alert('مكتبة ZIP لم تُحمّل'); return; }
+
+    const btn = downloadZipBtn;
+    const orig = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري الإنشاء...';
+
+    try {
+        const zip = new JSZip();
+        for (const r of results) {
+            const base64 = r.url.split(',')[1];
+            zip.file(r.name, base64, { base64: true });
+        }
+        const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+        const url = URL.createObjectURL(content);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `intooly-studio-${Date.now()}.zip`;
+        link.click();
+        URL.revokeObjectURL(url);
+        btn.textContent = '✅ تم التحميل!';
+        setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+    } catch (e) {
+        console.error(e);
+        alert('خطأ في إنشاء ZIP');
+        btn.textContent = orig;
+        btn.disabled = false;
+    }
 }
 downloadZipBtn.addEventListener('click', downloadZip);
 downloadZipBtnSide.addEventListener('click', downloadZip);
-// ============ MASK EDITOR ============
+
+// ============================================
+// ✅ MASK EDITOR
+// ============================================
 function openMaskEditor(item) {
-if (!item.maskData) { alert('لم تكتمل المعالجة بعد'); return; }
-currentEditorItem = item;
-maskEditorModal.classList.remove('hidden');
-const canvas = editorCanvas;
-editorState.ctx = canvas.getContext('2d');
-canvas.width = item.maskData.width;
-canvas.height = item.maskData.height;
-editorState.ctx.drawImage(item.imageEl, 0, 0);
-editorState.originalImage = item.imageEl;
-editorState.maskCanvas = document.createElement('canvas');
-editorState.maskCanvas.width = canvas.width;
-editorState.maskCanvas.height = canvas.height;
-editorState.maskCtx = editorState.maskCanvas.getContext('2d');
-const maskImgData = editorState.maskCtx.createImageData(canvas.width, canvas.height);
-for (let i = 0; i < item.maskData.mask.length; i++) {
-const a = Math.round(item.maskData.mask[i] * 255);
-maskImgData.data[i * 4] = 255;
-maskImgData.data[i * 4 + 1] = 255;
-maskImgData.data[i * 4 + 2] = 255;
-maskImgData.data[i * 4 + 3] = a;
+    if (!item.maskData) { alert('لم تكتمل المعالجة بعد'); return; }
+    currentEditorItem = item;
+    maskEditorModal.classList.remove('hidden');
+    const canvas = editorCanvas;
+    editorState.ctx = canvas.getContext('2d');
+
+    canvas.width = item.maskData.width;
+    canvas.height = item.maskData.height;
+
+    editorState.ctx.drawImage(item.imageEl, 0, 0);
+    editorState.originalImage = item.imageEl;
+
+    editorState.maskCanvas = document.createElement('canvas');
+    editorState.maskCanvas.width = canvas.width;
+    editorState.maskCanvas.height = canvas.height;
+    editorState.maskCtx = editorState.maskCanvas.getContext('2d');
+    const maskImgData = editorState.maskCtx.createImageData(canvas.width, canvas.height);
+    for (let i = 0; i < item.maskData.mask.length; i++) {
+        const a = Math.round(item.maskData.mask[i] * 255);
+        maskImgData.data[i * 4] = 255;
+        maskImgData.data[i * 4 + 1] = 255;
+        maskImgData.data[i * 4 + 2] = 255;
+        maskImgData.data[i * 4 + 3] = a;
+    }
+    editorState.maskCtx.putImageData(maskImgData, 0, 0);
+    applyEditorPreview();
 }
-editorState.maskCtx.putImageData(maskImgData, 0, 0);
-applyEditorPreview();
-}
+
 function applyEditorPreview() {
-const ctx = editorState.ctx;
-ctx.clearRect(0, 0, editorCanvas.width, editorCanvas.height);
-ctx.drawImage(editorState.originalImage, 0, 0);
-ctx.globalCompositeOperation = 'destination-in';
-ctx.drawImage(editorState.maskCanvas, 0, 0);
-ctx.globalCompositeOperation = 'source-over';
+    const ctx = editorState.ctx;
+    ctx.clearRect(0, 0, editorCanvas.width, editorCanvas.height);
+    ctx.drawImage(editorState.originalImage, 0, 0);
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.drawImage(editorState.maskCanvas, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
 }
+
 function getEditorPos(e) {
-const rect = editorCanvas.getBoundingClientRect();
-const sx = editorCanvas.width / rect.width;
-const sy = editorCanvas.height / rect.height;
-const cx = e.touches ? e.touches[0].clientX : e.clientX;
-const cy = e.touches ? e.touches[0].clientY : e.clientY;
-return { x: (cx - rect.left) * sx, y: (cy - rect.top) * sy };
+    const rect = editorCanvas.getBoundingClientRect();
+    const sx = editorCanvas.width / rect.width;
+    const sy = editorCanvas.height / rect.height;
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (cx - rect.left) * sx, y: (cy - rect.top) * sy };
 }
+
 editorCanvas.addEventListener('mousedown', (e) => {
-editorState.isDrawing = true;
-const p = getEditorPos(e);
-editorState.lastX = p.x; editorState.lastY = p.y;
-drawEditor(e);
+    editorState.isDrawing = true;
+    const p = getEditorPos(e);
+    editorState.lastX = p.x; editorState.lastY = p.y;
+    drawEditor(e);
 });
 editorCanvas.addEventListener('mousemove', drawEditor);
 editorCanvas.addEventListener('mouseup', () => editorState.isDrawing = false);
@@ -1796,55 +1946,59 @@ editorCanvas.addEventListener('mouseleave', () => editorState.isDrawing = false)
 editorCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); editorState.isDrawing = true; const p = getEditorPos(e); editorState.lastX = p.x; editorState.lastY = p.y; drawEditor(e); }, { passive: false });
 editorCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); drawEditor(e); }, { passive: false });
 editorCanvas.addEventListener('touchend', () => editorState.isDrawing = false);
+
 function drawEditor(e) {
-if (!editorState.isDrawing) return;
-const p = getEditorPos(e);
-const size = parseInt(editorBrushSize.value);
-editorState.maskCtx.globalCompositeOperation = editorState.tool === 'restore' ? 'source-over' : 'destination-out';
-editorState.maskCtx.strokeStyle = 'rgba(255,255,255,1)';
-editorState.maskCtx.lineWidth = size;
-editorState.maskCtx.lineCap = 'round';
-editorState.maskCtx.lineJoin = 'round';
-editorState.maskCtx.beginPath();
-editorState.maskCtx.moveTo(editorState.lastX, editorState.lastY);
-editorState.maskCtx.lineTo(p.x, p.y);
-editorState.maskCtx.stroke();
-editorState.lastX = p.x; editorState.lastY = p.y;
-applyEditorPreview();
+    if (!editorState.isDrawing) return;
+    const p = getEditorPos(e);
+    const size = parseInt(editorBrushSize.value);
+    editorState.maskCtx.globalCompositeOperation = editorState.tool === 'restore' ? 'source-over' : 'destination-out';
+    editorState.maskCtx.strokeStyle = 'rgba(255,255,255,1)';
+    editorState.maskCtx.lineWidth = size;
+    editorState.maskCtx.lineCap = 'round';
+    editorState.maskCtx.lineJoin = 'round';
+    editorState.maskCtx.beginPath();
+    editorState.maskCtx.moveTo(editorState.lastX, editorState.lastY);
+    editorState.maskCtx.lineTo(p.x, p.y);
+    editorState.maskCtx.stroke();
+    editorState.lastX = p.x; editorState.lastY = p.y;
+    applyEditorPreview();
 }
+
 editorBrushRestore.addEventListener('click', () => {
-editorState.tool = 'restore';
-editorBrushRestore.classList.add('active');
-editorBrushErase.classList.remove('active');
+    editorState.tool = 'restore';
+    editorBrushRestore.classList.add('active');
+    editorBrushErase.classList.remove('active');
 });
 editorBrushErase.addEventListener('click', () => {
-editorState.tool = 'erase';
-editorBrushErase.classList.add('active');
-editorBrushRestore.classList.remove('active');
+    editorState.tool = 'erase';
+    editorBrushErase.classList.add('active');
+    editorBrushRestore.classList.remove('active');
 });
 editorBrushSize.addEventListener('input', () => {
-editorBrushSizeValue.textContent = editorBrushSize.value;
+    editorBrushSizeValue.textContent = editorBrushSize.value;
 });
 closeEditorBtn.addEventListener('click', () => {
-maskEditorModal.classList.add('hidden');
-currentEditorItem = null;
+    maskEditorModal.classList.add('hidden');
+    currentEditorItem = null;
 });
 editorApplyBtn.addEventListener('click', async () => {
-if (!currentEditorItem) return;
-const maskData = editorState.maskCtx.getImageData(0, 0, editorState.maskCanvas.width, editorState.maskCanvas.height).data;
-const newMask = new Float32Array(maskData.length / 4);
-for (let i = 0; i < newMask.length; i++) newMask[i] = maskData[i * 4 + 3] / 255;
-currentEditorItem.maskData.mask = newMask;
-const url = renderProcessed(currentEditorItem, currentBg, currentShadow, currentSize, isCustomSize);
-if (currentEditorItem.processedUrl) URL.revokeObjectURL(currentEditorItem.processedUrl);
-currentEditorItem.processedUrl = url;
-const r = results.find(x => x.id === currentEditorItem.id);
-if (r) r.url = url;
-maskEditorModal.classList.add('hidden');
-renderThumbnails();
-showActiveFile();
-renderResults();
+    if (!currentEditorItem) return;
+    const maskData = editorState.maskCtx.getImageData(0, 0, editorState.maskCanvas.width, editorState.maskCanvas.height).data;
+    const newMask = new Float32Array(maskData.length / 4);
+    for (let i = 0; i < newMask.length; i++) newMask[i] = maskData[i * 4 + 3] / 255;
+    currentEditorItem.maskData.mask = newMask;
+    const url = renderProcessed(currentEditorItem, currentBg, currentShadow, currentSize, isCustomSize);
+    currentEditorItem.processedUrl = url;
+
+    const r = results.find(x => x.id === currentEditorItem.id);
+    if (r) r.url = url;
+
+    maskEditorModal.classList.add('hidden');
+    renderThumbnails();
+    showActiveFile();
+    renderResults();
 });
+
 })();
 </script>
 </body>
