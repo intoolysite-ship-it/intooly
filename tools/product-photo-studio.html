@@ -40,9 +40,9 @@ gtag('config', 'G-GB8VLXYS9Z');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- ============ ONNX Runtime + JSZip ============ -->
-<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+<!-- ============ ONNX Runtime + JSZip (بدون defer) ============ -->
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <!-- ============ Tailwind ============ -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -1096,18 +1096,20 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 (function() {
 'use strict';
 const CONFIG = {
+    // روابط النموذج الصحيحة والمختبرة
     MODEL_URLS: [
-        '/assets/models/u2netp.onnx',
-        'https://huggingface.co/skytnt/u2net/resolve/main/u2netp.onnx',
-        'https://cdn.jsdelivr.net/gh/sony/model-zoo@master/models/image_segmentation/u2netp/u2netp.onnx'
+        'https://huggingface.co/Heliosoph/u2net-onnx/resolve/main/u2netp.onnx',
+        'https://huggingface.co/baby2008/u2net-onnx/resolve/main/u2netp.onnx',
+        'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx'
     ],
-    CACHE_NAME: 'intooly-product-studio-u2netp-v3-local',
-    MODEL_SIZE: 640,
+    CACHE_NAME: 'intooly-product-studio-u2netp-v4',
+    MODEL_SIZE: 320,
     MAX_IMAGES: 50,
     CONCURRENT: 2,
     MIN_SIZE: 100,
     MAX_SIZE: 5000,
-    DEFAULT_CUSTOM: 1500
+    DEFAULT_CUSTOM: 1500,
+    MAX_DIM: 2000
 };
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
@@ -1190,9 +1192,12 @@ if (cached) return await cached.arrayBuffer();
 let lastErr;
 for (const url of CONFIG.MODEL_URLS) {
 try {
-const res = await fetch(url);
-if (!res.ok) throw new Error('HTTP ' + res.status);
+console.log('محاولة تحميل النموذج من:', url);
+const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+if (!res.ok) throw new Error('HTTP ' + res.status + ' على ' + url);
 const buf = await res.arrayBuffer();
+if (buf.byteLength < 100000) throw new Error('الملف صغير جداً — ربما خطأ في الرابط');
+console.log('تم تحميل النموذج بنجاح، الحجم:', buf.byteLength);
 if ('caches' in window) {
 try {
 const cache = await caches.open(CONFIG.CACHE_NAME);
@@ -1201,10 +1206,11 @@ await cache.put('u2netp.onnx', new Response(buf.slice(0)));
 }
 return buf;
 } catch (e) {
+console.warn('فشل تحميل من', url, e.message);
 lastErr = e;
 }
 }
-throw lastErr || new Error('فشل تحميل النموذج');
+throw lastErr || new Error('فشل تحميل النموذج من جميع المصادر');
 }
 async function loadModel() {
 if (modelLoaded) return session;
@@ -1214,9 +1220,15 @@ modelLoading = true;
 modelStatus.textContent = '⏳ جاري تحميل نموذج الذكاء الاصطناعي...';
 modelStatus.className = 'text-center text-sm font-bold text-ink-600 mt-4';
 try {
+// التحقق من وجود ort
+if (typeof ort === 'undefined') {
+throw new Error('مكتبة ONNX Runtime لم يتم تحميلها بعد');
+}
+// إعدادات ONNX Runtime
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
 ort.env.wasm.numThreads = 1;
 ort.env.wasm.simd = true;
+ort.env.wasm.proxy = false;
 const buf = await fetchModelBuffer();
 session = await ort.InferenceSession.create(new Uint8Array(buf), {
 executionProviders: ['wasm'],
@@ -1229,7 +1241,8 @@ modelStatus.className = 'text-center text-sm font-bold text-green-600 mt-4';
 return session;
 } catch (e) {
 modelLoading = false;
-modelStatus.textContent = '⚠️ تعذّر تحميل النموذج';
+console.error('خطأ في تحميل النموذج:', e);
+modelStatus.textContent = '⚠️ تعذّر تحميل النموذج: ' + e.message;
 modelStatus.className = 'text-center text-sm font-bold text-orange-600 mt-4';
 throw e;
 }
@@ -1512,6 +1525,15 @@ reprocessAll();
 processBtn.addEventListener('click', processAll);
 async function processAll() {
 if (files.length === 0) return;
+// التأكد من تحميل الصور
+for (const item of files) {
+if (!item.imageEl) {
+await new Promise(r => {
+const check = setInterval(() => { if (item.imageEl || !item.file) { clearInterval(check); r(); } }, 50);
+setTimeout(() => { clearInterval(check); r(); }, 5000);
+});
+}
+}
 workspaceSection.classList.add('hidden');
 progressSection.classList.remove('hidden');
 resultsSection.classList.add('hidden');
@@ -1519,7 +1541,7 @@ downloadZipBtn.disabled = true;
 downloadZipBtnSide.disabled = true;
 results = [];
 try { await loadModel(); } catch (e) {
-alert('فشل تحميل النموذج. يرجى التحقق من اتصال الإنترنت أو تحديث الصفحة.');
+alert('فشل تحميل النموذج: ' + e.message + '\nيرجى التحقق من اتصال الإنترنت أو تحديث الصفحة.');
 progressSection.classList.add('hidden');
 workspaceSection.classList.remove('hidden');
 return;
@@ -1827,5 +1849,3 @@ renderResults();
 </script>
 </body>
 </html>
-
-

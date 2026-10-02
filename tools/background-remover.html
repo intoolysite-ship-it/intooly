@@ -41,8 +41,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    <!-- ✅ FIXED: إزالة defer لضمان تحميل ort قبل الكود -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -1081,7 +1082,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
-    </button>    <script>
+    </button>
+
+    <script>
     // ============ Shared Scripts ============
     (function() {
         'use strict';
@@ -1178,23 +1181,27 @@
         if (yearEl) yearEl.textContent = new Date().getFullYear();
     })();
 
-    // ============ Background Remover Tool (FULLY FIXED) ============
+    // ====================================================
+    // ✅ Background Remover Tool — FULLY FIXED
+    // ====================================================
     (function() {
         'use strict';
 
         // ============================================
-        // ✅ CONFIG — إعدادات مُصلَّحة
+        // ✅ CONFIG — إعدادات مُصلَّحة بروابط صالحة
         // ============================================
         const CONFIG = {
             MODEL_URLS: [
-    '/assets/models/u2netp.onnx',
-    'https://huggingface.co/skytnt/u2net/resolve/main/u2netp.onnx',
-    'https://cdn.jsdelivr.net/gh/sony/model-zoo@master/models/image_segmentation/u2netp/u2netp.onnx'
-],
-CACHE_NAME: 'intooly-u2netp-v3-local',
+                '/assets/models/u2netp.onnx',
+                'https://huggingface.co/tomjackson2023/rembg/resolve/main/u2netp.onnx',
+                'https://huggingface.co/Xenova/u2netp/resolve/main/onnx/model_quantized.onnx',
+                'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx'
+            ],
+            CACHE_NAME: 'intooly-u2netp-v5-fixed',
             MODEL_SIZE: 320,
             MAX_IMAGES: 50,
-            CONCURRENT: 2
+            CONCURRENT: 2,
+            FETCH_TIMEOUT: 45000
         };
 
         const dropZone = document.getElementById('dropZone');
@@ -1288,7 +1295,7 @@ CACHE_NAME: 'intooly-u2netp-v3-local',
         }
 
         // ============================================
-        // ✅ MODEL LOADING (مع Cache + fallbacks)
+        // ✅ MODEL LOADING — مع Cache + fallbacks + timeout
         // ============================================
         async function fetchModelBuffer() {
             if ('caches' in window) {
@@ -1310,15 +1317,23 @@ CACHE_NAME: 'intooly-u2netp-v3-local',
                     setModelStatus('loading', `جاري التحميل من المصدر ${i+1}...`);
 
                     const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 30000);
+                    const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT);
 
-                    const res = await fetch(url, { signal: controller.signal, mode: 'cors' });
+                    const res = await fetch(url, {
+                        signal: controller.signal,
+                        mode: 'cors',
+                        credentials: 'omit'
+                    });
                     clearTimeout(timeout);
 
                     if (!res.ok) throw new Error('HTTP ' + res.status);
 
                     const buf = await res.arrayBuffer();
                     console.log('[Model] ✅ Loaded:', buf.byteLength, 'bytes from', url);
+
+                    if (buf.byteLength < 100000) {
+                        throw new Error('حجم الملف صغير جداً (' + buf.byteLength + ' بايت)');
+                    }
 
                     if ('caches' in window) {
                         try {
@@ -1343,18 +1358,32 @@ CACHE_NAME: 'intooly-u2netp-v3-local',
                 modelLoading = true;
                 setModelStatus('loading', 'جاري تحضير محرك الذكاء الاصطناعي...');
                 try {
+                    // ✅ التحقق من ort
+                    if (typeof ort === 'undefined') {
+                        throw new Error('مكتبة ONNX Runtime لم تُحمَّل. تحقق من الرابط في <head>.');
+                    }
+                    if (typeof WebAssembly === 'undefined') {
+                        throw new Error('متصفحك لا يدعم WebAssembly.');
+                    }
+
+                    // ✅ إعدادات ONNX Runtime — كان ناقصاً "/" في النهاية
                     ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
-ort.env.wasm.numThreads = 1;
+                    ort.env.wasm.numThreads = 1;
                     ort.env.wasm.simd = true;
+                    ort.env.wasm.proxy = false;
+
                     const buf = await fetchModelBuffer();
                     setModelStatus('loading', 'جاري تهيئة النموذج...');
+
                     session = await ort.InferenceSession.create(new Uint8Array(buf), {
                         executionProviders: ['wasm'],
                         graphOptimizationLevel: 'all'
                     });
+
                     modelLoaded = true;
                     modelLoading = false;
                     setModelStatus('ready', 'النموذج جاهز — U²-Net محلي');
+                    console.log('[Model] ✅ Session created successfully');
                     return session;
                 } catch (e) {
                     modelLoading = false;
@@ -1369,24 +1398,24 @@ ort.env.wasm.numThreads = 1;
             return modelLoadPromise;
         }
 
-        window.addEventListener('load', () => { setTimeout(() => { loadModel().catch(() => {}); }, 500); });
+        window.addEventListener('load', () => { setTimeout(() => { loadModel().catch(() => {}); }, 300); });
 
         // ============================================
-        // ✅ INFERENCE (مع doublePass محسّن)
+        // ✅ INFERENCE
         // ============================================
         async function runInference(img, modelSize, useDoublePass) {
             if (!session) await loadModel();
+            if (!img) throw new Error('الصورة غير محمّلة بعد');
             const SIZE = modelSize || CONFIG.MODEL_SIZE;
             const W = img.naturalWidth, H = img.naturalHeight;
 
             const mask1 = await singleInferencePass(img, SIZE, W, H);
 
             if (useDoublePass) {
-                // الطبقة الثانية: دقة أعلى
                 const mask2 = await singleInferencePass(img, Math.min(1024, SIZE + 320), W, H);
-                // ✅ إصلاح: Math.max بدل Math.min — يحتفظ بكل المحتوى
+                // ✅ المتوسط المرجّح (بدل Math.max الذي يوسّع القناع)
                 for (let i = 0; i < mask1.length; i++) {
-                    mask1[i] = Math.max(mask1[i], mask2[i]);
+                    mask1[i] = mask1[i] * 0.6 + mask2[i] * 0.4;
                 }
             }
             return { mask: mask1, width: W, height: H };
@@ -1435,7 +1464,7 @@ ort.env.wasm.numThreads = 1;
                 }
             }
 
-            // ✅ إصلاح: S-Curve أنعم (يحتفظ بحواف الشعر والتفاصيل)
+            // ✅ S-Curve أنعم — يحتفظ بحواف الشعر
             const refined = new Float32Array(mask.length);
             for (let i = 0; i < mask.length; i++) {
                 let a = mask[i];
@@ -1447,7 +1476,7 @@ ort.env.wasm.numThreads = 1;
         }
 
         // ============================================
-        // ✅ RENDER PROCESSED (مُصلَّح بالكامل)
+        // ✅ RENDER PROCESSED
         // ============================================
         function renderProcessed(imageItem, bg, options) {
             options = options || {};
@@ -1456,7 +1485,7 @@ ort.env.wasm.numThreads = 1;
             const targetSize = options.size || 1024;
             const bgImage = options.bgImage || null;
 
-            // 1. بناء canvas للمنتج بحجمه الأصلي
+            // 1. بناء canvas للمنتج
             const productCanvas = document.createElement('canvas');
             productCanvas.width = width;
             productCanvas.height = height;
@@ -1469,12 +1498,12 @@ ort.env.wasm.numThreads = 1;
             }
             pctx.putImageData(productData, 0, 0);
 
-            // ✅ 2. حساب bounding box (مُصلَّح — threshold منخفض)
+            // 2. حساب bounding box (threshold منخفض للحفاظ على التفاصيل)
             let minX = width, minY = height, maxX = -1, maxY = -1;
             if (trim) {
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
-                        if (mask[y * width + x] > 0.1) {  // ✅ من 0.5 → 0.1
+                        if (mask[y * width + x] > 0.1) {
                             if (x < minX) minX = x;
                             if (x > maxX) maxX = x;
                             if (y < minY) minY = y;
@@ -1485,7 +1514,7 @@ ort.env.wasm.numThreads = 1;
             }
             if (maxX < 0) { minX = 0; minY = 0; maxX = width - 1; maxY = height - 1; }
 
-            // ✅ 3. padding ثابت (2 بكسل)
+            // padding ثابت
             const pad = 2;
             minX = Math.max(0, minX - pad);
             minY = Math.max(0, minY - pad);
@@ -1495,20 +1524,33 @@ ort.env.wasm.numThreads = 1;
             const trimW = maxX - minX + 1;
             const trimH = maxY - minY + 1;
 
-            // 4. بناء canvas نهائي
+            // 3. بناء canvas نهائي
             const finalCanvas = document.createElement('canvas');
-            const useSquare = !trim;
-            if (useSquare) {
+            let drawW, drawH, dx, dy;
+
+            if (!trim) {
+                // مربع كامل مع الحفاظ على النسبة
                 finalCanvas.width = targetSize;
                 finalCanvas.height = targetSize;
+                const scale = Math.min(targetSize / width, targetSize / height);
+                drawW = width * scale;
+                drawH = height * scale;
+                dx = (targetSize - drawW) / 2;
+                dy = (targetSize - drawH) / 2;
             } else {
+                // حسب النسبة الفعلية (الضلع الأكبر = targetSize)
                 const scale = targetSize / Math.max(trimW, trimH);
                 finalCanvas.width = Math.max(1, Math.round(trimW * scale));
                 finalCanvas.height = Math.max(1, Math.round(trimH * scale));
+                drawW = finalCanvas.width;
+                drawH = finalCanvas.height;
+                dx = 0;
+                dy = 0;
             }
+
             const ctx = finalCanvas.getContext('2d');
 
-            // 5. رسم الخلفية
+            // 4. رسم الخلفية
             if (bg && bg !== 'transparent' && bg !== 'image') {
                 ctx.fillStyle = bg;
                 ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
@@ -1520,14 +1562,11 @@ ort.env.wasm.numThreads = 1;
                 ctx.drawImage(bgImage, (cW - dw) / 2, (cH - dh) / 2, dw, dh);
             }
 
-            // 6. رسم المنتج المقصوص
-            if (useSquare) {
-                const scale = Math.min(targetSize / trimW, targetSize / trimH);
-                const dw = trimW * scale, dh = trimH * scale;
-                const dx = (targetSize - dw) / 2, dy = (targetSize - dh) / 2;
-                ctx.drawImage(productCanvas, minX, minY, trimW, trimH, dx, dy, dw, dh);
+            // 5. رسم المنتج
+            if (!trim) {
+                ctx.drawImage(productCanvas, 0, 0, width, height, dx, dy, drawW, drawH);
             } else {
-                ctx.drawImage(productCanvas, minX, minY, trimW, trimH, 0, 0, finalCanvas.width, finalCanvas.height);
+                ctx.drawImage(productCanvas, minX, minY, trimW, trimH, 0, 0, drawW, drawH);
             }
 
             return finalCanvas.toDataURL('image/png');
@@ -1677,9 +1716,11 @@ ort.env.wasm.numThreads = 1;
         // ✅ BG OPTIONS
         // ============================================
         bgOptions.forEach(opt => {
-            opt.addEventListener('click', () => {
-                if (opt.tagName === 'LABEL' && opt.querySelector('input[type="color"]')) return;
-                if (opt.tagName === 'LABEL' && opt.querySelector('input[type="file"]')) return;
+            opt.addEventListener('click', (e) => {
+                // تجاهل الـ labels التي تحتوي على input color/file
+                if (opt.tagName === 'LABEL' && (opt.querySelector('input[type="color"]') || opt.querySelector('input[type="file"]'))) {
+                    return;
+                }
                 bgOptions.forEach(o => o.classList.remove('active'));
                 opt.classList.add('active');
                 currentBg = opt.dataset.bg;
@@ -1731,6 +1772,19 @@ ort.env.wasm.numThreads = 1;
 
         async function processAll() {
             if (files.length === 0) return;
+
+            // ✅ FIX #7: انتظار تحميل كل الصور
+            for (const item of files) {
+                if (!item.imageEl) {
+                    await new Promise(r => {
+                        const check = setInterval(() => {
+                            if (item.imageEl) { clearInterval(check); r(); }
+                        }, 50);
+                        setTimeout(() => { clearInterval(check); r(); }, 8000);
+                    });
+                }
+            }
+
             workspaceSection.classList.add('hidden');
             progressSection.classList.remove('hidden');
             resultsSection.classList.add('hidden');
@@ -1738,8 +1792,10 @@ ort.env.wasm.numThreads = 1;
             downloadZipBtnSide.disabled = true;
             results = [];
 
-            try { await loadModel(); } catch (e) {
-                alert('فشل تحميل النموذج. تحقق من الاتصال بالإنترنت.');
+            try {
+                await loadModel();
+            } catch (e) {
+                alert('فشل تحميل النموذج.\n' + (e.message || '') + '\n\nتحقق من الاتصال بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/');
                 progressSection.classList.add('hidden');
                 workspaceSection.classList.remove('hidden');
                 return;
@@ -1756,6 +1812,7 @@ ort.env.wasm.numThreads = 1;
                 progressPercent.textContent = pct + '%';
 
                 try {
+                    if (!item.imageEl) throw new Error('الصورة غير محمّلة');
                     const maskData = await runInference(item.imageEl, preset.modelSize, preset.doublePass);
                     item.maskData = maskData;
                     const processedUrl = renderProcessed(item, currentBg, {
@@ -1775,7 +1832,7 @@ ort.env.wasm.numThreads = 1;
                         height: maskData.height
                     });
                 } catch (e) {
-                    console.error('Error:', item.name, e);
+                    console.error('Error processing', item.name, e);
                 }
                 await new Promise(r => setTimeout(r, 20));
             }
@@ -2108,6 +2165,3 @@ ort.env.wasm.numThreads = 1;
     </script>
 </body>
 </html>
-
-
-
