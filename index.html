@@ -84,12 +84,40 @@
         .cat-ink { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; }
         .cat-gray { background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%); color: white; }
         .cat-soft { background: linear-gradient(135deg, #374151 0%, #4b5563 100%); color: white; }
-        .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
-        .hero-gradient::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px); background-size: 30px 30px; animation: move-bg 20s linear infinite; }
-        .hero-gradient::after { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        
+        /* ✅ تم تعديل الهيرو ليكون فاتحاً ومضغوطاً */
+        .hero-gradient { 
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 50%, #f9fafb 100%); 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .hero-gradient::before { 
+            content: ''; 
+            position: absolute; 
+            top: -50%; 
+            right: -50%; 
+            width: 200%; 
+            height: 200%; 
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.1) 1px, transparent 1px); 
+            background-size: 30px 30px; 
+            animation: move-bg 20s linear infinite; 
+        }
+        .hero-gradient::after { 
+            content: ''; 
+            position: absolute; 
+            top: -100px; 
+            right: -100px; 
+            width: 400px; 
+            height: 400px; 
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, transparent 70%); 
+            border-radius: 50%; 
+            pointer-events: none; 
+        }
         @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
-        .hero-title { font-size: clamp(1.25rem, 3vw + 0.4rem, 2.75rem); line-height: 1.25; }
-        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
+        
+        .hero-title { font-size: clamp(1.25rem, 3vw + 0.4rem, 2.5rem); line-height: 1.3; }
+        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.125rem); line-height: 1.6; }
+        
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .faq-answer.active { max-height: 500px; }
         .footer-gradient { background: linear-gradient(180deg, #1f2937 0%, #111827 100%); }
@@ -222,11 +250,17 @@
         </div>
     </header>
 
-    <!-- ================= HERO SECTION ================= -->
-    <section class="hero-gradient text-white py-8 sm:py-10 md:py-12 relative">
+    <!-- ================= HERO SECTION (معدّل: فاتح ومضغوط) ================= -->
+    <section class="hero-gradient text-ink-900 py-6 sm:py-8 md:py-10 relative">
         <div class="container mx-auto px-4 text-center relative z-10">
-            <h1 class="hero-title font-extrabold mb-3 md:mb-4">أدوات مجانية احترافية<br><span class="text-brand-400">تعمل محلياً في متصفحك</span></h1>
-            <p class="hero-subtitle max-w-3xl mx-auto opacity-95 font-medium">صور، فيديو، نصوص. <span class="text-brand-300 font-bold">بدون رفع، بدون تسجيل، بدون حدود.</span></p>
+            <h1 class="hero-title font-extrabold mb-2 md:mb-3">
+                أدوات مجانية احترافية<br>
+                <span class="text-brand-600">تعمل محلياً في متصفحك</span>
+            </h1>
+            <p class="hero-subtitle max-w-3xl mx-auto text-ink-600 font-medium">
+                صور، فيديو، نصوص.
+                <span class="text-brand-500 font-bold">بدون رفع، بدون تسجيل، بدون حدود.</span>
+            </p>
         </div>
     </section>
 
