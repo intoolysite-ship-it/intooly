@@ -1229,5 +1229,79 @@
         }
     })();
     </script>
+    <!-- قسم أحدث المقالات من المدونة -->
+<section id="latest-posts-section" class="py-16 bg-ink-900 border-t border-ink-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-white mb-4">أحدث المقالات والأدلة</h2>
+            <p class="text-ink-400">تابع آخر النصائح والأدلة الشاملة حول أدواتنا وتقنيات تحسين الإنتاجية</p>
+        </div>
+        
+        <!-- هنا سيتم حقن المقالات تلقائياً -->
+        <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center text-ink-400 py-8">جاري تحميل أحدث المقالات...</div>
+        </div>
+
+        <div class="text-center mt-10">
+            <a href="https://blog.intooly.com" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-ink-900 bg-accent-400 hover:bg-accent-500 transition-colors">
+                عرض جميع المقالات
+                <svg class="mr-2 -ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- كود جافاسكربت لسحب المقالات من ووردبريس -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const blogUrl = 'https://blog.intooly.com';
+    const apiUrl = `${blogUrl}/wp-json/wp/v2/posts?per_page=3&_embed`;
+    const container = document.getElementById('posts-container');
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error('فشل في تحميل المقالات');
+            return response.json();
+        })
+        .then(posts => {
+            container.innerHTML = ''; // مسح رسالة التحميل
+            
+            posts.forEach(post => {
+                // استخراج الصورة المميزة أو استخدام صورة افتراضية
+                const imageUrl = post._embedded && post._embedded['wp:featuredmedia'] 
+                    ? post._embedded['wp:featuredmedia'][0].source_url 
+                    : 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80';
+                
+                // تنظيف الاقتباس من أكواد HTML
+                const excerpt = post.excerpt.rendered.replace(/<[^>]+>/g, '').substring(0, 100) + '...';
+                const date = new Date(post.date).toLocaleDateString('ar-EG');
+
+                const postCard = `
+                    <article class="bg-ink-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-ink-700 group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="${imageUrl}" alt="${post.title.rendered}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-6">
+                            <div class="text-accent-400 text-sm mb-2">${date}</div>
+                            <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-accent-400 transition-colors">
+                                ${post.title.rendered}
+                            </h3>
+                            <p class="text-ink-400 text-sm mb-4 line-clamp-3">${excerpt}</p>
+                            <a href="${post.link}" target="_blank" class="inline-flex items-center text-accent-400 hover:text-accent-300 font-medium text-sm transition-colors">
+                                اقرأ المزيد
+                                <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </a>
+                        </div>
+                    </article>
+                `;
+                container.innerHTML += postCard;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching posts:', error);
+            container.innerHTML = `<div class="col-span-full text-center text-red-400 py-8">عذراً، حدث خطأ أثناء تحميل المقالات. يرجى زيارة <a href="${blogUrl}" class="underline">المدونة</a> مباشرة.</div>`;
+        });
+});
+</script>
 </body>
 </html>
