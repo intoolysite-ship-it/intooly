@@ -46,29 +46,12 @@
                     fontFamily: { sans: ['Cairo', 'sans-serif'] },
                     colors: {
                         brand: {
-                            50: '#fefce8',
-                            100: '#fef9c3',
-                            200: '#fef08a',
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                            800: '#854d0e',
-                            900: '#713f12',
+                            50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047', 400: '#facc15',
+                            500: '#eab308', 600: '#ca8a04', 700: '#a16207', 800: '#854d0e', 900: '#713f12',
                         },
                         ink: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                            950: '#030712',
+                            50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af',
+                            500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712',
                         }
                     }
                 }
@@ -79,246 +62,68 @@
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-        
         .tool-card { transition: all 0.3s ease; position: relative; overflow: hidden; }
         .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(17, 24, 39, 0.12); }
         .tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #eab308, #facc15); transform: scaleX(0); transition: transform 0.3s ease; }
         .tool-card:hover::before { transform: scaleX(1); }
-        
         .badge { display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; white-space: nowrap; }
         .badge-hot { background: linear-gradient(90deg, #111827, #374151); color: #facc15; animation: pulse-hot 2s infinite; }
         @keyframes pulse-hot { 0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(250, 204, 21, 0); } }
         .badge-star { background: linear-gradient(90deg, #eab308, #facc15); color: #111827; }
         .badge-soon { background: linear-gradient(90deg, #6b7280, #4b5563); color: white; }
-        
-        /* ============ CATEGORY CARDS ============ */
-        .category-card {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0.875rem 0.5rem;
-            border-radius: 1rem;
-        }
-        .category-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(17, 24, 39, 0.15);
-        }
-        .category-card .cat-icon {
-            font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-        .category-card .cat-title {
-            font-size: clamp(0.75rem, 1.4vw, 0.95rem);
-            font-weight: 700;
-            margin-bottom: 0.375rem;
-            line-height: 1.2;
-        }
-        .category-card .cat-count {
-            font-size: clamp(0.6rem, 1vw, 0.7rem);
-            font-weight: 700;
-            padding: 0.125rem 0.5rem;
-            border-radius: 9999px;
-            background: rgba(255,255,255,0.25);
-            margin-bottom: 0.25rem;
-        }
-        .category-card .cat-desc {
-            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
-            opacity: 0.9;
-            line-height: 1.3;
-            display: none;
-        }
-        @media (min-width: 640px) {
-            .category-card { padding: 1rem 0.75rem; }
-            .category-card .cat-desc { display: block; }
-        }
-        @media (min-width: 1024px) {
-            .category-card { padding: 1.25rem 1rem; }
-        }
-        
-        /* ألوان التصنيفات */
+        .category-card { transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0.875rem 0.5rem; border-radius: 1rem; }
+        .category-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(17, 24, 39, 0.15); }
+        .category-card .cat-icon { font-size: clamp(1.5rem, 3.5vw, 2.25rem); line-height: 1; margin-bottom: 0.5rem; }
+        .category-card .cat-title { font-size: clamp(0.75rem, 1.4vw, 0.95rem); font-weight: 700; margin-bottom: 0.375rem; line-height: 1.2; }
+        .category-card .cat-count { font-size: clamp(0.6rem, 1vw, 0.7rem); font-weight: 700; padding: 0.125rem 0.5rem; border-radius: 9999px; background: rgba(255,255,255,0.25); margin-bottom: 0.25rem; }
+        .category-card .cat-desc { font-size: clamp(0.55rem, 0.9vw, 0.7rem); opacity: 0.9; line-height: 1.3; display: none; }
+        @media (min-width: 640px) { .category-card { padding: 1rem 0.75rem; } .category-card .cat-desc { display: block; } }
+        @media (min-width: 1024px) { .category-card { padding: 1.25rem 1rem; } }
         .cat-dark { background: linear-gradient(135deg, #111827 0%, #1f2937 100%); color: white; }
         .cat-gold { background: linear-gradient(135deg, #ca8a04 0%, #eab308 100%); color: #111827; }
         .cat-ink { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; }
         .cat-gray { background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%); color: white; }
         .cat-soft { background: linear-gradient(135deg, #374151 0%, #4b5563 100%); color: white; }
-        
-        /* ============ HERO ============ */
-        .hero-gradient {
-            background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-gradient::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px);
-            background-size: 30px 30px;
-            animation: move-bg 20s linear infinite;
-        }
-        .hero-gradient::after {
-            content: '';
-            position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        @keyframes move-bg {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 30px); }
-        }
-
-        /* ✅ تم تصغير الخطوط */
-        .hero-title {
-            font-size: clamp(1.25rem, 3vw + 0.4rem, 2.75rem);
-            line-height: 1.25;
-        }
-        .hero-subtitle {
-            font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem);
-            line-height: 1.5;
-        }
-        
+        .hero-gradient { background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%); position: relative; overflow: hidden; }
+        .hero-gradient::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 1px, transparent 1px); background-size: 30px 30px; animation: move-bg 20s linear infinite; }
+        .hero-gradient::after { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        @keyframes move-bg { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        .hero-title { font-size: clamp(1.25rem, 3vw + 0.4rem, 2.75rem); line-height: 1.25; }
+        .hero-subtitle { font-size: clamp(0.875rem, 1.5vw + 0.2rem, 1.25rem); line-height: 1.5; }
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .faq-answer.active { max-height: 500px; }
-        
         .footer-gradient { background: linear-gradient(180deg, #1f2937 0%, #111827 100%); }
         .footer-bottom { background: linear-gradient(90deg, #030712 0%, #111827 50%, #030712 100%); border-top: 1px solid rgba(250, 204, 21, 0.3); position: relative; overflow: hidden; }
         .footer-bottom::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #eab308, #facc15, #eab308, transparent); }
-        
         .social-icon { transition: all 0.3s; }
         .social-icon:hover { transform: translateY(-3px) scale(1.1); }
-        
         .footer-link { position: relative; transition: all 0.2s; }
         .footer-link:hover { color: #facc15; padding-right: 4px; }
-        
         .logo-icon { animation: logo-pulse 3s ease-in-out infinite; }
         @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        
-        /* Scroll to top button */
-        #scrollTop {
-            position: fixed; bottom: 24px; left: 24px; z-index: 40;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: linear-gradient(135deg, #eab308, #facc15); color: #111827;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
-            opacity: 0; visibility: hidden; transform: translateY(20px);
-            transition: all 0.3s ease; cursor: pointer; border: none;
-        }
+        #scrollTop { position: fixed; bottom: 24px; left: 24px; z-index: 40; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; cursor: pointer; border: none; }
         #scrollTop.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         #scrollTop:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(234, 179, 8, 0.6); }
-        
-        /* ============ SEO CONTENT SECTION ============ */
-        .seo-badge {
-            display: inline-block;
-            background: #fef9c3;
-            color: #a16207;
-            font-weight: 700;
-            padding: 0.375rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-        }
-        .seo-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-        .seo-card:hover {
-            border-color: #facc15;
-            box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
-            transform: translateY(-2px);
-        }
+        .seo-badge { display: inline-block; background: #fef9c3; color: #a16207; font-weight: 700; padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.875rem; }
+        .seo-card { background: white; border-radius: 1rem; padding: 1.5rem; border: 1px solid #e5e7eb; transition: all 0.3s ease; }
+        .seo-card:hover { border-color: #facc15; box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08); transform: translateY(-2px); }
         .seo-card h3 { color: #111827; font-weight: 800; font-size: 1.25rem; margin-bottom: 0.75rem; }
         .seo-card p { color: #4b5563; font-size: 0.875rem; line-height: 1.7; margin-bottom: 1rem; }
         .seo-card strong { color: #1f2937; }
         .seo-card a { color: #ca8a04; font-weight: 700; font-size: 0.875rem; transition: color 0.2s; }
         .seo-card a:hover { color: #a16207; }
-        
-        .seo-content-main {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 3rem;
-        }
+        .seo-content-main { background: white; border-radius: 1rem; padding: 2rem; border: 1px solid #e5e7eb; margin-bottom: 3rem; }
         .seo-content-main h3 { color: #111827; font-weight: 800; font-size: 1.5rem; margin-bottom: 1rem; }
         .seo-content-main p { color: #374151; line-height: 1.9; margin-bottom: 1rem; }
         .seo-content-main ul { margin: 1rem 0; }
-        .seo-content-main li {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            color: #374151;
-            line-height: 1.7;
-        }
-        .seo-content-main li .check {
-            color: #eab308;
-            font-weight: 800;
-            font-size: 1.125rem;
-            flex-shrink: 0;
-        }
-        
-        .seo-faq-item {
-            background: white;
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
-        }
-        .seo-faq-item h4 {
-            color: #111827;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .seo-content-main li { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; color: #374151; line-height: 1.7; }
+        .seo-content-main li .check { color: #eab308; font-weight: 800; font-size: 1.125rem; flex-shrink: 0; }
+        .seo-faq-item { background: white; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; }
+        .seo-faq-item h4 { color: #111827; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
         .seo-faq-item p { color: #4b5563; font-size: 0.875rem; line-height: 1.7; }
-        
-        /* ============ HOW IT WORKS SECTION ============ */
-        .how-step {
-            position: relative;
-            background: #f9fafb;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-        .how-step:hover {
-            border-color: #facc15;
-            box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
-            transform: translateY(-2px);
-        }
-        .how-step-num {
-            position: absolute;
-            top: -1rem;
-            right: -1rem;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 0.75rem;
-            background: linear-gradient(135deg, #eab308, #facc15);
-            color: #111827;
-            font-weight: 800;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
-        }
+        .how-step { position: relative; background: #f9fafb; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e5e7eb; transition: all 0.3s ease; }
+        .how-step:hover { border-color: #facc15; box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08); transform: translateY(-2px); }
+        .how-step-num { position: absolute; top: -1rem; right: -1rem; width: 3rem; height: 3rem; border-radius: 0.75rem; background: linear-gradient(135deg, #eab308, #facc15); color: #111827; font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3); }
     </style>
 
     <!-- ============ Schema.org: Organization ============ -->
@@ -330,12 +135,7 @@
       "url": "https://intooly.com",
       "logo": "https://intooly.com/logo.png",
       "description": "أدوات مجانية احترافية تعمل محلياً في متصفحك",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "email": "support@intooly.com",
-        "contactType": "customer support",
-        "availableLanguage": ["Arabic", "English"]
-      }
+      "contactPoint": { "@type": "ContactPoint", "email": "support@intooly.com", "contactType": "customer support", "availableLanguage": ["Arabic", "English"] }
     }
     </script>
     
@@ -348,10 +148,7 @@
       "inLanguage": "ar",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://intooly.com/?q={search_term_string}"
-        },
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://intooly.com/?q={search_term_string}" },
         "query-input": "required name=search_term_string"
       }
     }
@@ -362,43 +159,14 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "هل الموقع مجاني بالكامل؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "نعم، جميع أدوات intooly مجانية 100% بدون أي قيود على عدد الاستخدامات، بدون علامات مائية، وبدون الحاجة للتسجيل."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "هل ملفاتي آمنة؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "نعم 100%. جميع المعالجات تتم محلياً في متصفحك. لا يتم رفع أي ملف إلى سيرفراتنا، مما يضمن خصوصية تامة لبياناتك."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "هل أحتاج لتثبيت برامج؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "لا، جميع الأدوات تعمل مباشرة في متصفحك (Chrome, Firefox, Edge, Safari). لا تحتاج لتثبيت أي برنامج أو إضافة."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "كيف أتواصل مع الدعم؟",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "عبر البريد الإلكتروني support@intooly.com أو صفحة اتصل بنا."
-          }
-        }
+        { "@type": "Question", "name": "هل الموقع مجاني بالكامل؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، جميع أدوات intooly مجانية 100% بدون أي قيود على عدد الاستخدامات، بدون علامات مائية، وبدون الحاجة للتسجيل." } },
+        { "@type": "Question", "name": "هل ملفاتي آمنة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم 100%. جميع المعالجات تتم محلياً في متصفحك. لا يتم رفع أي ملف إلى سيرفراتنا، مما يضمن خصوصية تامة لبياناتك." } },
+        { "@type": "Question", "name": "هل أحتاج لتثبيت برامج؟", "acceptedAnswer": { "@type": "Answer", "text": "لا، جميع الأدوات تعمل مباشرة في متصفحك (Chrome, Firefox, Edge, Safari). لا تحتاج لتثبيت أي برنامج أو إضافة." } },
+        { "@type": "Question", "name": "كيف أتواصل مع الدعم؟", "acceptedAnswer": { "@type": "Answer", "text": "عبر البريد الإلكتروني support@intooly.com أو صفحة اتصل بنا." } }
       ]
     }
     </script>
     
-    <!-- ============ Schema.org: HowTo ============ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -407,24 +175,9 @@
       "description": "3 خطوات بسيطة لاستخدام أدوات intooly المجانية لمعالجة ملفاتك محلياً في متصفحك.",
       "totalTime": "PT1M",
       "step": [
-        {
-          "@type": "HowToStep",
-          "position": 1,
-          "name": "اختر ملفك",
-          "text": "اسحب ملفك أو اختره من جهازك. لا يتم رفع أي شيء — يبقى الملف في متصفحك من البداية."
-        },
-        {
-          "@type": "HowToStep",
-          "position": 2,
-          "name": "معالجة محلية فورية",
-          "text": "تعمل الأدوات داخل متصفحك عبر WebAssembly والذكاء الاصطناعي لمعالجة ملفك في ثوانٍ."
-        },
-        {
-          "@type": "HowToStep",
-          "position": 3,
-          "name": "حمّل النتيجة",
-          "text": "عاين النتيجة وحمّلها فوراً بصيغة PNG أو JPG أو الصيغة التي تحتاجها."
-        }
+        { "@type": "HowToStep", "position": 1, "name": "اختر ملفك", "text": "اسحب ملفك أو اختره من جهازك. لا يتم رفع أي شيء — يبقى الملف في متصفحك من البداية." },
+        { "@type": "HowToStep", "position": 2, "name": "معالجة محلية فورية", "text": "تعمل الأدوات داخل متصفحك عبر WebAssembly والذكاء الاصطناعي لمعالجة ملفك في ثوانٍ." },
+        { "@type": "HowToStep", "position": 3, "name": "حمّل النتيجة", "text": "عاين النتيجة وحمّلها فوراً بصيغة PNG أو JPG أو الصيغة التي تحتاجها." }
       ]
     }
     </script>
@@ -442,7 +195,6 @@
     <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-ink-100">
         <div class="container mx-auto px-4 py-3">
             <div class="flex items-center justify-between gap-4">
-                
                 <a href="index.html" class="flex items-center gap-3 flex-shrink-0 group" aria-label="intooly - الصفحة الرئيسية">
                     <div class="logo-icon relative w-12 h-12 rounded-xl bg-ink-900 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
                         <svg class="w-7 h-7 text-white"><use href="#icon-logo"/></svg>
@@ -453,7 +205,6 @@
                         <span class="text-[10px] text-ink-600 font-medium leading-tight">أدوات مجانية احترافية</span>
                     </div>
                 </a>
-                
                 <nav class="hidden md:flex items-center gap-6 text-ink-700 font-semibold mx-auto" aria-label="التنقل الرئيسي">
                     <a href="index.html" class="hover:text-brand-600 transition">الرئيسية</a>
                     <a href="#categories" class="hover:text-brand-600 transition scroll-link">التصنيفات</a>
@@ -461,15 +212,10 @@
                     <a href="about.html" class="hover:text-brand-600 transition">من نحن</a>
                     <a href="contact.html" class="hover:text-brand-600 transition">اتصل بنا</a>
                 </nav>
-                
                 <div class="flex items-center gap-3">
                     <div class="relative">
                         <label for="searchInput" class="sr-only">ابحث عن أداة</label>
-                        <input type="search" id="searchInput" 
-                            placeholder="🔍 ابحث عن أداة..." 
-                            aria-label="ابحث عن أداة"
-                            autocomplete="off"
-                            class="w-40 md:w-48 px-4 py-2 rounded-full border border-ink-300 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 bg-ink-50 transition">
+                        <input type="search" id="searchInput" placeholder="🔍 ابحث عن أداة..." aria-label="ابحث عن أداة" autocomplete="off" class="w-40 md:w-48 px-4 py-2 rounded-full border border-ink-300 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 bg-ink-50 transition">
                     </div>
                 </div>
             </div>
@@ -479,14 +225,8 @@
     <!-- ================= HERO SECTION ================= -->
     <section class="hero-gradient text-white py-8 sm:py-10 md:py-12 relative">
         <div class="container mx-auto px-4 text-center relative z-10">
-            <h1 class="hero-title font-extrabold mb-3 md:mb-4">
-                أدوات مجانية احترافية<br>
-                <span class="text-brand-400">تعمل محلياً في متصفحك</span>
-            </h1>
-            <p class="hero-subtitle max-w-3xl mx-auto opacity-95 font-medium">
-                صور، فيديو، نصوص.
-                <span class="text-brand-300 font-bold">بدون رفع، بدون تسجيل، بدون حدود.</span>
-            </p>
+            <h1 class="hero-title font-extrabold mb-3 md:mb-4">أدوات مجانية احترافية<br><span class="text-brand-400">تعمل محلياً في متصفحك</span></h1>
+            <p class="hero-subtitle max-w-3xl mx-auto opacity-95 font-medium">صور، فيديو، نصوص. <span class="text-brand-300 font-bold">بدون رفع، بدون تسجيل، بدون حدود.</span></p>
         </div>
     </section>
 
@@ -497,7 +237,6 @@
                 <h2 class="text-2xl md:text-4xl font-extrabold text-ink-900 mb-2 md:mb-3">📂 التصنيفات الرئيسية</h2>
                 <p class="text-base md:text-lg text-ink-600">اختر التصنيف الذي يناسب احتياجك</p>
             </div>
-            
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 <a href="#image-tools" class="category-card cat-dark scroll-link">
                     <div class="cat-icon">🖼️</div>
@@ -505,28 +244,24 @@
                     <div class="cat-count">6 أدوات</div>
                     <p class="cat-desc">إزالة الخلفية، ضغط، تحويل</p>
                 </a>
-
                 <a href="#video-tools" class="category-card cat-gold scroll-link">
                     <div class="cat-icon">🎬</div>
                     <h3 class="cat-title">أدوات الفيديو</h3>
                     <div class="cat-count" style="background: rgba(17,24,39,0.15);">5 أدوات</div>
                     <p class="cat-desc">ضغط، تحويل، قص، GIF</p>
                 </a>
-
                 <div class="category-card cat-ink opacity-90">
                     <div class="cat-icon">✍️</div>
                     <h3 class="cat-title">أدوات النصوص</h3>
                     <div class="cat-count">قريباً</div>
                     <p class="cat-desc">عداد كلمات، تنسيق عربي</p>
                 </div>
-
                 <div class="category-card cat-gray opacity-90">
                     <div class="cat-icon">🔍</div>
                     <h3 class="cat-title">أدوات SEO</h3>
                     <div class="cat-count">قريباً</div>
                     <p class="cat-desc">Sitemap، Schema</p>
                 </div>
-
                 <div class="category-card cat-soft opacity-90">
                     <div class="cat-icon">👨‍💻</div>
                     <h3 class="cat-title">أدوات المطورين</h3>
@@ -545,42 +280,26 @@
                 <p class="text-lg text-ink-600">الأدوات التي يستخدمها الآلاف يومياً</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
                 <a href="tools/background-remover.html" class="tool-card bg-white rounded-2xl p-6 shadow-sm border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-5xl">🪄</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
+                    <div class="flex justify-between items-start mb-3"><div class="text-5xl">🪄</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
                     <h3 class="font-bold text-ink-900 text-lg mb-2">إزالة الخلفية بالـ AI</h3>
                     <p class="text-sm text-ink-600 mb-4">أزل خلفية أي صورة بدقة 95% باستخدام نموذج U²-Net</p>
                     <div class="text-brand-600 font-semibold text-sm">ابدأ الاستخدام ←</div>
                 </a>
-
                 <a href="tools/image-compressor.html" class="tool-card bg-white rounded-2xl p-6 shadow-sm border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-5xl">🗜️</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
+                    <div class="flex justify-between items-start mb-3"><div class="text-5xl">🗜️</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
                     <h3 class="font-bold text-ink-900 text-lg mb-2">ضاغط الصور</h3>
                     <p class="text-sm text-ink-600 mb-4">قلّل حجم صورك حتى 80% مع الحفاظ على الجودة</p>
                     <div class="text-brand-600 font-semibold text-sm">ابدأ الاستخدام ←</div>
                 </a>
-
                 <a href="tools/video-compressor.html" class="tool-card bg-white rounded-2xl p-6 shadow-sm border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-5xl">🎬</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
+                    <div class="flex justify-between items-start mb-3"><div class="text-5xl">🎬</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
                     <h3 class="font-bold text-ink-900 text-lg mb-2">ضاغط الفيديو</h3>
                     <p class="text-sm text-ink-600 mb-4">ضغط احترافي باستخدام محرك FFmpeg</p>
                     <div class="text-brand-600 font-semibold text-sm">ابدأ الاستخدام ←</div>
                 </a>
-
                 <a href="tools/video-converter.html" class="tool-card bg-white rounded-2xl p-6 shadow-sm border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-5xl">🔄</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
+                    <div class="flex justify-between items-start mb-3"><div class="text-5xl">🔄</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
                     <h3 class="font-bold text-ink-900 text-lg mb-2">محول صيغ الفيديو</h3>
                     <p class="text-sm text-ink-600 mb-4">حوّل بين MP4, WebM, MOV, MKV, AVI</p>
                     <div class="text-brand-600 font-semibold text-sm">ابدأ الاستخدام ←</div>
@@ -592,55 +311,28 @@
     <!-- ================= IMAGE TOOLS ================= -->
     <section id="image-tools" class="py-16 bg-white scroll-section">
         <div class="container mx-auto px-4">
-            <div class="mb-8">
-                <h2 class="text-3xl font-extrabold text-ink-900 mb-2">🖼️ أدوات الصور</h2>
-                <p class="text-ink-600">6 أدوات احترافية لمعالجة الصور</p>
-            </div>
+            <div class="mb-8"><h2 class="text-3xl font-extrabold text-ink-900 mb-2">🖼️ أدوات الصور</h2><p class="text-ink-600">6 أدوات احترافية لمعالجة الصور</p></div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
                 <a href="tools/background-remover.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-4xl">🪄</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
-                    <h3 class="font-bold text-ink-900 mb-2">إزالة الخلفية بالـ AI</h3>
-                    <p class="text-sm text-ink-600">أزل خلفية أي صورة بدقة 95% باستخدام U²-Net</p>
+                    <div class="flex justify-between items-start mb-3"><div class="text-4xl">🪄</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
+                    <h3 class="font-bold text-ink-900 mb-2">إزالة الخلفية بالـ AI</h3><p class="text-sm text-ink-600">أزل خلفية أي صورة بدقة 95% باستخدام U²-Net</p>
                 </a>
-
                 <a href="tools/image-compressor.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-4xl">🗜️</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
-                    <h3 class="font-bold text-ink-900 mb-2">ضاغط الصور</h3>
-                    <p class="text-sm text-ink-600">قلّل حجم الصور حتى 80% مع الحفاظ على الجودة</p>
+                    <div class="flex justify-between items-start mb-3"><div class="text-4xl">🗜️</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
+                    <h3 class="font-bold text-ink-900 mb-2">ضاغط الصور</h3><p class="text-sm text-ink-600">قلّل حجم الصور حتى 80% مع الحفاظ على الجودة</p>
                 </a>
-
                 <a href="tools/product-photo-studio.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-4xl">📸</div>
-                        <span class="badge badge-star">⭐ مميز</span>
-                    </div>
-                    <h3 class="font-bold text-ink-900 mb-2">استوديو صور المنتجات</h3>
-                    <p class="text-sm text-ink-600">جهّز صورك لأمازون ونون وإنستغرام</p>
+                    <div class="flex justify-between items-start mb-3"><div class="text-4xl">📸</div><span class="badge badge-star">⭐ مميز</span></div>
+                    <h3 class="font-bold text-ink-900 mb-2">استوديو صور المنتجات</h3><p class="text-sm text-ink-600">جهّز صورك لأمازون ونون وإنستغرام</p>
                 </a>
-
                 <a href="tools/image-resizer.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">📏</div>
-                    <h3 class="font-bold text-ink-900 mb-2">تغيير حجم الصور</h3>
-                    <p class="text-sm text-ink-600">غيّر أبعاد صورك بسهولة وسرعة</p>
+                    <div class="text-4xl mb-3">📏</div><h3 class="font-bold text-ink-900 mb-2">تغيير حجم الصور</h3><p class="text-sm text-ink-600">غيّر أبعاد صورك بسهولة وسرعة</p>
                 </a>
-
                 <a href="tools/image-converter.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">🔄</div>
-                    <h3 class="font-bold text-ink-900 mb-2">تحويل صيغ الصور</h3>
-                    <p class="text-sm text-ink-600">حوّل بين JPG, PNG, WebP, GIF</p>
+                    <div class="text-4xl mb-3">🔄</div><h3 class="font-bold text-ink-900 mb-2">تحويل صيغ الصور</h3><p class="text-sm text-ink-600">حوّل بين JPG, PNG, WebP, GIF</p>
                 </a>
-
                 <a href="tools/image-cropper.html" class="tool-card bg-ink-50 rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">✂️</div>
-                    <h3 class="font-bold text-ink-900 mb-2">قص الصور</h3>
-                    <p class="text-sm text-ink-600">اقصص أجزاء محددة من صورك بدقة</p>
+                    <div class="text-4xl mb-3">✂️</div><h3 class="font-bold text-ink-900 mb-2">قص الصور</h3><p class="text-sm text-ink-600">اقصص أجزاء محددة من صورك بدقة</p>
                 </a>
             </div>
         </div>
@@ -649,52 +341,27 @@
     <!-- ================= VIDEO TOOLS ================= -->
     <section id="video-tools" class="py-16 bg-ink-50 scroll-section">
         <div class="container mx-auto px-4">
-            <div class="mb-8">
-                <h2 class="text-3xl font-extrabold text-ink-900 mb-2">🎬 أدوات الفيديو</h2>
-                <p class="text-ink-600">5 أدوات متقدمة باستخدام محرك FFmpeg</p>
-            </div>
+            <div class="mb-8"><h2 class="text-3xl font-extrabold text-ink-900 mb-2">🎬 أدوات الفيديو</h2><p class="text-ink-600">5 أدوات متقدمة باستخدام محرك FFmpeg</p></div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
                 <a href="tools/video-compressor.html" class="tool-card bg-white rounded-2xl p-6 border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-4xl">🎬</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
-                    <h3 class="font-bold text-ink-900 mb-2">ضاغط الفيديو</h3>
-                    <p class="text-sm text-ink-600">ضغط احترافي باستخدام محرك FFmpeg</p>
+                    <div class="flex justify-between items-start mb-3"><div class="text-4xl">🎬</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
+                    <h3 class="font-bold text-ink-900 mb-2">ضاغط الفيديو</h3><p class="text-sm text-ink-600">ضغط احترافي باستخدام محرك FFmpeg</p>
                 </a>
-
                 <a href="tools/video-converter.html" class="tool-card bg-white rounded-2xl p-6 border border-ink-100 block">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="text-4xl">🔄</div>
-                        <span class="badge badge-hot">🔥 الأكثر استخداماً</span>
-                    </div>
-                    <h3 class="font-bold text-ink-900 mb-2">محول صيغ الفيديو</h3>
-                    <p class="text-sm text-ink-600">حوّل بين MP4, WebM, MOV, MKV, AVI</p>
+                    <div class="flex justify-between items-start mb-3"><div class="text-4xl">🔄</div><span class="badge badge-hot">🔥 الأكثر استخداماً</span></div>
+                    <h3 class="font-bold text-ink-900 mb-2">محول صيغ الفيديو</h3><p class="text-sm text-ink-600">حوّل بين MP4, WebM, MOV, MKV, AVI</p>
                 </a>
-
                 <a href="tools/video-trimmer.html" class="tool-card bg-white rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">✂️</div>
-                    <h3 class="font-bold text-ink-900 mb-2">قص الفيديو</h3>
-                    <p class="text-sm text-ink-600">قص بداية أو نهاية الفيديو بسرعة فائقة</p>
+                    <div class="text-4xl mb-3">✂️</div><h3 class="font-bold text-ink-900 mb-2">قص الفيديو</h3><p class="text-sm text-ink-600">قص بداية أو نهاية الفيديو بسرعة فائقة</p>
                 </a>
-
                 <a href="tools/video-to-gif.html" class="tool-card bg-white rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">🎞️</div>
-                    <h3 class="font-bold text-ink-900 mb-2">تحويل الفيديو إلى GIF</h3>
-                    <p class="text-sm text-ink-600">اصنع صور GIF متحركة من فيديوهاتك</p>
+                    <div class="text-4xl mb-3">🎞️</div><h3 class="font-bold text-ink-900 mb-2">تحويل الفيديو إلى GIF</h3><p class="text-sm text-ink-600">اصنع صور GIF متحركة من فيديوهاتك</p>
                 </a>
-
                 <a href="tools/video-to-mp3.html" class="tool-card bg-white rounded-2xl p-6 border border-ink-100 block">
-                    <div class="text-4xl mb-3">🎵</div>
-                    <h3 class="font-bold text-ink-900 mb-2">استخراج الصوت</h3>
-                    <p class="text-sm text-ink-600">حوّل الفيديو إلى MP3, WAV, AAC, OGG</p>
+                    <div class="text-4xl mb-3">🎵</div><h3 class="font-bold text-ink-900 mb-2">استخراج الصوت</h3><p class="text-sm text-ink-600">حوّل الفيديو إلى MP3, WAV, AAC, OGG</p>
                 </a>
-
                 <div class="bg-gradient-to-br from-ink-100 to-brand-50 rounded-2xl p-6 border-2 border-dashed border-brand-400 flex flex-col items-center justify-center text-center">
-                    <div class="text-4xl mb-3">🚀</div>
-                    <h3 class="font-bold text-ink-900 mb-2">أدوات جديدة قريباً</h3>
-                    <p class="text-sm text-ink-600">نعمل على إضافة المزيد</p>
+                    <div class="text-4xl mb-3">🚀</div><h3 class="font-bold text-ink-900 mb-2">أدوات جديدة قريباً</h3><p class="text-sm text-ink-600">نعمل على إضافة المزيد</p>
                 </div>
             </div>
         </div>
@@ -703,273 +370,210 @@
     <!-- ================= SEO CONTENT SECTION ================= -->
     <section class="py-16 md:py-20 bg-ink-50">
         <div class="container mx-auto px-4 max-w-5xl">
-            
             <div class="text-center mb-12">
                 <span class="seo-badge">دليلك الشامل</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mt-4 mb-4">
-                    كل ما تحتاجه لمعالجة ملفاتك — في مكان واحد
-                </h2>
-                <p class="text-lg text-ink-600 max-w-3xl mx-auto leading-relaxed">
-                    منصة <strong class="text-ink-900">intooly</strong> تقدم لك مجموعة متكاملة من <strong class="text-brand-600">الأدوات المجانية عبر الإنترنت</strong> لمعالجة الصور والفيديو والنصوص، دون الحاجة إلى تثبيت أي برامج أو التسجيل في أي خدمة. كل أداة تعمل مباشرة في متصفحك، وبدون رفع ملفاتك إلى أي سيرفر خارجي.
-                </p>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mt-4 mb-4">كل ما تحتاجه لمعالجة ملفاتك — في مكان واحد</h2>
+                <p class="text-lg text-ink-600 max-w-3xl mx-auto leading-relaxed">منصة <strong class="text-ink-900">intooly</strong> تقدم لك مجموعة متكاملة من <strong class="text-brand-600">الأدوات المجانية عبر الإنترنت</strong> لمعالجة الصور والفيديو والنصوص، دون الحاجة إلى تثبيت أي برامج أو التسجيل في أي خدمة. كل أداة تعمل مباشرة في متصفحك، وبدون رفع ملفاتك إلى أي سيرفر خارجي.</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                
                 <article class="seo-card">
                     <div class="text-4xl mb-3" aria-hidden="true">🖼️</div>
                     <h3>أدوات الصور</h3>
-                    <p>
-                        حوّل صورك من عادية إلى احترافية. أدوات متقدمة لـ 
-                        <strong>إزالة خلفية الصور بالذكاء الاصطناعي</strong>، 
-                        <strong>ضغط الصور</strong> بدون فقدان الجودة، 
-                        <strong>تغيير حجم الصور</strong>، 
-                        <strong>تحويل صيغ الصور</strong> بين JPG و PNG و WebP، 
-                        <strong>قص الصور</strong> بدقة، وتحسين صور المنتجات للمتاجر الإلكترونية.
-                    </p>
+                    <p>حوّل صورك من عادية إلى احترافية. أدوات متقدمة لـ <strong>إزالة خلفية الصور بالذكاء الاصطناعي</strong>، <strong>ضغط الصور</strong> بدون فقدان الجودة، <strong>تغيير حجم الصور</strong>، <strong>تحويل صيغ الصور</strong> بين JPG و PNG و WebP، <strong>قص الصور</strong> بدقة، وتحسين صور المنتجات للمتاجر الإلكترونية.</p>
                     <a href="#image-tools">استكشف أدوات الصور ←</a>
                 </article>
-
                 <article class="seo-card">
                     <div class="text-4xl mb-3" aria-hidden="true">🎬</div>
                     <h3>أدوات الفيديو</h3>
-                    <p>
-                        أنشئ وعدّل فيديوهاتك بسهولة. أدوات احترافية لـ 
-                        <strong>ضغط الفيديو</strong> بدون جهد، 
-                        <strong>تحويل صيغ الفيديو</strong> بين MP4 و WebM و MOV و MKV و AVI، 
-                        <strong>قص الفيديو</strong> لتحديد المقاطع المهمة، 
-                        <strong>تحويل الفيديو إلى GIF</strong> متحرك، و
-                        <strong>استخراج الصوت</strong> من الفيديو بصيغة MP3.
-                    </p>
+                    <p>أنشئ وعدّل فيديوهاتك بسهولة. أدوات احترافية لـ <strong>ضغط الفيديو</strong> بدون جهد، <strong>تحويل صيغ الفيديو</strong> بين MP4 و WebM و MOV و MKV و AVI، <strong>قص الفيديو</strong> لتحديد المقاطع المهمة، <strong>تحويل الفيديو إلى GIF</strong> متحرك، و<strong>استخراج الصوت</strong> من الفيديو بصيغة MP3.</p>
                     <a href="#video-tools">استكشف أدوات الفيديو ←</a>
                 </article>
-
                 <article class="seo-card">
                     <div class="text-4xl mb-3" aria-hidden="true">🚀</div>
                     <h3>قريباً</h3>
-                    <p>
-                        نعمل باستمرار على إضافة أدوات جديدة. قريباً: 
-                        <strong>أدوات النصوص</strong> (عداد كلمات، تنسيق نصوص عربية)، 
-                        <strong>أدوات SEO</strong> (مولّد Sitemap، Schema)، 
-                        و<strong>أدوات المطورين</strong> (JSON Formatter، QR Code Generator).
-                    </p>
+                    <p>نعمل باستمرار على إضافة أدوات جديدة. قريباً: <strong>أدوات النصوص</strong> (عداد كلمات، تنسيق نصوص عربية)، <strong>أدوات SEO</strong> (مولّد Sitemap، Schema)، و<strong>أدوات المطورين</strong> (JSON Formatter، QR Code Generator).</p>
                     <span style="color: #9ca3af; font-weight: 700; font-size: 0.875rem;">ترقبوا الجديد ✨</span>
                 </article>
-
             </div>
-
             <div class="seo-content-main">
                 <h3>لماذا يختار المستخدمون intooly يومياً؟</h3>
-                <p>
-                    في عصر يعتمد فيه معظم الناس على أدوات سحابية تطلب تسجيلاً وتفرض حدوداً يومية، يأتي <strong class="text-ink-900">intooly</strong> ليقدم تجربة مختلفة تماماً. جميع أدواتنا تعمل بتقنية <strong class="text-brand-600">WebAssembly</strong> و <strong class="text-brand-600">الذكاء الاصطناعي المدمج</strong> داخل متصفحك مباشرة، مما يعني أن:
-                </p>
+                <p>في عصر يعتمد فيه معظم الناس على أدوات سحابية تطلب تسجيلاً وتفرض حدوداً يومية، يأتي <strong class="text-ink-900">intooly</strong> ليقدم تجربة مختلفة تماماً. جميع أدواتنا تعمل بتقنية <strong class="text-brand-600">WebAssembly</strong> و <strong class="text-brand-600">الذكاء الاصطناعي المدمج</strong> داخل متصفحك مباشرة، مما يعني أن:</p>
                 <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>ملفاتك لا تغادر جهازك أبداً</strong> — خصوصية كاملة وأمان تام.</span>
-                    </li>
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>لا انتظار لرفع الملفات</strong> — النتائج فورية خلال ثوانٍ.</span>
-                    </li>
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>مجاني بالكامل</strong> — بدون اشتراكات، بدون حدود، وبدون علامات مائية.</span>
-                    </li>
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>بدون تسجيل</strong> — افتح الأداة واستخدمها مباشرة.</span>
-                    </li>
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>يعمل على جميع الأجهزة</strong> — كمبيوتر، تابلت، وهاتف.</span>
-                    </li>
-                    <li>
-                        <span class="check">✓</span>
-                        <span><strong>يدعم اللغة العربية</strong> — واجهة كاملة بالعربية لسهولة الاستخدام.</span>
-                    </li>
+                    <li><span class="check">✓</span><span><strong>ملفاتك لا تغادر جهازك أبداً</strong> — خصوصية كاملة وأمان تام.</span></li>
+                    <li><span class="check">✓</span><span><strong>لا انتظار لرفع الملفات</strong> — النتائج فورية خلال ثوانٍ.</span></li>
+                    <li><span class="check">✓</span><span><strong>مجاني بالكامل</strong> — بدون اشتراكات، بدون حدود، وبدون علامات مائية.</span></li>
+                    <li><span class="check">✓</span><span><strong>بدون تسجيل</strong> — افتح الأداة واستخدمها مباشرة.</span></li>
+                    <li><span class="check">✓</span><span><strong>يعمل على جميع الأجهزة</strong> — كمبيوتر، تابلت، وهاتف.</span></li>
+                    <li><span class="check">✓</span><span><strong>يدعم اللغة العربية</strong> — واجهة كاملة بالعربية لسهولة الاستخدام.</span></li>
                 </ul>
-                <p class="mt-4">
-                    سواء كنت <strong class="text-ink-900">مصمماً</strong> يحتاج لإزالة خلفيات الصور بسرعة، أو <strong class="text-ink-900">صاحب متجر إلكتروني</strong> يجهّز صور منتجاته، أو <strong class="text-ink-900">صانع محتوى</strong> يعدّل فيديوهاته، أو <strong class="text-ink-900">طالباً</strong> يضغط ملفاته — فإن intooly يوفر لك الأدوات المناسبة في مكان واحد، مجاناً وبدون تعقيد.
-                </p>
+                <p class="mt-4">سواء كنت <strong class="text-ink-900">مصمماً</strong> يحتاج لإزالة خلفيات الصور بسرعة، أو <strong class="text-ink-900">صاحب متجر إلكتروني</strong> يجهّز صور منتجاته، أو <strong class="text-ink-900">صانع محتوى</strong> يعدّل فيديوهاته، أو <strong class="text-ink-900">طالباً</strong> يضغط ملفاته — فإن intooly يوفر لك الأدوات المناسبة في مكان واحد، مجاناً وبدون تعقيد.</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="seo-faq-item">
-                    <h4>
-                        <span class="text-brand-500" aria-hidden="true">💡</span>
-                        ما الفرق بين intooly والأدوات الأخرى؟
-                    </h4>
-                    <p>معظم الأدوات تطلب رفع ملفاتك لسيرفراتها. intooly يشغّل كل شيء في متصفحك مباشرة، فلا حاجة لرفع، ولا خوف على الخصوصية، ونتائج فورية.</p>
-                </div>
-                <div class="seo-faq-item">
-                    <h4>
-                        <span class="text-brand-500" aria-hidden="true">🆓</span>
-                        هل الأداة مجانية فعلاً بدون قيود؟
-                    </h4>
-                    <p>نعم تماماً. لا اشتراكات، لا حدود يومية، لا علامات مائية، ولا حاجة للتسجيل. استخدم أي أداة بالعدد الذي تحتاجه، متى شئت.</p>
-                </div>
-                <div class="seo-faq-item">
-                    <h4>
-                        <span class="text-brand-500" aria-hidden="true">🔒</span>
-                        هل بياناتي آمنة حقاً؟
-                    </h4>
-                    <p>نعم. بسبب أن المعالجة محلية 100%، لا يتم رفع أي ملف إلى سيرفراتنا. ملفاتك تبقى على جهازك من البداية إلى النهاية.</p>
-                </div>
-                <div class="seo-faq-item">
-                    <h4>
-                        <span class="text-brand-500" aria-hidden="true">⚡</span>
-                        هل أحتاج جهازاً قوياً؟
-                    </h4>
-                    <p>لا. الأدوات تعمل على أي متصفح حديث (Chrome, Firefox, Safari, Edge). لتحسين الأداء، نوصي بمتصفح حديث وإصدار محدّث.</p>
-                </div>
+                <div class="seo-faq-item"><h4><span class="text-brand-500" aria-hidden="true">💡</span>ما الفرق بين intooly والأدوات الأخرى؟</h4><p>معظم الأدوات تطلب رفع ملفاتك لسيرفراتها. intooly يشغّل كل شيء في متصفحك مباشرة، فلا حاجة لرفع، ولا خوف على الخصوصية، ونتائج فورية.</p></div>
+                <div class="seo-faq-item"><h4><span class="text-brand-500" aria-hidden="true">🆓</span>هل الأداة مجانية فعلاً بدون قيود؟</h4><p>نعم تماماً. لا اشتراكات، لا حدود يومية، لا علامات مائية، ولا حاجة للتسجيل. استخدم أي أداة بالعدد الذي تحتاجه، متى شئت.</p></div>
+                <div class="seo-faq-item"><h4><span class="text-brand-500" aria-hidden="true">🔒</span>هل بياناتي آمنة حقاً؟</h4><p>نعم. بسبب أن المعالجة محلية 100%، لا يتم رفع أي ملف إلى سيرفراتنا. ملفاتك تبقى على جهازك من البداية إلى النهاية.</p></div>
+                <div class="seo-faq-item"><h4><span class="text-brand-500" aria-hidden="true">⚡</span>هل أحتاج جهازاً قوياً؟</h4><p>لا. الأدوات تعمل على أي متصفح حديث (Chrome, Firefox, Safari, Edge). لتحسين الأداء، نوصي بمتصفح حديث وإصدار محدّث.</p></div>
             </div>
-
             <div class="text-center mt-10">
-                <p class="text-ink-600 text-sm">
-                    جاهز للبدء؟ اختر أداة من
-                    <a href="#categories" class="text-brand-600 font-bold hover:underline">التصنيفات</a>
-                    أو تصفح
-                    <a href="#tools" class="text-brand-600 font-bold hover:underline">الأدوات الأكثر شعبية</a>.
-                </p>
+                <p class="text-ink-600 text-sm">جاهز للبدء؟ اختر أداة من <a href="#categories" class="text-brand-600 font-bold hover:underline">التصنيفات</a> أو تصفح <a href="#tools" class="text-brand-600 font-bold hover:underline">الأدوات الأكثر شعبية</a>.</p>
             </div>
-
         </div>
     </section>
 
     <!-- ================= HOW IT WORKS ================= -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            
             <div class="text-center mb-12">
-                <span class="inline-block bg-brand-100 text-brand-700 font-bold px-4 py-1.5 rounded-full text-sm mb-4">
-                    شفافية تقنية
-                </span>
+                <span class="inline-block bg-brand-100 text-brand-700 font-bold px-4 py-1.5 rounded-full text-sm mb-4">شفافية تقنية</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-3">🔬 كيف تعمل أدواتنا؟</h2>
-                <p class="text-lg text-ink-600 max-w-2xl mx-auto">
-                    3 خطوات بسيطة — لكن التقنية داخلها معقدة ومتطورة
-                </p>
+                <p class="text-lg text-ink-600 max-w-2xl mx-auto">3 خطوات بسيطة — لكن التقنية داخلها معقدة ومتطورة</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-                
                 <div class="how-step">
                     <div class="how-step-num">1</div>
                     <div class="text-5xl mb-4" aria-hidden="true">📤</div>
                     <h3 class="font-bold text-ink-900 text-xl mb-3">اختر ملفك</h3>
-                    <p class="text-sm text-ink-600 leading-relaxed">
-                        اسحب ملفك أو اختره من جهازك. <strong class="text-ink-800">لا يتم رفع أي شيء</strong> — يبقى الملف في متصفحك من البداية.
-                    </p>
+                    <p class="text-sm text-ink-600 leading-relaxed">اسحب ملفك أو اختره من جهازك. <strong class="text-ink-800">لا يتم رفع أي شيء</strong> — يبقى الملف في متصفحك من البداية.</p>
                 </div>
-
                 <div class="how-step">
                     <div class="how-step-num">2</div>
                     <div class="text-5xl mb-4" aria-hidden="true">⚙️</div>
                     <h3 class="font-bold text-ink-900 text-xl mb-3">معالجة محلية فورية</h3>
-                    <p class="text-sm text-ink-600 leading-relaxed">
-                        تعمل الأدوات داخل متصفحك عبر <strong class="text-ink-800">WebAssembly</strong> و <strong class="text-ink-800">الذكاء الاصطناعي</strong> لمعالجة ملفك في ثوانٍ.
-                    </p>
+                    <p class="text-sm text-ink-600 leading-relaxed">تعمل الأدوات داخل متصفحك عبر <strong class="text-ink-800">WebAssembly</strong> و <strong class="text-ink-800">الذكاء الاصطناعي</strong> لمعالجة ملفك في ثوانٍ.</p>
                 </div>
-
                 <div class="how-step">
                     <div class="how-step-num">3</div>
                     <div class="text-5xl mb-4" aria-hidden="true">⬇️</div>
                     <h3 class="font-bold text-ink-900 text-xl mb-3">حمّل النتيجة</h3>
-                    <p class="text-sm text-ink-600 leading-relaxed">
-                        عاين النتيجة وحمّلها فوراً بصيغة PNG أو JPG أو الصيغة التي تحتاجها — <strong class="text-ink-800">بدون علامات مائية</strong>.
-                    </p>
+                    <p class="text-sm text-ink-600 leading-relaxed">عاين النتيجة وحمّلها فوراً بصيغة PNG أو JPG أو الصيغة التي تحتاجها — <strong class="text-ink-800">بدون علامات مائية</strong>.</p>
                 </div>
-
             </div>
-
-            <!-- شريط الثقة -->
             <div class="bg-ink-900 rounded-2xl p-8 md:p-10 max-w-4xl mx-auto">
-                <div class="text-center mb-6">
-                    <h3 class="text-xl md:text-2xl font-extrabold text-white">
-                        ما يميز أدواتنا
-                    </h3>
-                </div>
-                
+                <div class="text-center mb-6"><h3 class="text-xl md:text-2xl font-extrabold text-white">ما يميز أدواتنا</h3></div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="flex flex-col items-center text-center gap-2 p-3">
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span>
-                        <span class="text-ink-200 text-sm font-semibold">بدون رفع للسيرفر</span>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-2 p-3">
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span>
-                        <span class="text-ink-200 text-sm font-semibold">بدون تسجيل</span>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-2 p-3">
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span>
-                        <span class="text-ink-200 text-sm font-semibold">بدون حدود يومية</span>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-2 p-3">
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span>
-                        <span class="text-ink-200 text-sm font-semibold">بدون علامات مائية</span>
-                    </div>
+                    <div class="flex flex-col items-center text-center gap-2 p-3"><span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span><span class="text-ink-200 text-sm font-semibold">بدون رفع للسيرفر</span></div>
+                    <div class="flex flex-col items-center text-center gap-2 p-3"><span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span><span class="text-ink-200 text-sm font-semibold">بدون تسجيل</span></div>
+                    <div class="flex flex-col items-center text-center gap-2 p-3"><span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span><span class="text-ink-200 text-sm font-semibold">بدون حدود يومية</span></div>
+                    <div class="flex flex-col items-center text-center gap-2 p-3"><span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-400 text-ink-900 font-extrabold text-lg" aria-hidden="true">✓</span><span class="text-ink-200 text-sm font-semibold">بدون علامات مائية</span></div>
                 </div>
             </div>
-
         </div>
     </section>
 
     <!-- ================= FAQ ================= -->
     <section class="py-16 bg-ink-50">
         <div class="container mx-auto px-4 max-w-4xl">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-3">❓ الأسئلة الشائعة</h2>
-            </div>
+            <div class="text-center mb-10"><h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-3">❓ الأسئلة الشائعة</h2></div>
             <div class="space-y-3">
                 <div class="bg-white rounded-xl border border-ink-200 overflow-hidden">
-                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition" 
-                            aria-expanded="false" aria-controls="faq-1">
-                        <span class="font-bold text-ink-900">هل الموقع مجاني بالكامل؟</span>
-                        <span class="text-brand-600 text-xl" aria-hidden="true">+</span>
+                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition" aria-expanded="false" aria-controls="faq-1">
+                        <span class="font-bold text-ink-900">هل الموقع مجاني بالكامل؟</span><span class="text-brand-600 text-xl" aria-hidden="true">+</span>
                     </button>
-                    <div class="faq-answer px-4" id="faq-1" role="region">
-                        <p class="pb-4 text-ink-700">نعم، جميع أدوات intooly مجانية 100% بدون أي قيود على عدد الاستخدامات، بدون علامات مائية، وبدون الحاجة للتسجيل.</p>
-                    </div>
+                    <div class="faq-answer px-4" id="faq-1" role="region"><p class="pb-4 text-ink-700">نعم، جميع أدوات intooly مجانية 100% بدون أي قيود على عدد الاستخدامات، بدون علامات مائية، وبدون الحاجة للتسجيل.</p></div>
                 </div>
                 <div class="bg-white rounded-xl border border-ink-200 overflow-hidden">
-                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition"
-                            aria-expanded="false" aria-controls="faq-2">
-                        <span class="font-bold text-ink-900">هل ملفاتي آمنة؟</span>
-                        <span class="text-brand-600 text-xl" aria-hidden="true">+</span>
+                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition" aria-expanded="false" aria-controls="faq-2">
+                        <span class="font-bold text-ink-900">هل ملفاتي آمنة؟</span><span class="text-brand-600 text-xl" aria-hidden="true">+</span>
                     </button>
-                    <div class="faq-answer px-4" id="faq-2" role="region">
-                        <p class="pb-4 text-ink-700">نعم 100%. جميع المعالجات تتم محلياً في متصفحك. لا يتم رفع أي ملف إلى سيرفراتنا، مما يضمن خصوصية تامة لبياناتك.</p>
-                    </div>
+                    <div class="faq-answer px-4" id="faq-2" role="region"><p class="pb-4 text-ink-700">نعم 100%. جميع المعالجات تتم محلياً في متصفحك. لا يتم رفع أي ملف إلى سيرفراتنا، مما يضمن خصوصية تامة لبياناتك.</p></div>
                 </div>
                 <div class="bg-white rounded-xl border border-ink-200 overflow-hidden">
-                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition"
-                            aria-expanded="false" aria-controls="faq-3">
-                        <span class="font-bold text-ink-900">هل أحتاج لتثبيت برامج؟</span>
-                        <span class="text-brand-600 text-xl" aria-hidden="true">+</span>
+                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition" aria-expanded="false" aria-controls="faq-3">
+                        <span class="font-bold text-ink-900">هل أحتاج لتثبيت برامج؟</span><span class="text-brand-600 text-xl" aria-hidden="true">+</span>
                     </button>
-                    <div class="faq-answer px-4" id="faq-3" role="region">
-                        <p class="pb-4 text-ink-700">لا، جميع الأدوات تعمل مباشرة في متصفحك (Chrome, Firefox, Edge, Safari). لا تحتاج لتثبيت أي برنامج أو إضافة.</p>
-                    </div>
+                    <div class="faq-answer px-4" id="faq-3" role="region"><p class="pb-4 text-ink-700">لا، جميع الأدوات تعمل مباشرة في متصفحك (Chrome, Firefox, Edge, Safari). لا تحتاج لتثبيت أي برنامج أو إضافة.</p></div>
                 </div>
                 <div class="bg-white rounded-xl border border-ink-200 overflow-hidden">
-                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition"
-                            aria-expanded="false" aria-controls="faq-4">
-                        <span class="font-bold text-ink-900">كيف أتواصل مع الدعم؟</span>
-                        <span class="text-brand-600 text-xl" aria-hidden="true">+</span>
+                    <button class="faq-toggle w-full p-4 text-right flex justify-between items-center hover:bg-brand-50 transition" aria-expanded="false" aria-controls="faq-4">
+                        <span class="font-bold text-ink-900">كيف أتواصل مع الدعم؟</span><span class="text-brand-600 text-xl" aria-hidden="true">+</span>
                     </button>
-                    <div class="faq-answer px-4" id="faq-4" role="region">
-                        <p class="pb-4 text-ink-700">عبر البريد: <a href="mailto:support@intooly.com" class="text-brand-600 hover:underline font-semibold">support@intooly.com</a> أو صفحة <a href="contact.html" class="text-brand-600 hover:underline font-semibold">اتصل بنا</a>.</p>
-                    </div>
+                    <div class="faq-answer px-4" id="faq-4" role="region"><p class="pb-4 text-ink-700">عبر البريد: <a href="mailto:support@intooly.com" class="text-brand-600 hover:underline font-semibold">support@intooly.com</a> أو صفحة <a href="contact.html" class="text-brand-600 hover:underline font-semibold">اتصل بنا</a>.</p></div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ========================================== -->
+    <!-- ✅ قسم أحدث المقالات من المدونة (معدّل)   -->
+    <!-- ========================================== -->
+    <section id="latest-posts-section" class="py-12 bg-slate-800 border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-white mb-2">أحدث المقالات والأدلة</h2>
+                <p class="text-slate-300 text-sm">تابع آخر النصائح والأدلة الشاملة حول أدواتنا</p>
+            </div>
+            
+            <!-- الشبكة المتجاوبة: 2 للموبايل، 3 للتابلت، 4 للديسكتوب -->
+            <div id="posts-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="col-span-full text-center text-slate-400 py-6 text-sm">جاري تحميل أحدث المقالات...</div>
+            </div>
+
+            <div class="text-center mt-8">
+                <a href="https://blog.intooly.com" target="_blank" class="inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-md text-slate-900 bg-amber-400 hover:bg-amber-500 transition-colors">
+                    عرض جميع المقالات
+                    <svg class="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const blogUrl = 'https://blog.intooly.com';
+        const apiUrl = `${blogUrl}/wp-json/wp/v2/posts?per_page=4&_embed`;
+        const container = document.getElementById('posts-container');
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('فشل في تحميل المقالات');
+                return response.json();
+            })
+            .then(posts => {
+                container.innerHTML = '';
+                
+                posts.forEach(post => {
+                    const imageUrl = post._embedded && post._embedded['wp:featuredmedia'] 
+                        ? post._embedded['wp:featuredmedia'][0].source_url 
+                        : 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80';
+                    
+                    const excerpt = post.excerpt.rendered.replace(/<[^>]+>/g, '').substring(0, 80) + '...';
+                    const date = new Date(post.date).toLocaleDateString('ar-EG');
+
+                    const postCard = `
+                        <article class="bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-slate-600 group flex flex-col">
+                            <div class="relative h-32 overflow-hidden">
+                                <img src="${imageUrl}" alt="${post.title.rendered}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <div class="text-amber-400 text-xs mb-1">${date}</div>
+                                <h3 class="text-sm font-bold text-white mb-2 line-clamp-2 group-hover:text-amber-400 transition-colors leading-tight">
+                                    ${post.title.rendered}
+                                </h3>
+                                <p class="text-slate-300 text-xs mb-3 line-clamp-2 leading-relaxed flex-grow">${excerpt}</p>
+                                <a href="${post.link}" target="_blank" class="inline-flex items-center text-amber-400 hover:text-amber-300 font-medium text-xs transition-colors mt-auto">
+                                    اقرأ المزيد
+                                    <svg class="mr-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                </a>
+                            </div>
+                        </article>
+                    `;
+                    container.innerHTML += postCard;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching posts:', error);
+                container.innerHTML = `<div class="col-span-full text-center text-red-400 py-6 text-sm">عذراً، حدث خطأ. يرجى زيارة <a href="${blogUrl}" class="underline">المدونة</a> مباشرة.</div>`;
+            });
+    });
+    </script>
+    <!-- ========================================== -->
+    <!-- نهاية قسم المقالات                        -->
+    <!-- ========================================== -->
+
     <!-- ================= FOOTER ================= -->
     <footer class="footer-gradient text-ink-300 pt-16 pb-0 mt-auto">
         <div class="container mx-auto px-4">
-            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-12 h-12 bg-ink-800 rounded-lg flex items-center justify-center">
@@ -978,11 +582,8 @@
                         <span class="text-2xl font-extrabold text-white">intooly</span>
                     </div>
                     <p class="text-sm text-ink-400 mb-3">منصة أدوات مجانية احترافية</p>
-                    <p class="text-sm text-ink-400 leading-relaxed">
-                        نقدم لك مجموعة متكاملة من الأدوات المجانية لمعالجة الصور والفيديو والنصوص. جميع أدواتنا تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.
-                    </p>
+                    <p class="text-sm text-ink-400 leading-relaxed">نقدم لك مجموعة متكاملة من الأدوات المجانية لمعالجة الصور والفيديو والنصوص. جميع أدواتنا تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.</p>
                 </div>
-
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-500 pr-3">خدماتنا</h3>
                     <ul class="space-y-2 text-sm">
@@ -994,7 +595,6 @@
                         <li><a href="cookie-policy.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>←</span> سياسة الكوكيز</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-400 pr-3">أشهر الأدوات</h3>
                     <ul class="space-y-2 text-sm">
@@ -1005,31 +605,19 @@
                         <li><a href="tools/product-photo-studio.html" class="text-ink-400 hover:text-brand-400 transition flex items-center gap-2"><span>⭐</span> استوديو صور المنتجات</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4 border-r-4 border-brand-300 pr-3">اشترك معنا</h3>
                     <p class="text-sm text-ink-400 mb-4">احصل على آخر الأدوات والتحديثات مباشرة في بريدك</p>
-                    
                     <form class="space-y-3" id="subscribeForm" novalidate>
                         <div>
                             <label for="emailInput" class="sr-only">البريد الإلكتروني</label>
-                            <input type="email" id="emailInput" 
-                                placeholder="أدخل بريدك الإلكتروني"
-                                autocomplete="email"
-                                class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition"
-                                required
-                                aria-describedby="emailHelp">
+                            <input type="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" autocomplete="email" class="w-full px-4 py-2 rounded-lg border border-ink-700 bg-ink-800 text-white text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 transition" required aria-describedby="emailHelp">
                         </div>
-                        <button type="submit" 
-                            class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">
-                            اشترك الآن 📧
-                        </button>
+                        <button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-brand-400 text-ink-900 font-bold py-2 rounded-lg hover:from-brand-400 hover:to-brand-300 transition transform hover:-translate-y-0.5 text-sm">اشترك الآن 📧</button>
                         <p id="emailHelp" class="text-xs text-ink-500">نحترم خصوصيتك. لا رسائل مزعجة.</p>
                     </form>
                 </div>
-
             </div>
-
             <div class="footer-bottom mt-6 py-5">
                 <div class="container mx-auto px-4">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -1038,18 +626,14 @@
                                 <svg class="w-5 h-5 text-brand-400"><use href="#icon-logo"/></svg>
                             </div>
                             <div>
-                                <p class="text-sm text-ink-300 font-semibold">
-                                    &copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.
-                                </p>
+                                <p class="text-sm text-ink-300 font-semibold">&copy; <span id="currentYear">2026</span> <span class="text-white font-bold">intooly</span>. جميع الحقوق محفوظة.</p>
                                 <p class="text-xs text-ink-500 mt-0.5">صُنع بـ ❤️ في العالم العربي</p>
                             </div>
                         </div>
-
                         <div class="flex items-center gap-2 bg-ink-800/50 px-4 py-2 rounded-full border border-ink-700">
                             <span class="text-brand-400" aria-hidden="true">📧</span>
                             <a href="mailto:support@intooly.com" class="text-sm text-ink-300 hover:text-brand-400 transition font-medium">support@intooly.com</a>
                         </div>
-
                         <div class="flex items-center gap-4 text-xs">
                             <a href="privacy-policy.html" class="text-ink-400 hover:text-brand-400 transition">الخصوصية</a>
                             <span class="text-ink-600" aria-hidden="true">•</span>
@@ -1060,7 +644,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </footer>
 
@@ -1075,59 +658,34 @@
     <script>
     (function() {
         'use strict';
-
         const faqToggles = document.querySelectorAll('.faq-toggle');
         faqToggles.forEach(btn => {
             btn.addEventListener('click', () => {
                 const answer = btn.nextElementSibling;
                 const icon = btn.querySelector('span:last-child');
                 const isActive = answer.classList.contains('active');
-                
                 document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
-                faqToggles.forEach(b => {
-                    b.setAttribute('aria-expanded', 'false');
-                    b.querySelector('span:last-child').textContent = '+';
-                });
-                
-                if (!isActive) {
-                    answer.classList.add('active');
-                    btn.setAttribute('aria-expanded', 'true');
-                    icon.textContent = '−';
-                }
+                faqToggles.forEach(b => { b.setAttribute('aria-expanded', 'false'); b.querySelector('span:last-child').textContent = '+'; });
+                if (!isActive) { answer.classList.add('active'); btn.setAttribute('aria-expanded', 'true'); icon.textContent = '−'; }
             });
         });
-
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 if (href === '#' || href.length < 2) return;
-                
                 const target = document.querySelector(href);
                 if (!target) return;
-                
                 e.preventDefault();
                 const headerOffset = 80;
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                 history.pushState(null, '', href);
             });
         });
-
         const normalizeArabic = (text) => {
-            return String(text)
-                .replace(/[أإآٱا]/g, 'ا')
-                .replace(/ة/g, 'ه')
-                .replace(/ى/g, 'ي')
-                .replace(/ؤ/g, 'و')
-                .replace(/ئ/g, 'ي')
-                .replace(/[\u064B-\u0652\u0670]/g, '')
-                .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '')
-                .toLowerCase()
-                .trim();
+            return String(text).replace(/[أإآٱا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي').replace(/[\u064B-\u0652\u0670]/g, '').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').toLowerCase().trim();
         };
-
         const SEARCH_INDEX = [
             { names: ['خلفية', 'ازالة الخلفية', 'ازاله الخلفيه', 'background', 'bg', 'remover'], url: 'tools/background-remover.html' },
             { names: ['ضغط الصور', 'ضاغط الصور', 'image compressor', 'compress image'], url: 'tools/image-compressor.html' },
@@ -1141,31 +699,16 @@
             { names: ['تحويل الصور', 'image converter', 'jpg', 'png', 'webp'], url: 'tools/image-converter.html' },
             { names: ['قص الصور', 'crop', 'اقتصاص'], url: 'tools/image-cropper.html' },
         ];
-
         const searchInput = document.getElementById('searchInput');
-        
         if (searchInput) {
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key !== 'Enter') return;
-                
                 const query = normalizeArabic(e.target.value);
                 if (!query) return;
-                
-                const match = SEARCH_INDEX.find(tool =>
-                    tool.names.some(name => {
-                        const normalizedName = normalizeArabic(name);
-                        return query.includes(normalizedName) || normalizedName.includes(query);
-                    })
-                );
-                
-                if (match) {
-                    window.location.href = match.url;
-                } else {
-                    alert('لم يتم العثور على نتائج. جرّب: خلفية، ضغط، فيديو، GIF، MP3');
-                }
+                const match = SEARCH_INDEX.find(tool => tool.names.some(name => { const normalizedName = normalizeArabic(name); return query.includes(normalizedName) || normalizedName.includes(query); }));
+                if (match) { window.location.href = match.url; } else { alert('لم يتم العثور على نتائج. جرّب: خلفية، ضغط، فيديو، GIF، MP3'); }
             });
         }
-
         const subscribeForm = document.getElementById('subscribeForm');
         if (subscribeForm) {
             subscribeForm.addEventListener('submit', async (e) => {
@@ -1173,135 +716,36 @@
                 const emailInput = document.getElementById('emailInput');
                 const btn = e.target.querySelector('button[type="submit"]');
                 const email = emailInput.value.trim();
-                
-                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    emailInput.focus();
-                    emailInput.classList.add('border-red-500');
-                    setTimeout(() => emailInput.classList.remove('border-red-500'), 2000);
-                    return;
-                }
-                
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); emailInput.classList.add('border-red-500'); setTimeout(() => emailInput.classList.remove('border-red-500'), 2000); return; }
                 const originalText = btn.textContent;
                 btn.disabled = true;
                 btn.textContent = 'جاري الاشتراك...';
-                
                 try {
                     await new Promise(resolve => setTimeout(resolve, 800));
                     btn.textContent = '✅ تم الاشتراك بنجاح!';
                     subscribeForm.reset();
-                } catch (err) {
-                    btn.textContent = '❌ حدث خطأ، حاول مرة أخرى';
-                } finally {
-                    setTimeout(() => {
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                    }, 3000);
+                } catch (err) { btn.textContent = '❌ حدث خطأ، حاول مرة أخرى'; } finally {
+                    setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 3000);
                 }
             });
         }
-
         const scrollTopBtn = document.getElementById('scrollTop');
         if (scrollTopBtn) {
             let ticking = false;
-            
             window.addEventListener('scroll', () => {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
-                        if (window.pageYOffset > 500) {
-                            scrollTopBtn.classList.add('visible');
-                        } else {
-                            scrollTopBtn.classList.remove('visible');
-                        }
+                        if (window.pageYOffset > 500) { scrollTopBtn.classList.add('visible'); } else { scrollTopBtn.classList.remove('visible'); }
                         ticking = false;
                     });
                     ticking = true;
                 }
             });
-            
-            scrollTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         }
-
         const yearEl = document.getElementById('currentYear');
-        if (yearEl) {
-            yearEl.textContent = new Date().getFullYear();
-        }
+        if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
     })();
     </script>
-    <!-- قسم أحدث المقالات من المدونة -->
-<section id="latest-posts-section" class="py-16 bg-ink-900 border-t border-ink-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-white mb-4">أحدث المقالات والأدلة</h2>
-            <p class="text-ink-400">تابع آخر النصائح والأدلة الشاملة حول أدواتنا وتقنيات تحسين الإنتاجية</p>
-        </div>
-        
-        <!-- هنا سيتم حقن المقالات تلقائياً -->
-        <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="col-span-full text-center text-ink-400 py-8">جاري تحميل أحدث المقالات...</div>
-        </div>
-
-        <div class="text-center mt-10">
-            <a href="https://blog.intooly.com" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-ink-900 bg-accent-400 hover:bg-accent-500 transition-colors">
-                عرض جميع المقالات
-                <svg class="mr-2 -ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- كود جافاسكربت لسحب المقالات من ووردبريس -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const blogUrl = 'https://blog.intooly.com';
-    const apiUrl = `${blogUrl}/wp-json/wp/v2/posts?per_page=3&_embed`;
-    const container = document.getElementById('posts-container');
-
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) throw new Error('فشل في تحميل المقالات');
-            return response.json();
-        })
-        .then(posts => {
-            container.innerHTML = ''; // مسح رسالة التحميل
-            
-            posts.forEach(post => {
-                // استخراج الصورة المميزة أو استخدام صورة افتراضية
-                const imageUrl = post._embedded && post._embedded['wp:featuredmedia'] 
-                    ? post._embedded['wp:featuredmedia'][0].source_url 
-                    : 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80';
-                
-                // تنظيف الاقتباس من أكواد HTML
-                const excerpt = post.excerpt.rendered.replace(/<[^>]+>/g, '').substring(0, 100) + '...';
-                const date = new Date(post.date).toLocaleDateString('ar-EG');
-
-                const postCard = `
-                    <article class="bg-ink-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-ink-700 group">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="${imageUrl}" alt="${post.title.rendered}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        </div>
-                        <div class="p-6">
-                            <div class="text-accent-400 text-sm mb-2">${date}</div>
-                            <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-accent-400 transition-colors">
-                                ${post.title.rendered}
-                            </h3>
-                            <p class="text-ink-400 text-sm mb-4 line-clamp-3">${excerpt}</p>
-                            <a href="${post.link}" target="_blank" class="inline-flex items-center text-accent-400 hover:text-accent-300 font-medium text-sm transition-colors">
-                                اقرأ المزيد
-                                <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            </a>
-                        </div>
-                    </article>
-                `;
-                container.innerHTML += postCard;
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching posts:', error);
-            container.innerHTML = `<div class="col-span-full text-center text-red-400 py-8">عذراً، حدث خطأ أثناء تحميل المقالات. يرجى زيارة <a href="${blogUrl}" class="underline">المدونة</a> مباشرة.</div>`;
-        });
-});
-</script>
 </body>
 </html>
