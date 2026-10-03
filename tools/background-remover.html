@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>إزالة خلفية الصور بالذكاء الاصطناعي | intooly</title>
-    <meta name="description" content="أزل خلفية أي صورة بدقة احترافية باستخدام الذكاء الاصطناعي محلياً في متصفحك. معالجة دفعية، تحميل ZIP، محرر قناع، ومقارنة تفاعلية قبل/بعد. مجاني 100% بدون رفع.">
+    <meta name="description" content="أزل خلفية أي صورة بجودة احترافية باستخدام الذكاء الاصطناعي محلياً في متصفحك. معالجة دفعية، تحميل ZIP، محرر قناع، ومقارنة تفاعلية قبل/بعد. مجاني 100% بدون رفع.">
     <meta name="keywords" content="إزالة خلفية الصور, إزالة الخلفية بالذكاء الاصطناعي, background remover, remove bg, شفافية الصور, إزالة خلفية المنتجات, intooly">
     <meta name="author" content="intooly">
     <meta name="robots" content="index, follow, max-image-preview:large">
@@ -22,7 +22,7 @@
     <link rel="canonical" href="https://intooly.com/tools/background-remover.html">
     
     <meta property="og:title" content="إزالة خلفية الصور بالذكاء الاصطناعي | intooly">
-    <meta property="og:description" content="أزل خلفية أي صورة بدقة احترافية. محلي 100%، بدون حدود، بدون علامات مائية.">
+    <meta property="og:description" content="أزل خلفية أي صورة بجودة احترافية. محلي 100%، بدون حدود، بدون علامات مائية.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://intooly.com/tools/background-remover.html">
     <meta property="og:locale" content="ar_SA">
@@ -34,14 +34,13 @@
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="إزالة خلفية الصور بالذكاء الاصطناعي | intooly">
-    <meta name="twitter:description" content="أزل خلفية أي صورة بدقة احترافية. مجاني ومحلي 100%.">
+    <meta name="twitter:description" content="أزل خلفية أي صورة بجودة احترافية. مجاني ومحلي 100%.">
     <meta name="twitter:image" content="https://intooly.com/og-image.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- ✅ FIXED: إزالة defer لضمان تحميل ort قبل الكود -->
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
@@ -177,8 +176,6 @@
         .btn-zip { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; font-weight: 800; padding: 1rem 2.5rem; border-radius: 0.875rem; transition: all 0.3s; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3); border: none; cursor: pointer; font-size: 1.0625rem; display: inline-flex; align-items: center; gap: 0.625rem; font-family: 'Cairo', sans-serif; }
         .btn-zip:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5); }
         .btn-zip:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; font-weight: 800; padding: 0.5rem 0.875rem; border-radius: 0.625rem; transition: all 0.3s; border: none; cursor: pointer; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Cairo', sans-serif; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
-        .btn-warning:hover:not(:disabled) { background: linear-gradient(135deg, #d97706, #f59e0b); transform: translateY(-1px); }
         
         .editor-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(6px); }
         .editor-modal.hidden { display: none; }
@@ -230,11 +227,6 @@
         .feature-card h4 { font-weight: 800; color: #111827; margin-bottom: 0.375rem; font-size: 0.9375rem; }
         .feature-card p { color: #6b7280; font-size: 0.8125rem; line-height: 1.5; }
         
-        .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border-radius: 1rem; padding: 1.25rem; text-align: center; color: white; border: 2px solid #374151; transition: all 0.3s; }
-        .stat-card:hover { border-color: #eab308; transform: translateY(-3px); }
-        .stat-card .stat-num { font-size: 1.75rem; font-weight: 900; color: #facc15; margin-bottom: 0.25rem; line-height: 1; }
-        .stat-card .stat-label { font-size: 0.75rem; color: #9ca3af; font-weight: 700; }
-        
         .related-tool { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.25rem 0.875rem; border-radius: 1rem; background: white; border: 2px solid #e5e7eb; text-decoration: none; transition: all 0.3s; text-align: center; }
         .related-tool:hover { border-color: #facc15; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(234, 179, 8, 0.15); }
         .related-tool .tool-emoji { font-size: 2rem; }
@@ -252,7 +244,7 @@
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://intooly.com/"},{"@type":"ListItem","position":2,"name":"أدوات الصور","item":"https://intooly.com/#image-tools"},{"@type":"ListItem","position":3,"name":"إزالة الخلفية","item":"https://intooly.com/tools/background-remover.html"}]}
     </script>
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"إزالة خلفية الصور بالـ AI - intooly","url":"https://intooly.com/tools/background-remover.html","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"أداة مجانية لإزالة خلفية الصور باستخدام الذكاء الاصطناعي محلياً في المتصفح.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"3418"},"featureList":["إزالة خلفية بدقة احترافية","معالجة دفعية لعدة صور","تحميل الكل كملف ZIP","محرر قناع يدوي","خلفيات جاهزة (شفاف، أبيض، رمادي)","مقارنة تفاعلية قبل/بعد","معالجة محلية 100% في المتصفح","مجاني بدون حدود","بدون علامات مائية"]}
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"إزالة خلفية الصور بالـ AI - intooly","url":"https://intooly.com/tools/background-remover.html","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","inLanguage":"ar","description":"أداة مجانية لإزالة خلفية الصور باستخدام الذكاء الاصطناعي محلياً في المتصفح.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["إزالة خلفية بجودة احترافية","معالجة دفعية لعدة صور","تحميل الكل كملف ZIP","محرر قناع يدوي","خلفيات جاهزة (شفاف، أبيض، رمادي)","مقارنة تفاعلية قبل/بعد","معالجة محلية 100% في المتصفح","مجاني بدون حدود","بدون علامات مائية"]}
     </script>
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"HowTo","name":"كيفية إزالة خلفية الصور بالذكاء الاصطناعي","totalTime":"PT15S","tool":[{"@type":"HowToTool","name":"متصفح حديث"}],"step":[{"@type":"HowToStep","position":1,"name":"ارفع صورك","text":"اسحب صورك وأفلتها في المنطقة المخصصة، أو انقر لاختيارها من جهازك."},{"@type":"HowToStep","position":2,"name":"اضغط إزالة الخلفية","text":"سيعالج الذكاء الاصطناعي الصور محلياً خلال ثوانٍ."},{"@type":"HowToStep","position":3,"name":"اختر الخلفية","text":"شفاف، أبيض، رمادي، أو لون مخصص."},{"@type":"HowToStep","position":4,"name":"عاين النتائج","text":"قارن بين الصورة الأصلية والمعالجة باستخدام شريط تفاعلي."},{"@type":"HowToStep","position":5,"name":"حمّل النتائج","text":"حمّل كل صورة على حدة بصيغة PNG شفافة، أو حمّل الكل كملف ZIP."}]}
@@ -261,16 +253,16 @@
     {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
       {"@type":"Question","name":"هل أداة إزالة الخلفية مجانية بالكامل؟","acceptedAnswer":{"@type":"Answer","text":"نعم، الأداة مجانية 100% بدون قيود على عدد الصور، بدون علامات مائية، وبدون الحاجة للتسجيل."}},
       {"@type":"Question","name":"هل صوري آمنة عند استخدام الأداة؟","acceptedAnswer":{"@type":"Answer","text":"نعم 100%. كل المعالجة تتم محلياً في متصفحك. صورك لا تُرفع إلى أي سيرفر خارجي."}},
-      {"@type":"Question","name":"ما هي الصيغ المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم JPG, PNG, WebP, GIF, BMP. النتيجة تُصدّر بصيغة PNG للحفاظ على الشفافية."}},
-      {"@type":"Question","name":"كم عدد الصور التي يمكن معالجتها دفعة واحدة؟","acceptedAnswer":{"@type":"Answer","text":"لا يوجد حد أقصى. يمكنك رفع 10، 50، أو حتى 100 صورة ومعالجتها كلها بضغطة واحدة."}},
-      {"@type":"Question","name":"هل تعمل الأداة بدون إنترنت؟","acceptedAnswer":{"@type":"Answer","text":"بعد أول زيارة، يُخزّن نموذج الذكاء الاصطناعي في Cache API. يمكنك استخدام الأداة بدون إنترنت بعد الزيارة الأولى."}},
+      {"@type":"Question","name":"ما هي الصيغ المدعومة؟","acceptedAnswer":{"@type":"Answer","text":"ندعم JPG, PNG, WebP. النتيجة تُصدّر بصيغة PNG للحفاظ على الشفافية الكاملة."}},
+      {"@type":"Question","name":"كم عدد الصور التي يمكن معالجتها دفعة واحدة؟","acceptedAnswer":{"@type":"Answer","text":"حتى 50 صورة في الجلسة الواحدة، معالجة عبر Queue ذكي لتجنب تجميد المتصفح."}},
+      {"@type":"Question","name":"هل تعمل الأداة بدون إنترنت؟","acceptedAnswer":{"@type":"Answer","text":"بعد أول زيارة، يُخزّن نموذج الذكاء الاصطناعي في Cache API. الزيارات التالية تعمل بدون إنترنت تماماً."}},
       {"@type":"Question","name":"هل يمكنني تعديل النتيجة يدوياً؟","acceptedAnswer":{"@type":"Answer","text":"نعم، لكل صورة زر تعديل يفتح محرر قناع يدوي بفرشاة استعادة وممحاة لتصحيح أي خطأ في العزل."}},
       {"@type":"Question","name":"ما هي الخلفيات المتاحة؟","acceptedAnswer":{"@type":"Answer","text":"شفاف، أبيض نقي، رمادي فاتح، لون مخصص، أو صورة مخصصة ترفعها."}},
-      {"@type":"Question","name":"هل يفقد الذكاء الاصطناعي أجزاء من الصورة؟","acceptedAnswer":{"@type":"Answer","text":"النموذج مصمم بدقة عالية. نادراً ما يخطئ، وفي حال حدوث خطأ، يمكن استخدام محرر القناع اليدوي لتصحيحه بسهولة."}}
+      {"@type":"Question","name":"هل يفقد الذكاء الاصطناعي أجزاء من الصورة؟","acceptedAnswer":{"@type":"Answer","text":"النموذج مصمم بجودة عالية. نادراً ما يخطئ، وفي حال حدوث خطأ، يمكن استخدام محرر القناع اليدوي لتصحيحه بسهولة."}}
     ]}
     </script>
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"Product","name":"إزالة خلفية الصور بالـ AI","description":"أداة مجانية لإزالة خلفية الصور بالذكاء الاصطناعي محلياً في المتصفح","brand":{"@type":"Brand","name":"intooly"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"3418"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
+    {"@context":"https://schema.org","@type":"Product","name":"إزالة خلفية الصور بالـ AI","description":"أداة مجانية لإزالة خلفية الصور بالذكاء الاصطناعي محلياً في المتصفح","brand":{"@type":"Brand","name":"intooly"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}}
     </script>
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"ItemList","name":"أدوات ذات صلة","itemListElement":[
@@ -280,8 +272,9 @@
       {"@type":"ListItem","position":4,"name":"قص الصور","url":"https://intooly.com/tools/image-cropper.html"}
     ]}
     </script>
-</head><body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
-
+</head>
+<body class="bg-ink-50 text-ink-800 flex flex-col min-h-screen">
+    
     <svg style="display:none" aria-hidden="true">
         <symbol id="icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
@@ -335,7 +328,7 @@
                 <div class="text-5xl md:text-6xl mb-3">🪄</div>
                 <h1 class="hero-title font-extrabold mb-2 md:mb-3">إزالة خلفية الصور بالذكاء الاصطناعي</h1>
                 <p class="hero-subtitle opacity-95 max-w-3xl mx-auto">
-                    أزل خلفية أي صورة بدقة <span class="text-brand-400 font-bold">احترافية</span> باستخدام U²-Net.
+                    أزل خلفية أي صورة بجودة <span class="text-brand-400 font-bold">احترافية</span> باستخدام أحدث نماذج الذكاء الاصطناعي.
                     <span class="text-brand-300 font-bold">معالجة دفعية، محرر قناع، ومقارنة تفاعلية.</span>
                 </p>
             </div>
@@ -418,7 +411,7 @@
                                     <button type="button" class="preset-btn active" data-preset="balanced">⚖️ متوازن</button>
                                     <button type="button" class="preset-btn" data-preset="best">💎 أفضل جودة</button>
                                 </div>
-                                <p style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 "سريع" أسرع 3 أضعاف، "أفضل جودة" يفحص الصورة مرتين</p>
+                                <p style="font-size: 0.6875rem; color: #6b7280; font-weight: 700; margin-top: 0.5rem;">💡 "سريع" = نموذج خفيف، "أفضل جودة" = نموذج ISNet + معالجة متقدمة</p>
                             </div>
                             
                             <div class="settings-group">
@@ -549,7 +542,7 @@
                         <div class="seo-card">
                             <h3>📖 ما هي أداة إزالة الخلفية؟</h3>
                             <p class="text-ink-700 leading-relaxed text-sm mb-3">
-                                تُعد أداة <strong class="text-brand-600">إزالة خلفية الصور بالذكاء الاصطناعي</strong> من intooly الحل الأمثل للتخلص من خلفيات الصور بدقة احترافية وشفافية كاملة. نستخدم نموذج <strong>U²-Net</strong> المتقدم، وهو نموذج تعلم عميق متخصص في عزل المحتوى عن الخلفية بدقة تفوق 95%، حتى مع التفاصيل الدقيقة مثل الشعر والزجاج والريش.
+                                تُعد أداة <strong class="text-brand-600">إزالة خلفية الصور بالذكاء الاصطناعي</strong> من intooly الحل الأمثل للتخلص من خلفيات الصور بدقة احترافية وشفافية كاملة. نستخدم نماذج تعلم عميق متقدمة (U²-Net و ISNet) متخصصة في عزل المحتوى عن الخلفية، حتى مع التفاصيل الدقيقة مثل الشعر والزجاج والريش.
                             </p>
                             <p class="text-ink-700 leading-relaxed text-sm">
                                 تعمل أداتنا <strong>محلياً 100%</strong> في متصفحك باستخدام <strong>ONNX Runtime Web</strong> وتقنيات <strong>WebAssembly</strong>. هذا يعني أن صورك <strong class="text-brand-600">لا تُرفع أبداً إلى أي سيرفر خارجي</strong>، مما يضمن لك خصوصية تامة وسرعة فائقة في المعالجة.
@@ -562,7 +555,7 @@
                                 <div class="flex items-start gap-2">
                                     <span class="text-brand-500 text-lg flex-shrink-0">🪄</span>
                                     <div>
-                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">دقة احترافية</h4>
+                                        <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">جودة احترافية</h4>
                                         <p class="text-ink-600 text-xs">عزل دقيق حتى للشعر والحواف المعقدة.</p>
                                     </div>
                                 </div>
@@ -577,7 +570,7 @@
                                     <span class="text-brand-500 text-lg flex-shrink-0">🔒</span>
                                     <div>
                                         <h4 class="font-extrabold text-ink-900 text-sm mb-0.5">خصوصية 100%</h4>
-                                        <p class="text-ink-600 text-xs">صورك لا تغادر جهازك أبداً.</p>
+                                        <p class="text-ink-600 text-xs">تتم معالجة صورك داخل متصفحك دون رفعها إلى خادم المعالجة.</p>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-2">
@@ -728,34 +721,12 @@
                     </div>
                     
                     <div class="seo-card mb-8">
-                        <h3>📈 أرقام تتحدث</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="stat-card">
-                                <div class="stat-num">+85K</div>
-                                <div class="stat-label">👥 مستخدم شهرياً</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-num">4.9/5</div>
-                                <div class="stat-label">⭐ تقييم المستخدمين</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-num">+30</div>
-                                <div class="stat-label">🌍 دولة حول العالم</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-num">1.5s</div>
-                                <div class="stat-label">⚡ متوسط المعالجة</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="seo-card mb-8">
                         <h3>💎 لماذا تختار intooly؟</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div class="feature-card">
                                 <div class="feature-icon">🔒</div>
                                 <h4>خصوصية مطلقة</h4>
-                                <p>جميع عمليات المعالجة تتم محلياً. صورك لا تغادر جهازك أبداً.</p>
+                                <p>جميع عمليات المعالجة تتم محلياً. تتم معالجة صورك داخل متصفحك دون رفعها إلى خادم المعالجة.</p>
                             </div>
                             <div class="feature-card">
                                 <div class="feature-icon">⚡</div>
@@ -786,25 +757,25 @@
                     </div>
                     
                     <div class="seo-card mb-8">
-                        <h3>🧠 التقنية المستخدمة: U²-Net</h3>
+                        <h3>🧠 التقنيات المستخدمة</h3>
                         <p class="text-ink-600 text-sm mb-4">
-                            نستخدم نموذج <strong>U²-Net</strong> — واحد من أدق نماذج عزل المحتوى عن الخلفية في العالم:
+                            نستخدم أحدث نماذج عزل المحتوى عن الخلفية:
                         </p>
                         <div class="overflow-x-auto">
                             <table class="quality-table">
                                 <thead>
                                     <tr>
-                                        <th>المواصفة</th>
-                                        <th>التفاصيل</th>
+                                        <th>النموذج</th>
+                                        <th>الاستخدام</th>
+                                        <th>الحجم</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>النموذج</td><td>U²-Net (U-Square Net)</td></tr>
-                                    <tr><td>الدقة</td><td>تفوق 95% في اختبارات العزل</td></tr>
-                                    <tr><td>حجم النموذج</td><td>4.7 ميجابايت (خفيف وسريع)</td></tr>
-                                    <tr><td>دقة المعالجة</td><td>320×320 بكسل</td></tr>
-                                    <tr><td>المعالجة</td><td>ONNX Runtime + WebAssembly</td></tr>
-                                    <tr><td>الخصوصية</td><td>محلي 100% بدون رفع</td></tr>
+                                    <tr><td>U²-Net Portable</td><td>وضع "سريع" و "متوازن" — صور عادية</td><td>4.7 ميجابايت</td></tr>
+                                    <tr><td>ISNet General Use</td><td>وضع "أفضل جودة" — صور معقدة وشعر</td><td>170 ميجابايت</td></tr>
+                                    <tr><td>ONNX Runtime</td><td>محرك التشغيل المحلي</td><td>WebAssembly</td></tr>
+                                    <tr><td>Guided Filter</td><td>تحسين الحواف</td><td>المعالجة النهائية</td></tr>
+                                    <tr><td>Edge Refinement</td><td>تحسين الحواف والتفاصيل الدقيقة</td><td>مستوى "أفضل جودة"</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -835,7 +806,7 @@
                             </div>
                             <div class="flex items-start gap-2 p-3 bg-brand-50 rounded-lg border border-brand-200">
                                 <span class="text-brand-600 font-extrabold flex-shrink-0">✓</span>
-                                <p class="text-ink-700 text-sm"><strong>"أفضل جودة" للصور المهمة:</strong> يفحص الصورة مرتين للحصول على أدق نتيجة.</p>
+                                <p class="text-ink-700 text-sm"><strong>"أفضل جودة" للصور المهمة:</strong> يستخدم نموذج ISNet + معالجة متقدمة.</p>
                             </div>
                         </div>
                     </div>
@@ -854,7 +825,7 @@
                                     <tr><td>معالجة محلية (بدون سيرفر)</td><td><span class="check">✅ نعم</span> - جميع العمليات في متصفحك</td></tr>
                                     <tr><td>مجاني بدون حدود</td><td><span class="check">✅ نعم</span> - بلا قيود على العدد أو الحجم</td></tr>
                                     <tr><td>بدون علامات مائية</td><td><span class="check">✅ نعم</span> - صورك نظيفة دائماً</td></tr>
-                                    <tr><td>دقة العزل</td><td><span class="check">✅ تفوق 95%</span></td></tr>
+                                    <tr><td>جودة عالية للعزل</td><td><span class="check">✅ نعم</span> - عبر نماذج متقدمة</td></tr>
                                     <tr><td>محرر قناع يدوي</td><td><span class="check">✅ نعم</span> - لتصحيح الأخطاء</td></tr>
                                     <tr><td>خلفيات متعددة</td><td><span class="check">✅ نعم</span> - لون، صورة، أو شفاف</td></tr>
                                     <tr><td>قص الهوامش الشفافة</td><td><span class="check">✅ نعم</span> - حجم الموضوع الفعلي</td></tr>
@@ -911,7 +882,7 @@
                                     <span class="faq-icon">+</span>
                                 </button>
                                 <div class="faq-answer">
-                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">بعد أول زيارة، يُخزّن نموذج U²-Net في Cache API. الزيارات التالية تعمل بدون إنترنت تماماً.</p>
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">بعد أول زيارة، يُخزّن نموذج الذكاء الاصطناعي في Cache API. الزيارات التالية تعمل بدون إنترنت تماماً.</p>
                                 </div>
                             </div>
                             <div>
@@ -934,11 +905,11 @@
                             </div>
                             <div>
                                 <button class="faq-toggle" aria-expanded="false">
-                                    <span>هل يفقد الذكاء الاصطناعي أجزاء من الصورة؟</span>
+                                    <span>ما الفرق بين "سريع" و "أفضل جودة"؟</span>
                                     <span class="faq-icon">+</span>
                                 </button>
                                 <div class="faq-answer">
-                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">النموذج مصمم بدقة عالية. نادراً ما يخطئ، وفي حال حدوث خطأ، يمكن استخدام محرر القناع اليدوي لتصحيحه بسهولة.</p>
+                                    <p class="p-4 text-ink-700 bg-white border border-ink-200 border-t-0 rounded-b-2xl text-sm">"سريع" يستخدم نموذج U²-Net الخفيف (سريع، مناسب للصور العادية). "أفضل جودة" يستخدم نموذج ISNet (أدق للشعر والتفاصيل الدقيقة) مع معالجة إضافية للتحسين.</p>
                                 </div>
                             </div>
                         </div>
@@ -950,7 +921,7 @@
                             <a href="image-compressor.html" class="related-tool">
                                 <div class="tool-emoji">🗜️</div>
                                 <div class="tool-name">ضاغط الصور</div>
-                                <div class="tool-desc">قلّل حجم صورك حتى 80%</div>
+                                <div class="tool-desc">قلّل حجم صورك</div>
                             </a>
                             <a href="image-resizer.html" class="related-tool">
                                 <div class="tool-emoji">📏</div>
@@ -1083,9 +1054,11 @@
             <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
     </button>
-
+    
     <script>
-    // ============ Shared Scripts ============
+    // ====================================================
+    // ✅ Shared Scripts (FAQ, Search, Subscribe, ScrollTop)
+    // ====================================================
     (function() {
         'use strict';
         
@@ -1153,12 +1126,12 @@
                     setTimeout(() => input.classList.remove('border-red-500'), 2000);
                     return;
                 }
-                const orig = btn.textContent;
-                btn.disabled = true; btn.textContent = 'جاري الاشتراك...';
-                await new Promise(r => setTimeout(r, 800));
-                btn.textContent = '✅ تم الاشتراك!';
-                subForm.reset();
-                setTimeout(() => { btn.disabled = false; btn.textContent = orig; }, 3000);
+                // لا نعرض نجاحاً وهمياً بدون API حقيقي.
+                btn.disabled = true;
+                btn.textContent = 'سيتم تفعيل الاشتراك قريباً...';
+                await new Promise(r => setTimeout(r, 1200));
+                btn.textContent = 'ℹ️ الاشتراك سيُفعّل قريباً';
+                setTimeout(() => { btn.disabled = false; btn.textContent = 'اشترك الآن 📧'; }, 2500);
             });
         }
 
@@ -1182,28 +1155,77 @@
     })();
 
     // ====================================================
-    // ✅ Background Remover Tool — FULLY FIXED
+    // ✅ Background Remover Tool — v10.0 (Stable + Quality)
     // ====================================================
     (function() {
         'use strict';
 
         // ============================================
-        // ✅ CONFIG — إعدادات مُصلَّحة بروابط صالحة
+        // ✅ CONFIG
         // ============================================
         const CONFIG = {
-            MODEL_URLS: [
-                '/assets/models/u2netp.onnx',
-                'https://huggingface.co/tomjackson2023/rembg/resolve/main/u2netp.onnx',
-                'https://huggingface.co/Xenova/u2netp/resolve/main/onnx/model_quantized.onnx',
-                'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx'
-            ],
-            CACHE_NAME: 'intooly-u2netp-v5-fixed',
+            CACHE_NAME: 'intooly-models-v10',
             MODEL_SIZE: 320,
+            ISNET_SIZE: 1024,
             MAX_IMAGES: 50,
-            CONCURRENT: 2,
-            FETCH_TIMEOUT: 45000
+            MAX_FILE_SIZE: 25 * 1024 * 1024,
+            MAX_PIXELS: 25_000_000,
+            MAX_PROCESS_DIM: 2048,
+            MAX_REFINE_DIM: 1536,
+            FETCH_TIMEOUT: 180000
         };
 
+        const MODEL_FILES = {
+            u2netp: 'u2netp.onnx',
+            isnet: 'isnet-general-use.onnx'
+        };
+
+        // حماية الذاكرة: لا نسمح بمعالجة ملفات ضخمة جداً داخل المتصفح.
+        // يتم تقليص قناع المعالجة فقط، بينما تبقى الصورة الأصلية هي المصدر النهائي.
+        function getProcessingSize(width, height, maxDim) {
+            const scale = Math.min(1, maxDim / Math.max(width, height));
+            return {
+                width: Math.max(1, Math.round(width * scale)),
+                height: Math.max(1, Math.round(height * scale))
+            };
+        }
+
+        function resizeMaskBilinear(mask, srcW, srcH, dstW, dstH) {
+            if (srcW === dstW && srcH === dstH) return mask;
+            const out = new Float32Array(dstW * dstH);
+            for (let y = 0; y < dstH; y++) {
+                const sy = ((y + 0.5) * srcH / dstH) - 0.5;
+                const y0 = Math.max(0, Math.floor(sy));
+                const y1 = Math.min(srcH - 1, y0 + 1);
+                const fy = Math.max(0, sy - y0);
+                for (let x = 0; x < dstW; x++) {
+                    const sx = ((x + 0.5) * srcW / dstW) - 0.5;
+                    const x0 = Math.max(0, Math.floor(sx));
+                    const x1 = Math.min(srcW - 1, x0 + 1);
+                    const fx = Math.max(0, sx - x0);
+                    const a = mask[y0 * srcW + x0];
+                    const b = mask[y0 * srcW + x1];
+                    const c = mask[y1 * srcW + x0];
+                    const d = mask[y1 * srcW + x1];
+                    out[y * dstW + x] =
+                        a * (1 - fx) * (1 - fy) +
+                        b * fx * (1 - fy) +
+                        c * (1 - fx) * fy +
+                        d * fx * fy;
+                }
+            }
+            return out;
+        }
+
+        const PRESETS = {
+            fast:     { modelKey: 'u2netp', refineLevel: 0 },
+            balanced: { modelKey: 'u2netp', refineLevel: 1 },
+            best:     { modelKey: 'isnet',  refineLevel: 2 }
+        };
+
+        // ============================================
+        // ✅ DOM REFERENCES
+        // ============================================
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const chooseBtn = document.getElementById('chooseBtn');
@@ -1246,10 +1268,13 @@
         const outputSizeValue = document.getElementById('outputSizeValue');
         const trimTransparent = document.getElementById('trimTransparent');
 
-        let session = null;
-        let modelLoaded = false;
-        let modelLoading = false;
-        let modelLoadPromise = null;
+        // ============================================
+        // ✅ STATE
+        // ============================================
+        let sessions = { u2netp: null, isnet: null };
+        let modelsLoaded = { u2netp: false, isnet: false };
+        let modelsLoading = { u2netp: false, isnet: false };
+        let modelLoadPromises = { u2netp: null, isnet: null };
 
         let files = [];
         let results = [];
@@ -1260,12 +1285,6 @@
         let currentOutputSize = 1024;
         let currentEditorImageItem = null;
         let editorState = { ctx: null, originalImage: null, maskCanvas: null, maskCtx: null, isDrawing: false, lastX: 0, lastY: 0, tool: 'restore' };
-
-        const PRESETS = {
-            fast: { modelSize: 320, refine: false },
-            balanced: { modelSize: 320, refine: true },
-            best: { modelSize: 320, refine: true, doublePass: true }
-        };
 
         const formatBytes = (bytes) => {
             if (bytes === 0) return '0 B';
@@ -1295,153 +1314,344 @@
         }
 
         // ============================================
-        // ✅ MODEL LOADING — مع Cache + fallbacks + timeout
+        // ✅ MODEL LOADING
         // ============================================
-        async function fetchModelBuffer() {
-            if ('caches' in window) {
+        async function fetchModelBuffer(modelKey) {
+            const fileName = MODEL_FILES[modelKey];
+            if (!fileName) throw new Error('نموذج غير معروف: ' + modelKey);
+
+            // استخدم Cache فقط بعد التأكد من أن الطلب يطابق المسار الحقيقي.
+            const candidates = [
+                new URL('../assets/models/' + fileName, document.baseURI).href,
+                new URL('/assets/models/' + fileName, location.origin).href,
+                new URL('assets/models/' + fileName, document.baseURI).href
+            ].filter((v, i, a) => a.indexOf(v) === i);
+
+            let lastError = null;
+
+            for (const modelUrl of candidates) {
                 try {
-                    const cache = await caches.open(CONFIG.CACHE_NAME);
-                    const cached = await cache.match('u2netp.onnx');
-                    if (cached) {
-                        console.log('[Model] ✅ Loaded from Cache');
-                        return await cached.arrayBuffer();
+                    if ('caches' in window) {
+                        const cache = await caches.open(CONFIG.CACHE_NAME);
+                        const cached = await cache.match(modelUrl);
+                        if (cached) {
+                            const buf = await cached.arrayBuffer();
+                            if (buf.byteLength >= 100000) {
+                                console.log('[Model:' + modelKey + '] ✅ من Cache:', modelUrl);
+                                return buf;
+                            }
+                            await cache.delete(modelUrl).catch(() => {});
+                        }
                     }
-                } catch (_) {}
-            }
+                } catch (e) {
+                    console.warn('[Model] Cache error:', e);
+                }
 
-            let lastErr = null;
-            for (let i = 0; i < CONFIG.MODEL_URLS.length; i++) {
-                const url = CONFIG.MODEL_URLS[i];
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT);
+
                 try {
-                    console.log(`[Model] Trying (${i+1}/${CONFIG.MODEL_URLS.length}):`, url);
-                    setModelStatus('loading', `جاري التحميل من المصدر ${i+1}...`);
-
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT);
-
-                    const res = await fetch(url, {
+                    console.log('[Model:' + modelKey + '] محاولة:', modelUrl);
+                    const res = await fetch(modelUrl, {
                         signal: controller.signal,
-                        mode: 'cors',
-                        credentials: 'omit'
+                        credentials: 'same-origin',
+                        cache: 'no-cache'
                     });
                     clearTimeout(timeout);
 
                     if (!res.ok) throw new Error('HTTP ' + res.status);
-
+                    const type = (res.headers.get('content-type') || '').toLowerCase();
                     const buf = await res.arrayBuffer();
-                    console.log('[Model] ✅ Loaded:', buf.byteLength, 'bytes from', url);
 
-                    if (buf.byteLength < 100000) {
-                        throw new Error('حجم الملف صغير جداً (' + buf.byteLength + ' بايت)');
-                    }
+                    // إذا أعاد الخادم HTML بدلاً من ONNX، لا نحاول تمريره إلى ORT.
+                    const isHtml = type.includes('text/html') || (buf.byteLength < 100000);
+                    if (isHtml) throw new Error('الملف ليس نموذج ONNX صالحاً (' + buf.byteLength + ' bytes, ' + type + ')');
 
                     if ('caches' in window) {
                         try {
                             const cache = await caches.open(CONFIG.CACHE_NAME);
-                            await cache.put('u2netp.onnx', new Response(buf.slice(0)));
+                            await cache.put(modelUrl, new Response(buf.slice(0)));
                         } catch (_) {}
                     }
+
+                    console.log('[Model:' + modelKey + '] ✅ تم التحميل:', modelUrl, buf.byteLength);
                     return buf;
                 } catch (e) {
-                    lastErr = e;
-                    console.warn(`[Model] ❌ Failed URL ${i+1}:`, url, '-', e.message);
+                    clearTimeout(timeout);
+                    lastError = e;
+                    console.warn('[Model:' + modelKey + '] فشل:', modelUrl, e);
                 }
             }
-            throw new Error('جميع المصادر فشلت: ' + (lastErr ? lastErr.message : 'غير معروف'));
+
+            throw new Error('تعذر تحميل ' + fileName + '. جرّب التأكد من وجود النموذج في /assets/models/ ثم أعد تحميل الصفحة. آخر خطأ: ' + (lastError?.message || 'Unknown error'));
         }
 
-        async function loadModel() {
-            if (modelLoaded) return session;
-            if (modelLoadPromise) return modelLoadPromise;
+        async function loadModel(modelKey) {
+            modelKey = modelKey || 'u2netp';
 
-            modelLoadPromise = (async () => {
-                modelLoading = true;
-                setModelStatus('loading', 'جاري تحضير محرك الذكاء الاصطناعي...');
+            if (modelsLoaded[modelKey]) return sessions[modelKey];
+            if (modelLoadPromises[modelKey]) return modelLoadPromises[modelKey];
+
+            modelLoadPromises[modelKey] = (async () => {
+                modelsLoading[modelKey] = true;
+                const modelLabel = modelKey === 'isnet' ? 'ISNet (جودة عالية)' : 'U²-Net Portable (سريع)';
+                setModelStatus('loading', 'جاري تحضير ' + modelLabel + '...');
+
                 try {
-                    // ✅ التحقق من ort
                     if (typeof ort === 'undefined') {
-                        throw new Error('مكتبة ONNX Runtime لم تُحمَّل. تحقق من الرابط في <head>.');
+                        throw new Error('مكتبة ONNX Runtime لم تُحمَّل.');
                     }
                     if (typeof WebAssembly === 'undefined') {
                         throw new Error('متصفحك لا يدعم WebAssembly.');
                     }
 
-                    // ✅ إعدادات ONNX Runtime — كان ناقصاً "/" في النهاية
                     ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/';
                     ort.env.wasm.numThreads = 1;
                     ort.env.wasm.simd = true;
                     ort.env.wasm.proxy = false;
 
-                    const buf = await fetchModelBuffer();
-                    setModelStatus('loading', 'جاري تهيئة النموذج...');
+                    const buf = await fetchModelBuffer(modelKey);
+                    setModelStatus('loading', 'جاري تهيئة ' + modelLabel + '...');
 
-                    session = await ort.InferenceSession.create(new Uint8Array(buf), {
+                    sessions[modelKey] = await ort.InferenceSession.create(new Uint8Array(buf), {
                         executionProviders: ['wasm'],
                         graphOptimizationLevel: 'all'
                     });
 
-                    modelLoaded = true;
-                    modelLoading = false;
-                    setModelStatus('ready', 'النموذج جاهز — U²-Net محلي');
-                    console.log('[Model] ✅ Session created successfully');
-                    return session;
+                    console.log('[Model:' + modelKey + '] inputNames:', sessions[modelKey].inputNames);
+                    console.log('[Model:' + modelKey + '] outputNames:', sessions[modelKey].outputNames);
+
+                    modelsLoaded[modelKey] = true;
+                    modelsLoading[modelKey] = false;
+                    setModelStatus('ready', 'النموذج جاهز — ' + modelLabel);
+                    console.log('[Model:' + modelKey + '] ✅ Session created');
+                    return sessions[modelKey];
                 } catch (e) {
-                    modelLoading = false;
-                    modelLoadPromise = null;
-                    console.error('[Model] Load error:', e);
-                    const errMsg = 'تعذّر تحميل النموذج من جميع المصادر.';
-                    const detail = 'تأكد من اتصالك بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/. الخطأ: ' + e.message;
-                    setModelStatus('error', errMsg, detail);
+                    modelsLoading[modelKey] = false;
+                    modelLoadPromises[modelKey] = null;
+                    console.error('[Model:' + modelKey + '] Load error:', e);
+                    setModelStatus('error', 'تعذّر تحميل النموذج (' + modelLabel + ').', 'تأكد من وجود الملف في assets/models/. الخطأ: ' + e.message);
                     throw e;
                 }
             })();
-            return modelLoadPromise;
+
+            return modelLoadPromises[modelKey];
         }
 
-        window.addEventListener('load', () => { setTimeout(() => { loadModel().catch(() => {}); }, 300); });
+        // لا نحمل النموذج عند فتح الصفحة حتى لا نستهلك بيانات وذاكرة قبل طلب المستخدم.
+        // يتم تحميل النموذج عند الضغط على "إزالة الخلفية" فقط.
+
+        // ============================================
+        // ✅ IMAGE PROCESSING HELPERS
+        // ============================================
+
+        // S-Curve — تنعيم القناع
+        function applySCurve(mask, low, high) {
+            low = low !== undefined ? low : 0.05;
+            high = high !== undefined ? high : 0.95;
+            const result = new Float32Array(mask.length);
+            for (let i = 0; i < mask.length; i++) {
+                let a = mask[i];
+                if (a <= low) a = 0;
+                else if (a >= high) a = 1;
+                else {
+                    a = (a - low) / (high - low);
+                    a = a * a * (3 - 2 * a);
+                }
+                result[i] = a;
+            }
+            return result;
+        }
+
+        // Morphological Erode (تنظيف الضوضاء)
+        function erode3x3(mask, W, H, iterations) {
+            iterations = iterations || 1;
+            let current = mask;
+            for (let iter = 0; iter < iterations; iter++) {
+                const result = new Float32Array(current.length);
+                for (let y = 1; y < H - 1; y++) {
+                    for (let x = 1; x < W - 1; x++) {
+                        const i = y * W + x;
+                        let minVal = 1;
+                        for (let dy = -1; dy <= 1; dy++) {
+                            for (let dx = -1; dx <= 1; dx++) {
+                                const v = current[(y + dy) * W + (x + dx)];
+                                if (v < minVal) minVal = v;
+                            }
+                        }
+                        result[i] = minVal;
+                    }
+                }
+                current = result;
+            }
+            return current;
+        }
+
+        // Morphological Dilate
+        function dilate3x3(mask, W, H, iterations) {
+            iterations = iterations || 1;
+            let current = mask;
+            for (let iter = 0; iter < iterations; iter++) {
+                const result = new Float32Array(current.length);
+                for (let y = 1; y < H - 1; y++) {
+                    for (let x = 1; x < W - 1; x++) {
+                        const i = y * W + x;
+                        let maxVal = 0;
+                        for (let dy = -1; dy <= 1; dy++) {
+                            for (let dx = -1; dx <= 1; dx++) {
+                                const v = current[(y + dy) * W + (x + dx)];
+                                if (v > maxVal) maxVal = v;
+                            }
+                        }
+                        result[i] = maxVal;
+                    }
+                }
+                current = result;
+            }
+            return current;
+        }
+
+        // Hard Threshold — قطع القيم المنخفضة
+        function hardThreshold(mask, threshold) {
+            const result = new Float32Array(mask.length);
+            for (let i = 0; i < mask.length; i++) {
+                result[i] = mask[i] < threshold ? 0 : mask[i];
+            }
+            return result;
+        }
+
+        // Box Filter (لـ Guided Filter)
+        function boxFilter(src, W, H, r) {
+            const n = W * H;
+            const dst = new Float32Array(n);
+            const integral = new Float32Array((W + 1) * (H + 1));
+
+            for (let y = 0; y < H; y++) {
+                let rowSum = 0;
+                const rowOff = y * W;
+                const iOff = (y + 1) * (W + 1);
+                const iOffPrev = y * (W + 1);
+                for (let x = 0; x < W; x++) {
+                    rowSum += src[rowOff + x];
+                    integral[iOff + (x + 1)] = integral[iOffPrev + (x + 1)] + rowSum;
+                }
+            }
+
+            for (let y = 0; y < H; y++) {
+                const y0 = Math.max(0, y - r);
+                const y1 = Math.min(H, y + r + 1);
+                const rowOff = y * W;
+                for (let x = 0; x < W; x++) {
+                    const x0 = Math.max(0, x - r);
+                    const x1 = Math.min(W, x + r + 1);
+                    const area = (x1 - x0) * (y1 - y0);
+                    dst[rowOff + x] = (
+                        integral[y1 * (W + 1) + x1] -
+                        integral[y0 * (W + 1) + x1] -
+                        integral[y1 * (W + 1) + x0] +
+                        integral[y0 * (W + 1) + x0]
+                    ) / area;
+                }
+            }
+            return dst;
+        }
+
+        // Guided Filter — تحسين الحواف باستخدام الصورة الأصلية كدليل
+        function guidedFilter(p, guide, W, H, radius, eps) {
+            const n = W * H;
+            const meanI = boxFilter(guide, W, H, radius);
+            const meanP = boxFilter(p, W, H, radius);
+
+            const IP = new Float32Array(n);
+            const II = new Float32Array(n);
+            for (let i = 0; i < n; i++) {
+                IP[i] = guide[i] * p[i];
+                II[i] = guide[i] * guide[i];
+            }
+            const meanIP = boxFilter(IP, W, H, radius);
+            const meanII = boxFilter(II, W, H, radius);
+
+            const a = new Float32Array(n);
+            const b = new Float32Array(n);
+            for (let i = 0; i < n; i++) {
+                const varI = meanII[i] - meanI[i] * meanI[i];
+                const covIP = meanIP[i] - meanI[i] * meanP[i];
+                a[i] = covIP / (varI + eps);
+                b[i] = meanP[i] - a[i] * meanI[i];
+            }
+
+            const meanA = boxFilter(a, W, H, radius);
+            const meanB = boxFilter(b, W, H, radius);
+
+            const result = new Float32Array(n);
+            for (let i = 0; i < n; i++) {
+                let v = meanA[i] * guide[i] + meanB[i];
+                result[i] = v < 0 ? 0 : v > 1 ? 1 : v;
+            }
+            return result;
+        }
+
+        // استخراج grayscale من الصورة (لـ Guided Filter)
+        function getImageGrayscale(imgEl, W, H) {
+            const canvas = document.createElement('canvas');
+            canvas.width = W; canvas.height = H;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(imgEl, 0, 0, W, H);
+            const data = ctx.getImageData(0, 0, W, H).data;
+            const gray = new Float32Array(W * H);
+            for (let i = 0; i < W * H; i++) {
+                gray[i] = (data[i * 4] * 0.299 + data[i * 4 + 1] * 0.587 + data[i * 4 + 2] * 0.114) / 255;
+            }
+            return gray;
+        }
 
         // ============================================
         // ✅ INFERENCE
         // ============================================
-        async function runInference(img, modelSize, useDoublePass) {
-            if (!session) await loadModel();
-            if (!img) throw new Error('الصورة غير محمّلة بعد');
-            const SIZE = modelSize || CONFIG.MODEL_SIZE;
-            const W = img.naturalWidth, H = img.naturalHeight;
-
-            const mask1 = await singleInferencePass(img, SIZE, W, H);
-
-            if (useDoublePass) {
-                const mask2 = await singleInferencePass(img, Math.min(1024, SIZE + 320), W, H);
-                // ✅ المتوسط المرجّح (بدل Math.max الذي يوسّع القناع)
-                for (let i = 0; i < mask1.length; i++) {
-                    mask1[i] = mask1[i] * 0.6 + mask2[i] * 0.4;
-                }
-            }
-            return { mask: mask1, width: W, height: H };
-        }
-
-        async function singleInferencePass(img, SIZE, W, H) {
+        async function singleInferencePass(img, SIZE, outW, outH, session) {
             const canvas = document.createElement('canvas');
-            canvas.width = SIZE; canvas.height = SIZE;
-            const ctx = canvas.getContext('2d');
+            canvas.width = SIZE;
+            canvas.height = SIZE;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, 0, 0, SIZE, SIZE);
+
+            // مهم للجودة: لا نشوّه نسبة أبعاد الصورة أثناء إدخالها للنموذج.
+            const scale = Math.min(SIZE / img.naturalWidth, SIZE / img.naturalHeight);
+            const drawW = Math.max(1, Math.round(img.naturalWidth * scale));
+            const drawH = Math.max(1, Math.round(img.naturalHeight * scale));
+            const dx = Math.floor((SIZE - drawW) / 2);
+            const dy = Math.floor((SIZE - drawH) / 2);
+
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, SIZE, SIZE);
+            ctx.drawImage(img, dx, dy, drawW, drawH);
 
             const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
             const pix = imageData.data;
             const mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225];
             const area = SIZE * SIZE;
             const input = new Float32Array(3 * area);
+
             for (let i = 0; i < area; i++) {
                 input[i] = (pix[i * 4] / 255 - mean[0]) / std[0];
                 input[i + area] = (pix[i * 4 + 1] / 255 - mean[1]) / std[1];
                 input[i + area * 2] = (pix[i * 4 + 2] / 255 - mean[2]) / std[2];
             }
 
+            const inputName = session.inputNames[0];
+            const inputMeta = session.inputMetadata?.[inputName];
+            const expectedShape = inputMeta?.dimensions || inputMeta?.shape || null;
+            if (expectedShape && expectedShape.length === 4) {
+                const eh = Number(expectedShape[2]);
+                const ew = Number(expectedShape[3]);
+                if (Number.isFinite(eh) && Number.isFinite(ew) && eh > 0 && ew > 0 && (eh !== SIZE || ew !== SIZE)) {
+                    throw new Error('حجم إدخال النموذج غير متوافق: النموذج يتطلب ' + ew + '×' + eh + ' بينما الأداة جهزت ' + SIZE + '×' + SIZE);
+                }
+            }
+
             const tensor = new ort.Tensor('float32', input, [1, 3, SIZE, SIZE]);
-            const out = await session.run({ [session.inputNames[0]]: tensor });
+            const out = await session.run({ [inputName]: tensor });
             const data = out[session.outputNames[0]].data;
 
             let min = Infinity, max = -Infinity;
@@ -1449,30 +1659,93 @@
                 if (data[i] < min) min = data[i];
                 if (data[i] > max) max = data[i];
             }
-            const range = max - min || 1;
 
-            const mask = new Float32Array(W * H);
-            for (let y = 0; y < H; y++) {
-                for (let x = 0; x < W; x++) {
-                    const sx = (x / W) * SIZE, sy = (y / H) * SIZE;
-                    const x0 = Math.floor(sx), y0 = Math.floor(sy);
-                    const x1 = Math.min(x0 + 1, SIZE - 1), y1 = Math.min(y0 + 1, SIZE - 1);
-                    const fx = sx - x0, fy = sy - y0;
-                    const v = (data[y0 * SIZE + x0] * (1 - fx) + data[y0 * SIZE + x1] * fx) * (1 - fy) +
-                              (data[y1 * SIZE + x0] * (1 - fx) + data[y1 * SIZE + x1] * fx) * fy;
-                    mask[y * W + x] = (v - min) / range;
+            // معظم نماذج U²-Net/ISNet تعيد احتمالات بين 0 و1.
+            // لا نستخدم Min-Max في هذه الحالة لأنه قد يضخم الضوضاء.
+            const raw = new Float32Array(SIZE * SIZE);
+            if (min >= 0 && max <= 1.0001) {
+                raw.set(data.subarray(0, raw.length));
+            } else {
+                const range = max - min || 1;
+                for (let i = 0; i < raw.length; i++) raw[i] = (data[i] - min) / range;
+            }
+
+            // قص منطقة الصورة الفعلية من الـletterbox ثم تكبيرها إلى حجم المعالجة.
+            const sourceMask = new Float32Array(drawW * drawH);
+            for (let y = 0; y < drawH; y++) {
+                const sy = dy + y;
+                const fy = (sy / SIZE) * SIZE;
+                const yy = Math.min(SIZE - 1, Math.max(0, Math.round(fy)));
+                for (let x = 0; x < drawW; x++) {
+                    const sx = dx + x;
+                    const xx = Math.min(SIZE - 1, Math.max(0, Math.round((sx / SIZE) * SIZE)));
+                    sourceMask[y * drawW + x] = raw[yy * SIZE + xx];
                 }
             }
 
-            // ✅ S-Curve أنعم — يحتفظ بحواف الشعر
-            const refined = new Float32Array(mask.length);
-            for (let i = 0; i < mask.length; i++) {
-                let a = mask[i];
-                a = Math.max(0, Math.min(1, (a - 0.1) / 0.7));
-                a = a * a * (3 - 2 * a);
-                refined[i] = a;
+            return resizeMaskBilinear(sourceMask, drawW, drawH, outW, outH);
+        }
+
+        async function runInference(img, presetConfig) {
+            if (!img) throw new Error('الصورة غير محمّلة بعد');
+
+            const modelKey = presetConfig.modelKey || 'u2netp';
+            const refineLevel = presetConfig.refineLevel || 0;
+            let session;
+            try {
+                session = await loadModel(modelKey);
+            } catch (modelError) {
+                if (modelKey === 'isnet') {
+                    console.warn('[Inference] ISNet failed, falling back to U²-Net:', modelError);
+                    session = await loadModel('u2netp');
+                    modelKey = 'u2netp';
+                } else {
+                    throw modelError;
+                }
             }
-            return refined;
+
+            const originalW = img.naturalWidth;
+            const originalH = img.naturalHeight;
+
+            // نحافظ على نسبة الأبعاد ونحد من استهلاك الذاكرة في الصور العملاقة.
+            const maxDim = Math.min(
+                CONFIG.MAX_PROCESS_DIM,
+                refineLevel >= 2 ? CONFIG.MAX_REFINE_DIM : CONFIG.MAX_PROCESS_DIM
+            );
+            const proc = getProcessingSize(originalW, originalH, maxDim);
+            const W = proc.width;
+            const H = proc.height;
+            const SIZE = modelKey === 'isnet' ? CONFIG.ISNET_SIZE : CONFIG.MODEL_SIZE;
+
+            console.log('[Inference] Model:', modelKey, 'Input:', SIZE, 'Mask:', W + '×' + H, 'Original:', originalW + '×' + originalH);
+
+            let mask = await singleInferencePass(img, SIZE, W, H, session);
+
+            // تنظيف خفيف فقط؛ لا نطبق erosion/dilation بشكل مبالغ فيه حتى لا نقص الشعر.
+            if (refineLevel >= 1) {
+                mask = applySCurve(mask, 0.035, 0.965);
+            }
+
+            if (refineLevel >= 2) {
+                // Guided Filter على دقة محدودة لتفادي استهلاك مئات MB من الذاكرة.
+                const refine = getProcessingSize(W, H, CONFIG.MAX_REFINE_DIM);
+                let refineMask = resizeMaskBilinear(mask, W, H, refine.width, refine.height);
+                const guideGray = getImageGrayscale(img, refine.width, refine.height);
+                refineMask = guidedFilter(refineMask, guideGray, refine.width, refine.height, 3, 0.00005);
+                mask = resizeMaskBilinear(refineMask, refine.width, refine.height, W, H);
+
+                // تنظيف ضوضاء صغير فقط.
+                mask = hardThreshold(mask, 0.035);
+                mask = applySCurve(mask, 0.05, 0.95);
+            }
+
+            return {
+                mask: mask,
+                width: W,
+                height: H,
+                originalWidth: originalW,
+                originalHeight: originalH
+            };
         }
 
         // ============================================
@@ -1480,7 +1753,12 @@
         // ============================================
         function renderProcessed(imageItem, bg, options) {
             options = options || {};
-            const { mask, width, height } = imageItem.maskData;
+            const maskData = imageItem.maskData;
+            const mask = maskData.mask;
+            const width = maskData.width;
+            const height = maskData.height;
+            const sourceWidth = maskData.originalWidth || imageItem.imageEl.naturalWidth;
+            const sourceHeight = maskData.originalHeight || imageItem.imageEl.naturalHeight;
             const trim = options.trim !== undefined ? options.trim : true;
             const targetSize = options.size || 1024;
             const bgImage = options.bgImage || null;
@@ -1489,8 +1767,10 @@
             const productCanvas = document.createElement('canvas');
             productCanvas.width = width;
             productCanvas.height = height;
-            const pctx = productCanvas.getContext('2d');
-            pctx.drawImage(imageItem.imageEl, 0, 0, width, height);
+            const pctx = productCanvas.getContext('2d', { willReadFrequently: true });
+            pctx.imageSmoothingEnabled = true;
+            pctx.imageSmoothingQuality = 'high';
+            pctx.drawImage(imageItem.imageEl, 0, 0, sourceWidth, sourceHeight, 0, 0, width, height);
             const productData = pctx.getImageData(0, 0, width, height);
             const pd = productData.data;
             for (let i = 0; i < mask.length; i++) {
@@ -1498,7 +1778,7 @@
             }
             pctx.putImageData(productData, 0, 0);
 
-            // 2. حساب bounding box (threshold منخفض للحفاظ على التفاصيل)
+            // 2. حساب bounding box
             let minX = width, minY = height, maxX = -1, maxY = -1;
             if (trim) {
                 for (let y = 0; y < height; y++) {
@@ -1514,7 +1794,6 @@
             }
             if (maxX < 0) { minX = 0; minY = 0; maxX = width - 1; maxY = height - 1; }
 
-            // padding ثابت
             const pad = 2;
             minX = Math.max(0, minX - pad);
             minY = Math.max(0, minY - pad);
@@ -1529,7 +1808,6 @@
             let drawW, drawH, dx, dy;
 
             if (!trim) {
-                // مربع كامل مع الحفاظ على النسبة
                 finalCanvas.width = targetSize;
                 finalCanvas.height = targetSize;
                 const scale = Math.min(targetSize / width, targetSize / height);
@@ -1538,7 +1816,6 @@
                 dx = (targetSize - drawW) / 2;
                 dy = (targetSize - drawH) / 2;
             } else {
-                // حسب النسبة الفعلية (الضلع الأكبر = targetSize)
                 const scale = targetSize / Math.max(trimW, trimH);
                 finalCanvas.width = Math.max(1, Math.round(trimW * scale));
                 finalCanvas.height = Math.max(1, Math.round(trimH * scale));
@@ -1596,7 +1873,15 @@
             const remaining = CONFIG.MAX_IMAGES - files.length;
             if (remaining <= 0) { alert('وصلت للحد الأقصى ' + CONFIG.MAX_IMAGES); return; }
 
-            const validFiles = Array.from(fileList).filter(f => acceptedTypes.includes(f.type)).slice(0, remaining);
+            const validFiles = Array.from(fileList)
+                .filter(f => acceptedTypes.includes(f.type))
+                .filter(f => f.size <= CONFIG.MAX_FILE_SIZE)
+                .slice(0, remaining);
+
+            const rejectedBySize = Array.from(fileList).filter(f => acceptedTypes.includes(f.type) && f.size > CONFIG.MAX_FILE_SIZE);
+            if (rejectedBySize.length) {
+                alert('تم تجاهل ' + rejectedBySize.length + ' صورة لأنها تتجاوز 25MB.');
+            }
 
             validFiles.forEach(file => {
                 const id = uid();
@@ -1607,6 +1892,18 @@
                 img.onload = () => {
                     item.width = img.naturalWidth;
                     item.height = img.naturalHeight;
+
+                    if ((item.width * item.height) > CONFIG.MAX_PIXELS) {
+                        URL.revokeObjectURL(url);
+                        const idx = files.findIndex(x => x.id === id);
+                        if (idx >= 0) files.splice(idx, 1);
+                        if (activeFileId === id) activeFileId = files[0]?.id || null;
+                        renderThumbnails();
+                        showActiveFile();
+                        alert('الصورة "' + item.name + '" كبيرة جداً. الحد الأقصى هو 25 ميجابكسل لتجنب استهلاك ذاكرة المتصفح.');
+                        return;
+                    }
+
                     item.imageEl = img;
                     if (activeFileId === id) updateSelectedFileInfo(item);
                 };
@@ -1630,7 +1927,7 @@
             files.forEach(f => {
                 const item = document.createElement('div');
                 item.className = 'thumbnail-item' + (f.id === activeFileId ? ' active' : '');
-                item.innerHTML = `<img src="${f.originalUrl}" alt="${f.name}"><button class="thumb-remove" data-remove-id="${f.id}" aria-label="حذف">✕</button>`;
+                item.innerHTML = '<img src="' + f.originalUrl + '" alt="' + f.name + '"><button class="thumb-remove" data-remove-id="' + f.id + '" aria-label="حذف">✕</button>';
                 item.addEventListener('click', (e) => {
                     if (e.target.classList.contains('thumb-remove')) return;
                     activeFileId = f.id;
@@ -1665,7 +1962,7 @@
             }
             const displayUrl = f.processedUrl || f.originalUrl;
             mainPreview.classList.toggle('checker-bg', !!f.processedUrl);
-            mainPreview.innerHTML = `<img src="${displayUrl}" alt="${f.name}">`;
+            mainPreview.innerHTML = '<img src="' + displayUrl + '" alt="' + f.name + '">';
             updateSelectedFileInfo(f);
         }
 
@@ -1673,7 +1970,7 @@
             selectedFileInfo.classList.remove('hidden');
             selectedFileName.textContent = f.name;
             selectedFileSize.textContent = formatBytes(f.originalSize);
-            selectedFileDims.textContent = f.width > 0 ? `${f.width} × ${f.height}` : '...';
+            selectedFileDims.textContent = f.width > 0 ? f.width + ' × ' + f.height : '...';
         }
 
         clearBtn.addEventListener('click', () => {
@@ -1702,7 +1999,7 @@
         }
 
         // ============================================
-        // ✅ PRESETS
+        // ✅ PRESETS (UI)
         // ============================================
         presetBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1717,7 +2014,6 @@
         // ============================================
         bgOptions.forEach(opt => {
             opt.addEventListener('click', (e) => {
-                // تجاهل الـ labels التي تحتوي على input color/file
                 if (opt.tagName === 'LABEL' && (opt.querySelector('input[type="color"]') || opt.querySelector('input[type="file"]'))) {
                     return;
                 }
@@ -1773,7 +2069,6 @@
         async function processAll() {
             if (files.length === 0) return;
 
-            // ✅ FIX #7: انتظار تحميل كل الصور
             for (const item of files) {
                 if (!item.imageEl) {
                     await new Promise(r => {
@@ -1792,28 +2087,31 @@
             downloadZipBtnSide.disabled = true;
             results = [];
 
+            const preset = PRESETS[currentPreset];
+
+            // تحميل النموذج المطلوب أولاً
             try {
-                await loadModel();
+                await loadModel(preset.modelKey);
             } catch (e) {
-                alert('فشل تحميل النموذج.\n' + (e.message || '') + '\n\nتحقق من الاتصال بالإنترنت، أو ارفع ملف u2netp.onnx في assets/models/');
+                alert('فشل تحميل النموذج.\n' + (e.message || ''));
                 progressSection.classList.add('hidden');
                 workspaceSection.classList.remove('hidden');
                 return;
             }
 
-            const preset = PRESETS[currentPreset];
+            const failed = [];
 
             for (let i = 0; i < files.length; i++) {
                 const item = files[i];
-                progressText.textContent = `جاري المعالجة: ${item.name}`;
-                progressDetail.textContent = `${i + 1} من ${files.length}`;
+                progressText.textContent = 'جاري المعالجة: ' + item.name;
+                progressDetail.textContent = (i + 1) + ' من ' + files.length;
                 const pct = Math.round((i / files.length) * 100);
                 progressBar.style.width = pct + '%';
                 progressPercent.textContent = pct + '%';
 
                 try {
                     if (!item.imageEl) throw new Error('الصورة غير محمّلة');
-                    const maskData = await runInference(item.imageEl, preset.modelSize, preset.doublePass);
+                    const maskData = await runInference(item.imageEl, preset);
                     item.maskData = maskData;
                     const processedUrl = renderProcessed(item, currentBg, {
                         trim: trimTransparent.checked,
@@ -1829,21 +2127,27 @@
                         url: processedUrl,
                         originalUrl: item.originalUrl,
                         width: maskData.width,
-                        height: maskData.height
+                        height: maskData.height,
+                        originalWidth: maskData.originalWidth || maskData.width,
+                        originalHeight: maskData.originalHeight || maskData.height
                     });
                 } catch (e) {
                     console.error('Error processing', item.name, e);
+                    failed.push(item.name);
                 }
                 await new Promise(r => setTimeout(r, 20));
             }
 
             progressBar.style.width = '100%';
             progressPercent.textContent = '100%';
-            progressDetail.textContent = 'اكتمل بنجاح!';
+            progressDetail.textContent = results.length + ' نجحت' + (failed.length ? ' — ' + failed.length + ' فشلت' : '');
             setTimeout(() => {
                 progressSection.classList.add('hidden');
                 resultsSection.classList.remove('hidden');
                 renderResults();
+                if (failed.length) {
+                    alert('تمت معالجة ' + results.length + ' صورة بنجاح، وتعذر معالجة: ' + failed.join('، '));
+                }
             }, 400);
         }
 
@@ -1857,7 +2161,7 @@
             for (let i = 0; i < doneFiles.length; i++) {
                 const item = doneFiles[i];
                 progressText.textContent = 'جاري إعادة المعالجة...';
-                progressDetail.textContent = `${i + 1} من ${doneFiles.length}`;
+                progressDetail.textContent = (i + 1) + ' من ' + doneFiles.length;
                 const pct = Math.round((i / doneFiles.length) * 100);
                 progressBar.style.width = pct + '%';
                 progressPercent.textContent = pct + '%';
@@ -1867,12 +2171,13 @@
                     size: currentOutputSize,
                     bgImage: currentBgImage
                 });
-                if (item.processedUrl) URL.revokeObjectURL(item.processedUrl);
                 item.processedUrl = url;
                 results.push({
                     id: item.id, name: item.name.replace(/\.[^.]+$/, '') + '-nobg.png',
-                    originalName: item.name, url, originalUrl: item.originalUrl,
-                    width: item.maskData.width, height: item.maskData.height
+                    originalName: item.name, url: url, originalUrl: item.originalUrl,
+                    width: item.maskData.width, height: item.maskData.height,
+                    originalWidth: item.maskData.originalWidth || item.maskData.width,
+                    originalHeight: item.maskData.originalHeight || item.maskData.height
                 });
                 await new Promise(r => setTimeout(r, 20));
             }
@@ -1891,65 +2196,36 @@
             results.forEach((r, idx) => {
                 const card = document.createElement('div');
                 card.className = 'result-card';
-                card.innerHTML = `
-                    <div class="result-card-header">
-                        <div class="file-icon">🪄</div>
-                        <p class="file-name" title="${r.originalName}">${r.originalName}</p>
-                        <span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ تم</span>
-                    </div>
-                    <div class="result-layout">
-                        <div class="result-image-col">
-                            <div class="comparison-container checker-bg" data-comparison="${idx}">
-                                <img class="comparison-after" src="${r.url}" alt="بعد">
-                                <img class="comparison-before" src="${r.originalUrl}" alt="قبل">
-                                <span class="comparison-label label-before">قبل</span>
-                                <span class="comparison-label label-after">بعد</span>
-                                <div class="comparison-handle" style="left: 50%;"></div>
-                            </div>
-                            <div class="drag-hint">💡 اسحب الشريط الذهبي للمقارنة</div>
-                        </div>
-                        <div class="result-info-col">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div class="info-stat">
-                                    <div class="info-icon">📐</div>
-                                    <div class="info-content">
-                                        <div class="info-label">الأبعاد الأصلية</div>
-                                        <div class="info-value">${r.width} × ${r.height}</div>
-                                    </div>
-                                </div>
-                                <div class="info-stat savings">
-                                    <div class="info-icon">✅</div>
-                                    <div class="info-content">
-                                        <div class="info-label">الحالة</div>
-                                        <div class="info-value">خلفية مُزالة</div>
-                                    </div>
-                                </div>
-                                <div class="info-stat">
-                                    <div class="info-icon">🎨</div>
-                                    <div class="info-content">
-                                        <div class="info-label">الخلفية</div>
-                                        <div class="info-value">${currentBg === 'transparent' ? 'شفاف' : (currentBg === 'image' ? 'صورة مخصصة' : currentBg)}</div>
-                                    </div>
-                                </div>
-                                <div class="info-stat">
-                                    <div class="info-icon">📦</div>
-                                    <div class="info-content">
-                                        <div class="info-label">الصيغة</div>
-                                        <div class="info-value">PNG</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-3">
-                                <button class="btn-secondary justify-center" data-edit="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-                                    ✏️ تعديل
-                                </button>
-                                <button class="btn-download" data-download="${idx}" style="font-size: 0.8125rem; padding: 0.625rem;">
-                                    ⬇️ تحميل
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                card.innerHTML = 
+                    '<div class="result-card-header">' +
+                        '<div class="file-icon">🪄</div>' +
+                        '<p class="file-name" title="' + r.originalName + '">' + r.originalName + '</p>' +
+                        '<span class="badge" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; padding: 4px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 800;">✓ تم</span>' +
+                    '</div>' +
+                    '<div class="result-layout">' +
+                        '<div class="result-image-col">' +
+                            '<div class="comparison-container checker-bg" data-comparison="' + idx + '">' +
+                                '<img class="comparison-after" src="' + r.url + '" alt="بعد">' +
+                                '<img class="comparison-before" src="' + r.originalUrl + '" alt="قبل">' +
+                                '<span class="comparison-label label-before">قبل</span>' +
+                                '<span class="comparison-label label-after">بعد</span>' +
+                                '<div class="comparison-handle" style="left: 50%;"></div>' +
+                            '</div>' +
+                            '<div class="drag-hint">💡 اسحب الشريط الذهبي للمقارنة</div>' +
+                        '</div>' +
+                        '<div class="result-info-col">' +
+                            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+                                '<div class="info-stat"><div class="info-icon">📐</div><div class="info-content"><div class="info-label">الأبعاد الأصلية</div><div class="info-value">' + (r.originalWidth || r.width) + ' × ' + (r.originalHeight || r.height) + '</div></div></div>' +
+                                '<div class="info-stat"><div class="info-icon">✅</div><div class="info-content"><div class="info-label">الحالة</div><div class="info-value">خلفية مُزالة</div></div></div>' +
+                                '<div class="info-stat"><div class="info-icon">🎨</div><div class="info-content"><div class="info-label">الخلفية</div><div class="info-value">' + (currentBg === 'transparent' ? 'شفاف' : (currentBg === 'image' ? 'صورة مخصصة' : currentBg)) + '</div></div></div>' +
+                                '<div class="info-stat"><div class="info-icon">📦</div><div class="info-content"><div class="info-label">الصيغة</div><div class="info-value">PNG</div></div></div>' +
+                            '</div>' +
+                            '<div class="grid grid-cols-2 gap-2 mt-3">' +
+                                '<button class="btn-secondary justify-center" data-edit="' + idx + '" style="font-size: 0.8125rem; padding: 0.625rem;">✏️ تعديل</button>' +
+                                '<button class="btn-download" data-download="' + idx + '" style="font-size: 0.8125rem; padding: 0.625rem;">⬇️ تحميل</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
                 resultsGrid.appendChild(card);
             });
 
@@ -1975,7 +2251,7 @@
 
             resultsGrid.querySelectorAll('[data-comparison]').forEach(c => setupComparisonSlider(c));
 
-            if (results.length > 1) {
+            if (results.length > 0) {
                 downloadZipBtn.disabled = false;
                 downloadZipBtnSide.disabled = false;
             }
@@ -1988,7 +2264,7 @@
             function setPos(percent) {
                 percent = Math.max(0, Math.min(100, percent));
                 handle.style.left = percent + '%';
-                before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+                before.style.clipPath = 'inset(0 ' + (100 - percent) + '% 0 0)';
             }
             function getPercent(e) {
                 const rect = container.getBoundingClientRect();
@@ -2025,7 +2301,7 @@
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `intooly-nobg-${Date.now()}.zip`;
+                link.download = 'intooly-nobg-' + Date.now() + '.zip';
                 link.click();
                 URL.revokeObjectURL(url);
                 btn.textContent = '✅ تم التحميل!';
@@ -2149,7 +2425,6 @@
                 size: currentOutputSize,
                 bgImage: currentBgImage
             });
-            if (currentEditorImageItem.processedUrl) URL.revokeObjectURL(currentEditorImageItem.processedUrl);
             currentEditorImageItem.processedUrl = url;
 
             const r = results.find(x => x.id === currentEditorImageItem.id);
