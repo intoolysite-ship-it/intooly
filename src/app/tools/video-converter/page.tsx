@@ -48,11 +48,8 @@ const QUALITY_PRESETS: { id: QualityPreset; name: string; desc: string; crf: num
   { id: 'low', name: 'منخفضة', desc: 'حجم أصغر', crf: 28, icon: '🗜️' },
 ];
 
-const FFMPEG_CDNS = [
-  'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd',
-  'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd',
-  'https://cdn.skypack.dev/@ffmpeg/core@0.12.6/dist/umd',
-];
+// ✅ استخدام الملفات المحلية (أسرع وأكثر موثوقية)
+const LOCAL_FFMPEG_BASE = '/assets/ffmpeg';
 
 // ============================================================
 // ✅ المكوّن الرئيسي
@@ -92,7 +89,7 @@ export default function VideoConverterPage() {
   }, []);
 
   // ============================================================
-  // ✅ تحميل FFmpeg
+  // ✅ تحميل FFmpeg — من الملفات المحلية
   // ============================================================
   const loadFFmpeg = useCallback(async (signal?: AbortSignal) => {
     if (ffmpegRef.current) return ffmpegRef.current;
@@ -102,48 +99,47 @@ export default function VideoConverterPage() {
 
     try {
       const { FFmpeg } = await import('@ffmpeg/ffmpeg');
-      const { toBlobURL } = await import('@ffmpeg/util');
 
       let lastError: Error | null = null;
 
-      for (const baseUrl of FFMPEG_CDNS) {
-        try {
-          if (signal?.aborted) throw new Error('تم الإلغاء');
+      try {
+        if (signal?.aborted) throw new Error('تم الإلغاء');
 
-          console.log(`[FFmpeg] محاولة ${baseUrl}...`);
+        console.log('[FFmpeg] تحميل من الملفات المحلية...');
 
-          const ffmpeg = new FFmpeg();
+        const ffmpeg = new FFmpeg();
 
-          ffmpeg.on('progress', ({ progress }: { progress: number }) => {
-            setVideo(prev => ({ ...prev, progress: Math.round(progress * 100) }));
-          });
+        ffmpeg.on('progress', ({ progress }: { progress: number }) => {
+          setVideo(prev => ({ ...prev, progress: Math.round(progress * 100) }));
+        });
 
-          await ffmpeg.load({
-            coreURL: await toBlobURL(`${baseUrl}/ffmpeg-core.js`, 'text/javascript'),
-            wasmURL: await toBlobURL(`${baseUrl}/ffmpeg-core.wasm`, 'application/wasm'),
-          });
+                // ✅ استخدام URL مطلق (Absolute URL) — يمنع مشكلة file://
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-          console.log(`[FFmpeg] ✅ نجح التحميل من ${baseUrl}`);
-          ffmpegRef.current = ffmpeg;
-          setFfmpegLoaded(true);
+        await ffmpeg.load({
+          coreURL: `${origin}${LOCAL_FFMPEG_BASE}/ffmpeg-core.js`,
+          wasmURL: `${origin}${LOCAL_FFMPEG_BASE}/ffmpeg-core.wasm`,
+          classWorkerURL: `${origin}${LOCAL_FFMPEG_BASE}/worker.js`,
+        });
+
+        console.log('[FFmpeg] ✅ نجح التحميل');
+        ffmpegRef.current = ffmpeg;
+        setFfmpegLoaded(true);
+        setFfmpegLoading(false);
+        return ffmpeg;
+      } catch (error) {
+        if (signal?.aborted) {
           setFfmpegLoading(false);
-          return ffmpeg;
-        } catch (error) {
-          if (signal?.aborted) {
-            setFfmpegLoading(false);
-            throw new Error('تم الإلغاء');
-          }
-          console.warn(`[FFmpeg] ❌ فشل ${baseUrl}:`, error);
-          lastError = error as Error;
+          throw new Error('تم الإلغاء');
         }
+        console.warn('[FFmpeg] ❌ فشل التحميل:', error);
+        lastError = error as Error;
       }
 
       throw new Error(
-        'فشل تحميل FFmpeg من جميع الخوادم.\n' +
-        'تأكد من:\n' +
-        '1. إعدادات CORS في next.config.js\n' +
-        '2. اتصال الإنترنت\n' +
-        '3. عدم حجب CDN'
+        'فشل تحميل FFmpeg.\n' +
+        'تأكد من وجود ملفات FFmpeg في public/assets/ffmpeg/\n' +
+        'الخطأ: ' + (lastError?.message || 'غير معروف')
       );
     } catch (error) {
       setFfmpegLoading(false);
@@ -835,7 +831,7 @@ export default function VideoConverterPage() {
                     <div className={`${cardClass} border rounded-xl p-3 text-xs ${textClass} flex items-start gap-2`}>
                       <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-ink-900">ملاحظة:</strong> FFmpeg.wasm سيُحمّل عند أول تحويل (~30 MB). تأكد من إعدادات CORS في <code className="bg-ink-100 px-1 rounded">next.config.js</code>.
+                        <strong className="text-ink-900">ملاحظة:</strong> FFmpeg.wasm سيُحمّل عند أول تحويل (~30 MB) من الخادم المحلي.
                       </span>
                     </div>
                   )}
