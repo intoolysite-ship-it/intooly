@@ -1,17 +1,58 @@
+# ============================================================
+# .htaccess لـ intooly.com (Next.js Static Export)
+# ============================================================
+
+# تعطيل عرض قائمة المجلدات
+Options -Indexes
+
+# تعيين index.html كصفحة افتراضية
+DirectoryIndex index.html
+
 # تفعيل إعادة الكتابة
 RewriteEngine On
-
-# توجيه جميع الطلبات إلى index.html
 RewriteBase /
-RewriteRule ^index\.html$ - [L]
+
+# إذا كان الملف المطلوب موجودًا، اعرضه مباشرة
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# إذا كان المجلد موجودًا ويحتوي على index.html، اعرضه
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [L]
+
+# إذا كان هناك ملف .html مطابق، اعرضه (بدون الامتداد)
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# الطلبات المتبقية → index.html (للصفحات غير الموجودة)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
 
-# منع عرض قائمة المجلدات
-Options -Indexes
-
-# السماح بالوصول للملفات الثابتة
-<FilesMatch "\.(html|htm|css|js|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$">
+# السماح بالوصول لجميع الملفات الثابتة
+<FilesMatch "\.(html|htm|css|js|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|wasm|onnx|mjs|map|txt|xml)$">
     Require all granted
 </FilesMatch>
+
+# MIME Types للأصول الخاصة
+AddType application/wasm .wasm
+AddType application/octet-stream .onnx
+AddType text/javascript .mjs
+
+# Cache للأصول الثابتة
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/wasm "access plus 1 year"
+</IfModule>
+
+# ضغط Gzip
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json application/wasm
+</IfModule>
