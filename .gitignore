@@ -31,5 +31,5 @@ yarn-error.log*
 next-env.d.ts
 
 # Build outputs
-# /out  (now tracked)
+/out
 /public_html

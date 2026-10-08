@@ -1,12 +1,10 @@
-﻿import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+﻿/** @type {import('next').NextConfig} */
+const nextConfig = {
   output: 'export',
   distDir: 'out',
   images: {
     unoptimized: true,
   },
-  turbopack: {}, 
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
