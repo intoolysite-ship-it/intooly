@@ -1,5 +1,8 @@
 ﻿import { MetadataRoute } from 'next';
 
+// ✅ إضافة مطلوبة لـ Static Export
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://intooly.com';
 
@@ -23,7 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/video-to-audio',
     '/tools/video-trimmer',
     '/tools/video-to-gif',
-    '/tools/keyword-generator',
   ];
 
   return routes.map((route) => ({

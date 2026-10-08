@@ -1,0 +1,24 @@
+1:"$Sreact.fragment"
+2:I[47257,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"ClientPageRoot"]
+3:I[78299,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js","/_next/static/chunks/1kw4y77mkqavk.js"],"default"]
+6:I[97367,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+b:I[97367,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"ViewportBoundary"]
+c:I[97367,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"MetadataBoundary"]
+d:I[27201,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"IconMark"]
+f:I[39756,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"default"]
+10:I[37457,["/_next/static/chunks/3fntmmi971322.js","/_next/static/chunks/39obzcbfx-n5x.js"],"default"]
+a:X
+12:X
+12:C
+0:{"buildId":"CnnmyhSsSND4m80i6f8cl","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/_next/static/chunks/1kw4y77mkqavk.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":"$@9","staleTime":"$a","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$Lb",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#111827"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"intooly - أدوات مجانية احترافية تعمل محلياً"}],["$","meta","1",{"name":"description","content":"منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً 100% في متصفحك لضمان خصوصيتك وسرعتك."}],["$","link","2",{"rel":"author","href":"https://intooly.com"}],["$","meta","3",{"name":"author","content":"intooly"}],["$","meta","4",{"name":"keywords","content":"أدوات مجانية,خصوصية البيانات,معالجة محلية,intooly,ضغط الصور,إزالة الخلفية"}],["$","meta","5",{"name":"robots","content":"index, follow"}],["$","meta","6",{"name":"googlebot","content":"index, follow, max-image-preview:large"}],["$","meta","7",{"property":"og:title","content":"intooly - أدوات مجانية احترافية"}],["$","meta","8",{"property":"og:description","content":"منصة أدوات مجانية احترافية تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة."}],["$","meta","9",{"property":"og:url","content":"https://intooly.com"}],["$","meta","10",{"property":"og:site_name","content":"intooly"}],["$","meta","11",{"property":"og:locale","content":"ar_SA"}],["$","meta","12",{"property":"og:image","content":"https://intooly.com/og-image.jpg"}],["$","meta","13",{"property":"og:image:width","content":"1200"}],["$","meta","14",{"property":"og:image:height","content":"630"}],["$","meta","15",{"property":"og:image:alt","content":"intooly"}],["$","meta","16",{"property":"og:type","content":"website"}],["$","meta","17",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","18",{"name":"twitter:title","content":"intooly - أدوات مجانية احترافية"}],["$","meta","19",{"name":"twitter:description","content":"منصة أدوات مجانية احترافية تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة."}],["$","meta","20",{"name":"twitter:image","content":"https://intooly.com/og-image.jpg"}],["$","meta","21",{"name":"twitter:image:alt","content":"intooly"}],["$","meta","22",{"name":"twitter:image:width","content":"1200"}],["$","meta","23",{"name":"twitter:image:height","content":"630"}],["$","link","24",{"rel":"icon","href":"/favicon.ico?favicon.2vob68tjqpejf.ico","sizes":"256x256","type":"image/x-icon"}],["$","link","25",{"rel":"icon","href":"/favicon.svg"}],["$","link","26",{"rel":"apple-touch-icon","href":"/favicon.svg"}],["$","$Ld","27",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@e","staleTime":"$a","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lf",null,{"parallelRouterKey":"children","template":["$","$L10",null,{}]}]]}],"isPartial":"$@11","staleTime":"$a","varyParams":"$12"}],"isUpgradeableISRFallback":false,"a":"$@13","rootVaryParams":null,"needsRuntimeRequest":"$@14"}
+4:{}
+5:"$0:data:0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null
+14:true
+a:300
+a:C
+13:0
+e:"$undefined"
+11:"$undefined"
+9:"$undefined"

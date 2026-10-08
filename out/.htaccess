@@ -1,0 +1,17 @@
+# تفعيل إعادة الكتابة
+RewriteEngine On
+
+# توجيه جميع الطلبات إلى index.html
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# منع عرض قائمة المجلدات
+Options -Indexes
+
+# السماح بالوصول للملفات الثابتة
+<FilesMatch "\.(html|htm|css|js|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$">
+    Require all granted
+</FilesMatch>
