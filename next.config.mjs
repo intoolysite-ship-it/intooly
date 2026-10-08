@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   distDir: 'out',
+  turbopack: {},        // ✅ مطلوب لـ `npm run dev` (Next.js 16)
   images: {
     unoptimized: true,
   },

@@ -1,17 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { Cairo } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieConsent from '@/components/CookieConsent';
-
-const cairo = Cairo({
-  subsets: ['arabic'],
-  weight: ['400', '600', '700', '800'],
-  display: 'swap',
-  variable: '--font-cairo',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
@@ -77,7 +69,7 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
-      className={`${cairo.variable} overflow-x-hidden`}
+      className="overflow-x-hidden"
     >
       <head>
         {/* Schema.org: Organization */}
@@ -103,6 +95,14 @@ export default function RootLayout({
           }}
         />
 
+        {/* ✅ Google Fonts: Cairo — عبر <link> مباشر */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+
         {/* Google Analytics 4 — مع Cookie Consent Mode */}
         <Script
           id="google-analytics-consent"
@@ -116,7 +116,6 @@ export default function RootLayout({
                 ad_storage: 'denied',
                 wait_for_update: 500,
               });
-              // إذا وافق المستخدم سابقًا، فعّل التتبع فورًا
               try {
                 if (localStorage.getItem('cookie-consent') === 'accepted') {
                   gtag('consent', 'update', {
@@ -147,7 +146,6 @@ export default function RootLayout({
           }}
         />
       </head>
-      {/* ✅ تم حذف: dark:bg-ink-950, dark:text-ink-100, transition-colors duration-300 */}
       <body className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden bg-ink-50 text-ink-800">
         <Header />
         <main className="flex-grow w-full max-w-full overflow-x-hidden">
