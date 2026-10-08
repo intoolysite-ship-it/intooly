@@ -9,14 +9,18 @@ export default function CookieConsent() {
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
-      setVisible(true);
+      // ✅ تأخير 1.2 ثانية لتحسين تجربة المستخدم
+      const timer = setTimeout(() => {
+        setVisible(true);
+      }, 1200);
+      return () => clearTimeout(timer);
     }
   }, []);
 
   const accept = () => {
     localStorage.setItem('cookie-consent', 'accepted');
     setVisible(false);
-    // إعادة تحميل الصفحة لتفعيل GA
+    // تفعيل GA بعد الموافقة
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('consent', 'update', {
         analytics_storage: 'granted',
@@ -33,11 +37,25 @@ export default function CookieConsent() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9999] bg-ink-900 text-white shadow-2xl border-t-2 border-brand-500"
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-ink-900 text-white shadow-2xl border-t-2 border-brand-500 animate-[slideUp_0.4s_ease-out]"
       dir="rtl"
       role="dialog"
       aria-live="polite"
+      aria-label="إشعار ملفات تعريف الارتباط"
     >
+      <style jsx>{`
+        @keyframes slideUp {
+          from {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
+
       <div className="container mx-auto px-4 py-4 max-w-6xl">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
           <div className="flex-1">
