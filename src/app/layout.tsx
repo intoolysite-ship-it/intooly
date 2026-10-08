@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CookieConsent from '@/components/CookieConsent';
 
 const cairo = Cairo({
   subsets: ['arabic'],
@@ -101,6 +102,50 @@ export default function RootLayout({
             }),
           }}
         />
+
+        {/* Google Analytics 4 — مع Cookie Consent Mode */}
+        <Script
+          id="google-analytics-consent"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                wait_for_update: 500,
+              });
+              // إذا وافق المستخدم سابقًا، فعّل التتبع فورًا
+              try {
+                if (localStorage.getItem('cookie-consent') === 'accepted') {
+                  gtag('consent', 'update', {
+                    analytics_storage: 'granted',
+                  });
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-GB8VLXYS9Z"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-GB8VLXYS9Z', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
       </head>
       {/* ✅ تم حذف: dark:bg-ink-950, dark:text-ink-100, transition-colors duration-300 */}
       <body className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden bg-ink-50 text-ink-800">
@@ -109,6 +154,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );
