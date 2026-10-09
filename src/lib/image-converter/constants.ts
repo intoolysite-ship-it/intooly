@@ -227,19 +227,12 @@ export const QUALITY_PRESETS: Record<QualityPreset, {
 // ============================================================
 
 export const LIMITS = {
-  /** الحد الأقصى لحجم الملف الواحد (25 MB) */
   MAX_FILE_SIZE: 25 * 1024 * 1024,
-  /** الحد الأقصى لعدد الصور */
   MAX_IMAGES: 100,
-  /** الحد الأدنى لعرض الصورة */
   MIN_WIDTH: 1,
-  /** الحد الأقصى لعرض الصورة */
   MAX_WIDTH: 20000,
-  /** الحد الأدنى للجودة */
   MIN_QUALITY: 0.1,
-  /** الحد الأقصى للجودة */
   MAX_QUALITY: 1.0,
-  /** الحد الأقصى للبعد */
   MAX_DIMENSION: 8000,
 };
 
@@ -247,49 +240,25 @@ export const LIMITS = {
 // 📥 الصيغ المقبولة للإدخال
 // ============================================================
 
-export const ACCEPTED_INPUT_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-  'image/avif',
-  'image/heic',
-  'image/heif',
-  'image/gif',
-  'image/bmp',
-  'image/tiff',
-  'image/x-icon',
-  'image/vnd.microsoft.icon',
-  '.jpg',
-  '.jpeg',
-  '.png',
-  '.webp',
-  '.avif',
-  '.heic',
-  '.heif',
-  '.gif',
-  '.bmp',
-  '.tiff',
-  '.tif',
-  '.ico',
-];
-
-/** امتدادات لفحص الأسماء */
 export const ACCEPTED_EXTENSIONS = /\.(jpg|jpeg|png|webp|avif|heic|heif|gif|bmp|tiff|tif|ico|jfif)$/i;
 
 // ============================================================
-// 🎨 الألوان الافتراضية
+// 🎨 الألوان
 // ============================================================
 
 export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
+export const TRANSPARENT_VALUE = 'transparent';
 
 export const COMMON_BACKGROUND_COLORS = [
   { name: 'أبيض', value: '#ffffff' },
   { name: 'أسود', value: '#000000' },
   { name: 'رمادي فاتح', value: '#f3f4f6' },
   { name: 'رمادي', value: '#9ca3af' },
+  { name: 'رمادي غامق', value: '#4b5563' },
   { name: 'بيج', value: '#fef3c7' },
   { name: 'أزرق فاتح', value: '#dbeafe' },
+  { name: 'وردي فاتح', value: '#fce7f3' },
 ];
 
 // ============================================================
@@ -302,7 +271,7 @@ export const DEFAULT_SETTINGS = {
   qualityPreset: 'high' as QualityPreset,
   resize: {
     enabled: false,
-    mode: 'original' as const,
+    mode: 'exact' as const,
     keepAspectRatio: true,
   },
   stripExif: true,
@@ -325,9 +294,7 @@ export const STORAGE_KEY = 'intooly_image_converter_settings';
 // ============================================================
 
 export const CONCURRENCY = {
-  /** عدد الصور المُعالَجة بالتوازي */
   MAX_PARALLEL: 3,
-  /** تأخير بين المهام (ms) لمنع تجميد المتصفح */
   TASK_DELAY: 50,
 };
 
@@ -336,12 +303,8 @@ export const CONCURRENCY = {
 // ============================================================
 
 export const WARNING_THRESHOLDS = {
-  /** حجم كبير (MB) */
   LARGE_FILE: 10,
-  /** حجم ضخم (MB) */
   HUGE_FILE: 20,
-  /** دقة عالية جداً (بكسل) */
   HIGH_RESOLUTION: 4000,
-  /** دقة ضخمة (بكسل) */
   HUGE_RESOLUTION: 6000,
 };

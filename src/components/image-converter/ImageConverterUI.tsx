@@ -1,15 +1,15 @@
 'use client';
 
 // ============================================================
-// 🎨 مكونات واجهة محوّل الصور
+// 🎨 مكونات واجهة محوّل الصور — محدَّث
 // ============================================================
 
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Upload, X, Image as ImageIcon, Sparkles,
   AlertCircle, CheckCircle2, Info, Shield,
   ChevronDown, ChevronUp, Loader2, Trash2,
-  Download, FileImage, Zap, Lock, Gauge,
+  Download, FileImage, Zap, Lock, Unlock, Gauge,
   Maximize2, Minimize2, ArrowRight, Layers,
   RefreshCw, Sliders, Palette, Eye, EyeOff
 } from 'lucide-react';
@@ -30,6 +30,7 @@ import {
   LIMITS,
   COMMON_BACKGROUND_COLORS,
   ACCEPTED_EXTENSIONS,
+  TRANSPARENT_VALUE,
 } from '@/lib/image-converter/constants';
 
 import {
@@ -40,7 +41,7 @@ import {
 } from '@/lib/image-converter/utils';
 
 // ============================================================
-// 📤 مكوّن منطقة الرفع
+// 📤 UploadZone
 // ============================================================
 
 interface UploadZoneProps {
@@ -162,7 +163,7 @@ export function UploadZone({ onFiles, disabled, currentCount }: UploadZoneProps)
 }
 
 // ============================================================
-// 🧠 مكوّن التحليل الذكي
+// 🧠 ImageAnalyzer
 // ============================================================
 
 interface ImageAnalyzerProps {
@@ -270,11 +271,7 @@ export function ImageAnalyzer({ recommendations, onApplyAction }: ImageAnalyzerP
 }
 
 // ============================================================
-// 📌 استيراد المكونات من الأجزاء التالية
-// ============================================================
-
-// ============================================================
-// 👁️ مكوّن المقارنة قبل/بعد
+// 👁️ ComparisonSlider
 // ============================================================
 
 interface ComparisonSliderProps {
@@ -308,35 +305,33 @@ export function ComparisonSlider({
     setPosition(percent);
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) handleMove(e.clientX);
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && e.touches[0]) {
+        handleMove(e.touches[0].clientX);
+      }
+    };
+    
+    const handleMouseUp = () => setIsDragging(false);
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleMouseUp);
+    };
+  }, [isDragging, handleMove]);
+
   const handleMouseDown = useCallback(() => setIsDragging(true), []);
-  const handleMouseUp = useCallback(() => setIsDragging(false), []);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isDragging) handleMove(e.clientX);
-  }, [isDragging, handleMove]);
-
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (isDragging && e.touches[0]) {
-      handleMove(e.touches[0].clientX);
-    }
-  }, [isDragging, handleMove]);
-
-  // Event listeners
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMemo(() => {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleMouseUp);
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleMouseUp);
-      };
-    }, [handleMouseMove, handleMouseUp, handleTouchMove]);
-  }
 
   const savings = beforeSize && afterSize
     ? Math.round(((beforeSize - afterSize) / beforeSize) * 100)
@@ -344,7 +339,6 @@ export function ComparisonSlider({
 
   return (
     <div className="space-y-3">
-      {/* الشريط العلوي */}
       <div className="flex items-center justify-between gap-2 text-xs">
         <span className="px-3 py-1.5 rounded-full bg-slate-900 text-white font-black">
           {beforeLabel} {beforeSize && `· ${formatBytes(beforeSize)}`}
@@ -360,7 +354,6 @@ export function ComparisonSlider({
         </span>
       </div>
 
-      {/* المقارنة */}
       <div
         ref={containerRef}
         className="relative rounded-2xl overflow-hidden select-none cursor-ew-resize bg-slate-900"
@@ -368,7 +361,6 @@ export function ComparisonSlider({
         onMouseDown={handleMouseDown}
         onTouchStart={handleMouseDown}
       >
-        {/* After (الصورة المحوّلة - الخلفية) */}
         <img
           src={afterUrl}
           alt={afterLabel}
@@ -376,7 +368,6 @@ export function ComparisonSlider({
           draggable={false}
         />
 
-        {/* Before (الصورة الأصلية - عليها clip) */}
         <div
           className="absolute inset-0"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
@@ -389,7 +380,6 @@ export function ComparisonSlider({
           />
         </div>
 
-        {/* الشريط الذهبي */}
         <div
           className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 via-amber-500 to-amber-400 shadow-2xl pointer-events-none z-10"
           style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
@@ -408,16 +398,22 @@ export function ComparisonSlider({
 }
 
 // ============================================================
-// ⚙️ مكوّن لوحة الإعدادات
+// ⚙️ SettingsPanel
 // ============================================================
 
 interface SettingsPanelProps {
   settings: ConversionSettings;
   onChange: (settings: ConversionSettings) => void;
   hasAlpha?: boolean;
+  originalDimensions?: { width: number; height: number };
 }
 
-export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelProps) {
+export function SettingsPanel({ 
+  settings, 
+  onChange, 
+  hasAlpha,
+  originalDimensions,
+}: SettingsPanelProps) {
   const updateSettings = (updates: Partial<ConversionSettings>) => {
     onChange({ ...settings, ...updates });
   };
@@ -445,11 +441,47 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
 
   const currentFormatInfo = SUPPORTED_FORMATS.find(f => f.id === settings.format);
 
+  const handleWidthChange = (val: number | undefined) => {
+    if (!val || val < 1) {
+      updateResize({ width: undefined });
+      return;
+    }
+    
+    if (settings.resize.keepAspectRatio && originalDimensions && originalDimensions.width > 0) {
+      const aspectRatio = originalDimensions.height / originalDimensions.width;
+      const calculatedHeight = Math.round(val * aspectRatio);
+      updateResize({ 
+        width: val, 
+        height: calculatedHeight,
+        mode: 'exact',
+      });
+    } else {
+      updateResize({ width: val, mode: 'exact' });
+    }
+  };
+
+  const handleHeightChange = (val: number | undefined) => {
+    if (!val || val < 1) {
+      updateResize({ height: undefined });
+      return;
+    }
+    
+    if (settings.resize.keepAspectRatio && originalDimensions && originalDimensions.height > 0) {
+      const aspectRatio = originalDimensions.width / originalDimensions.height;
+      const calculatedWidth = Math.round(val * aspectRatio);
+      updateResize({ 
+        height: val, 
+        width: calculatedWidth,
+        mode: 'exact',
+      });
+    } else {
+      updateResize({ height: val, mode: 'exact' });
+    }
+  };
+
   return (
     <div className="space-y-4">
-      {/* ============================================ */}
-      {/* 1. الصيغة المستهدفة */}
-      {/* ============================================ */}
+      {/* 1. الصيغة */}
       <div>
         <label className="flex items-center gap-2 text-xs font-black text-slate-700 mb-2">
           <FileImage className="w-4 h-4 text-amber-500" />
@@ -494,19 +526,9 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
             {currentFormatInfo.description}
           </p>
         )}
-        {hasAlpha && currentFormatInfo && !currentFormatInfo.supportsAlpha && (
-          <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <p className="text-xs font-bold text-amber-800">
-              ستفقد الشفافية — سيُملأ الخلفية بلون مخصص
-            </p>
-          </div>
-        )}
       </div>
 
-      {/* ============================================ */}
       {/* 2. الجودة */}
-      {/* ============================================ */}
       {settings.format !== 'png' && settings.format !== 'bmp' && (
         <div>
           <label className="flex items-center justify-between text-xs font-black text-slate-700 mb-2">
@@ -519,7 +541,6 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
             </span>
           </label>
 
-          {/* Presets */}
           <div className="grid grid-cols-4 gap-1.5 mb-2">
             {(Object.keys(QUALITY_PRESETS) as QualityPreset[])
               .filter(k => k !== 'custom')
@@ -549,7 +570,6 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
               })}
           </div>
 
-          {/* Slider */}
           <input
             type="range"
             min={10}
@@ -562,17 +582,10 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
             })}
             className="w-full h-2 rounded-full appearance-none cursor-pointer bg-gradient-to-r from-slate-200 to-amber-200 accent-amber-500"
           />
-
-          <p className="text-xs text-slate-500 font-bold mt-1">
-            {QUALITY_PRESETS[settings.qualityPreset as QualityPreset]?.description || 
-             'جودة مخصصة'}
-          </p>
         </div>
       )}
 
-      {/* ============================================ */}
-      {/* 3. تغيير الأبعاد */}
-      {/* ============================================ */}
+      {/* 3. الأبعاد */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="flex items-center gap-2 text-xs font-black text-slate-700">
@@ -591,109 +604,250 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
         </div>
 
         {settings.resize.enabled && (
-          <div className="space-y-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => updateResize({ mode: 'max-width' })}
-                className={`
-                  p-2 rounded-lg text-xs font-black transition-all
-                  ${settings.resize.mode === 'max-width'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-white text-slate-700 border border-slate-200'
-                  }
-                `}
-              >
-                الحد الأقصى للعرض
-              </button>
-              <button
-                onClick={() => updateResize({ mode: 'max-height' })}
-                className={`
-                  p-2 rounded-lg text-xs font-black transition-all
-                  ${settings.resize.mode === 'max-height'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-white text-slate-700 border border-slate-200'
-                  }
-                `}
-              >
-                الحد الأقصى للطول
-              </button>
-            </div>
-
-            {(settings.resize.mode === 'max-width' || settings.resize.mode === 'max-height') && (
-              <div>
-                <label className="text-xs font-bold text-slate-600 mb-1 block">
-                  الحد الأقصى (بكسل)
+          <div className="space-y-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <div className="flex items-end gap-2">
+              <div className="flex-1">
+                <label className="text-[10px] font-black text-slate-500 mb-1 block">
+                  العرض (px)
                 </label>
                 <input
                   type="number"
-                  min={100}
-                  max={8000}
-                  step={100}
-                  value={
-                    settings.resize.mode === 'max-width'
-                      ? settings.resize.maxWidth || 1920
-                      : settings.resize.maxHeight || 1080
-                  }
+                  min={1}
+                  max={20000}
+                  step={1}
+                  value={settings.resize.width || ''}
+                  placeholder={originalDimensions ? String(originalDimensions.width) : 'تلقائي'}
                   onChange={(e) => {
-                    const val = parseInt(e.target.value) || 1000;
-                    if (settings.resize.mode === 'max-width') {
-                      updateResize({ maxWidth: val });
-                    } else {
-                      updateResize({ maxHeight: val });
-                    }
+                    const val = e.target.value === '' ? undefined : parseInt(e.target.value);
+                    handleWidthChange(val);
                   }}
-                  className="w-full px-3 py-2 rounded-lg border-2 border-slate-200 focus:border-amber-500 outline-none text-sm font-bold"
+                  className="w-full px-2 py-2 rounded-lg border-2 border-slate-200 focus:border-amber-500 outline-none text-sm font-bold text-center"
                 />
               </div>
+
+              <button
+                onClick={() => updateResize({ keepAspectRatio: !settings.resize.keepAspectRatio })}
+                className={`
+                  mb-0.5 p-2.5 rounded-lg border-2 transition-all flex-shrink-0
+                  ${settings.resize.keepAspectRatio
+                    ? 'bg-amber-500 border-amber-500 text-white shadow-md'
+                    : 'bg-white border-slate-300 text-slate-400 hover:border-amber-300'
+                  }
+                `}
+                title={settings.resize.keepAspectRatio 
+                  ? 'النسبة محفوظة (اضغط للتحرير)' 
+                  : 'النسبة حرة (اضغط للقفل)'
+                }
+              >
+                {settings.resize.keepAspectRatio ? (
+                  <Lock className="w-4 h-4" />
+                ) : (
+                  <Unlock className="w-4 h-4" />
+                )}
+              </button>
+
+              <div className="flex-1">
+                <label className="text-[10px] font-black text-slate-500 mb-1 block">
+                  الطول (px)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={20000}
+                  step={1}
+                  value={settings.resize.height || ''}
+                  placeholder={originalDimensions ? String(originalDimensions.height) : 'تلقائي'}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? undefined : parseInt(e.target.value);
+                    handleHeightChange(val);
+                  }}
+                  className="w-full px-2 py-2 rounded-lg border-2 border-slate-200 focus:border-amber-500 outline-none text-sm font-bold text-center"
+                />
+              </div>
+            </div>
+
+            <div className={`
+              p-2 rounded-lg text-[10px] font-bold text-center
+              ${settings.resize.keepAspectRatio 
+                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                : 'bg-slate-100 text-slate-600 border border-slate-200'
+              }
+            `}>
+              {settings.resize.keepAspectRatio 
+                ? '🔒 النسبة محفوظة — تعديل حقل يعدّل الآخر تلقائيًا'
+                : '🔓 النسبة حرة — يمكنك تعديل كل حقل بشكل مستقل'
+              }
+            </div>
+
+            {originalDimensions && (
+              <button
+                onClick={() => updateResize({
+                  width: originalDimensions.width,
+                  height: originalDimensions.height,
+                  mode: 'exact',
+                })}
+                className="w-full py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 text-[10px] font-black hover:border-amber-400 hover:text-amber-600 transition-colors"
+              >
+                ↺ إعادة إلى الأبعاد الأصلية ({originalDimensions.width}×{originalDimensions.height})
+              </button>
             )}
           </div>
         )}
       </div>
 
-      {/* ============================================ */}
-      {/* 4. لون الخلفية (إذا كانت الصيغة لا تدعم الشفافية) */}
-      {/* ============================================ */}
-      {currentFormatInfo && !currentFormatInfo.supportsAlpha && (
-        <div>
-          <label className="flex items-center gap-2 text-xs font-black text-slate-700 mb-2">
-            <Palette className="w-4 h-4 text-amber-500" />
-            لون الخلفية
-          </label>
-          <div className="flex flex-wrap gap-1.5">
-            {COMMON_BACKGROUND_COLORS.map((color) => (
+      {/* 4. لون الخلفية — محدَّث */}
+      <div>
+        <label className="flex items-center gap-2 text-xs font-black text-slate-700 mb-2">
+          <Palette className="w-4 h-4 text-amber-500" />
+          لون الخلفية
+        </label>
+
+        {currentFormatInfo && currentFormatInfo.supportsAlpha ? (
+          <div className="mb-2 p-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <p className="text-[10px] font-bold text-emerald-800 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3 h-3" />
+              {currentFormatInfo.name} يدعم الشفافية — اختر "شفاف" أو لون
+            </p>
+          </div>
+        ) : (
+          <div className="mb-2 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-[10px] font-bold text-amber-800 flex items-center gap-1.5">
+              <AlertCircle className="w-3 h-3" />
+              {currentFormatInfo?.name} لا يدعم الشفافية — اختر لون خلفية
+            </p>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2 items-center">
+          {currentFormatInfo?.supportsAlpha && (
+            <button
+              type="button"
+              onClick={() => updateSettings({ backgroundColor: TRANSPARENT_VALUE })}
+              className={`
+                w-10 h-10 rounded-lg border-2 transition-all hover:scale-110 relative
+                ${settings.backgroundColor === TRANSPARENT_VALUE
+                  ? 'border-amber-500 ring-2 ring-amber-200'
+                  : 'border-slate-300'
+                }
+              `}
+              title="شفاف (Transparent)"
+              style={{
+                backgroundImage: `
+                  linear-gradient(45deg, #cbd5e1 25%, transparent 25%),
+                  linear-gradient(-45deg, #cbd5e1 25%, transparent 25%),
+                  linear-gradient(45deg, transparent 75%, #cbd5e1 75%),
+                  linear-gradient(-45deg, transparent 75%, #cbd5e1 75%)
+                `,
+                backgroundSize: '10px 10px',
+                backgroundPosition: '0 0, 0 5px, 5px -5px, -5px 0px',
+              }}
+            >
+              {settings.backgroundColor === TRANSPARENT_VALUE && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <CheckCircle2 className="w-5 h-5 text-amber-600 bg-white rounded-full" />
+                </div>
+              )}
+            </button>
+          )}
+
+          {COMMON_BACKGROUND_COLORS.map((color) => {
+            const isActive = settings.backgroundColor === color.value;
+            const isLight = ['#ffffff', '#f3f4f6', '#fef3c7', '#dbeafe', '#fce7f3'].includes(color.value);
+            
+            return (
               <button
                 key={color.value}
+                type="button"
                 onClick={() => updateSettings({ backgroundColor: color.value })}
                 className={`
-                  w-8 h-8 rounded-lg border-2 transition-all hover:scale-110
-                  ${settings.backgroundColor === color.value
+                  w-10 h-10 rounded-lg border-2 transition-all hover:scale-110 relative
+                  ${isActive
                     ? 'border-amber-500 ring-2 ring-amber-200'
                     : 'border-slate-300'
                   }
                 `}
                 style={{ backgroundColor: color.value }}
                 title={color.name}
-              />
-            ))}
-            <label className="w-8 h-8 rounded-lg border-2 border-slate-300 cursor-pointer overflow-hidden relative">
-              <input
-                type="color"
-                value={settings.backgroundColor}
-                onChange={(e) => updateSettings({ backgroundColor: e.target.value })}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <div
-                className="w-full h-full"
-                style={{ backgroundColor: settings.backgroundColor }}
-              />
-            </label>
+              >
+                {isActive && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <CheckCircle2 className={`w-5 h-5 ${isLight ? 'text-slate-700' : 'text-white'}`} />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+
+          <label
+            className={`
+              w-10 h-10 rounded-lg border-2 cursor-pointer transition-all hover:scale-110 relative overflow-hidden
+              ${settings.backgroundColor !== TRANSPARENT_VALUE &&
+                !COMMON_BACKGROUND_COLORS.some(c => c.value === settings.backgroundColor)
+                ? 'border-amber-500 ring-2 ring-amber-200'
+                : 'border-slate-300'
+              }
+            `}
+            title="لون مخصص"
+            style={{
+              background: 'conic-gradient(from 0deg, #ef4444, #f59e0b, #eab308, #22c55e, #14b8a6, #3b82f6, #8b5cf6, #ec4899, #ef4444)',
+            }}
+          >
+            <input
+              type="color"
+              value={
+                settings.backgroundColor === TRANSPARENT_VALUE || 
+                !settings.backgroundColor
+                  ? '#ffffff'
+                  : settings.backgroundColor
+              }
+              onChange={(e) => updateSettings({ backgroundColor: e.target.value })}
+              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Palette className="w-5 h-5 text-white drop-shadow-lg" />
+            </div>
+          </label>
+        </div>
+
+        <div className="mt-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+          <span className="text-[10px] font-black text-slate-600">
+            اللون الحالي:
+          </span>
+          <div className="flex items-center gap-2">
+            {settings.backgroundColor === TRANSPARENT_VALUE ? (
+              <>
+                <div
+                  className="w-5 h-5 rounded border border-slate-300"
+                  style={{
+                    backgroundImage: `
+                      linear-gradient(45deg, #cbd5e1 25%, transparent 25%),
+                      linear-gradient(-45deg, #cbd5e1 25%, transparent 25%),
+                      linear-gradient(45deg, transparent 75%, #cbd5e1 75%),
+                      linear-gradient(-45deg, transparent 75%, #cbd5e1 75%)
+                    `,
+                    backgroundSize: '6px 6px',
+                  }}
+                />
+                <code className="text-[10px] font-black text-slate-700">
+                  شفاف
+                </code>
+              </>
+            ) : (
+              <>
+                <div
+                  className="w-5 h-5 rounded border border-slate-300"
+                  style={{ backgroundColor: settings.backgroundColor }}
+                />
+                <code className="text-[10px] font-black text-slate-700 uppercase">
+                  {settings.backgroundColor}
+                </code>
+              </>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* ============================================ */}
       {/* 5. حماية الخصوصية */}
-      {/* ============================================ */}
       <div>
         <label className="flex items-center justify-between gap-3 p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer hover:border-amber-300 transition-colors">
           <div className="flex items-center gap-2">
@@ -716,9 +870,7 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
         </label>
       </div>
 
-      {/* ============================================ */}
-      {/* 6. تصدير متعدد الصيغ */}
-      {/* ============================================ */}
+      {/* 6. تصدير متعدد */}
       <div>
         <label className="flex items-center justify-between gap-3 p-3 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl cursor-pointer hover:border-blue-400 transition-colors">
           <div className="flex items-center gap-2">
@@ -778,7 +930,7 @@ export function SettingsPanel({ settings, onChange, hasAlpha }: SettingsPanelPro
 }
 
 // ============================================================
-// 🎯 مكوّن الإعدادات المسبقة الذكية
+// 🎯 PresetButtons
 // ============================================================
 
 interface PresetButtonsProps {
@@ -842,7 +994,7 @@ export function PresetButtons({ activePreset, onSelect, onClear }: PresetButtons
 }
 
 // ============================================================
-// 📊 مكوّن بطاقة النتيجة
+// 📊 ResultCard
 // ============================================================
 
 interface ResultCardProps {
@@ -866,7 +1018,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
 
   return (
     <div className="bg-white border-2 border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
-      {/* Header */}
       <div className="flex items-center justify-between gap-3 p-3 bg-gradient-to-l from-slate-50 to-amber-50/30 border-b border-slate-200">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -895,9 +1046,7 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
         </button>
       </div>
 
-      {/* Body */}
       <div className="p-3">
-        {/* Preview */}
         <div className="relative rounded-xl overflow-hidden bg-slate-900 mb-3" style={{ aspectRatio: 1 }}>
           {showComparison && item.convertedUrl && item.originalUrl ? (
             <ComparisonSlider
@@ -909,14 +1058,12 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
             />
           ) : (
             <>
-              {/* المعاينة العادية */}
               <img
                 src={item.convertedUrl || item.originalUrl}
                 alt={item.name}
                 className="absolute inset-0 w-full h-full object-contain"
               />
 
-              {/* زر تبديل المقارنة */}
               {hasResult && (
                 <button
                   onClick={() => setShowComparison(true)}
@@ -927,7 +1074,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
                 </button>
               )}
 
-              {/* الحالة */}
               <div className="absolute top-2 right-2">
                 {item.status === 'converting' && (
                   <span className="px-3 py-1.5 rounded-full bg-blue-500/90 backdrop-blur-sm text-white text-xs font-black flex items-center gap-1.5">
@@ -952,7 +1098,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
           )}
         </div>
 
-        {/* زر إغلاق المقارنة */}
         {showComparison && (
           <button
             onClick={() => setShowComparison(false)}
@@ -963,10 +1108,8 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
           </button>
         )}
 
-        {/* معلومات النتيجة */}
         {hasResult && (
           <div className="grid grid-cols-2 gap-2 mb-3">
-            {/* الحجم */}
             <div className="bg-slate-50 rounded-lg p-2.5 text-center">
               <p className="text-[10px] font-black text-slate-500 mb-0.5">الحجم</p>
               <p className="text-xs font-black text-slate-900">
@@ -978,7 +1121,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
               </p>
             </div>
 
-            {/* التوفير */}
             {savings !== 0 && (
               <div className={`rounded-lg p-2.5 text-center ${
                 savings > 0 ? 'bg-emerald-50' : 'bg-red-50'
@@ -998,7 +1140,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
           </div>
         )}
 
-        {/* خطأ */}
         {item.status === 'error' && item.errorMessage && (
           <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
@@ -1008,7 +1149,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
           </div>
         )}
 
-        {/* الأزرار */}
         {hasResult ? (
           <button
             onClick={onDownload}
@@ -1030,10 +1170,6 @@ export function ResultCard({ item, onDownload, onRemove, onReconvert }: ResultCa
     </div>
   );
 }
-
-// ============================================================
-// 🎯 تصدير جميع المكونات
-// ============================================================
 
 export default {
   UploadZone,

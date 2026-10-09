@@ -69,9 +69,10 @@ export async function convertImage(
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     
-    // 7. لون الخلفية (إذا كانت الصيغة لا تدعم الشفافية)
-    const needsBackground = !targetInfo.supportsAlpha || !settings.preserveAlpha;
-    if (needsBackground) {
+        // ✅ 7. لون الخلفية — معالجة محدَّثة
+    const isTransparent = settings.backgroundColor === 'transparent';
+    
+    if (!isTransparent && settings.backgroundColor) {
       const bg = hexToRgb(settings.backgroundColor);
       ctx.fillStyle = `rgb(${bg.r}, ${bg.g}, ${bg.b})`;
       ctx.fillRect(0, 0, targetWidth, targetHeight);

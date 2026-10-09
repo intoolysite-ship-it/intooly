@@ -10,7 +10,7 @@ import {
   Sparkles, Image as ImageIcon, Download, Trash2,
   Loader2, AlertCircle, CheckCircle2, Package,
   RefreshCw, FileArchive, Zap, Shield, Layers,
-  ChevronDown, ChevronUp, X, Info, Play,
+  ChevronDown, ChevronUp, X, Info, Play, ArrowDown,
 } from 'lucide-react';
 
 import type {
@@ -27,6 +27,7 @@ import {
   DEFAULT_SETTINGS,
   LIMITS,
   STORAGE_KEY,
+  TRANSPARENT_VALUE,
 } from '@/lib/image-converter/constants';
 
 import {
@@ -53,10 +54,6 @@ import {
 } from '@/lib/image-converter/converter';
 
 import {
-  isHeicFile,
-} from '@/lib/image-converter/heic-support';
-
-import {
   UploadZone,
   ImageAnalyzer,
   ComparisonSlider,
@@ -70,13 +67,9 @@ import {
 // ============================================================
 
 export default function ImageConverterPage() {
-  // ============================================
-  // 📊 الحالة
-  // ============================================
   const [items, setItems] = useState<ImageItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [settings, setSettings] = useState<ConversionSettings>(() => {
-    // محاولة تحميل الإعدادات المحفوظة
     const saved = loadFromStorage<Partial<ConversionSettings>>(STORAGE_KEY, {});
     return { ...DEFAULT_SETTINGS, ...saved };
   });
@@ -98,10 +91,8 @@ export default function ImageConverterPage() {
   });
   const [showStats, setShowStats] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const settingsKeyRef = useRef<string>('');
 
-  // ============================================
-  // 📌 الصورة النشطة
-  // ============================================
   const activeItem = items.find(i => i.id === activeId) || null;
 
   const recommendations: AnalysisRecommendation[] = activeItem?.info
@@ -109,15 +100,71 @@ export default function ImageConverterPage() {
     : [];
 
   // ============================================
-  // 💾 حفظ الإعدادات تلقائياً
+  // 💾 حفظ الإعدادات
   // ============================================
   useEffect(() => {
     saveToStorage(STORAGE_KEY, settings);
   }, [settings]);
 
   // ============================================
-  // 🔔 Toast
+  // ✅ إلغاء نتائج التحويل عند تغيير الإعدادات
   // ============================================
+  useEffect(() => {
+    const currentKey = JSON.stringify({
+      format: settings.format,
+      quality: settings.quality,
+      bg: settings.backgroundColor,
+      resize: settings.resize,
+      stripExif: settings.stripExif,
+      multiFormat: settings.multiFormat.enabled,
+    });
+
+    if (settingsKeyRef.current === '') {
+      settingsKeyRef.current = currentKey;
+      return;
+    }
+
+    if (settingsKeyRef.current === currentKey) return;
+    settingsKeyRef.current = currentKey;
+
+    const hasConvertedItems = items.some(i => 
+      i.status === 'done' || i.status === 'converting'
+    );
+    if (!hasConvertedItems) return;
+
+    setItems(prev => prev.map(item => {
+      if (item.status !== 'done' && item.status !== 'converting') {
+        return item;
+      }
+      
+      if (item.convertedUrl) {
+        URL.revokeObjectURL(item.convertedUrl);
+      }
+      
+      return {
+        ...item,
+        status: 'ready' as const,
+        convertedUrl: undefined,
+        convertedBlob: undefined,
+        convertedSize: undefined,
+        convertedFormat: undefined,
+        multiFormatBlobs: undefined,
+        name: item.file.name,
+      };
+    }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    settings.format,
+    settings.quality,
+    settings.backgroundColor,
+    settings.resize.enabled,
+    settings.resize.width,
+    settings.resize.height,
+    settings.resize.keepAspectRatio,
+    settings.stripExif,
+    settings.multiFormat.enabled,
+  ]);
+
   const showToast = useCallback((message: string, isError = false) => {
     setToast({ message, visible: true, isError });
     setTimeout(() => {
@@ -150,7 +197,6 @@ export default function ImageConverterPage() {
       return;
     }
 
-    // إنشاء عناصر جديدة
     const newItems: ImageItem[] = validFiles.map(file => ({
       id: generateId(),
       file,
@@ -167,7 +213,6 @@ export default function ImageConverterPage() {
 
     showToast(`✅ تم إضافة ${validFiles.length} صورة`);
     
-    // ⚠️ استخدم setTimeout لتجنب تعطيل الـ UI
     setTimeout(async () => {
       for (const item of newItems) {
         try {
@@ -193,9 +238,6 @@ export default function ImageConverterPage() {
     }, 100);
   }, [items.length, activeId, showToast]);
 
-  // ============================================
-  // 🗑️ حذف صورة
-  // ============================================
   const handleRemove = useCallback((id: string) => {
     setItems(prev => {
       const item = prev.find(i => i.id === id);
@@ -212,9 +254,6 @@ export default function ImageConverterPage() {
     }
   }, [activeId, items]);
 
-  // ============================================
-  // 🧹 حذف الكل
-  // ============================================
   const handleClearAll = useCallback(() => {
     if (!confirm('هل تريد حذف جميع الصور؟')) return;
     
@@ -228,9 +267,6 @@ export default function ImageConverterPage() {
     showToast('🗑️ تم حذف جميع الصور');
   }, [items, showToast]);
 
-  // ============================================
-  // 🎯 تطبيق Preset
-  // ============================================
   const handlePresetSelect = useCallback((preset: SmartPreset) => {
     setSettings(prev => applyPreset(preset, prev));
     showToast(`✨ تم تطبيق: ${SMART_PRESETS[preset].name}`);
@@ -284,7 +320,6 @@ export default function ImageConverterPage() {
           const ext = formatInfo.extension;
           const newName = `${getFileBasename(item.name)}.${ext}`;
           
-          // تحويل متعدد الصيغ (إن كان مفعّلاً)
           let multiFormatBlobs: Partial<Record<ImageFormat, Blob>> | undefined;
           if (settings.multiFormat.enabled && settings.multiFormat.formats.length > 0) {
             multiFormatBlobs = await convertToMultipleFormats(item.file, settings);
@@ -327,7 +362,6 @@ export default function ImageConverterPage() {
         ));
       }
 
-      // تحديث التقدم
       const current = i + 1;
       const elapsed = performance.now() - progress.startTime;
       const eta = calculateETA(current, readyItems.length, elapsed);
@@ -339,7 +373,6 @@ export default function ImageConverterPage() {
         eta: eta || 0,
       });
 
-      // تأخير بسيط لمنع تجميد UI
       await new Promise(r => setTimeout(r, 50));
     }
 
@@ -347,18 +380,12 @@ export default function ImageConverterPage() {
     showToast(`✅ تم تحويل ${readyItems.length} صورة`);
   }, [items, settings, progress.startTime, showToast]);
 
-  // ============================================
-  // 📥 تحميل صورة
-  // ============================================
   const handleDownload = useCallback((item: ImageItem) => {
     if (item.convertedUrl && item.convertedBlob) {
       downloadUrl(item.convertedUrl, item.name);
     }
   }, []);
 
-  // ============================================
-  // 📦 تحميل الكل (ZIP)
-  // ============================================
   const handleDownloadAll = useCallback(async () => {
     const doneItems = items.filter(i => i.status === 'done' && i.convertedBlob);
     if (doneItems.length === 0) {
@@ -367,11 +394,8 @@ export default function ImageConverterPage() {
     }
 
     try {
-      // استيراد JSZip ديناميكياً
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
-      
-      // إنشاء مجلد داخل الـ ZIP
       const folder = zip.folder('intooly-converted');
       
       for (const item of doneItems) {
@@ -379,7 +403,6 @@ export default function ImageConverterPage() {
           folder?.file(item.name, item.convertedBlob);
         }
         
-        // إضافة النسخ المتعددة (إن وجدت)
         if (item.multiFormatBlobs) {
           for (const [format, blob] of Object.entries(item.multiFormatBlobs)) {
             if (blob) {
@@ -411,6 +434,7 @@ export default function ImageConverterPage() {
   const stats = {
     total: items.length,
     done: items.filter(i => i.status === 'done').length,
+    ready: items.filter(i => i.status === 'ready').length,
     totalOriginal: items.reduce((sum, i) => sum + (i.info?.size || 0), 0),
     totalConverted: items
       .filter(i => i.status === 'done')
@@ -424,21 +448,18 @@ export default function ImageConverterPage() {
     ? (totalSavings / stats.totalOriginal) * 100
     : 0;
 
-    // ============================================
+  // ============================================
   // 🎨 الواجهة
   // ============================================
   return (
     <div className="min-h-screen bg-slate-50" dir="rtl">
-      {/* ============================================ */}
-      {/* 🔔 Toast */}
-      {/* ============================================ */}
+      {/* Toast */}
       {toast.visible && (
         <div
           className={`
             fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]
             px-6 py-3 rounded-full font-black shadow-2xl
             max-w-[90vw] text-center text-sm
-            animate-[slideUp_0.3s_ease-out]
             ${toast.isError 
               ? 'bg-red-600 text-white' 
               : 'bg-slate-900 text-white'
@@ -449,11 +470,8 @@ export default function ImageConverterPage() {
         </div>
       )}
 
-      {/* ============================================ */}
-      {/* 🌟 Hero Section */}
-      {/* ============================================ */}
+      {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-slate-50 to-white py-8 md:py-12 overflow-hidden border-b border-slate-200">
-        {/* نقاط الخلفية */}
         <div
           className="absolute inset-0 opacity-20 text-slate-900"
           style={{
@@ -464,7 +482,6 @@ export default function ImageConverterPage() {
 
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
-            {/* الأيقونة + العنوان */}
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
                 <ImageIcon className="w-8 h-8 md:w-9 md:h-9 text-white" />
@@ -474,18 +491,15 @@ export default function ImageConverterPage() {
               </h1>
             </div>
 
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs md:text-sm font-black mb-4">
               <Sparkles className="w-4 h-4" />
               محلي 100% · 9 صيغ · بدون رفع
             </div>
 
-            {/* الوصف */}
             <p className="text-base md:text-lg text-slate-600 font-bold mb-6 max-w-2xl mx-auto">
               حوّل صورك بين <span className="text-amber-600">JPG, PNG, WebP, AVIF, HEIC</span> وأكثر — بجودة احترافية وسرعة فائقة
             </p>
 
-            {/* شارات المميزات */}
             <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
               {[
                 { icon: Shield, label: 'خصوصية كاملة', color: 'bg-emerald-100 text-emerald-700' },
@@ -505,19 +519,15 @@ export default function ImageConverterPage() {
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 🎯 الأداة الرئيسية */}
-      {/* ============================================ */}
+      {/* الأداة الرئيسية */}
       <section className="py-6 md:py-10">
         <div className="container mx-auto px-4 max-w-7xl">
 
-          {/* ===== حالة: لا توجد صور ===== */}
+          {/* حالة: لا توجد صور */}
           {items.length === 0 && (
             <div className="space-y-6">
-              {/* Upload Zone */}
               <UploadZone onFiles={handleFiles} currentCount={0} />
 
-              {/* المميزات */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
                 {[
                   { icon: '🍎', title: 'دعم HEIC', desc: 'صور iPhone' },
@@ -536,7 +546,6 @@ export default function ImageConverterPage() {
                 ))}
               </div>
 
-              {/* معلومات إضافية */}
               <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-4 max-w-2xl mx-auto">
                 <div className="flex items-start gap-3">
                   <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -553,11 +562,11 @@ export default function ImageConverterPage() {
             </div>
           )}
 
-          {/* ===== حالة: توجد صور ===== */}
+          {/* حالة: توجد صور */}
           {items.length > 0 && (
             <div className="space-y-6">
 
-              {/* ===== Header الإجراءات ===== */}
+              {/* Header الإجراءات */}
               <div className="bg-white border-2 border-slate-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
@@ -569,13 +578,13 @@ export default function ImageConverterPage() {
                     </h2>
                     <p className="text-xs text-slate-500 font-bold">
                       {stats.done > 0 && `${stats.done} جاهزة · `}
+                      {stats.ready > 0 && `${stats.ready} في الانتظار · `}
                       {stats.totalOriginal > 0 && `${formatBytes(stats.totalOriginal)}`}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {/* زر الإحصائيات */}
                   {stats.done > 0 && (
                     <button
                       onClick={() => setShowStats(!showStats)}
@@ -585,7 +594,6 @@ export default function ImageConverterPage() {
                     </button>
                   )}
 
-                  {/* زر الحذف */}
                   <button
                     onClick={handleClearAll}
                     className="px-3 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 text-xs font-black flex items-center gap-1.5 transition-colors"
@@ -596,7 +604,7 @@ export default function ImageConverterPage() {
                 </div>
               </div>
 
-              {/* ===== الإحصائيات ===== */}
+              {/* الإحصائيات */}
               {showStats && stats.done > 0 && (
                 <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -628,22 +636,110 @@ export default function ImageConverterPage() {
                 </div>
               )}
 
-              {/* ===== Grid المكونات الرئيسية ===== */}
+              {/* ✅ Grid الرئيسي — بدون Sticky */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* العمود الأيسر: الصور + المعاينة */}
+                {/* ✅ العمود الأيسر: الصورة + النتيجة + النتائج */}
                 <div className="space-y-4">
-                  {/* معاينة الصورة النشطة */}
                   {activeItem && activeItem.info && (
                     <div className="bg-white border-2 border-slate-200 rounded-2xl p-4">
+
                       {activeItem.status === 'done' && activeItem.convertedUrl ? (
-                        <ComparisonSlider
-                          beforeUrl={activeItem.originalUrl}
-                          afterUrl={activeItem.convertedUrl}
-                          beforeSize={activeItem.info.size}
-                          afterSize={activeItem.convertedSize}
-                          aspectRatio={1}
-                        />
+                        <div className="space-y-3">
+                          {/* ✅ الأصلية فوق */}
+                          <div className="space-y-1.5">
+                            <div className="text-[10px] font-black text-slate-600 text-center bg-slate-100 rounded-md py-1">
+                              📷 الأصلية · {formatBytes(activeItem.info.size)}
+                            </div>
+                            <div
+                              className="relative rounded-lg overflow-hidden"
+                              style={{
+                                aspectRatio: 1,
+                                maxHeight: '300px',
+                                backgroundColor: '#f8fafc',
+                                backgroundImage: `
+                                  linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+                                  linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+                                  linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+                                  linear-gradient(-45deg, transparent 75%, #e2e8f0 75%)
+                                `,
+                                backgroundSize: '20px 20px',
+                                backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+                              }}
+                            >
+                              <img
+                                src={activeItem.originalUrl}
+                                alt="الأصلية"
+                                className="absolute inset-0 w-full h-full object-contain"
+                              />
+                            </div>
+                            <div className="text-[10px] font-bold text-slate-500 text-center">
+                              {activeItem.info.width}×{activeItem.info.height} · {activeItem.info.format.toUpperCase()}
+                            </div>
+                          </div>
+
+                          {/* ✅ سهم صغير للأسفل */}
+                          <div className="flex items-center justify-center">
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-200">
+                              <ArrowDown className="w-3 h-3 text-amber-700" />
+                              <span className="text-[10px] font-black text-amber-700">النتيجة</span>
+                            </div>
+                          </div>
+
+                          {/* ✅ المحوّلة تحت */}
+                          <div className="space-y-1.5">
+                            <div className="text-[10px] font-black text-white text-center bg-emerald-500 rounded-md py-1">
+                              ✨ المحوّلة · {formatBytes(activeItem.convertedSize || 0)}
+                            </div>
+                            <div
+                              className="relative rounded-lg overflow-hidden"
+                              style={{
+                                aspectRatio: 1,
+                                maxHeight: '300px',
+                                backgroundColor:
+                                  settings.backgroundColor === TRANSPARENT_VALUE
+                                    ? '#f8fafc'
+                                    : settings.backgroundColor,
+                                backgroundImage:
+                                  settings.backgroundColor === TRANSPARENT_VALUE
+                                    ? `linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+                                       linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+                                       linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+                                       linear-gradient(-45deg, transparent 75%, #e2e8f0 75%)`
+                                    : undefined,
+                                backgroundSize:
+                                  settings.backgroundColor === TRANSPARENT_VALUE ? '20px 20px' : undefined,
+                                backgroundPosition:
+                                  settings.backgroundColor === TRANSPARENT_VALUE
+                                    ? '0 0, 0 10px, 10px -10px, -10px 0px'
+                                    : undefined,
+                              }}
+                            >
+                              <img
+                                src={activeItem.convertedUrl}
+                                alt="المحوّلة"
+                                className="absolute inset-0 w-full h-full object-contain"
+                              />
+                            </div>
+                            <div className="text-[10px] font-bold text-emerald-600 text-center">
+                              {activeItem.convertedFormat?.toUpperCase()}
+                            </div>
+                          </div>
+
+                          {/* المقارنة التفاعلية */}
+                          <div className="pt-2 border-t border-slate-200">
+                            <p className="text-[10px] font-black text-slate-500 mb-2 text-center">
+                              👁️ المقارنة التفاعلية
+                            </p>
+                            <ComparisonSlider
+                              beforeUrl={activeItem.originalUrl}
+                              afterUrl={activeItem.convertedUrl}
+                              beforeSize={activeItem.info.size}
+                              afterSize={activeItem.convertedSize}
+                              aspectRatio={1}
+                            />
+                          </div>
+                        </div>
                       ) : (
                         <div className="relative rounded-xl overflow-hidden bg-slate-900" style={{ aspectRatio: 1 }}>
                           <img
@@ -657,6 +753,12 @@ export default function ImageConverterPage() {
                           <div className="absolute top-2 left-2 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-sm text-white text-xs font-black">
                             {formatBytes(activeItem.info.size)}
                           </div>
+
+                          {activeItem.status === 'ready' && (
+                            <div className="absolute bottom-2 left-2 right-2 px-3 py-2 rounded-lg bg-amber-500/95 backdrop-blur-sm text-white text-[10px] font-black text-center">
+                              ⏳ اضغط "ابدأ التحويل" لرؤية النتيجة
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -667,7 +769,7 @@ export default function ImageConverterPage() {
                     <ImageAnalyzer recommendations={recommendations} />
                   )}
 
-                  {/* شريط الصور المصغرة */}
+                  {/* شريط الصور */}
                   <div className="bg-white border-2 border-slate-200 rounded-2xl p-3">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-black text-xs text-slate-700">
@@ -713,34 +815,66 @@ export default function ImageConverterPage() {
                               <AlertCircle className="w-4 h-4 text-white" />
                             </div>
                           )}
+                          {item.status === 'ready' && (
+                            <div className="absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full bg-amber-500 flex items-center justify-center">
+                              <span className="text-[8px] text-white font-black">⏳</span>
+                            </div>
+                          )}
                         </button>
                       ))}
                     </div>
                   </div>
+
+                  {/* ✅ النتائج داخل العمود الأيسر */}
+                  {stats.done > 0 && (
+                    <div className="bg-white border-2 border-slate-200 rounded-2xl p-3">
+                      <h3 className="font-black text-xs text-slate-700 mb-3 flex items-center gap-2">
+                        <span className="text-base">✨</span>
+                        النتائج ({stats.done})
+                      </h3>
+                      <div className="space-y-3">
+                        {items
+                          .filter(i => i.status === 'done')
+                          .map((item) => (
+                            <ResultCard
+                              key={item.id}
+                              item={item}
+                              onDownload={() => handleDownload(item)}
+                              onRemove={() => handleRemove(item.id)}
+                              onReconvert={handleConvert}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* العمود الأيمن: الإعدادات */}
                 <div className="space-y-4">
                   <div className="bg-white border-2 border-slate-200 rounded-2xl p-4">
-                    {/* الإعدادات المسبقة */}
                     <PresetButtons
                       activePreset={settings.smartPreset}
                       onSelect={handlePresetSelect}
                       onClear={handlePresetClear}
                     />
 
-                    {/* فاصل */}
                     <div className="my-4 h-px bg-slate-200" />
 
-                    {/* لوحة الإعدادات */}
                     <SettingsPanel
                       settings={settings}
                       onChange={setSettings}
                       hasAlpha={activeItem?.info?.hasAlpha}
+                      originalDimensions={
+                        activeItem?.info 
+                          ? { 
+                              width: activeItem.info.width, 
+                              height: activeItem.info.height 
+                            }
+                          : undefined
+                      }
                     />
                   </div>
 
-                  {/* زر التحويل */}
                   <button
                     onClick={handleConvert}
                     disabled={isConverting || items.every(i => i.status !== 'ready')}
@@ -766,7 +900,6 @@ export default function ImageConverterPage() {
                     )}
                   </button>
 
-                  {/* شريط التقدم */}
                   {isConverting && (
                     <div className="bg-white border-2 border-amber-200 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
@@ -791,7 +924,6 @@ export default function ImageConverterPage() {
                     </div>
                   )}
 
-                  {/* زر ZIP */}
                   {stats.done > 1 && (
                     <button
                       onClick={handleDownloadAll}
@@ -804,68 +936,41 @@ export default function ImageConverterPage() {
                 </div>
               </div>
 
-              {/* ===== النتائج (بطاقات) ===== */}
-              {stats.done > 0 && (
-                <div>
-                  <h2 className="text-lg md:text-xl font-black text-slate-900 mb-4 text-center">
-                    ✨ النتائج
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {items
-                      .filter(i => i.status === 'done')
-                      .map((item) => (
-                        <ResultCard
-                          key={item.id}
-                          item={item}
-                          onDownload={() => handleDownload(item)}
-                          onRemove={() => handleRemove(item.id)}
-                          onReconvert={handleConvert}
-                        />
-                      ))}
-                  </div>
-                </div>
-              )}
-
             </div>
           )}
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 📚 SEO Section */}
-      {/* ============================================ */}
+      {/* SEO Section */}
       <section className="py-12 md:py-16 bg-white border-t border-slate-200">
         <div className="container mx-auto px-4 max-w-4xl">
-
-          {/* ما هو؟ */}
           <article className="mb-12">
             <h2 className="text-2xl md:text-3xl font-black mb-4 text-slate-900">
               ما هو محوّل الصور؟
             </h2>
             <p className="text-base leading-relaxed mb-4 text-slate-700">
-              <strong>محوّل الصور</strong> من intooly هو أداة احترافية تعمل بالكامل في متصفحك، تتيح لك التحويل بين <strong>9 صيغ مختلفة</strong> من الصور بجودة عالية. تستخدم الأداة أحدث تقنيات الويب (Canvas API, WebAssembly) لضمان السرعة والجودة.
+              <strong>محوّل الصور</strong> من intooly هو أداة احترافية تعمل بالكامل في متصفحك، تتيح لك التحويل بين <strong>9 صيغ مختلفة</strong> من الصور بجودة عالية.
             </p>
             <p className="text-base leading-relaxed mb-4 text-slate-700">
-              كل شيء يحدث <strong className="text-amber-600">محلياً 100%</strong> — لا تُرفع صورك إلى أي خادم خارجي، مما يضمن لك <strong>خصوصية تامة</strong> وأداءً فائقاً.
+              كل شيء يحدث <strong className="text-amber-600">محلياً 100%</strong> — لا تُرفع صورك إلى أي خادم خارجي.
             </p>
           </article>
 
-          {/* المميزات */}
           <article className="mb-12">
             <h2 className="text-2xl md:text-3xl font-black mb-6 text-slate-900">
               المميزات الاحترافية
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { icon: '🍎', title: 'دعم HEIC', desc: 'حوّل صور iPhone إلى JPG أو WebP بسهولة' },
-                { icon: '⚡', title: 'AVIF الحديثة', desc: 'أصغر 70% من JPG بنفس الجودة' },
-                { icon: '📦', title: 'معالجة دفعية', desc: 'حوّل حتى 100 صورة في وقت واحد' },
-                { icon: '🔒', title: 'حذف EXIF', desc: 'احمِ خصوصيتك بحذف بيانات GPS' },
-                { icon: '👁️', title: 'مقارنة قبل/بعد', desc: 'شاهد الفرق بشريط تفاعلي' },
-                { icon: '🎨', title: '9 صيغ', desc: 'JPG, PNG, WebP, AVIF, HEIC, GIF, BMP, TIFF, ICO' },
-                { icon: '✨', title: 'تصدير متعدد', desc: 'صورة واحدة → عدة صيغ في ZIP' },
-                { icon: '⚙️', title: '6 إعدادات سريعة', desc: 'واتساب، إنستغرام، ويب، طباعة، بريد، مصغّرة' },
-                { icon: '🔍', title: 'تحليل ذكي', desc: 'توصيات تلقائية لتحسين كل صورة' },
+                { icon: '🍎', title: 'دعم HEIC', desc: 'حوّل صور iPhone إلى JPG أو WebP' },
+                { icon: '⚡', title: 'AVIF الحديثة', desc: 'أصغر 70% من JPG' },
+                { icon: '📦', title: 'معالجة دفعية', desc: 'حتى 100 صورة' },
+                { icon: '🔒', title: 'حذف EXIF', desc: 'حماية خصوصيتك' },
+                { icon: '👁️', title: 'مقارنة قبل/بعد', desc: 'شريط تفاعلي' },
+                { icon: '🎨', title: '9 صيغ', desc: 'JPG, PNG, WebP, AVIF, HEIC...' },
+                { icon: '✨', title: 'تصدير متعدد', desc: 'صورة → عدة صيغ' },
+                { icon: '⚙️', title: '6 إعدادات سريعة', desc: 'واتساب، إنستغرام...' },
+                { icon: '🔍', title: 'تحليل ذكي', desc: 'توصيات تلقائية' },
               ].map((f, i) => (
                 <div key={i} className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4 hover:border-amber-400 transition-colors">
                   <div className="text-3xl mb-2">{f.icon}</div>
@@ -876,7 +981,6 @@ export default function ImageConverterPage() {
             </div>
           </article>
 
-          {/* الأسئلة الشائعة */}
           <article>
             <h2 className="text-2xl md:text-3xl font-black mb-6 text-slate-900">
               الأسئلة الشائعة
@@ -885,35 +989,27 @@ export default function ImageConverterPage() {
               {[
                 { 
                   q: 'كيف أحوّل صورة HEIC من iPhone إلى JPG؟', 
-                  a: 'ارفع صورة HEIC وسيقوم المتصفح بتحويلها تلقائياً. اختر "JPG" كصيغة نهائية واضغط "ابدأ التحويل". لا حاجة لأي تطبيق إضافي.' 
+                  a: 'ارفع صورة HEIC وسيقوم المتصفح بتحويلها تلقائياً. اختر "JPG" كصيغة نهائية واضغط "ابدأ التحويل".' 
                 },
                 { 
                   q: 'ما هي أفضل صيغة للصور على الويب؟', 
-                  a: 'WebP هي الأفضل حالياً — توفر 30-50% من حجم JPG بنفس الجودة. AVIF أفضل لكن دعمها أقل. استخدم WebP كافتراضي.' 
+                  a: 'WebP هي الأفضل — توفر 30-50% من حجم JPG. AVIF أفضل لكن دعمها أقل.' 
                 },
                 { 
                   q: 'هل صوري آمنة؟', 
-                  a: 'نعم 100%. كل المعالجة تحدث في متصفحك باستخدام Canvas API. لا نرفع صورك لأي خادم.' 
+                  a: 'نعم 100%. كل المعالجة تحدث في متصفحك. لا نرفع صورك لأي خادم.' 
                 },
                 { 
                   q: 'كيف أقلل حجم الصورة؟', 
-                  a: 'استخدم صيغة WebP بجودة 85%، أو اختر preset "ويب" أو "بريد". يمكن توفير 50-90% من الحجم.' 
+                  a: 'استخدم WebP بجودة 85%، أو اختر preset "ويب" أو "بريد".' 
                 },
                 { 
                   q: 'ما هو حذف EXIF؟', 
-                  a: 'EXIF هي بيانات مخفية في الصور تحتوي على معلومات كاميرا وموقع GPS. حذفها يحمي خصوصيتك عند مشاركة الصور.' 
+                  a: 'EXIF هي بيانات مخفية تحتوي على معلومات الكاميرا وGPS. حذفها يحمي خصوصيتك.' 
                 },
                 { 
                   q: 'هل يمكن تحويل عدة صور دفعة واحدة؟', 
-                  a: 'نعم، حتى 100 صورة. يمكنك تحميلها جميعاً كملف ZIP واحد.' 
-                },
-                { 
-                  q: 'ما هي الصيغ المدعومة؟', 
-                  a: 'ندعم 9 صيغ: JPG، PNG، WebP، AVIF، HEIC، GIF، BMP، TIFF، ICO.' 
-                },
-                { 
-                  q: 'هل الأداة مجانية؟', 
-                  a: 'نعم 100% مجانية بدون حدود وبدون علامات مائية وبدون تسجيل.' 
+                  a: 'نعم، حتى 100 صورة. يمكنك تحميلها كملف ZIP واحد.' 
                 },
               ].map((faq, i) => (
                 <details key={i} className="bg-slate-50 border-2 border-slate-200 rounded-xl overflow-hidden group">
@@ -929,7 +1025,6 @@ export default function ImageConverterPage() {
             </div>
           </article>
 
-          {/* أدوات ذات صلة */}
           <article className="mt-12">
             <h2 className="text-2xl md:text-3xl font-black mb-6 text-slate-900">
               أدوات ذات صلة
@@ -953,7 +1048,6 @@ export default function ImageConverterPage() {
               ))}
             </div>
           </article>
-
         </div>
       </section>
 
