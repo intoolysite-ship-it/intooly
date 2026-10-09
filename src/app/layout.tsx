@@ -8,9 +8,9 @@ import ScrollToTop from '@/components/ScrollToTop';
 export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
   title: {
-    default: 'intooly - أدوات مجانية احترافية تعمل محلياً',
-    template: '%s | intooly',
-  },
+  default: 'intooly - أدوات مجانية احترافية تعمل محلياً',
+  template: '%s | intooly',   // ← الصحيح
+},
   description:
     'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً 100% في متصفحك لضمان خصوصيتك وسرعتك.',
   keywords: [
@@ -54,10 +54,9 @@ export const metadata: Metadata = {
   icons: {
   icon: [
     { url: '/favicon.ico', sizes: 'any' },
+    { url: '/icon.png', type: 'image/png', sizes: '512x512' },
     { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
     { url: '/favicon-144x144.png', type: 'image/png', sizes: '144x144' },
-    { url: '/icon0.svg', type: 'image/svg+xml' },
-    { url: '/icon1.png', type: 'image/png' },
   ],
   apple: [
     { url: '/apple-touch-icon.png', sizes: '180x180' },

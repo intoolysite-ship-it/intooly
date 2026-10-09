@@ -1,8 +1,8 @@
 ﻿import sharp from 'sharp';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
-const INPUT = resolve('public/logo-icon.svg');
+const INPUT = resolve('public/logo-icon-v2.svg');
 const OUTPUTS = [
   { name: 'favicon-48x48.png', size: 48 },
   { name: 'favicon-96x96.png', size: 96 },
@@ -12,7 +12,7 @@ const OUTPUTS = [
   { name: 'web-app-manifest-512x512.png', size: 512 },
 ];
 
-console.log('📖 قراءة logo-icon.svg...');
+console.log('📖 قراءة logo-icon-v2.svg...');
 const svgBuffer = readFileSync(INPUT);
 console.log('✅ تم القراءة بنجاح');
 
