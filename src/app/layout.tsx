@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     'إزالة الخلفية',
   ],
   authors: [{ name: 'intooly', url: 'https://intooly.com' }],
-  robots: {
+    robots: {
     index: true,
     follow: true,
     googleBot: {
@@ -30,6 +30,9 @@ export const metadata: Metadata = {
       follow: true,
       'max-image-preview': 'large',
     },
+  },
+  verification: {
+    google: 'oOXc7sK6VZPHb2T_EnFtgjFQxi1Q0wKpIaOBl5U0JG8',
   },
   openGraph: {
     type: 'website',
