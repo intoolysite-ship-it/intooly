@@ -4,7 +4,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieConsent from '@/components/CookieConsent';
-
+import ScrollToTop from '@/components/ScrollToTop';
 export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
   title: {
@@ -156,6 +156,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <CookieConsent />
+       <ScrollToTop />
       </body>
     </html>
   );
