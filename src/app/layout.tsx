@@ -52,9 +52,13 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
-  },
+  icon: [
+    { url: '/favicon.ico', sizes: 'any' },
+    { url: '/icon0.svg', type: 'image/svg+xml' },
+    { url: '/icon1.png', type: 'image/png' },
+  ],
+  apple: '/apple-icon.png',
+},
 };
 
 export const viewport: Viewport = {
