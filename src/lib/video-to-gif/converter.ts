@@ -97,7 +97,7 @@ function buildVideoToGifCommand(options: FFmpegOptions, inputName: string): stri
   args.push('-i', inputName);
 
   // فلتر: fps + scale + palette (لجودة عالية)
-  const filter = `fps=${fps},scale=${width}:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256[p];[s1][p]paletteuse=dither=sierra2_4a`;
+  const filter = `fps=${fps},scale=${width}:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle`;
 
   args.push('-filter_complex', filter);
 
