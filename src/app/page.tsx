@@ -279,15 +279,7 @@ export default function Home() {
                 </div>
               </Link>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-2.5 opacity-60" style={{ boxShadow: '0 4px 20px -4px rgba(139,92,246,0.25)' }}>
-              <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <FileText className="w-5 h-5 text-slate-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm text-slate-900">عداد الكلمات</h3>
-                <p className="text-xs text-slate-500">قريباً</p>
-              </div>
-            </div>
+            
 
             <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-2.5 opacity-60" style={{ boxShadow: '0 4px 20px -4px rgba(139,92,246,0.25)' }}>
               <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
