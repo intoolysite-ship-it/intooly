@@ -268,6 +268,17 @@ export default function Home() {
               </div>
             </Link>
 
+            <Link href="/tools/word-counter" className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5 relative" style={{ boxShadow: '0 4px 20px -4px rgba(16,185,129,0.25)' }}>
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">جديد</span>
+                <div className="w-9 h-9 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-200 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                  <FileText className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-sm text-slate-900">عدّاد الكلمات</h3>
+                  <p className="text-xs text-slate-600 truncate">تحليل شامل + مؤشر قراءة</p>
+                </div>
+              </Link>
+
             <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-2.5 opacity-60" style={{ boxShadow: '0 4px 20px -4px rgba(139,92,246,0.25)' }}>
               <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <FileText className="w-5 h-5 text-slate-400" />
@@ -296,7 +307,7 @@ export default function Home() {
               أدوات <strong>تحسين محركات البحث (SEO)</strong> من intooly تساعدك على تحسين ترتيب موقعك في نتائج Google. أداة <strong>مولد الكلمات المفتاحية</strong> تكتشف مئات الكلمات المفتاحية الطويلة (Long-tail Keywords) من كلمة واحدة فقط، معتمدة على Google Autocomplete مع تصنيف ذكي حسب نية البحث وتجميع تلقائي.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed mb-3">
-              قريباً سنضيف <strong>عداد الكلمات والحروف</strong> لتحليل كثافة الكلمات في محتواك، و<strong>مولد Meta Tags</strong> لإنشاء عناوين ووصفات Meta مثالية مع معاينة حية لنتائج محركات البحث.
+              جرّب أيضاً <strong>عدّاد الكلمات الذكي</strong> لتحليل كثافة الكلمات ومؤشر القراءة، و<strong>مولد Meta Tags</strong> لإنشاء عناوين ووصفات Meta مثالية مع معاينة حية لنتائج محركات البحث (قريباً).
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
               باستخدام أدوات SEO من intooly، يمكنك <strong>زيادة الزيارات العضوية</strong> لموقعك، <strong>تحسين محتوى مقالاتك</strong>، و<strong>الوصول إلى جمهورك المستهدف</strong> بشكل أكثر دقة وفعالية.
