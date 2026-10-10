@@ -69,6 +69,7 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
 export default function Header() {
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -222,13 +223,23 @@ export default function Header() {
                 )}
               </div>
 
-              <button 
-                className="lg:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="فتح القائمة"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+              {/* أيقونة البحث للجوال */}
+<button 
+  className="sm:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors"
+  onClick={() => setMobileSearchOpen(true)}
+  aria-label="البحث"
+>
+  <Search className="w-5 h-5 text-ink-700" />
+</button>
+
+{/* زر القائمة */}
+<button 
+  className="lg:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors"
+  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  aria-label="فتح القائمة"
+>
+  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+</button>
             </div>
           </div>
         </div>
@@ -326,6 +337,69 @@ export default function Header() {
               </div>
             </nav>
           </div>
+        </div>
+      )}
+          {/* ============= نافذة البحث على الجوال ============= */}
+      {mobileSearchOpen && (
+        <div className="sm:hidden fixed inset-0 z-[100] bg-white" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+          <div className="p-4 border-b border-ink-200">
+            <div className="flex items-center gap-2">
+              <div className="flex-1 relative">
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-400" />
+                <input
+                  type="search"
+                  placeholder="🔍 ابحث عن أداة..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-4 pr-12 py-3 rounded-xl border-2 border-ink-200 text-base focus:outline-none focus:border-brand-500 bg-ink-50"
+                  autoFocus
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  setSearchQuery('');
+                }}
+                className="px-4 py-3 rounded-xl bg-ink-100 hover:bg-ink-200 font-bold text-sm"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+          
+          {/* النتائج */}
+          {searchQuery.trim().length >= 2 && (
+            <div className="p-4 space-y-2 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+              {searchResults.length > 0 ? (
+                searchResults.map((tool, idx) => (
+                  <Link
+                    key={idx}
+                    href={tool.href}
+                    onClick={() => {
+                      setMobileSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-ink-50 hover:bg-brand-50 transition-colors"
+                  >
+                    <Zap className="w-5 h-5 text-brand-500 flex-shrink-0" />
+                    <span className="text-base font-bold text-ink-800">{tool.name}</span>
+                  </Link>
+                ))
+              ) : (
+                <div className="text-center py-12 text-ink-500">
+                  <p className="font-bold mb-2">لا توجد نتائج</p>
+                  <p className="text-sm">جرب كلمة أخرى</p>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {searchQuery.trim().length < 2 && (
+            <div className="p-6 text-center text-ink-500">
+              <p className="font-bold mb-2">🔍 ابحث عن أداة</p>
+              <p className="text-sm">اكتب حرفين على الأقل للبحث</p>
+            </div>
+          )}
         </div>
       )}
     </>
