@@ -95,6 +95,7 @@ export default function Home() {
               { icon: Video, label: 'أدوات الفيديو', href: '/#video-tools', shadowColor: 'rgba(59,130,246,0.25)' },
               { icon: Type, label: 'أدوات النصوص', href: '#', shadowColor: 'rgba(16,185,129,0.25)' },
               { icon: FileText, label: 'أدوات SEO', href: '/#seo-tools', shadowColor: 'rgba(139,92,246,0.25)' },
+                { icon: Zap, label: 'أدوات الإنتاجية', href: '/#productivity-tools', shadowColor: 'rgba(234,179,8,0.25)' },
               { icon: Wrench, label: 'أدوات التطوير', href: '#', shadowColor: 'rgba(99,102,241,0.25)' },
             ].map((cat, idx) => (
               <Link key={idx} href={cat.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5" style={{ boxShadow: `0 4px 20px -4px ${cat.shadowColor}` }}>
@@ -308,6 +309,43 @@ export default function Home() {
         </div>
       </section>
 
+        {/* ============ 5.6. أدوات الإنتاجية ============ */}
+        <section id="productivity-tools" className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <div className="flex items-center justify-center gap-2.5 mb-3">
+                <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                  <Zap className="w-5 h-5 text-amber-600" />
+                </div>
+                <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-900">أدوات الإنتاجية</h2>
+              </div>
+              <p className="text-base md:text-lg text-slate-600">أدوات عملية لإنجاز مهامك اليومية بكفاءة</p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              <Link href="/tools/qr-generator" className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5 relative" style={{ boxShadow: '0 4px 20px -4px rgba(234,179,8,0.25)' }}>
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">جديد</span>
+                <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                  <QrCode className="w-5 h-5 text-amber-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-sm text-slate-900">مولّد QR Code</h3>
+                  <p className="text-xs text-slate-600 truncate">14 نوع QR + تخصيص كامل</p>
+                </div>
+              </Link>
+            </div>
+
+            <div className="mt-8 p-5 rounded-xl bg-gradient-to-br from-brand-50 to-white border border-brand-200">
+              <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                <strong>أدوات الإنتاجية</strong> من intooly تساعدك على إنجاز مهامك اليومية بكفاءة. بدلاً من استخدام أدوات متعددة، تجد كل ما تحتاجه في مكان واحد.
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                جميع الأدوات تعمل <strong>محلياً في متصفحك</strong> بدون رفع ملفاتك إلى أي سيرفر، مما يضمن <strong>خصوصية كاملة</strong> وسرعة فائقة.
+              </p>
+            </div>
+          </div>
+        </section>
+
       {/* ============ 6. كل ما تحتاجه لمعالجة ملفاتك ============ */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -328,6 +366,7 @@ export default function Home() {
               { icon: Image, title: 'أدوات الصور', desc: 'إزالة الخلفية، ضغط، تحويل', href: '/#image-tools', shadowColor: 'rgba(249,115,22,0.25)' },
               { icon: Video, title: 'أدوات الفيديو', desc: 'ضغط، تحويل، قص، GIF', href: '/#video-tools', shadowColor: 'rgba(59,130,246,0.25)' },
               { icon: BarChart3, title: 'أدوات SEO', desc: 'كلمات مفتاحية، Meta Tags', href: '/#seo-tools', shadowColor: 'rgba(139,92,246,0.25)' },
+                { icon: Zap, title: 'أدوات الإنتاجية', desc: 'QR Code، أدوات عملية', href: '/#productivity-tools', shadowColor: 'rgba(234,179,8,0.25)' },
               { icon: FileCode, title: 'أدوات المطورين', desc: 'JSON, QR, Base64', href: '#', shadowColor: 'rgba(99,102,241,0.25)' },
             ].map((tool, idx) => (
               <Link key={idx} href={tool.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5" style={{ boxShadow: `0 4px 20px -4px ${tool.shadowColor}` }}>
@@ -590,3 +629,4 @@ export default function Home() {
     </div>
   );
 }
+

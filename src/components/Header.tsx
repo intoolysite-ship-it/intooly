@@ -59,9 +59,16 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
     color: 'from-indigo-500 to-indigo-700',
     items: [
       { name: 'JSON Formatter', href: '/tools/json-formatter' },
-      { name: 'مولد QR Code', href: '/tools/qr-generator' },
       { name: 'Base64 Encoder', href: '/tools/base64' },
       { name: 'Color Picker', href: '/tools/color-picker' },
+    ],
+  },
+  productivity: {
+    icon: Zap,
+    title: 'أدوات الإنتاجية',
+    color: 'from-brand-500 to-brand-600',
+    items: [
+      { name: 'مولّد QR Code', href: '/tools/qr-generator', hot: true },
     ],
   },
 };
