@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'export',
   distDir: 'out',
-  turbopack: {},        // ✅ مطلوب لـ `npm run dev` (Next.js 16)
+  turbopack: {},
   images: {
     unoptimized: true,
   },
@@ -15,6 +15,14 @@ const nextConfig = {
         os: false,
       };
     }
+
+    // دعم ملفات WASM (مطلوب لـ onnxruntime-web / transformers.js)
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      topLevelAwait: true,
+    };
+
     return config;
   },
 };

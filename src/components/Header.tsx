@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -69,6 +69,7 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
     color: 'from-brand-500 to-brand-600',
     items: [
       { name: 'مولّد QR Code', href: '/tools/qr-generator', hot: true },
+      { name: 'مولّد الصور بالذكاء الاصطناعي', href: '/tools/ai-image-generator', hot: true, star: true },
     ],
   },
 };
