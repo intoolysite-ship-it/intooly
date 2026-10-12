@@ -13,6 +13,8 @@ type GenerateParams = {
   seed?: string;
   style?: string;
   ratio?: string;
+  customWidth?: number;
+  customHeight?: number;
 };
 
 type WorkerResponse = {
@@ -47,7 +49,7 @@ export function useImageGeneration() {
 
   const generate = useCallback(
     async (params: GenerateParams): Promise<string> => {
-      const { prompt, negativePrompt, style, ratio } = params;
+      const { prompt, negativePrompt, style, ratio, customWidth, customHeight } = params;
 
       setError('');
       setIsLoading(true);
@@ -64,14 +66,24 @@ export function useImageGeneration() {
           : promptEn;
 
         setStatus('جارٍ توليد الصورة على Cloudflare…');
+
+        const payload: Record<string, unknown> = {
+          prompt: fullPrompt,
+          style: style || 'realistic',
+        };
+
+        // إذا استخدم المستخدم الأبعاد المخصصة
+        if (customWidth && customHeight) {
+          payload.customWidth = customWidth;
+          payload.customHeight = customHeight;
+        } else {
+          payload.ratio = ratio || '1:1';
+        }
+
         const response = await fetch(`${WORKER_URL}/api/generate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: fullPrompt,
-            style: style || 'realistic',
-            ratio: ratio || '1:1',
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {

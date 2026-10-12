@@ -37,6 +37,9 @@ export default function AIImageGeneratorPage() {
   const [negativePrompt, setNegativePrompt] = useState(DEFAULT_NEGATIVE_PROMPT);
   const [style, setStyle] = useState<StyleKey>('realistic');
   const [ratio, setRatio] = useState<RatioKey>('1:1');
+  const [useCustomSize, setUseCustomSize] = useState(false);
+  const [customWidth, setCustomWidth] = useState(1024);
+  const [customHeight, setCustomHeight] = useState(1024);
   const [steps, setSteps] = useState(20);
   const [seed, setSeed] = useState('');
   const [result, setResult] = useState<string | null>(null);
@@ -57,14 +60,17 @@ export default function AIImageGeneratorPage() {
     }
   }, []);
 
-  const saveHistory = useCallback((items: HistoryItem[]) => {
-    setHistory(items);
-    try {
-      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      setError('مساحة التخزين المحلية ممتلئة. نزّل الصور المهمة ثم امسح السجل.');
-    }
-  }, [setError]);
+  const saveHistory = useCallback(
+    (items: HistoryItem[]) => {
+      setHistory(items);
+      try {
+        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(items));
+      } catch {
+        setError('مساحة التخزين المحلية ممتلئة. نزّل الصور المهمة ثم امسح السجل.');
+      }
+    },
+    [setError]
+  );
 
   async function handleGenerate() {
     setResult(null);
@@ -75,7 +81,10 @@ export default function AIImageGeneratorPage() {
       return;
     }
 
-    const [width, height] = DIMENSIONS[ratio] ?? DIMENSIONS['1:1'];
+    const [width, height] = useCustomSize
+      ? [customWidth, customHeight]
+      : DIMENSIONS[ratio] ?? DIMENSIONS['1:1'];
+
     const fullPrompt = `${prompt.trim()}, ${STYLES[style] ?? STYLES.realistic}`;
 
     try {
@@ -86,6 +95,10 @@ export default function AIImageGeneratorPage() {
         width,
         height,
         seed,
+        style,
+        ratio,
+        customWidth: useCustomSize ? customWidth : undefined,
+        customHeight: useCustomSize ? customHeight : undefined,
       });
 
       setResult(dataUrl);
@@ -142,8 +155,9 @@ export default function AIImageGeneratorPage() {
             <span className="inline-flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" /> معالجة محلية
             </span>
-            <span>• تنزيل PNG</span>
+            <span>• تنزيل JPEG</span>
             <span>• أنماط فنية متعددة</span>
+            <span>• مقاسات مخصصة</span>
           </div>
         </div>
       </section>
@@ -200,12 +214,15 @@ export default function AIImageGeneratorPage() {
               <select
                 value={ratio}
                 onChange={(e) => setRatio(e.target.value as RatioKey)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm"
+                disabled={useCustomSize}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm disabled:opacity-50"
               >
                 <option value="1:1">1:1</option>
                 <option value="4:3">4:3</option>
                 <option value="3:4">3:4</option>
                 <option value="16:9">16:9</option>
+                <option value="9:16">9:16</option>
+                <option value="21:9">21:9</option>
               </select>
             </div>
             <div>
@@ -220,6 +237,58 @@ export default function AIImageGeneratorPage() {
                 <option value={30}>30 — أبطأ</option>
               </select>
             </div>
+          </div>
+
+          {/* المقاس المخصص */}
+          <div className="rounded-2xl border border-dashed border-violet-200 bg-violet-50 p-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={useCustomSize}
+                onChange={(e) => setUseCustomSize(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <span className="text-sm font-bold">استخدام مقاس مخصص</span>
+            </label>
+
+            {useCustomSize && (
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-xs font-bold">
+                    العرض (256 - 1920)
+                  </label>
+                  <input
+                    type="number"
+                    min={256}
+                    max={1920}
+                    step={8}
+                    value={customWidth}
+                    onChange={(e) => setCustomWidth(Number(e.target.value))}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold">
+                    الارتفاع (256 - 1920)
+                  </label>
+                  <input
+                    type="number"
+                    min={256}
+                    max={1920}
+                    step={8}
+                    value={customHeight}
+                    onChange={(e) => setCustomHeight(Number(e.target.value))}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            {useCustomSize && (
+              <p className="mt-2 text-xs text-slate-500">
+                المقاس الحالي: {customWidth} × {customHeight} بكسل
+              </p>
+            )}
           </div>
 
           <div>
@@ -334,12 +403,12 @@ export default function AIImageGeneratorPage() {
                       onClick={() =>
                         downloadImage(
                           result,
-                          `intooly-ai-image-${Date.now()}.png`
+                          `intooly-ai-image-${Date.now()}.jpg`
                         )
                       }
                       className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-violet-700"
                     >
-                      <Download className="h-4 w-4" /> تنزيل PNG
+                      <Download className="h-4 w-4" /> تنزيل JPEG
                     </button>
                   </div>
                 </div>
@@ -408,7 +477,7 @@ export default function AIImageGeneratorPage() {
                       </p>
                       <button
                         onClick={() =>
-                          downloadImage(item.dataUrl, `intooly-${item.id}.png`)
+                          downloadImage(item.dataUrl, `intooly-${item.id}.jpg`)
                         }
                         className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-violet-700"
                       >
@@ -423,25 +492,6 @@ export default function AIImageGeneratorPage() {
         </section>
       </div>
 
-      <section className="border-t border-slate-200 bg-white">
-        <article className="mx-auto max-w-4xl px-4 py-12 text-right">
-          <h2 className="text-2xl font-black">
-            ما هو مولّد الصور بالذكاء الاصطناعي؟
-          </h2>
-          <p className="mt-4 leading-8 text-slate-600">
-            مولّد الصور بالذكاء الاصطناعي يحوّل الوصف النصي إلى صورة رقمية. يتيح
-            لك Intooly تجربة أنماط مثل التصوير الواقعي والفن الرقمي والأنمي
-            والألوان المائية. في هذا الإصدار التجريبي، يجري التوليد محليًا
-            باستخدام WebGPU ولا يتطلب مفتاح API.
-          </p>
-          <h3 className="mt-8 text-xl font-bold">الخصوصية ومتطلبات التشغيل</h3>
-          <p className="mt-3 leading-8 text-slate-600">
-            تُنزّل ملفات النموذج إلى المتصفح عند الاستخدام الأول. لا تُرسل الصور
-            إلى API توليد. يحتاج التشغيل إلى متصفح وجهاز متوافقين، وقد لا تعمل
-            الأداة على الأجهزة القديمة أو الهواتف محدودة الذاكرة.
-          </p>
-        </article>
-      </section>
       {/* قسم SEO */}
       <section className="border-t border-slate-200 bg-gradient-to-b from-white to-slate-50">
         <article className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
@@ -460,7 +510,7 @@ export default function AIImageGeneratorPage() {
               <li>✓ صور واقعية بجودة احترافية باستخدام نماذج FLUX.</li>
               <li>✓ مجاني بالكامل بدون حدود يومية أو مفتاح API.</li>
               <li>✓ أنماط فنية متعددة: واقعي، أنمي، ألوان مائية، زيتي، ثلاثي الأبعاد.</li>
-              <li>✓ نسب مختلفة: 1:1، 4:3، 3:4، 16:9.</li>
+              <li>✓ نسب مختلفة: 1:1، 4:3، 3:4، 16:9، وأبعاد مخصصة.</li>
             </ul>
             <h3 className="text-2xl font-bold text-slate-900 mt-10 mb-4">
               كيف تستخدم مولّد الصور؟
@@ -468,8 +518,8 @@ export default function AIImageGeneratorPage() {
             <ol className="space-y-3 text-slate-700 leading-8 list-decimal list-inside">
               <li>اكتب وصفًا واضحًا للصورة.</li>
               <li>اختر النمط الفني.</li>
-              <li>حدّد نسبة اللوحة.</li>
-              <li>اضغط زر "إنشاء الصورة".</li>
+              <li>حدّد نسبة اللوحة أو استخدم المقاس المخصص.</li>
+              <li>اضغط زر &quot;إنشاء الصورة&quot;.</li>
               <li>حمّل النتيجة بضغطة واحدة.</li>
             </ol>
             <h3 className="text-2xl font-bold text-slate-900 mt-10 mb-4">
@@ -487,6 +537,10 @@ export default function AIImageGeneratorPage() {
               <div>
                 <h4 className="text-lg font-bold text-slate-900 mb-2">ما أفضل وصف للحصول على صورة واقعية؟</h4>
                 <p className="text-slate-700 leading-8">كلما كان الوصف أكثر تفصيلًا، كانت النتيجة أفضل. اذكر الكاميرا، الإضاءة، والخلفية.</p>
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">هل يمكنني تحديد مقاس الصورة يدويًا؟</h4>
+                <p className="text-slate-700 leading-8">نعم، فعّل خيار &quot;استخدام مقاس مخصص&quot; وأدخل العرض والارتفاع بالبكسل (256 - 1920).</p>
               </div>
             </div>
           </div>
