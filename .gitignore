@@ -33,3 +33,7 @@ next-env.d.ts
 # Build outputs
 /out
 /public_html
+
+# Backup and test files
+*.bak
+response.json
