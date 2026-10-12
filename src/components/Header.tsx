@@ -63,6 +63,14 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
       { name: 'Color Picker', href: '/tools/color-picker' },
     ],
   },
+  pdf: {
+    icon: FileText,
+    title: 'أدوات PDF',
+    color: 'from-brand-500 to-brand-600',
+    items: [
+      { name: 'جميع أدوات PDF', href: '/tools/pdf', hot: true, star: true },
+    ],
+  },
   productivity: {
     icon: Zap,
     title: 'أدوات الإنتاجية',

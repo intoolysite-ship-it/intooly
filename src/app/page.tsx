@@ -5,7 +5,8 @@ import {
   Scissors, Archive, Maximize, FileType, Crop, Palette,
   Film, Music, Share2, Clock, Globe, Smartphone, Lock,
   HelpCircle, BookOpen, ArrowLeft, Wrench, Hash, QrCode,
-  Braces, Type, Search, BarChart3, FileCode, Code
+  Braces, Type, Search, BarChart3, FileCode, Code,
+  Merge, Minimize2, RotateCw, ImagePlus, Plus
 } from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
@@ -97,6 +98,7 @@ export default function Home() {
               { icon: FileText, label: 'أدوات SEO', href: '/#seo-tools', shadowColor: 'rgba(139,92,246,0.25)' },
                 { icon: Zap, label: 'أدوات الإنتاجية', href: '/#productivity-tools', shadowColor: 'rgba(234,179,8,0.25)' },
               { icon: Wrench, label: 'أدوات التطوير', href: '#', shadowColor: 'rgba(99,102,241,0.25)' },
+              { icon: FileText, label: 'أدوات PDF', href: '/tools/pdf', shadowColor: 'rgba(6,182,212,0.25)' },
             ].map((cat, idx) => (
               <Link key={idx} href={cat.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5" style={{ boxShadow: `0 4px 20px -4px ${cat.shadowColor}` }}>
                 <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.4)]">
@@ -245,6 +247,95 @@ export default function Home() {
       </section>
 
       {/* ============ 5.5. أدوات SEO ============ */}
+      {/* ============ 5.5. أدوات PDF ============ */}
+      <section id="pdf-tools" className="py-16 bg-gradient-to-br from-ink-50 via-white to-ink-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* العنوان */}
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 flex-shrink-0">
+                <div className="absolute inset-0 rounded-lg bg-brand-400/40 blur-xl" />
+                <FileText className="relative w-5 h-5 text-brand-600" />
+              </div>
+              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-ink-900">أدوات PDF المجانية أونلاين</h2>
+            </div>
+            <p className="text-base md:text-lg text-ink-600">أفضل أدوات PDF المجانية عبر الإنترنت لتيسير تحرير وضغط واستخراج النصوص</p>
+          </div>
+
+          {/* البطاقة الرئيسية */}
+          <Link
+            href="/tools/pdf"
+            className="group flex flex-col items-center justify-center w-full bg-white rounded-2xl p-6 md:p-8 text-center transition-all duration-300 shadow-[0_8px_30px_-8px_rgba(234,179,8,0.3)] hover:shadow-[0_15px_40px_-10px_rgba(234,179,8,0.5)] hover:-translate-y-1"
+          >
+            <span className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-base font-bold text-white shadow-lg shadow-brand-200 transition group-hover:bg-brand-600">
+              استكشف جميع الأدوات
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </span>
+          </Link>
+
+          {/* 6 بطاقات التصنيفات - مضغوطة */}
+          <div className="mt-6 grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+            <Link
+              href="/tools/merge-pdf"
+              className="group flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center transition-all duration-300 shadow-[0_4px_12px_-3px_rgba(234,179,8,0.35)] hover:bg-brand-600 hover:shadow-[0_8px_20px_-4px_rgba(234,179,8,0.65)] hover:-translate-y-0.5"
+            >
+              <Merge className="h-4 w-4 text-brand-600 transition-colors group-hover:text-white" />
+              <span className="text-xs md:text-sm font-bold text-ink-900 transition-colors group-hover:text-white">دمج</span>
+            </Link>
+
+            <Link
+              href="/tools/split-pdf"
+              className="group flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center transition-all duration-300 shadow-[0_4px_12px_-3px_rgba(234,179,8,0.35)] hover:bg-brand-600 hover:shadow-[0_8px_20px_-4px_rgba(234,179,8,0.65)] hover:-translate-y-0.5"
+            >
+              <Scissors className="h-4 w-4 text-brand-600 transition-colors group-hover:text-white" />
+              <span className="text-xs md:text-sm font-bold text-ink-900 transition-colors group-hover:text-white">تقسيم</span>
+            </Link>
+
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center opacity-50 cursor-not-allowed shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)]">
+              <Minimize2 className="h-4 w-4 text-ink-400" />
+              <span className="text-xs md:text-sm font-bold text-ink-400">ضغط</span>
+              <span className="text-[9px] font-bold text-ink-400 bg-ink-100 px-1.5 py-0.5 rounded">قريبًا</span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center opacity-50 cursor-not-allowed shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)]">
+              <RotateCw className="h-4 w-4 text-ink-400" />
+              <span className="text-xs md:text-sm font-bold text-ink-400">تدوير</span>
+              <span className="text-[9px] font-bold text-ink-400 bg-ink-100 px-1.5 py-0.5 rounded">قريبًا</span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center opacity-50 cursor-not-allowed shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)]">
+              <ImagePlus className="h-4 w-4 text-ink-400" />
+              <span className="text-xs md:text-sm font-bold text-ink-400">تحويل</span>
+              <span className="text-[9px] font-bold text-ink-400 bg-ink-100 px-1.5 py-0.5 rounded">قريبًا</span>
+            </div>
+
+            <Link
+              href="/tools/pdf"
+              className="group flex items-center justify-center gap-2 rounded-lg bg-brand-50 px-3 py-2.5 text-center transition-all duration-300 shadow-[0_4px_12px_-3px_rgba(234,179,8,0.45)] hover:bg-brand-600 hover:shadow-[0_8px_20px_-4px_rgba(234,179,8,0.65)] hover:-translate-y-0.5"
+            >
+              <Plus className="h-4 w-4 text-brand-700 transition-colors group-hover:text-white" />
+              <span className="text-xs md:text-sm font-bold text-ink-900 transition-colors group-hover:text-white">+20 أداة</span>
+            </Link>
+          </div>
+
+          {/* محتوى SEO - فقرتان فقط */}
+          <div className="mt-10 w-full rounded-2xl bg-white p-6 md:p-8 shadow-[0_4px_20px_-4px_rgba(234,179,8,0.15)]">
+            <h2 className="text-lg md:text-xl font-bold text-ink-900 mb-4 flex items-center gap-3">
+              <span className="inline-block w-1.5 h-6 rounded-full bg-brand-500" />
+              أدوات PDF المجانية أونلاين — أفضل حل للتعامل مع ملفاتك
+            </h2>
+            <p className="text-sm md:text-base text-ink-700 leading-relaxed mb-4">
+              إذا كنت تبحث عن <strong>أدوات PDF المجانية أونلاين</strong> التي تتيح لك التعامل مع ملفات PDF بسهولة وأمان، فأنت في المكان الصحيح. تقدم لك <strong>Intooly</strong> مجموعة متكاملة من <strong>أفضل أدوات PDF المجانية عبر الإنترنت</strong>، تعمل جميعها داخل متصفحك مباشرة، دون الحاجة إلى تحميل أي برامج، أو إنشاء حساب، أو رفع ملفاتك إلى أي خادم خارجي.
+            </p>
+            <p className="text-sm md:text-base text-ink-700 leading-relaxed">
+              تشمل الأدوات <strong>دمج ملفات PDF</strong> المتعددة في مستند واحد، <strong>تقسيم PDF</strong> إلى ملفات أصغر، <strong>ضغط PDF</strong> لتقليل الحجم دون فقدان الجودة، <strong>تدوير الصفحات</strong> لضبط الاتجاه، <strong>تحويل الصور إلى PDF</strong> بسهولة، بالإضافة إلى أكثر من 20 أداة أخرى لتحرير الملفات وحمايتها واستخراج النصوص منها.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section id="seo-tools" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">

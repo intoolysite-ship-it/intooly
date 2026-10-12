@@ -1,0 +1,278 @@
+﻿import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Merge,
+  Scissors,
+  Trash2,
+  RotateCw,
+  Image as ImageIcon,
+  FileImage,
+  LayoutGrid,
+  FileOutput,
+  Minimize2,
+  Stamp,
+  Hash,
+  Lock,
+  FileText,
+  ImagePlus,
+  PenTool,
+  Edit3,
+  Images,
+  Unlock,
+  FileType,
+  Table,
+  FileSpreadsheet,
+  Presentation,
+  ScanText,
+  Wrench,
+  ArrowLeft,
+} from 'lucide-react';
+
+import { PDF_TOOLS, PDF_CATEGORIES } from '@/lib/pdf-tools/data';
+import type { PdfToolCategory } from '@/lib/pdf-tools/data';
+
+export const metadata: Metadata = {
+  title: 'أدوات PDF مجانية أونلاين — دمج، تقسيم، ضغط، تحويل | Intooly',
+  description:
+    'مجموعة أدوات PDF مجانية تعمل داخل متصفحك: دمج، تقسيم، ضغط، تدوير، حماية، تحويل PDF إلى Word وJPG والعكس. بدون رفع الملفات إلى أي خادم.',
+  keywords: [
+    'أدوات PDF',
+    'PDF مجانا',
+    'دمج PDF',
+    'ضغط PDF',
+    'تحويل PDF',
+    'تقسيم PDF',
+    'Intooly',
+  ],
+  openGraph: {
+    title: 'أدوات PDF مجانية أونلاين | Intooly',
+    description:
+      'مجموعة أدوات PDF مجانية تعمل داخل متصفحك بدون رفع الملفات.',
+    url: 'https://intooly.com/tools/pdf',
+    siteName: 'Intooly',
+    locale: 'ar_EG',
+    type: 'website',
+  },
+  alternates: {
+    canonical: 'https://intooly.com/tools/pdf',
+  },
+};
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Merge,
+  Scissors,
+  Trash2,
+  RotateCw,
+  Image: ImageIcon,
+  FileImage,
+  LayoutGrid,
+  FileOutput,
+  Minimize2,
+  Stamp,
+  Hash,
+  Lock,
+  FileText,
+  ImagePlus,
+  PenTool,
+  Edit3,
+  Images,
+  Unlock,
+  FileType,
+  Table,
+  FileSpreadsheet,
+  Presentation,
+  ScanText,
+  Wrench,
+};
+
+const CATEGORY_ORDER: PdfToolCategory[] = [
+  'convert',
+  'organize',
+  'compress',
+  'security',
+  'extract',
+];
+
+export default function PdfToolsPage() {
+  return (
+    <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
+
+        <div className="container relative mx-auto px-4 py-12 md:py-16">
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-300 bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">
+            <FileText className="h-4 w-4" />
+            Intooly PDF Suite
+          </span>
+          <h1 className="text-3xl font-black tracking-tight text-ink-900 sm:text-4xl md:text-5xl">
+            أدوات PDF المجانية
+          </h1>
+          <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
+            مجموعة أدوات PDF تعمل داخل متصفحك مباشرة: دمج، تقسيم، ضغط،
+            تدوير، حماية، تحويل. لا تُرفع ملفاتك إلى أي خادم، ولا تحتاج
+            تسجيلًا.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-4 text-sm font-medium text-ink-600">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-brand-500" />
+              معالجة محلية
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-brand-500" />
+              بدون تسجيل
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-brand-500" />
+              بدون حدود يومية
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* التصنيفات */}
+      <section className="container mx-auto px-4 py-10 md:py-14">
+        {CATEGORY_ORDER.map((catKey) => {
+          const category = PDF_CATEGORIES[catKey];
+          const tools = PDF_TOOLS.filter((t) => t.category === catKey && t.isReady);
+          if (tools.length === 0) return null;
+
+          return (
+            <div key={catKey} className="mb-12 last:mb-0">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-8 w-1 rounded-full bg-brand-500" />
+                <div>
+                  <h2 className="text-2xl font-black text-ink-900">
+                    {category.title}
+                  </h2>
+                  <p className="mt-0.5 text-sm text-ink-600">
+                    {category.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {tools.map((tool) => {
+                  const IconComp = ICON_MAP[tool.icon] ?? FileText;
+                  return (
+                    <Link
+                      key={tool.slug}
+                      href={`/tools/${tool.slug}`}
+                      className="group flex items-start gap-3 rounded-xl border border-ink-200 bg-white p-4 text-right transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg"
+                    >
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-100 transition-transform group-hover:scale-110">
+                        <IconComp className="h-5 w-5 text-brand-600" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-bold text-ink-900 transition-colors group-hover:text-brand-600">
+                          {tool.name}
+                        </h3>
+                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink-600">
+                          {tool.description}
+                        </p>
+                        <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
+                          استخدام الأداة
+                          <ArrowLeft className="h-3 w-3" />
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+
+      {/* قسم SEO */}
+      <section className="border-t border-ink-100 bg-white">
+        <article className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
+          <div className="text-right">
+            <h2 className="mb-6 text-2xl font-black text-ink-900 md:text-3xl">
+              لماذا أدوات PDF من Intooly؟
+            </h2>
+            <ul className="space-y-3 leading-8 text-ink-700">
+              <li className="flex items-start gap-2">
+                <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" />
+                <span>
+                  <strong className="text-ink-900">معالجة داخل المتصفح:</strong>{' '}
+                  ملفاتك لا تُرفع إلى أي خادم، تبقى على جهازك.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" />
+                <span>
+                  <strong className="text-ink-900">مجاني بالكامل:</strong>{' '}
+                  بدون تسجيل، بدون حدود يومية، بدون علامات مائية.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" />
+                <span>
+                  <strong className="text-ink-900">سرعة فورية:</strong> لا
+                  انتظار للرفع أو التنزيل.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" />
+                <span>
+                  <strong className="text-ink-900">دعم العربية:</strong>{' '}
+                  واجهة عربية أصلية مع دعم كامل للنصوص العربية في ملفات PDF.
+                </span>
+              </li>
+            </ul>
+
+            <h3 className="mb-4 mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              كيف تستخدم أدوات PDF؟
+            </h3>
+            <ol className="list-inside list-decimal space-y-2 leading-8 text-ink-700">
+              <li>اختر الأداة المناسبة من القائمة أعلاه.</li>
+              <li>ارفع ملف PDF أو الصور من جهازك.</li>
+              <li>اضبط الإعدادات (إن وُجدت).</li>
+              <li>نزّل النتيجة مباشرة.</li>
+            </ol>
+
+            <h3 className="mb-4 mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              أسئلة شائعة
+            </h3>
+            <div className="space-y-5">
+              <div>
+                <h4 className="mb-2 text-base font-bold text-ink-900 md:text-lg">
+                  هل الأدوات مجانية؟
+                </h4>
+                <p className="leading-8 text-ink-700">
+                  نعم، جميع أدوات PDF على Intooly مجانية بالكامل، بدون تسجيل
+                  وبدون حدود يومية.
+                </p>
+              </div>
+              <div>
+                <h4 className="mb-2 text-base font-bold text-ink-900 md:text-lg">
+                  هل ملفاتي آمنة؟
+                </h4>
+                <p className="leading-8 text-ink-700">
+                  نعم، جميع العمليات تتم داخل متصفحك، ولا تُرفع ملفاتك إلى أي
+                  خادم.
+                </p>
+              </div>
+              <div>
+                <h4 className="mb-2 text-base font-bold text-ink-900 md:text-lg">
+                  هل تعمل على الجوال؟
+                </h4>
+                <p className="leading-8 text-ink-700">
+                  نعم، الأدوات متوافقة مع الجوال والأجهزة اللوحية.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  );
+}
