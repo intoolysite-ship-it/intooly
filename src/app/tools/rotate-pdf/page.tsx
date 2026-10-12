@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import {
   RotateCw,
@@ -113,7 +113,7 @@ export default function RotatePdfPage() {
       });
 
       const bytes = await pdf.save();
-      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const blob = new Blob([new Uint8Array(bytes).buffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       setResultUrl(url);
       setResultSize(blob.size);

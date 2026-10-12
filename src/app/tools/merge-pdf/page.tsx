@@ -112,7 +112,7 @@ export default function MergePdfPage() {
       }
 
       const mergedBytes = await mergedPdf.save();
-      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+      const blob = new Blob([new Uint8Array(mergedBytes).buffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       setResultUrl(url);
       setResultSize(blob.size);

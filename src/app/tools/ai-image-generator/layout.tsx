@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://intooly.com/tools/ai-image-generator',
-  robots: { index: false, follow: false },
   },
 };
 

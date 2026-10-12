@@ -120,7 +120,7 @@ export default function SplitPdfPage() {
         const copied = await newPdf.copyPages(sourcePdf, pageIndices);
         copied.forEach((p) => newPdf.addPage(p));
         const bytes = await newPdf.save();
-        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const blob = new Blob([new Uint8Array(bytes).buffer], { type: 'application/pdf' });
         results.push({
           name: `pages-${fromPage}-to-${toPage}.pdf`,
           url: URL.createObjectURL(blob),
@@ -142,7 +142,7 @@ export default function SplitPdfPage() {
           const copied = await newPdf.copyPages(sourcePdf, pageIndices);
           copied.forEach((p) => newPdf.addPage(p));
           const bytes = await newPdf.save();
-          const blob = new Blob([bytes], { type: 'application/pdf' });
+          const blob = new Blob([new Uint8Array(bytes).buffer], { type: 'application/pdf' });
           results.push({
             name: `part-${partNum}.pdf`,
             url: URL.createObjectURL(blob),
@@ -162,7 +162,7 @@ export default function SplitPdfPage() {
         const copied = await newPdf.copyPages(sourcePdf, pageIndices);
         copied.forEach((p) => newPdf.addPage(p));
         const bytes = await newPdf.save();
-        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const blob = new Blob([new Uint8Array(bytes).buffer], { type: 'application/pdf' });
         results.push({
           name: `extracted-pages.pdf`,
           url: URL.createObjectURL(blob),

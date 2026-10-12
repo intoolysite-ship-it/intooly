@@ -94,7 +94,7 @@ export default function CompressPdfPage() {
       };
 
       const compressedBytes = await pdf.save(saveOptions);
-      const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+      const blob = new Blob([new Uint8Array(compressedBytes).buffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
       setResultUrl(url);
