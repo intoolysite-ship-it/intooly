@@ -88,7 +88,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'Trash2',
     priority: 1,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
   {
     slug: 'rotate-pdf',
