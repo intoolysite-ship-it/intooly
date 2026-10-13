@@ -1,28 +1,30 @@
-import type { Metadata, Viewport } from 'next';
+﻿import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieConsent from '@/components/CookieConsent';
 import ScrollToTop from '@/components/ScrollToTop';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
   title: {
-  default: 'intooly - أدوات مجانية احترافية تعمل محلياً',
-  template: '%s | intooly',   // ← الصحيح
-},
+    default: 'Intooly - أدوات مجانية احترافية تعمل محلياً',
+    template: '%s | Intooly',
+  },
   description:
     'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً 100% في متصفحك لضمان خصوصيتك وسرعتك.',
   keywords: [
     'أدوات مجانية',
     'خصوصية البيانات',
     'معالجة محلية',
-    'intooly',
+    'Intooly',
     'ضغط الصور',
     'إزالة الخلفية',
+    'أدوات PDF',
   ],
-  authors: [{ name: 'intooly', url: 'https://intooly.com' }],
-    robots: {
+  authors: [{ name: 'Intooly', url: 'https://intooly.com' }],
+  robots: {
     index: true,
     follow: true,
     googleBot: {
@@ -38,8 +40,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ar_SA',
     url: 'https://intooly.com',
-    siteName: 'intooly',
-    title: 'intooly - أدوات مجانية احترافية',
+    siteName: 'Intooly',
+    title: 'Intooly - أدوات مجانية احترافية',
     description:
       'منصة أدوات مجانية احترافية تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.',
     images: [
@@ -47,22 +49,20 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'intooly',
+        alt: 'Intooly',
       },
     ],
   },
   icons: {
-  icon: [
-    { url: '/favicon.ico', sizes: 'any' },
-    { url: '/icon.png', type: 'image/png', sizes: '512x512' },
-    { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
-    { url: '/favicon-144x144.png', type: 'image/png', sizes: '144x144' },
-  ],
-  apple: [
-    { url: '/apple-touch-icon.png', sizes: '180x180' },
-  ],
-  shortcut: '/favicon.ico',
-},
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+      { url: '/favicon-144x144.png', type: 'image/png', sizes: '144x144' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+    shortcut: '/favicon.ico',
+  },
 };
 
 export const viewport: Viewport = {
@@ -71,44 +71,67 @@ export const viewport: Viewport = {
   themeColor: '#111827',
 };
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Intooly',
+  url: 'https://intooly.com',
+  logo: 'https://intooly.com/web-app-manifest-512x512.png',
+  description:
+    'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً في المتصفح',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'support@intooly.com',
+    contactType: 'customer support',
+    availableLanguage: ['Arabic', 'English'],
+  },
+  sameAs: [],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Intooly',
+  alternateName: 'أدوات مجانية احترافية',
+  url: 'https://intooly.com',
+  inLanguage: 'ar',
+  description:
+    'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والملفات',
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="ar"
-      dir="rtl"
-      className="overflow-x-hidden"
-    >
+    <html lang="ar" dir="rtl" className="overflow-x-hidden">
       <head>
         {/* Schema.org: Organization */}
-        <Script
+        <script
           id="schema-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'intooly',
-              url: 'https://intooly.com',
-              logo: 'https://intooly.com/logo.png',
-              description:
-                'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً في المتصفح',
-              contactPoint: {
-                '@type': 'ContactPoint',
-                email: 'support@intooly.com',
-                contactType: 'customer support',
-                availableLanguage: ['Arabic', 'English'],
-              },
-            }),
+            __html: JSON.stringify(organizationSchema),
           }}
         />
 
-        {/* ✅ Google Fonts: Cairo — عبر <link> مباشر */}
+        {/* Schema.org: WebSite */}
+        <script
+          id="schema-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+
+        {/* Google Fonts: Cairo */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
           rel="stylesheet"
@@ -164,7 +187,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <CookieConsent />
-       <ScrollToTop />
+        <ScrollToTop />
       </body>
     </html>
   );
