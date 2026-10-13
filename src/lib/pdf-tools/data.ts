@@ -131,7 +131,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'FileImage',
     priority: 2,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
   {
     slug: 'organize-pdf',
