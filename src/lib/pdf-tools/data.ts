@@ -183,7 +183,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'Stamp',
     priority: 2,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
   {
     slug: 'add-page-numbers-pdf',
