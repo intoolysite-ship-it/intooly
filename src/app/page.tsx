@@ -293,11 +293,13 @@ export default function Home() {
               <span className="text-xs md:text-sm font-bold text-ink-900 transition-colors group-hover:text-white">تقسيم</span>
             </Link>
 
-            <div className="flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center opacity-50 cursor-not-allowed shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)]">
-              <Minimize2 className="h-4 w-4 text-ink-400" />
-              <span className="text-xs md:text-sm font-bold text-ink-400">ضغط</span>
-              <span className="text-[9px] font-bold text-ink-400 bg-ink-100 px-1.5 py-0.5 rounded">قريبًا</span>
-            </div>
+            <Link
+              href="/tools/compress-pdf"
+              className="group flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 text-center transition-all duration-300 shadow-[0_4px_12px_-3px_rgba(234,179,8,0.35)] hover:bg-brand-600 hover:shadow-[0_8px_20px_-4px_rgba(234,179,8,0.65)] hover:-translate-y-0.5"
+            >
+              <Minimize2 className="h-4 w-4 text-brand-600 transition-colors group-hover:text-white" />
+              <span className="text-xs md:text-sm font-bold text-ink-900 transition-colors group-hover:text-white">ضغط</span>
+            </Link>
 
             <Link
               href="/tools/rotate-pdf"
