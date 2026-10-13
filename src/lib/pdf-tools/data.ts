@@ -144,7 +144,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'LayoutGrid',
     priority: 2,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
   {
     slug: 'extract-pdf-pages',
