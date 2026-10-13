@@ -124,7 +124,9 @@ export default function CompressPdfPage() {
   ): Promise<Uint8Array> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      const blob = new Blob([new Uint8Array(imageData).buffer], { type: mimeType });
+      const blob = new Blob([new Uint8Array(imageData).buffer], {
+        type: mimeType,
+      });
       const url = URL.createObjectURL(blob);
 
       img.onload = () => {
@@ -648,6 +650,282 @@ export default function CompressPdfPage() {
             </div>
           </aside>
         </div>
+
+        {/* SEO */}
+        <section className="mt-14 border-t border-ink-100 pt-10">
+          <article className="mx-auto max-w-4xl text-right">
+            <h2 className="text-2xl font-black text-ink-900 md:text-3xl">
+              ضغط PDF أونلاين مجانًا — قلّل حجم ملفاتك حتى 95%
+            </h2>
+
+            <p className="mt-4 leading-8 text-ink-700">
+              إذا كنت بحاجة إلى <strong>تقليل حجم ملف PDF</strong> لإرساله
+              عبر البريد الإلكتروني، أو لرفعه على موقع، أو لأرشفته على
+              جهازك، فإن أداة ضغط PDF من Intooly هي الحل الأمثل. تعمل
+              الأداة <strong>داخل متصفحك مباشرة</strong>، فلا حاجة لتحميل
+              برامج، ولا لرفع ملفاتك إلى أي خادم خارجي.
+            </p>
+
+            <p className="mt-3 leading-8 text-ink-700">
+              تعتمد الأداة على تقنية <strong>متقدمة لضغط الصور</strong>{' '}
+              باستخدام <strong>Canvas API</strong> ومكتبة{' '}
+              <strong>pdf-lib</strong>، مما يتيح تقليل الحجم مع الحفاظ على{' '}
+              <strong>جودة الصور</strong> و<strong>قابلية النص للنسخ</strong>.
+              على عكس الأدوات الأخرى التي تحوّل الصفحات إلى صور، تحافظ
+              أداتنا على <strong>بنية النص الأصلية</strong>.
+            </p>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              ما معنى ضغط PDF؟
+            </h3>
+            <p className="mt-3 leading-8 text-ink-700">
+              ضغط PDF هو عملية تقليل حجم ملف PDF عن طريق{' '}
+              <strong>إعادة ضغط الصور المدمجة</strong> وإزالة{' '}
+              <strong>البيانات الوصفية</strong> غير الضرورية. تعتمد النتيجة
+              على <strong>نوع محتوى الملف</strong>:
+            </p>
+            <ul className="mt-4 list-inside list-disc space-y-2 leading-8 text-ink-700">
+              <li>
+                <strong>الملفات بصور كثيرة:</strong> تحقق توفيرًا كبيرًا
+                (50-95%).
+              </li>
+              <li>
+                <strong>الملفات النصية:</strong> تحقق توفيرًا محدودًا
+                (10-30%) لأن النص مضغوط أصلًا.
+              </li>
+              <li>
+                <strong>الملفات بصور SVG/Vector:</strong> توفير قليل (5-15%)
+                لأن الرسومات المتجهية لا تُضغط.
+              </li>
+            </ul>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              مستويات الضغط الأربعة
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  ضغط خفيف
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  جودة الصور: 82% • التصغير: 90%. يحافظ على الجودة العالية
+                  مع توفير 25-45%. مثالي للملفات الرسمية.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  متوازن (موصى به)
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  جودة الصور: 60% • التصغير: 75%. توازن ممتاز بين الجودة
+                  والحجم مع توفير 50-75%.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  ضغط عالي
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  جودة الصور: 40% • التصغير: 60%. توفير كبير (70-88%) مع
+                  جودة مقبولة.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  ضغط أقصى
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  جودة الصور: 20% • التصغير: 45%. أقصى توفير (85-95%) مع
+                  جودة منخفضة.
+                </p>
+              </div>
+            </div>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              لماذا تختار أداة ضغط PDF من Intooly؟
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  خصوصية كاملة
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  ملفاتك لا تُرفع إلى أي خادم. العملية كلها تتم داخل
+                  متصفحك.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  النصوص تبقى قابلة للنسخ
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  لا نحوّل الصفحات إلى صور. النصوص تبقى قابلة للنسخ،
+                  البحث، والتحديد.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  سرعة فورية
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  لا انتظار لرفع الملفات أو تنزيلها من خادم. الضغط يبدأ
+                  مباشرة.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+                <h4 className="text-base font-bold text-ink-900">
+                  مجاني بالكامل
+                </h4>
+                <p className="mt-2 text-sm leading-7 text-ink-700">
+                  بدون تسجيل، بدون حدود يومية، بدون علامات مائية.
+                </p>
+              </div>
+            </div>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              كيف تستخدم أداة ضغط PDF؟
+            </h3>
+            <ol className="mt-4 list-inside list-decimal space-y-2 leading-8 text-ink-700">
+              <li>
+                <strong>ارفع الملف:</strong> اضغط على زر &quot;اختيار
+                ملف&quot; واختر ملف PDF من جهازك.
+              </li>
+              <li>
+                <strong>اختر المستوى:</strong> حدد مستوى الضغط المناسب.
+              </li>
+              <li>
+                <strong>اضغط ضغط:</strong> ستبدأ الأداة بمعالجة كل صورة
+                داخل الملف.
+              </li>
+              <li>
+                <strong>راقب التقدم:</strong> ستظهر نسبة التقدم وعدد
+                الصور المعالجة.
+              </li>
+              <li>
+                <strong>نزّل النتيجة:</strong> اضغط على زر &quot;تنزيل
+                الملف المضغوط&quot;.
+              </li>
+            </ol>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              حالات استخدام شائعة
+            </h3>
+            <ul className="mt-4 list-inside list-disc space-y-2 leading-8 text-ink-700">
+              <li>
+                <strong>البريد الإلكتروني:</strong> ضغط المرفقات الكبيرة
+                قبل إرسالها.
+              </li>
+              <li>
+                <strong>الرفع على الإنترنت:</strong> تقليل حجم الملفات
+                لتلبية متطلبات المواقع.
+              </li>
+              <li>
+                <strong>الأرشفة:</strong> حفظ مستندات بحجم أصغر على
+                جهازك.
+              </li>
+              <li>
+                <strong>المشاركة:</strong> إرسال ملفات PDF بسرعة عبر
+                تطبيقات المراسلة.
+              </li>
+              <li>
+                <strong>الطباعة:</strong> تسريع إرسال الملفات إلى
+                الطابعة.
+              </li>
+            </ul>
+
+            <h3 className="mt-10 text-xl font-bold text-ink-900 md:text-2xl">
+              أسئلة شائعة عن ضغط PDF
+            </h3>
+            <div className="mt-4 space-y-6">
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  هل ضغط PDF يؤثر على جودة الملف؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  يعتمد على المستوى المختار. &quot;ضغط خفيف&quot; يحافظ
+                  على الجودة بنسبة 95%+. &quot;ضغط أقصى&quot; يقلل
+                  الجودة بشكل ملحوظ لكن يوفر 85-95% من الحجم.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  كم يمكنني أن أوفر في الحجم؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  يعتمد على محتوى الملف: الملفات بصور كبيرة 60-95%،
+                  بصور متوسطة 30-60%، نصية 10-30%.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  هل النصوص تبقى قابلة للنسخ بعد الضغط؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  نعم! هذه الأداة تحافظ على بنية النص الأصلية. يمكنك
+                  نسخ النصوص، البحث فيها، وتحديدها تمامًا كما في الملف
+                  الأصلي.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  هل ملفاتي آمنة؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  نعم، الأمان مضمون. جميع العمليات تتم داخل متصفحك
+                  مباشرة، ولا يتم رفع أي ملف إلى أي خادم.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  هل هناك حد لحجم الملف؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  الحد الأقصى 100 ميغابايت لكل ملف. لكن الأداء يعتمد
+                  على ذاكرة جهازك.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-ink-900">
+                  هل الأداة مجانية؟
+                </h4>
+                <p className="mt-2 leading-8 text-ink-700">
+                  نعم، مجانية بالكامل. لا تطلب تسجيلًا، ولا تفرض حدودًا
+                  يومية، ولا تضيف علامات مائية.
+                </p>
+              </div>
+            </div>
+
+            <h3 className="mt-12 text-xl font-bold text-ink-900 md:text-2xl">
+              أدوات PDF ذات صلة
+            </h3>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/tools/merge-pdf"
+                className="rounded-lg border border-ink-200 bg-white p-3 text-sm font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-brand-50"
+              >
+                ← دمج PDF في ملف واحد
+              </Link>
+              <Link
+                href="/tools/split-pdf"
+                className="rounded-lg border border-ink-200 bg-white p-3 text-sm font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-brand-50"
+              >
+                ← تقسيم PDF إلى ملفات أصغر
+              </Link>
+              <Link
+                href="/tools/pdf-to-jpg"
+                className="rounded-lg border border-ink-200 bg-white p-3 text-sm font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-brand-50"
+              >
+                ← تحويل PDF إلى JPG
+              </Link>
+              <Link
+                href="/tools/jpg-to-pdf"
+                className="rounded-lg border border-ink-200 bg-white p-3 text-sm font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-brand-50"
+              >
+                ← تحويل JPG إلى PDF
+              </Link>
+            </div>
+          </article>
+        </section>
       </div>
     </main>
   );
