@@ -170,7 +170,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'Minimize2',
     priority: 2,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
   {
     slug: 'watermark-pdf',

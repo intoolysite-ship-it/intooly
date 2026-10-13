@@ -13,6 +13,11 @@ const nextConfig = {
         fs: false,
         path: false,
         os: false,
+        module: false,
+        crypto: false,
+        stream: false,
+        buffer: false,
+        util: false,
       };
     }
 
