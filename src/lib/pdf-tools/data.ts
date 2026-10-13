@@ -114,7 +114,7 @@ export const PDF_TOOLS: PdfTool[] = [
     icon: 'Image',
     priority: 1,
     needsWorker: false,
-    isReady: false,
+    isReady: true,
   },
 
   // ============================================
