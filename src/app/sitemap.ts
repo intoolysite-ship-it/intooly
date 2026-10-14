@@ -54,6 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // أدوات الإنتاجية
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly' },
+    { path: '/tools/ai-image-generator', priority: 0.85, frequency: 'weekly' },
   ];
 
   return routes.map((route) => ({
