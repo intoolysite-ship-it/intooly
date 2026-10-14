@@ -6,7 +6,7 @@ import {
   Film, Music, Share2, Clock, Globe, Smartphone, Lock,
   HelpCircle, BookOpen, ArrowLeft, Wrench, Hash, QrCode,
   Braces, Type, Search, BarChart3, FileCode, Code,
-  Merge, Minimize2, RotateCw, ImagePlus, Plus
+  Merge, Minimize2, RotateCw, ImagePlus, Plus, Files, FileArchive
 } from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
@@ -87,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============ 3. الأدوات الأكثر شعبية ============ */}
+      {/* ============ 3. أدوات مفيدة لإنجاز مهامك ============ */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
@@ -95,16 +95,16 @@ export default function Home() {
               <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                 <Zap className="w-5 h-5 text-amber-600" />
               </div>
-              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-900">الأدوات الأكثر شعبية</h2>
+              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-900">أدوات مفيدة لإنجاز مهامك</h2>
             </div>
-            <p className="text-base md:text-lg text-slate-600">الأدوات التي يستخدمها الآلاف يومياً</p>
+            <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto">اكتشف أدوات مجانية عبر الإنترنت لإنجاز مهامك بسهولة، من دمج وضغط ملفات PDF إلى إزالة خلفية الصور وإنشاء رموز QR.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {[
-              { icon: Scissors, title: 'إزالة الخلفية بالـ AI', desc: 'أزل خلفية أي صورة بدقة عالية', href: '/tools/background-remover' },
-              { icon: Archive, title: 'ضاغط الصور', desc: 'قلّل حجم صورتك مع الحفاظ على الجودة', href: '/tools/image-compressor' },
-              { icon: Film, title: 'ضاغط الفيديو', desc: 'ضغط احترافي باستخدام FFmpeg', href: '/tools/video-compressor' },
-              { icon: Share2, title: 'محول صيغ الفيديو', desc: 'حوّل بين MP4, WebM, MOV بسهولة', href: '/tools/video-converter' },
+              { icon: Files, title: 'دمج ملفات PDF', desc: 'اجمع عدة ملفات PDF في ملف واحد بسهولة.', href: '/tools/merge-pdf' },
+              { icon: FileArchive, title: 'ضغط ملفات PDF', desc: 'قلّل حجم ملفات PDF لتسهيل تخزينها ومشاركتها.', href: '/tools/compress-pdf' },
+              { icon: Scissors, title: 'إزالة خلفية الصور', desc: 'أزل خلفية الصور للحصول على صور بخلفية شفافة عند دعم الأداة لذلك.', href: '/tools/background-remover' },
+              { icon: QrCode, title: 'إنشاء رمز QR', desc: 'أنشئ رمز QR للرابط أو النص ونزّله للاستخدام.', href: '/tools/qr-generator' },
             ].map((tool, idx) => (
               <Link key={idx} href={tool.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5" style={{ boxShadow: '0 4px 20px -4px rgba(245,158,11,0.25)' }}>
                 <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.4)]">
@@ -120,12 +120,12 @@ export default function Home() {
 
           {/* محتوى SEO */}
           <div className="mt-12 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">أدوات أونلاين مجانية يستخدمها المحترفون</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-3">أدوات مجانية عبر الإنترنت لإنجاز مهامك اليومية</h3>
             <p className="text-sm text-slate-600 leading-relaxed mb-3">
-              تقدم منصة <strong>intooly</strong> مجموعة من <strong>الأدوات الأونلاين المجانية</strong> الأكثر استخداماً من قبل المصممين وصناع المحتوى والمسوقين الرقميين. تشمل أدواتنا الأكثر شعبية <strong>إزالة الخلفية بالذكاء الاصطناعي</strong>، <strong>ضغط الصور</strong> دون فقدان الجودة، <strong>ضغط الفيديو</strong> باستخدام محرك FFmpeg الاحترافي، و<strong>تحويل صيغ الفيديو</strong> بين جميع الصيغ الشائعة مثل MP4 وWebM وMOV.
+              توفّر <strong>Intooly</strong> مجموعة من <strong>الأدوات المجانية عبر الإنترنت</strong> لمساعدتك على إنجاز المهام الرقمية اليومية بسهولة. يمكنك استخدام <strong>أدوات PDF</strong> لدمج الملفات وضغطها، أو <strong>إزالة خلفية الصور</strong> لتجهيز الصور الشخصية وصور المنتجات، أو <strong>إنشاء رموز QR</strong> للروابط والنصوص. تختلف إمكانات كل أداة بحسب الوظائف المتاحة في صفحتها.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              جميع هذه الأدوات تعمل <strong>مباشرة في متصفحك</strong> بدون الحاجة لتثبيت أي برامج، وبدون رفع ملفاتك إلى أي سيرفر خارجي، مما يضمن <strong>خصوصية كاملة</strong> وسرعة فائقة في المعالجة.
+              اختر الأداة المناسبة لمهمتك، ثم اتبع التعليمات الموجودة في صفحتها لمعالجة الملفات أو إنشاء المحتوى المطلوب. نعمل على تنظيم الأدوات ضمن فئات واضحة لتسهيل الوصول إليها، مع توضيح طريقة الاستخدام والقيود المهمة لكل أداة. يمكنك أيضًا استكشاف أقسام الصور والفيديو وملفات PDF والإنتاجية للعثور على أدوات أخرى تناسب احتياجاتك.
             </p>
           </div>
         </div>
