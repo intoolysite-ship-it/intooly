@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { 
   Search, Menu, X, ChevronDown, Zap, Star, 
-  Image as ImageIcon, Video, FileText, Code
+  Image as ImageIcon, Video, FileText, Code, Type
 } from 'lucide-react';
 
 type ToolItem = {
@@ -16,73 +16,59 @@ type ToolItem = {
 
 const BLOG_URL = 'https://blog.intooly.com';
 
-const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; items: ToolItem[] }> = {
-  image: {
-    icon: ImageIcon,
-    title: 'أدوات الصور',
-    color: 'from-brand-500 to-brand-600',
-    items: [
-      { name: 'إزالة الخلفية بالـ AI', href: '/tools/background-remover', hot: true },
-      { name: 'ضاغط الصور', href: '/tools/image-compressor' },
-      { name: 'تغيير حجم الصور', href: '/tools/image-resizer' },
-      { name: 'تحويل صيغ الصور', href: '/tools/image-converter' },
-      { name: 'قص الصور', href: '/tools/image-cropper' },
-      { name: 'استوديو صور المنتجات', href: '/tools/product-photo-studio', star: true },
-    ],
-  },
-    video: {
-    icon: Video,
-    title: 'أدوات الفيديو',
-    color: 'from-ink-700 to-ink-900',
-    items: [
-      { name: 'ضاغط الفيديو', href: '/tools/video-compressor' },
-      { name: 'محول صيغ الفيديو', href: '/tools/video-converter' },
-      { name: 'تحويل الفيديو إلى صوت', href: '/tools/video-to-audio', hot: true }, // ✅ هذا هو الرابط الفعلي للمجلد
-      { name: 'قص الفيديو', href: '/tools/video-trimmer' },
-      { name: 'فيديو إلى GIF', href: '/tools/video-to-gif' },
-    ],
-  },
-  text: {
-    icon: FileText,
-    title: 'أدوات النصوص والـ SEO',
-    color: 'from-emerald-500 to-emerald-700',
-    items: [
-      { name: 'عداد الكلمات', href: '/tools/word-counter' },
-      { name: 'تنظيف النصوص', href: '/tools/text-cleaner' },
-      { name: 'إزالة التشكيل', href: '/tools/diacritics-remover' },
-      { name: 'مولد Meta Tags', href: '/tools/meta-generator' },
-    ],
-  },
-  dev: {
-    icon: Code,
-    title: 'أدوات المطورين',
-    color: 'from-indigo-500 to-indigo-700',
-    items: [
-      { name: 'JSON Formatter', href: '/tools/json-formatter' },
-      { name: 'Base64 Encoder', href: '/tools/base64' },
-      { name: 'Color Picker', href: '/tools/color-picker' },
-    ],
-  },
+const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; items: ToolItem[]; moreHref: string }> = {
   pdf: {
     icon: FileText,
     title: 'أدوات PDF',
     color: 'from-brand-500 to-brand-600',
+    moreHref: '/tools/pdf',
     items: [
-      { name: 'جميع أدوات PDF', href: '/tools/pdf', hot: true, star: true },
+      { name: 'دمج PDF', href: '/tools/merge-pdf' },
+      { name: 'ضغط PDF', href: '/tools/compress-pdf' },
+      { name: 'تقسيم PDF', href: '/tools/split-pdf' },
+      { name: 'تدوير PDF', href: '/tools/rotate-pdf' },
+    ],
+  },
+  image: {
+    icon: ImageIcon,
+    title: 'أدوات الصور',
+    color: 'from-orange-500 to-orange-600',
+    moreHref: '/#image-tools',
+    items: [
+      { name: 'إزالة الخلفية AI', href: '/tools/background-remover' },
+      { name: 'ضاغط الصور', href: '/tools/image-compressor' },
+      { name: 'استوديو المنتجات', href: '/tools/product-photo-studio' },
+      { name: 'تغيير حجم الصور', href: '/tools/image-resizer' },
+    ],
+  },
+  video: {
+    icon: Video,
+    title: 'أدوات الفيديو',
+    color: 'from-ink-700 to-ink-900',
+    moreHref: '/#video-tools',
+    items: [
+      { name: 'ضاغط الفيديو', href: '/tools/video-compressor' },
+      { name: 'محول الصيغ', href: '/tools/video-converter' },
+      { name: 'إلى صوت', href: '/tools/video-to-audio' },
+      { name: 'قص الفيديو', href: '/tools/video-trimmer' },
     ],
   },
   productivity: {
     icon: Zap,
-    title: 'أدوات الإنتاجية',
-    color: 'from-brand-500 to-brand-600',
+    title: 'SEO والإنتاجية',
+    color: 'from-emerald-500 to-emerald-700',
+    moreHref: '/#productivity-tools',
     items: [
-      { name: 'مولّد QR Code', href: '/tools/qr-generator', hot: true },
+      { name: 'عدّاد الكلمات', href: '/tools/word-counter' },
+      { name: 'مولّد الكلمات', href: '/tools/keyword-generator' },
+      { name: 'مولّد QR', href: '/tools/qr-generator' },
+      { name: 'AI Image', href: '/tools/ai-image-generator' },
     ],
   },
 };
-
 export default function Header() {
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>('pdf');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -265,56 +251,94 @@ export default function Header() {
             className="hidden lg:block absolute top-full left-0 right-0 w-full bg-white border-t border-ink-200 shadow-2xl z-40"
             onMouseEnter={() => setMegaMenuOpen(true)}
           >
-            <div className="container mx-auto px-6 py-6">
-              <div className="grid grid-cols-4 gap-8">
-                {Object.entries(TOOLS_MENU).map(([key, category]) => (
-                  <div key={key}>
-                    <div className="flex items-center gap-2.5 mb-4">
-                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center shadow-md`}>
-                        <category.icon className="w-5 h-5 text-white" />
+            <div className="container mx-auto px-6 py-5">
+              <div className="grid grid-cols-4 gap-5">
+                {Object.entries(TOOLS_MENU).map(([key, category]) => {
+                  const isActive = activeCategory === key;
+                  const CategoryIcon = category.icon;
+                  return (
+                    <div
+                      key={key}
+                      onMouseEnter={() => setActiveCategory(key)}
+                      className={`transition-all duration-200 ${
+                        isActive
+                          ? 'bg-gradient-to-br from-brand-50 to-white border-2 border-brand-300 rounded-xl p-3 shadow-[0_4px_20px_-4px_rgba(234,179,8,0.35)]'
+                          : 'bg-white border-2 border-transparent rounded-xl p-3'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                            isActive
+                              ? 'bg-gradient-to-br from-brand-500 to-brand-600 shadow-[0_0_15px_rgba(234,179,8,0.5)]'
+                              : 'bg-ink-100'
+                          }`}
+                        >
+                          <CategoryIcon
+                            className={`w-4 h-4 transition-colors duration-200 ${
+                              isActive ? 'text-white' : 'text-ink-600'
+                            }`}
+                          />
+                        </div>
+                        <h3
+                          className={`font-extrabold text-sm transition-colors duration-200 ${
+                            isActive ? 'text-brand-700' : 'text-ink-900'
+                          }`}
+                        >
+                          {category.title}
+                        </h3>
                       </div>
-                      <h3 className="font-extrabold text-ink-900 text-base">
-                        {category.title}
-                      </h3>
+
+                      <ul className="space-y-0.5">
+                        {category.items.map((item, i) => (
+                          <li key={i}>
+                            <Link
+                              href={item.href}
+                              onClick={() => setMegaMenuOpen(false)}
+                              className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 ${
+                                isActive
+                                  ? 'text-ink-700 hover:bg-brand-100 hover:text-brand-700 hover:translate-x-1'
+                                  : 'text-ink-600 hover:bg-brand-50 hover:text-brand-600 hover:translate-x-1'
+                              }`}
+                            >
+                              <span className="w-1 h-1 rounded-full bg-brand-400 flex-shrink-0" />
+                              <span className="font-medium truncate">{item.name}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <Link
+                        href={category.moreHref}
+                        onClick={() => setMegaMenuOpen(false)}
+                        className={`mt-2 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                          isActive
+                            ? 'bg-brand-500 text-white hover:bg-brand-600 shadow-sm'
+                            : 'bg-ink-100 text-ink-700 hover:bg-brand-100 hover:text-brand-700'
+                        }`}
+                      >
+                        المزيد
+                        <svg
+                          className="w-3 h-3 rotate-180"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </Link>
                     </div>
-                    <ul className="space-y-1">
-                      {category.items.map((item, i) => (
-                        <li key={i}>
-                          <Link
-                            href={item.href}
-                            onClick={() => setMegaMenuOpen(false)}
-                            className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-ink-600 hover:bg-brand-50 hover:text-brand-600 transition-colors"
-                          >
-                            <span className="font-medium">{item.name}</span>
-                            <div className="flex gap-1">
-                              {item.hot && <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-red-100 text-red-600">جديد</span>}
-                              {item.star && <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-brand-100 text-brand-700">مميز</span>}
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 pt-4 border-t border-ink-200 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-ink-600 font-medium">
-                  <Star className="w-4 h-4 text-brand-500 fill-brand-500" />
-                  <span>كل الأدوات مجانية، محلية، وتعمل بدون تسجيل</span>
-                </div>
-                <Link 
-                  href="/#tools" 
-                  onClick={() => setMegaMenuOpen(false)}
-                  className="text-sm font-black text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors"
-                >
-                  عرض كل الأدوات <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
-                </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
-        )}
-      </header>
+        )}      </header>
 
       {/* ============= قائمة الجوال ============= */}
       {mobileMenuOpen && (
