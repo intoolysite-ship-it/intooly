@@ -62,25 +62,25 @@ export default function Home() {
               <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                 <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
               </div>
-              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-900">التصنيفات الرئيسية</h2>
+              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-900">استكشف الأدوات المجانية حسب الفئة</h2>
             </div>
-            <p className="text-base md:text-lg text-slate-600">اختر التصنيف الذي يناسب احتياجاتك</p>
+            <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto">اكتشف أدوات عبر الإنترنت للصور والفيديو وملفات PDF والذكاء الاصطناعي وتحسين محركات البحث والإنتاجية، واختر الأداة المناسبة لمهمتك.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {[
-              { icon: Image, label: 'أدوات الصور', href: '/#image-tools', shadowColor: 'rgba(249,115,22,0.25)' },
-              { icon: Video, label: 'أدوات الفيديو', href: '/#video-tools', shadowColor: 'rgba(59,130,246,0.25)' },
-              { icon: Type, label: 'أدوات النصوص', href: '#', shadowColor: 'rgba(16,185,129,0.25)' },
-              { icon: FileText, label: 'أدوات SEO', href: '/#seo-tools', shadowColor: 'rgba(139,92,246,0.25)' },
-                { icon: Zap, label: 'أدوات الإنتاجية', href: '/#productivity-tools', shadowColor: 'rgba(234,179,8,0.25)' },
-              { icon: Wrench, label: 'أدوات التطوير', href: '#', shadowColor: 'rgba(99,102,241,0.25)' },
-              { icon: FileText, label: 'أدوات PDF', href: '/tools/pdf', shadowColor: 'rgba(6,182,212,0.25)' },
+              { icon: Image, label: 'أدوات الصور المجانية', desc: 'اضغط الصور، وغيّر أبعادها، وحوّل صيغها باستخدام أدوات صور عبر الإنترنت.', href: '/#image-tools', shadowColor: 'rgba(249,115,22,0.25)' },
+              { icon: Video, label: 'أدوات الفيديو المجانية', desc: 'قص الفيديو، واضغطه، وحوّله إلى صيغ أخرى أو إلى GIF باستخدام الأدوات المتاحة.', href: '/#video-tools', shadowColor: 'rgba(59,130,246,0.25)' },
+              { icon: FileText, label: 'أدوات PDF المجانية', desc: 'ادمج ملفات PDF، وقسّم الصفحات، واضغط الملفات أو حوّلها باستخدام أدوات PDF.', href: '/tools/pdf', shadowColor: 'rgba(6,182,212,0.25)' },
+              { icon: Sparkles, label: 'أدوات الذكاء الاصطناعي', desc: 'اكتشف أدوات الذكاء الاصطناعي المتاحة لإنجاز مهام رقمية وإنشاء المحتوى.', href: '/tools/ai-image-generator', shadowColor: 'rgba(139,92,246,0.25)' },
+              { icon: BarChart3, label: 'أدوات SEO المجانية', desc: 'ابحث عن أفكار الكلمات المفتاحية واستخدم أدوات تساعدك على تحسين المحتوى.', href: '/#seo-tools', shadowColor: 'rgba(16,185,129,0.25)' },
+              { icon: Zap, label: 'أدوات الإنتاجية المجانية', desc: 'أنشئ رموز QR واستخدم أدوات عملية لتسهيل المهام الرقمية اليومية.', href: '/#productivity-tools', shadowColor: 'rgba(234,179,8,0.25)' },
             ].map((cat, idx) => (
-              <Link key={idx} href={cat.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex items-center gap-2.5" style={{ boxShadow: `0 4px 20px -4px ${cat.shadowColor}` }}>
+              <Link key={idx} href={cat.href} className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 group flex flex-col gap-2.5" style={{ boxShadow: `0 4px 20px -4px ${cat.shadowColor}` }}>
                 <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                   <cat.icon className="w-5 h-5 text-amber-600" />
                 </div>
                 <h3 className="font-bold text-sm md:text-base text-slate-900">{cat.label}</h3>
+                <p className="text-xs md:text-sm text-slate-600 leading-relaxed">{cat.desc}</p>
               </Link>
             ))}
           </div>
