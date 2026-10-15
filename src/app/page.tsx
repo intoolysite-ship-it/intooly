@@ -220,19 +220,27 @@ const pdfTools = [
 const faqs = [
   {
     q: 'هل أدوات Intooly مجانية؟',
-    a: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة. راجع تفاصيل الأداة لمعرفة حدود الملفات والميزات المتاحة.',
+    a: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة.',
   },
   {
     q: 'هل بياناتي وملفاتي آمنة؟',
-    a: 'تختلف طريقة معالجة الملفات حسب الأداة. راجع تعليمات الأداة وسياسة الخصوصية لمعرفة ما إذا كانت المعالجة تتم داخل المتصفح أو تتطلب إرسال البيانات إلى خدمة أخرى.',
+    a: 'تختلف طريقة معالجة الملفات حسب الأداة. راجع تعليمات الأداة وسياسة الخصوصية.',
   },
   {
     q: 'هل أحتاج إلى تثبيت برامج؟',
-    a: 'يمكن استخدام الأدوات المتوافقة مباشرة من متصفح حديث دون تثبيت برنامج منفصل. وقد تختلف متطلبات التشغيل بحسب الأداة وحجم الملف.',
+    a: 'يمكن استخدام الأدوات المتوافقة مباشرة من متصفح حديث دون تثبيت برنامج منفصل.',
   },
   {
     q: 'كيف أتواصل مع فريق Intooly؟',
-    a: 'يمكنك التواصل معنا عبر البريد الإلكتروني support@intooly.com للاستفسارات والملاحظات المتعلقة بالموقع والأدوات.',
+    a: 'يمكنك التواصل معنا عبر البريد الإلكتروني support@intooly.com للاستفسارات.',
+  },
+  {
+    q: 'ما الصيغ المدعومة؟',
+    a: 'تختلف الصيغ المدعومة حسب الأداة. راجع صفحة كل أداة لمعرفة الصيغ التي تدعمها.',
+  },
+  {
+    q: 'هل تعمل الأدوات على الجوال؟',
+    a: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.',
   },
 ];
 
@@ -721,42 +729,57 @@ export default function Home() {
                 icon: BookOpen,
                 title: 'أدوات مصنفة بوضوح',
                 description: 'انتقل إلى فئات الصور والفيديو وPDF والنصوص.',
+                color: { bg: '#fff7ed', border: '#fed7aa', iconBg: '#ffedd5', iconColor: '#ea580c', shadow: 'rgba(234,88,12,0.15)' },
               },
               {
                 icon: Smartphone,
                 title: 'استخدام عبر المتصفح',
                 description: 'افتح صفحات الأدوات من متصفح متوافق.',
+                color: { bg: '#eff6ff', border: '#bfdbfe', iconBg: '#dbeafe', iconColor: '#2563eb', shadow: 'rgba(37,99,235,0.15)' },
               },
               {
                 icon: CheckCircle2,
                 title: 'خطوات واضحة',
                 description: 'راجع تعليمات الأداة قبل معالجة الملف.',
+                color: { bg: '#ecfdf5', border: '#a7f3d0', iconBg: '#d1fae5', iconColor: '#059669', shadow: 'rgba(5,150,105,0.15)' },
               },
               {
                 icon: Zap,
                 title: 'خيارات متنوعة',
                 description: 'اختر الأداة حسب المهمة التي تريد إنجازها.',
+                color: { bg: '#fffbeb', border: '#fde68a', iconBg: '#fef3c7', iconColor: '#d97706', shadow: 'rgba(217,119,6,0.15)' },
               },
               {
                 icon: Shield,
                 title: 'تفاصيل لكل أداة',
                 description: 'تحقق من حدود الملفات وطريقة المعالجة في صفحتها.',
+                color: { bg: '#f5f3ff', border: '#ddd6fe', iconBg: '#ede9fe', iconColor: '#7c3aed', shadow: 'rgba(124,58,237,0.15)' },
               },
               {
                 icon: HelpCircle,
                 title: 'دعم عبر البريد',
                 description: 'راسلنا على support@intooly.com لأي استفسار.',
+                color: { bg: '#fef2f2', border: '#fecaca', iconBg: '#fee2e2', iconColor: '#dc2626', shadow: 'rgba(220,38,38,0.15)' },
               },
             ].map((feature) => {
               const Icon = feature.icon;
+              const color = feature.color;
 
               return (
                 <div
                   key={feature.title}
-                  className="bg-white border border-slate-200 rounded-xl p-5 flex items-start gap-3 shadow-[0_4px_20px_-10px_rgba(245,158,11,0.25)]"
+                  className="rounded-xl p-5 flex items-start gap-3 border"
+                  style={{
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    boxShadow: `0 4px 20px -10px ${color.shadow}`,
+                  }}
                 >
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-amber-600" />
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: color.iconBg }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: color.iconColor }} />
                   </div>
                   <div>
                     <h3 className="font-bold text-sm md:text-base text-slate-900 mb-1">
@@ -782,7 +805,7 @@ export default function Home() {
             description="إجابات عن استخدام الأدوات المتاحة على Intooly."
           />
 
-          <div className="max-w-3xl mx-auto space-y-3">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3">
             {faqs.map((faq) => (
               <details
                 key={faq.q}
