@@ -31,7 +31,7 @@ import {
   ImagePlus,
   Plus,
   Files,
-  FileArchive,
+  FileArchive, ArrowLeft,
   Type,
 } from 'lucide-react';
 
@@ -61,37 +61,79 @@ const categories = [
     icon: ImageIcon,
     title: 'أدوات الصور',
     description: 'إزالة الخلفية، وضغط الصور، وتغيير الأبعاد، وتحويل الصيغ.',
-    href: '#image-tools',
+    href: '/#image-tools',
+    color: {
+      bg: '#fff7ed',
+      border: '#fed7aa',
+      iconBg: '#ffedd5',
+      iconColor: '#ea580c',
+      shadow: 'rgba(234,88,12,0.15)',
+    },
   },
   {
     icon: Video,
     title: 'أدوات الفيديو',
     description: 'قص الفيديو وضغطه وتحويله واستخراج الصوت وإنشاء GIF.',
-    href: '#video-tools',
+    href: '/#video-tools',
+    color: {
+      bg: '#fef2f2',
+      border: '#fecaca',
+      iconBg: '#fee2e2',
+      iconColor: '#dc2626',
+      shadow: 'rgba(220,38,38,0.15)',
+    },
   },
   {
     icon: FileText,
     title: 'أدوات PDF',
     description: 'دمج ملفات PDF وتقسيمها وضغطها وتنظيم صفحاتها.',
     href: '/tools/pdf',
+    color: {
+      bg: '#eff6ff',
+      border: '#bfdbfe',
+      iconBg: '#dbeafe',
+      iconColor: '#2563eb',
+      shadow: 'rgba(37,99,235,0.15)',
+    },
   },
   {
     icon: Sparkles,
     title: 'أدوات الذكاء الاصطناعي',
     description: 'توليد الصور بالذكاء الاصطناعي والأدوات الذكية.',
     href: '/tools/ai-image-generator',
+    color: {
+      bg: '#ecfdf5',
+      border: '#a7f3d0',
+      iconBg: '#d1fae5',
+      iconColor: '#059669',
+      shadow: 'rgba(5,150,105,0.15)',
+    },
   },
   {
     icon: BarChart3,
     title: 'أدوات SEO',
     description: 'اكتشاف أفكار الكلمات المفتاحية وتحليل النصوص.',
-    href: '#seo-tools',
+    href: '/#seo-tools',
+    color: {
+      bg: '#f5f3ff',
+      border: '#ddd6fe',
+      iconBg: '#ede9fe',
+      iconColor: '#7c3aed',
+      shadow: 'rgba(124,58,237,0.15)',
+    },
   },
   {
     icon: QrCode,
     title: 'أدوات الإنتاجية',
     description: 'إنشاء رموز QR للرابط والنص واستخدامات أخرى.',
-    href: '#productivity-tools',
+    href: '/#productivity-tools',
+    color: {
+      bg: '#fffbeb',
+      border: '#fde68a',
+      iconBg: '#fef3c7',
+      iconColor: '#d97706',
+      shadow: 'rgba(217,119,6,0.15)',
+    },
   },
 ];
 
@@ -101,24 +143,52 @@ const featuredTools = [
     title: 'دمج ملفات PDF',
     description: 'اجمع ملفات PDF متعددة في ملف واحد.',
     href: '/tools/merge-pdf',
+    color: {
+      bg: '#eff6ff',
+      border: '#bfdbfe',
+      iconBg: '#dbeafe',
+      iconColor: '#2563eb',
+      shadow: 'rgba(37,99,235,0.15)',
+    },
   },
   {
-    icon: FileArchive,
+    icon: FileArchive, ArrowLeft,
     title: 'ضغط ملفات PDF',
     description: 'قلّل حجم ملفات PDF وفق إمكانات أداة الضغط.',
     href: '/tools/compress-pdf',
+    color: {
+      bg: '#fff7ed',
+      border: '#fed7aa',
+      iconBg: '#ffedd5',
+      iconColor: '#ea580c',
+      shadow: 'rgba(234,88,12,0.15)',
+    },
   },
   {
     icon: Scissors,
     title: 'إزالة خلفية الصور',
     description: 'جرّب إزالة خلفية الصورة للحصول على خلفية شفافة.',
     href: '/tools/background-remover',
+    color: {
+      bg: '#ecfdf5',
+      border: '#a7f3d0',
+      iconBg: '#d1fae5',
+      iconColor: '#059669',
+      shadow: 'rgba(5,150,105,0.15)',
+    },
   },
   {
     icon: QrCode,
     title: 'إنشاء رمز QR',
     description: 'أنشئ رمزًا للرابط أو النص ونزّله.',
     href: '/tools/qr-generator',
+    color: {
+      bg: '#f5f3ff',
+      border: '#ddd6fe',
+      iconBg: '#ede9fe',
+      iconColor: '#7c3aed',
+      shadow: 'rgba(124,58,237,0.15)',
+    },
   },
 ];
 
@@ -211,6 +281,90 @@ function ToolGrid({
       {tools.map((tool) => {
         const Icon = tool.icon;
 
+        return (
+          <Link
+            key={tool.href}
+            href={tool.href}
+            className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 hover:border-amber-300 transition-all duration-300 group flex items-center gap-3 shadow-[0_4px_20px_-8px_rgba(245,158,11,0.25)]"
+          >
+            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors">
+              <Icon className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-sm md:text-base text-slate-900">
+                {tool.title}
+              </h3>
+              {tool.description && (
+                <p className="text-xs md:text-sm text-slate-600 leading-relaxed mt-1">
+                  {tool.description}
+                </p>
+              )}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+function ColoredToolGrid({
+  tools,
+  columns = 'md:grid-cols-3',
+}: {
+  tools: {
+    icon: React.ElementType;
+    title: string;
+    href: string;
+    description?: string;
+    color?: {
+      bg: string;
+      border: string;
+      iconBg: string;
+      iconColor: string;
+      shadow: string;
+    };
+  }[];
+  columns?: string;
+}) {
+  return (
+    <div className={`grid grid-cols-1 sm:grid-cols-2 ${columns} gap-3 md:gap-4`}>
+      {tools.map((tool) => {
+        const Icon = tool.icon;
+        const color = tool.color;
+
+        if (color) {
+          return (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="group rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3 border"
+              style={{
+                backgroundColor: color.bg,
+                borderColor: color.border,
+                boxShadow: `0 4px 20px -8px ${color.shadow}`,
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
+                style={{ backgroundColor: color.iconBg }}
+              >
+                <Icon className="w-5 h-5" style={{ color: color.iconColor }} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-sm md:text-base text-slate-900">
+                  {tool.title}
+                </h3>
+                {tool.description && (
+                  <p className="text-xs md:text-sm text-slate-600 leading-relaxed mt-1">
+                    {tool.description}
+                  </p>
+                )}
+              </div>
+            </Link>
+          );
+        }
+
+        // Fallback للذهبي
         return (
           <Link
             key={tool.href}
@@ -349,15 +503,24 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {categories.map((category) => {
               const Icon = category.icon;
+              const color = category.color;
 
               return (
                 <Link
                   key={category.title}
                   href={category.href}
-                  className="bg-white border border-slate-200 rounded-xl p-5 hover:-translate-y-0.5 hover:border-amber-300 transition-all duration-300 group flex flex-col gap-3 shadow-[0_4px_20px_-8px_rgba(245,158,11,0.25)]"
+                  className="group rounded-xl p-5 hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-3 border"
+                  style={{
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    boxShadow: `0 4px 20px -8px ${color.shadow}`,
+                  }}
                 >
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-200 transition-colors">
-                    <Icon className="w-5 h-5 text-amber-600" />
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110"
+                    style={{ backgroundColor: color.iconBg }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: color.iconColor }} />
                   </div>
                   <h3 className="font-bold text-base text-slate-900">
                     {category.title}
@@ -365,8 +528,12 @@ export default function Home() {
                   <p className="text-sm text-slate-600 leading-relaxed">
                     {category.description}
                   </p>
-                  <span className="text-sm font-bold text-amber-700">
-                    استكشف الفئة ←
+                  <span
+                    className="text-sm font-bold inline-flex items-center gap-1 group-hover:gap-2 transition-all"
+                    style={{ color: color.iconColor }}
+                  >
+                    استكشف الفئة
+                    <span>←</span>
                   </span>
                 </Link>
               );
@@ -384,7 +551,7 @@ export default function Home() {
             description="ابدأ بأحد هذه الخيارات للوصول مباشرة إلى صفحة الأداة وطريقة استخدامها."
           />
 
-          <ToolGrid tools={featuredTools} columns="md:grid-cols-2 lg:grid-cols-4" />
+          <ColoredToolGrid tools={featuredTools} columns="md:grid-cols-2 lg:grid-cols-4" />
 
           <div className="mt-10 max-w-4xl mx-auto">
             <h3 className="text-lg font-bold text-slate-900 mb-3">
@@ -400,201 +567,139 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Image tools */}
-      <section id="image-tools" className="py-14 md:py-16 bg-white scroll-mt-24">
+            {/* تصفح حسب الحاجة */}
+      <section id="browse" className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            icon={ImageIcon}
-            title="أدوات تعديل الصور وضغطها أونلاين"
-            description="خيارات لتجهيز الصور وتغيير أبعادها وتحويل صيغها واستخدامها في المتاجر الإلكترونية والمحتوى الرقمي."
+            icon={BookOpen}
+            title="تصفح حسب الحاجة"
+            description="اختر ما تريد إنجازه للوصول إلى الأدوات المناسبة."
           />
 
-          <ToolGrid tools={imageTools} columns="md:grid-cols-3 lg:grid-cols-3" />
-
-          <div className="mt-10 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">
-              تعديل الصور وضغطها وتغيير حجمها
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
-              تساعدك أدوات تعديل الصور على تنفيذ مهام مختلفة، مثل قص الصورة،
-              وتغيير أبعادها، وتحويلها بين الصيغ المدعومة، وتقليل حجمها عند الحاجة
-              إلى نشرها على موقع إلكتروني أو مشاركتها عبر الإنترنت. كما تتوفر أداة
-              لإزالة الخلفية وأداة مخصصة للعمل على صور المنتجات.
-            </p>
-            <p className="text-sm md:text-base text-slate-600 leading-8">
-              تختلف النتائج بحسب صيغة الصورة وإعدادات المعالجة والأداة المستخدمة.
-              لذلك، راجع خيارات التنزيل والجودة داخل صفحة الأداة، واحتفظ بنسخة من
-              الصورة الأصلية إذا كنت تحتاج إلى الرجوع إليها لاحقًا.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Video tools */}
-      <section id="video-tools" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            icon={Video}
-            title="أدوات الفيديو المجانية عبر الإنترنت"
-            description="استكشف أدوات لقص الفيديو وضغطه وتحويل صيغته أو استخراج الصوت وإنشاء صور GIF متحركة."
-          />
-
-          <ToolGrid tools={videoTools} columns="md:grid-cols-3 lg:grid-cols-3" />
-
-          <div className="mt-10 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">
-              قص الفيديو وتحويله وتقليل حجمه
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
-              قد تحتاج إلى قص جزء من مقطع فيديو، أو تجهيز نسخة أصغر للمشاركة،
-              أو استخراج الصوت، أو تحويل جزء مناسب إلى GIF. توفر صفحات أدوات
-              الفيديو تفاصيل الخيارات المتاحة وطريقة استخدامها.
-            </p>
-            <p className="text-sm md:text-base text-slate-600 leading-8">
-              تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح.
-              قبل معالجة المقاطع الكبيرة، تحقق من متطلبات الأداة وحدود حجم الملف
-              والصيغ التي تدعمها.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* PDF tools */}
-      <section id="pdf-tools" className="py-14 md:py-16 bg-gradient-to-br from-ink-50 via-white to-ink-50 scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            icon={FileText}
-            title="أدوات PDF لدمج الملفات وضغطها وتحويلها"
-            description="تعرف على الأدوات المتاحة لدمج ملفات PDF وتقسيمها وضغطها وتدوير الصفحات وتحويل الصور إلى PDF."
-          />
-
-          <div className="max-w-3xl mx-auto mb-6">
-            <Link
-              href="/tools/pdf"
-              className="group flex flex-col sm:flex-row items-center justify-between gap-4 w-full bg-white border border-amber-200 rounded-2xl p-6 md:p-8 transition-all duration-300 shadow-[0_8px_30px_-8px_rgba(234,179,8,0.25)] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_-10px_rgba(234,179,8,0.35)]"
-            >
-              <div className="text-center sm:text-right">
-                <h3 className="text-lg md:text-xl font-extrabold text-slate-900 mb-2">
-                  استكشف مجموعة أدوات PDF
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  انتقل إلى صفحة أدوات PDF للاطلاع على الخيارات المتاحة.
-                </p>
-              </div>
-              <span className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-bold text-white transition group-hover:bg-brand-600 whitespace-nowrap">
-                جميع أدوات PDF
-                <Plus className="w-4 h-4" />
-              </span>
-            </Link>
-          </div>
-
-          <ToolGrid tools={pdfTools} columns="md:grid-cols-3 lg:grid-cols-5" />
-
-          <div className="mt-10 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">
-              التعامل مع ملفات PDF بسهولة
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
-              تُستخدم أدوات PDF في مهام متعددة، منها جمع المستندات في ملف واحد،
-              وتقسيم ملف إلى أجزاء، وتدوير الصفحات، وتحويل الصور إلى مستند PDF.
-              وتساعد هذه الوظائف الطلاب وأصحاب الأعمال والمستخدمين على تنظيم
-              المستندات وتجهيزها للمشاركة.
-            </p>
-            <p className="text-sm md:text-base text-slate-600 leading-8">
-              عند ضغط الملفات أو تحويلها، قد تختلف النتيجة بحسب محتوى المستند
-              وإعدادات الأداة. راجع الملف الناتج قبل استخدامه النهائي، خصوصًا إذا
-              كان يحتوي على صور أو مستندات مهمة.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SEO and text tools */}
-      <section id="seo-tools" className="py-14 md:py-16 bg-white scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            icon={BarChart3}
-            title="أدوات تحسين محركات البحث والكلمات المفتاحية"
-            description="أدوات تساعدك على استكشاف الكلمات المفتاحية ومراجعة النصوص قبل نشر المحتوى."
-          />
-
-          <ToolGrid
-            tools={[
+          <div className="space-y-6">
+            {[
               {
-                icon: BarChart3,
-                title: 'مولد الكلمات المفتاحية',
-                description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.',
-                href: '/tools/keyword-generator',
+                icon: ImageIcon,
+                image: '/images/categories/image-tools.webp',
+                imageAlt: 'تعديل الصور وضغطها وتغيير أبعادها وتحويل صيغها.',
+                title: 'أدوات تعديل الصور وضغطها أونلاين',
+                count: '6 أدوات',
+                href: '/tools/images',
+                paragraphs: [
+                  'توفّر أدوات تعديل الصور على Intooly مجموعة من الوظائف التي تساعدك على تجهيز صورك بسهولة عبر الإنترنت. يمكنك تغيير أبعاد الصورة، وضغطها لتقليل حجم الملف، وتحويلها بين الصيغ المدعومة مثل JPG وPNG وWebP دون تثبيت أي برامج.',
+                  'تشمل أدوات الصور أيضًا إمكانية قص الصورة لتحديد الجزء المطلوب، وإزالة الخلفية للحصول على خلفية شفافة عند دعم الأداة. هذه الوظائف مفيدة لأصحاب المتاجر الإلكترونية الذين يحتاجون إلى تجهيز صور المنتجات، ولصنّاع المحتوى الذين يعدّون صورًا لمنصات التواصل.',
+                  'إذا كنت تبحث عن أدوات صور مجانية تعمل مباشرة من المتصفح، يمكنك تصفح جميع الأدوات المتاحة والاطلاع على تفاصيل كل أداة قبل استخدامها.',
+                ],
+              },
+              {
+                icon: Video,
+                image: '/images/categories/video-tools.webp',
+                imageAlt: 'قص وضغط وتحويل الفيديو.',
+                title: 'أدوات الفيديو المجانية عبر الإنترنت',
+                count: '5 أدوات',
+                href: '/tools/video',
+                paragraphs: [
+                  'توفّر أدوات الفيديو على Intooly مجموعة من الوظائف التي تساعدك على التعامل مع مقاطع الفيديو عبر الإنترنت. يمكنك قص جزء محدد من الفيديو، وتقليل حجم الملف ليكون مناسبًا للرفع، وتحويل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.',
+                  'تشمل أدوات الفيديو أيضًا إمكانية استخراج المسار الصوتي من الفيديو وتحويله إلى ملف صوتي، وتحويل جزء من الفيديو إلى صورة GIF متحركة. هذه الوظائف مفيدة لصنّاع المحتوى والمسوقين وأصحاب المشاريع.',
+                  'تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح. تحقق من متطلبات الأداة وحدود حجم الملف والصيغ التي تدعمها.',
+                ],
               },
               {
                 icon: FileText,
-                title: 'عدّاد الكلمات',
-                description: 'احسب الكلمات والأحرف في النصوص.',
-                href: '/tools/word-counter',
+                image: '/images/categories/pdf-tools.webp',
+                imageAlt: 'دمج مستندات PDF وتنظيم الصفحات.',
+                title: 'أدوات PDF لدمج الملفات وضغطها وتحويلها',
+                count: '10 أدوات',
+                href: '/tools/pdf',
+                paragraphs: [
+                  'تُستخدم أدوات PDF في مهام متعددة، منها جمع المستندات في ملف واحد، وتقسيم ملف إلى أجزاء، وتدوير الصفحات، وتحويل الصور إلى مستند PDF. وتساعد هذه الوظائف الطلاب وأصحاب الأعمال والمستخدمين على تنظيم المستندات.',
+                  'يمكنك أيضًا ضغط ملفات PDF لتقليل حجمها قبل الإرسال، وتحويل صفحات PDF إلى صور لاستخدامها في العروض التقديمية، وإضافة علامة مائية إلى المستندات لحمايتها.',
+                  'عند ضغط الملفات أو تحويلها، قد تختلف النتيجة بحسب محتوى المستند وإعدادات الأداة. راجع الملف الناتج قبل استخدامه النهائي.',
+                ],
               },
-            ]}
-            columns="md:grid-cols-2"
-          />
+              {
+                icon: BarChart3,
+                image: '/images/categories/seo-tools.webp',
+                imageAlt: 'تحسين محركات البحث وأدوات بحث الكلمات المفتاحية.',
+                title: 'أدوات تحسين محركات البحث والكلمات المفتاحية',
+                count: '2 أدوات',
+                href: '/tools/seo',
+                paragraphs: [
+                  'يساعد البحث عن الكلمات المفتاحية في اكتشاف عبارات قد يستخدمها الجمهور عند البحث عن موضوع معين. يمكنك استخدام مولّد الكلمات المفتاحية لاستكشاف أفكار مرتبطة بكلمة أساسية، ثم تقييم مدى ملاءمتها لمحتوى موقعك.',
+                  'أما عدّاد الكلمات فيساعدك على معرفة طول النص ومراجعته قبل النشر. يمكن استخدامه أيضًا لمراجعة منشورات التواصل الاجتماعي.',
+                  'تذكر أن الأدوات المساعدة لا تضمن وحدها تحسّن ترتيب الموقع؛ إذ يعتمد الأداء في نتائج البحث على جودة المحتوى وتجربة الصفحة وعوامل أخرى.',
+                ],
+              },
+              {
+                icon: QrCode,
+                image: '/images/categories/productivity-tools.webp',
+                imageAlt: 'مكتب منظم مع بطاقة رمز QR.',
+                title: 'أدوات مجانية للإنتاجية وإنشاء QR Code',
+                count: '3 أدوات',
+                href: '/tools/productivity',
+                paragraphs: [
+                  'يمكن استخدام رمز QR لتسهيل الوصول إلى رابط موقع أو نص أو معلومات أخرى تدعمها الأداة. أنشئ الرمز باستخدام مولّد QR Code، ثم حمّله واستخدمه في الطباعة على الملصقات أو بطاقات العمل.',
+                  'قبل طباعة الرمز أو مشاركته على نطاق واسع، جرّب مسحه باستخدام هاتفك للتأكد من أن البيانات صحيحة. تحقّق أيضًا من أن الرمز واضح بما يكفي للطباعة.',
+                  'تشمل أدوات الإنتاجية على Intooly أيضًا أدوات نصية مساعدة مثل عدّاد الكلمات ومولّد الكلمات المفتاحية.',
+                ],
+              },
+            ].map((cat, idx) => {
+              const Icon = cat.icon;
+              const isEven = idx % 2 === 0;
 
-          <div className="mt-10 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">
-              البحث عن الكلمات المفتاحية ومراجعة المحتوى
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
-              يساعد البحث عن الكلمات المفتاحية في اكتشاف عبارات قد يستخدمها
-              الجمهور عند البحث عن موضوع معين. يمكنك استخدام مولد الكلمات
-              المفتاحية لاستكشاف أفكار مرتبطة بكلمة أساسية، ثم تقييم مدى ملاءمتها
-              لمحتوى موقعك قبل إضافتها إلى العناوين أو المقالات.
-            </p>
-            <p className="text-sm md:text-base text-slate-600 leading-8">
-              أما عدّاد الكلمات فيساعدك على معرفة طول النص ومراجعته قبل النشر.
-              تذكر أن الأدوات المساعدة لا تضمن وحدها تحسن ترتيب الموقع؛ إذ يعتمد
-              الأداء في نتائج البحث أيضًا على جودة المحتوى ومدى فائدته للمستخدم
-              وتجربة الصفحة وعوامل أخرى.
-            </p>
+              return (
+                <div
+                  key={cat.href}
+                  className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-[0_8px_30px_-10px_rgba(245,158,11,0.25)]"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-10 gap-0">
+                    <div className={`relative h-64 md:h-72 lg:h-auto lg:col-span-3 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                      <img
+                        src={cat.image}
+                        alt={cat.imageAlt}
+                        className="w-full h-full object-contain p-2 md:p-4"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className={`p-6 md:p-8 lg:col-span-7 flex flex-col justify-center ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <h3 className="text-lg md:text-xl font-black text-slate-900">
+                          {cat.title}
+                        </h3>
+                      </div>
+
+                      <div className="space-y-2 mb-4">
+                        {cat.paragraphs.map((p, i) => (
+                          <p key={i} className="text-sm text-slate-600 leading-7">
+                            {p}
+                          </p>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full">
+                          {cat.count}
+                        </span>
+                        <Link
+                          href={cat.href}
+                          className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-brand-600 shadow-[0_4px_15px_-4px_rgba(234,179,8,0.35)]"
+                        >
+                          استكشف جميع الأدوات
+                          <ArrowLeft className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
-
-      {/* Productivity */}
-      <section id="productivity-tools" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            icon={QrCode}
-            title="أدوات مجانية للإنتاجية وإنشاء QR Code"
-            description="أنشئ رموز QR للرابط أو النص، واستكشف خيارات الاستخدام التي توفرها الأداة."
-          />
-
-          <div className="max-w-2xl mx-auto">
-            <ToolGrid
-              tools={[
-                {
-                  icon: QrCode,
-                  title: 'مولّد QR Code',
-                  description:
-                    'أنشئ رمز QR للمعلومات التي تريد مشاركتها، ثم نزّل الرمز وفق الخيارات المتاحة.',
-                  href: '/tools/qr-generator',
-                },
-              ]}
-              columns="md:grid-cols-1"
-            />
-          </div>
-
-          <div className="mt-10 max-w-4xl mx-auto">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">
-              إنشاء رموز QR للاستخدام الشخصي والتجاري
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 leading-8">
-              يمكن استخدام رمز QR لتسهيل الوصول إلى رابط موقع أو نص أو معلومات
-              أخرى تدعمها الأداة. قبل طباعة الرمز أو مشاركته على نطاق واسع، جرّب
-              مسحه باستخدام هاتفك للتأكد من أن البيانات صحيحة وأن الرابط يفتح
-              الصفحة المقصودة.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Intooly and how it works */}
+{/* Why Intooly and how it works */}
       <section className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading

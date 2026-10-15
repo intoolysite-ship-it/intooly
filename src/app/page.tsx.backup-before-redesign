@@ -1,0 +1,708 @@
+﻿import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Sparkles,
+  Shield,
+  Zap,
+  Image as ImageIcon,
+  Video,
+  FileText,
+  Star,
+  CheckCircle2,
+  ChevronDown,
+  Scissors,
+  Archive,
+  Maximize,
+  FileType,
+  Crop,
+  Palette,
+  Film,
+  Music,
+  Share2,
+  Smartphone,
+  Lock,
+  HelpCircle,
+  BookOpen,
+  BarChart3,
+  QrCode,
+  Merge,
+  Minimize2,
+  RotateCw,
+  ImagePlus,
+  Plus,
+  Files,
+  FileArchive,
+  Type,
+} from 'lucide-react';
+
+import BlogSection from '@/components/BlogSection';
+import HeroSearch from '@/components/HeroSearch';
+
+export const metadata: Metadata = {
+  title: 'Intooly – أدوات مجانية أونلاين للصور والفيديو وPDF',
+  description:
+    'اكتشف أدوات مجانية عبر الإنترنت لتعديل الصور وضغطها، وقص الفيديو وتحويله، ودمج ملفات PDF وضغطها، وإنشاء رموز QR باستخدام الأدوات المتاحة على Intooly.',
+  alternates: {
+    canonical: 'https://intooly.com/',
+  },
+  openGraph: {
+    title: 'Intooly – أدوات مجانية أونلاين للصور والفيديو وPDF',
+    description:
+      'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والكلمات المفتاحية والإنتاجية، بواجهة عربية سهلة الاستخدام.',
+    url: 'https://intooly.com/',
+    siteName: 'Intooly',
+    type: 'website',
+    locale: 'ar',
+  },
+};
+
+const categories = [
+  {
+    icon: ImageIcon,
+    title: 'أدوات الصور',
+    description: 'إزالة الخلفية، وضغط الصور، وتغيير الأبعاد، وتحويل الصيغ.',
+    href: '#image-tools',
+  },
+  {
+    icon: Video,
+    title: 'أدوات الفيديو',
+    description: 'قص الفيديو وضغطه وتحويله واستخراج الصوت وإنشاء GIF.',
+    href: '#video-tools',
+  },
+  {
+    icon: FileText,
+    title: 'أدوات PDF',
+    description: 'دمج ملفات PDF وتقسيمها وضغطها وتنظيم صفحاتها.',
+    href: '/tools/pdf',
+  },
+  {
+    icon: Sparkles,
+    title: 'أدوات الذكاء الاصطناعي',
+    description: 'توليد الصور بالذكاء الاصطناعي والأدوات الذكية.',
+    href: '/tools/ai-image-generator',
+  },
+  {
+    icon: BarChart3,
+    title: 'أدوات SEO',
+    description: 'اكتشاف أفكار الكلمات المفتاحية وتحليل النصوص.',
+    href: '#seo-tools',
+  },
+  {
+    icon: QrCode,
+    title: 'أدوات الإنتاجية',
+    description: 'إنشاء رموز QR للرابط والنص واستخدامات أخرى.',
+    href: '#productivity-tools',
+  },
+];
+
+const featuredTools = [
+  {
+    icon: Files,
+    title: 'دمج ملفات PDF',
+    description: 'اجمع ملفات PDF متعددة في ملف واحد.',
+    href: '/tools/merge-pdf',
+  },
+  {
+    icon: FileArchive,
+    title: 'ضغط ملفات PDF',
+    description: 'قلّل حجم ملفات PDF وفق إمكانات أداة الضغط.',
+    href: '/tools/compress-pdf',
+  },
+  {
+    icon: Scissors,
+    title: 'إزالة خلفية الصور',
+    description: 'جرّب إزالة خلفية الصورة للحصول على خلفية شفافة.',
+    href: '/tools/background-remover',
+  },
+  {
+    icon: QrCode,
+    title: 'إنشاء رمز QR',
+    description: 'أنشئ رمزًا للرابط أو النص ونزّله.',
+    href: '/tools/qr-generator',
+  },
+];
+
+const imageTools = [
+  { icon: Scissors, title: 'إزالة خلفية الصور', href: '/tools/background-remover' },
+  { icon: Archive, title: 'ضغط الصور', href: '/tools/image-compressor' },
+  { icon: Palette, title: 'استوديو صور المنتجات', href: '/tools/product-photo-studio' },
+  { icon: Crop, title: 'قص الصور', href: '/tools/image-cropper' },
+  { icon: FileType, title: 'تحويل صيغ الصور', href: '/tools/image-converter' },
+  { icon: Maximize, title: 'تغيير حجم الصور', href: '/tools/image-resizer' },
+];
+
+const videoTools = [
+  { icon: Archive, title: 'ضغط الفيديو', href: '/tools/video-compressor' },
+  { icon: Share2, title: 'تحويل صيغ الفيديو', href: '/tools/video-converter' },
+  { icon: Music, title: 'تحويل الفيديو إلى صوت', href: '/tools/video-to-audio' },
+  { icon: Film, title: 'قص الفيديو', href: '/tools/video-trimmer' },
+  { icon: Film, title: 'تحويل الفيديو إلى GIF', href: '/tools/video-to-gif' },
+];
+
+const pdfTools = [
+  { icon: Merge, title: 'دمج PDF', href: '/tools/merge-pdf' },
+  { icon: Scissors, title: 'تقسيم PDF', href: '/tools/split-pdf' },
+  { icon: Minimize2, title: 'ضغط PDF', href: '/tools/compress-pdf' },
+  { icon: RotateCw, title: 'تدوير PDF', href: '/tools/rotate-pdf' },
+  { icon: ImagePlus, title: 'تحويل الصور إلى PDF', href: '/tools/jpg-to-pdf' },
+];
+
+const faqs = [
+  {
+    q: 'هل أدوات Intooly مجانية؟',
+    a: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة. راجع تفاصيل الأداة لمعرفة حدود الملفات والميزات المتاحة.',
+  },
+  {
+    q: 'هل بياناتي وملفاتي آمنة؟',
+    a: 'تختلف طريقة معالجة الملفات حسب الأداة. راجع تعليمات الأداة وسياسة الخصوصية لمعرفة ما إذا كانت المعالجة تتم داخل المتصفح أو تتطلب إرسال البيانات إلى خدمة أخرى.',
+  },
+  {
+    q: 'هل أحتاج إلى تثبيت برامج؟',
+    a: 'يمكن استخدام الأدوات المتوافقة مباشرة من متصفح حديث دون تثبيت برنامج منفصل. وقد تختلف متطلبات التشغيل بحسب الأداة وحجم الملف.',
+  },
+  {
+    q: 'كيف أتواصل مع فريق Intooly؟',
+    a: 'يمكنك التواصل معنا عبر البريد الإلكتروني support@intooly.com للاستفسارات والملاحظات المتعلقة بالموقع والأدوات.',
+  },
+];
+
+function SectionHeading({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="text-center mb-10">
+      <div className="flex items-center justify-center gap-2.5 mb-3">
+        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+          <Icon className="w-5 h-5 text-amber-600" />
+        </div>
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-900">
+          {title}
+        </h2>
+      </div>
+      {description && (
+        <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function ToolGrid({
+  tools,
+  columns = 'md:grid-cols-3',
+}: {
+  tools: {
+    icon: React.ElementType;
+    title: string;
+    href: string;
+    description?: string;
+  }[];
+  columns?: string;
+}) {
+  return (
+    <div className={`grid grid-cols-1 sm:grid-cols-2 ${columns} gap-3 md:gap-4`}>
+      {tools.map((tool) => {
+        const Icon = tool.icon;
+
+        return (
+          <Link
+            key={tool.href}
+            href={tool.href}
+            className="bg-white border border-slate-200 rounded-xl p-4 hover:-translate-y-0.5 hover:border-amber-300 transition-all duration-300 group flex items-center gap-3 shadow-[0_4px_20px_-8px_rgba(245,158,11,0.25)]"
+          >
+            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors">
+              <Icon className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-sm md:text-base text-slate-900">
+                {tool.title}
+              </h3>
+              {tool.description && (
+                <p className="text-xs md:text-sm text-slate-600 leading-relaxed mt-1">
+                  {tool.description}
+                </p>
+              )}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function Home() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://intooly.com/#website',
+        url: 'https://intooly.com/',
+        name: 'Intooly',
+        description:
+          'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والكلمات المفتاحية والإنتاجية.',
+        inLanguage: 'ar',
+        publisher: {
+          '@id': 'https://intooly.com/#organization',
+        },
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://intooly.com/#organization',
+        name: 'Intooly',
+        url: 'https://intooly.com/',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://intooly.com/favicon.svg',
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: 'support@intooly.com',
+          contactType: 'customer support',
+          availableLanguage: ['Arabic', 'English'],
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://intooly.com/#faq',
+        mainEntity: faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.a,
+          },
+        })),
+      },
+    ],
+  };
+
+  return (
+    <div className="min-h-screen" dir="rtl">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-ink-50 to-white py-10 md:py-14 lg:py-16 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #1f2937 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-ink-900 mb-3 md:mb-4 leading-tight">
+              intooly أدوات مجانية احترافية
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl font-semibold text-ink-600 mb-6 md:mb-8 leading-relaxed">
+              أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص
+            </p>
+
+            <div className="mb-6 md:mb-8">
+              <HeroSearch />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+              {[
+                { icon: Shield, text: 'ملفات آمنة' },
+                { icon: Zap, text: 'معالجة فورية' },
+                { icon: CheckCircle2, text: 'مجاني' },
+                { icon: Lock, text: 'بدون تسجيل' },
+              ].map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    key={item.text}
+                    className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-brand-200 shadow-[0_4px_15px_-4px_rgba(234,179,8,0.25)]"
+                  >
+                    <Icon className="w-4 h-4 text-brand-500" />
+                    <span className="text-xs md:text-sm font-bold text-ink-900">
+                      {item.text}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section id="categories" className="py-14 md:py-16 bg-white scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={BookOpen}
+            title="استكشف الأدوات المجانية حسب الفئة"
+            description="اختر الفئة التي تناسب مهمتك للوصول إلى الأدوات المتاحة وتفاصيل استخدامها."
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {categories.map((category) => {
+              const Icon = category.icon;
+
+              return (
+                <Link
+                  key={category.title}
+                  href={category.href}
+                  className="bg-white border border-slate-200 rounded-xl p-5 hover:-translate-y-0.5 hover:border-amber-300 transition-all duration-300 group flex flex-col gap-3 shadow-[0_4px_20px_-8px_rgba(245,158,11,0.25)]"
+                >
+                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-200 transition-colors">
+                    <Icon className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <h3 className="font-bold text-base text-slate-900">
+                    {category.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {category.description}
+                  </p>
+                  <span className="text-sm font-bold text-amber-700">
+                    استكشف الفئة ←
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured tools */}
+      <section className="py-14 md:py-16 bg-slate-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={Star}
+            title="أدوات مفيدة لإنجاز مهامك"
+            description="ابدأ بأحد هذه الخيارات للوصول مباشرة إلى صفحة الأداة وطريقة استخدامها."
+          />
+
+          <ToolGrid tools={featuredTools} columns="md:grid-cols-2 lg:grid-cols-4" />
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              أدوات عملية للمهام اليومية
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              تجمع Intooly أدوات عبر الإنترنت تساعدك على تنفيذ مهام رقمية شائعة،
+              مثل دمج ملفات PDF وضغطها، وتجهيز الصور، وإنشاء رموز QR. اختر الأداة
+              التي تناسب احتياجك، ثم راجع التعليمات والخيارات المتاحة داخل صفحتها
+              قبل بدء المعالجة أو تنزيل النتيجة.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Image tools */}
+      <section id="image-tools" className="py-14 md:py-16 bg-white scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={ImageIcon}
+            title="أدوات تعديل الصور وضغطها أونلاين"
+            description="خيارات لتجهيز الصور وتغيير أبعادها وتحويل صيغها واستخدامها في المتاجر الإلكترونية والمحتوى الرقمي."
+          />
+
+          <ToolGrid tools={imageTools} columns="md:grid-cols-3 lg:grid-cols-3" />
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              تعديل الصور وضغطها وتغيير حجمها
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
+              تساعدك أدوات تعديل الصور على تنفيذ مهام مختلفة، مثل قص الصورة،
+              وتغيير أبعادها، وتحويلها بين الصيغ المدعومة، وتقليل حجمها عند الحاجة
+              إلى نشرها على موقع إلكتروني أو مشاركتها عبر الإنترنت. كما تتوفر أداة
+              لإزالة الخلفية وأداة مخصصة للعمل على صور المنتجات.
+            </p>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              تختلف النتائج بحسب صيغة الصورة وإعدادات المعالجة والأداة المستخدمة.
+              لذلك، راجع خيارات التنزيل والجودة داخل صفحة الأداة، واحتفظ بنسخة من
+              الصورة الأصلية إذا كنت تحتاج إلى الرجوع إليها لاحقًا.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Video tools */}
+      <section id="video-tools" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={Video}
+            title="أدوات الفيديو المجانية عبر الإنترنت"
+            description="استكشف أدوات لقص الفيديو وضغطه وتحويل صيغته أو استخراج الصوت وإنشاء صور GIF متحركة."
+          />
+
+          <ToolGrid tools={videoTools} columns="md:grid-cols-3 lg:grid-cols-3" />
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              قص الفيديو وتحويله وتقليل حجمه
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
+              قد تحتاج إلى قص جزء من مقطع فيديو، أو تجهيز نسخة أصغر للمشاركة،
+              أو استخراج الصوت، أو تحويل جزء مناسب إلى GIF. توفر صفحات أدوات
+              الفيديو تفاصيل الخيارات المتاحة وطريقة استخدامها.
+            </p>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح.
+              قبل معالجة المقاطع الكبيرة، تحقق من متطلبات الأداة وحدود حجم الملف
+              والصيغ التي تدعمها.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* PDF tools */}
+      <section id="pdf-tools" className="py-14 md:py-16 bg-gradient-to-br from-ink-50 via-white to-ink-50 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={FileText}
+            title="أدوات PDF لدمج الملفات وضغطها وتحويلها"
+            description="تعرف على الأدوات المتاحة لدمج ملفات PDF وتقسيمها وضغطها وتدوير الصفحات وتحويل الصور إلى PDF."
+          />
+
+          <div className="max-w-3xl mx-auto mb-6">
+            <Link
+              href="/tools/pdf"
+              className="group flex flex-col sm:flex-row items-center justify-between gap-4 w-full bg-white border border-amber-200 rounded-2xl p-6 md:p-8 transition-all duration-300 shadow-[0_8px_30px_-8px_rgba(234,179,8,0.25)] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_-10px_rgba(234,179,8,0.35)]"
+            >
+              <div className="text-center sm:text-right">
+                <h3 className="text-lg md:text-xl font-extrabold text-slate-900 mb-2">
+                  استكشف مجموعة أدوات PDF
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  انتقل إلى صفحة أدوات PDF للاطلاع على الخيارات المتاحة.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-bold text-white transition group-hover:bg-brand-600 whitespace-nowrap">
+                جميع أدوات PDF
+                <Plus className="w-4 h-4" />
+              </span>
+            </Link>
+          </div>
+
+          <ToolGrid tools={pdfTools} columns="md:grid-cols-3 lg:grid-cols-5" />
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              التعامل مع ملفات PDF بسهولة
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
+              تُستخدم أدوات PDF في مهام متعددة، منها جمع المستندات في ملف واحد،
+              وتقسيم ملف إلى أجزاء، وتدوير الصفحات، وتحويل الصور إلى مستند PDF.
+              وتساعد هذه الوظائف الطلاب وأصحاب الأعمال والمستخدمين على تنظيم
+              المستندات وتجهيزها للمشاركة.
+            </p>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              عند ضغط الملفات أو تحويلها، قد تختلف النتيجة بحسب محتوى المستند
+              وإعدادات الأداة. راجع الملف الناتج قبل استخدامه النهائي، خصوصًا إذا
+              كان يحتوي على صور أو مستندات مهمة.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO and text tools */}
+      <section id="seo-tools" className="py-14 md:py-16 bg-white scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={BarChart3}
+            title="أدوات تحسين محركات البحث والكلمات المفتاحية"
+            description="أدوات تساعدك على استكشاف الكلمات المفتاحية ومراجعة النصوص قبل نشر المحتوى."
+          />
+
+          <ToolGrid
+            tools={[
+              {
+                icon: BarChart3,
+                title: 'مولد الكلمات المفتاحية',
+                description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.',
+                href: '/tools/keyword-generator',
+              },
+              {
+                icon: FileText,
+                title: 'عدّاد الكلمات',
+                description: 'احسب الكلمات والأحرف في النصوص.',
+                href: '/tools/word-counter',
+              },
+            ]}
+            columns="md:grid-cols-2"
+          />
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              البحث عن الكلمات المفتاحية ومراجعة المحتوى
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8 mb-3">
+              يساعد البحث عن الكلمات المفتاحية في اكتشاف عبارات قد يستخدمها
+              الجمهور عند البحث عن موضوع معين. يمكنك استخدام مولد الكلمات
+              المفتاحية لاستكشاف أفكار مرتبطة بكلمة أساسية، ثم تقييم مدى ملاءمتها
+              لمحتوى موقعك قبل إضافتها إلى العناوين أو المقالات.
+            </p>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              أما عدّاد الكلمات فيساعدك على معرفة طول النص ومراجعته قبل النشر.
+              تذكر أن الأدوات المساعدة لا تضمن وحدها تحسن ترتيب الموقع؛ إذ يعتمد
+              الأداء في نتائج البحث أيضًا على جودة المحتوى ومدى فائدته للمستخدم
+              وتجربة الصفحة وعوامل أخرى.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Productivity */}
+      <section id="productivity-tools" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={QrCode}
+            title="أدوات مجانية للإنتاجية وإنشاء QR Code"
+            description="أنشئ رموز QR للرابط أو النص، واستكشف خيارات الاستخدام التي توفرها الأداة."
+          />
+
+          <div className="max-w-2xl mx-auto">
+            <ToolGrid
+              tools={[
+                {
+                  icon: QrCode,
+                  title: 'مولّد QR Code',
+                  description:
+                    'أنشئ رمز QR للمعلومات التي تريد مشاركتها، ثم نزّل الرمز وفق الخيارات المتاحة.',
+                  href: '/tools/qr-generator',
+                },
+              ]}
+              columns="md:grid-cols-1"
+            />
+          </div>
+
+          <div className="mt-10 max-w-4xl mx-auto">
+            <h3 className="text-lg font-bold text-slate-900 mb-3">
+              إنشاء رموز QR للاستخدام الشخصي والتجاري
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 leading-8">
+              يمكن استخدام رمز QR لتسهيل الوصول إلى رابط موقع أو نص أو معلومات
+              أخرى تدعمها الأداة. قبل طباعة الرمز أو مشاركته على نطاق واسع، جرّب
+              مسحه باستخدام هاتفك للتأكد من أن البيانات صحيحة وأن الرابط يفتح
+              الصفحة المقصودة.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Intooly and how it works */}
+      <section className="py-14 md:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={Star}
+            title="لماذا تستخدم Intooly؟"
+            description="تنظيم الأدوات في مكان واحد يساعدك على الوصول إلى الوظيفة المناسبة دون البحث في مواقع متعددة."
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            {[
+              {
+                icon: BookOpen,
+                title: 'أدوات مصنفة بوضوح',
+                description: 'انتقل إلى فئات الصور والفيديو وPDF والنصوص.',
+              },
+              {
+                icon: Smartphone,
+                title: 'استخدام عبر المتصفح',
+                description: 'افتح صفحات الأدوات من متصفح متوافق.',
+              },
+              {
+                icon: CheckCircle2,
+                title: 'خطوات واضحة',
+                description: 'راجع تعليمات الأداة قبل معالجة الملف.',
+              },
+              {
+                icon: Zap,
+                title: 'خيارات متنوعة',
+                description: 'اختر الأداة حسب المهمة التي تريد إنجازها.',
+              },
+              {
+                icon: Shield,
+                title: 'تفاصيل لكل أداة',
+                description: 'تحقق من حدود الملفات وطريقة المعالجة في صفحتها.',
+              },
+              {
+                icon: HelpCircle,
+                title: 'دعم عبر البريد',
+                description: 'راسلنا على support@intooly.com لأي استفسار.',
+              },
+            ].map((feature) => {
+              const Icon = feature.icon;
+
+              return (
+                <div
+                  key={feature.title}
+                  className="bg-white border border-slate-200 rounded-xl p-5 flex items-start gap-3 shadow-[0_4px_20px_-10px_rgba(245,158,11,0.25)]"
+                >
+                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-slate-900 mb-1">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            icon={HelpCircle}
+            title="الأسئلة الشائعة"
+            description="إجابات عن استخدام الأدوات المتاحة على Intooly."
+          />
+
+          <div className="max-w-3xl mx-auto space-y-3">
+            {faqs.map((faq) => (
+              <details
+                key={faq.q}
+                className="bg-white border border-slate-200 rounded-xl overflow-hidden group shadow-[0_4px_20px_-12px_rgba(100,116,139,0.3)]"
+              >
+                <summary className="flex items-center justify-between gap-4 p-4 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-sm md:text-base text-slate-900">
+                    {faq.q}
+                  </span>
+                  <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-4 pb-4 text-sm text-slate-600 border-t border-slate-100 pt-3 leading-7">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+
+
+        </div>
+      </section>
+
+      {/* Blog */}
+      <BlogSection />
+
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+        }}
+      />
+    </div>
+  );
+}
