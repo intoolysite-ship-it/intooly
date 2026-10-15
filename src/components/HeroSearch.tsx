@@ -128,7 +128,7 @@ export default function HeroSearch() {
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
           placeholder="ابحث عن أداة، مثل ضغط الصور أو تحويل PDF..."
-          className="w-full pr-11 pl-4 py-3 md:py-3.5 rounded-xl border-2 border-ink-200 bg-white text-sm md:text-base focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition shadow-sm"
+          className="w-full pr-11 pl-4 py-3 md:py-3.5 rounded-xl border-2 border-white/50 bg-white text-sm md:text-base focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-200/50 transition" style={{ boxShadow: '0 10px 30px -5px rgba(202,138,4,0.6), 0 5px 15px -3px rgba(202,138,4,0.4)' }}
           aria-label="البحث في الأدوات"
           autoComplete="off"
         />

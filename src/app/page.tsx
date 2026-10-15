@@ -441,23 +441,27 @@ export default function Home() {
   return (
     <div className="min-h-screen" dir="rtl">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-ink-50 to-white py-10 md:py-14 lg:py-16 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle, #1f2937 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
+      <section 
+        className="relative overflow-hidden py-10 md:py-14 lg:py-16 bg-white"
+        style={{ 
+          
+          boxShadow: '0 15px 50px -10px rgba(202,138,4,0.5), 0 8px 20px -5px rgba(202,138,4,0.3)'
+        }}
+      >
+        {/* توهج مركزي قوي #ca8a04 يتلاشى للأطراف */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{ 
+            background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(202,138,4,0.6) 0%, rgba(202,138,4,0.35) 25%, rgba(202,138,4,0.15) 50%, transparent 75%)'
+          }} 
         />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-ink-900 mb-3 md:mb-4 leading-tight">
               intooly أدوات مجانية احترافية
             </h1>
-            <p className="text-base sm:text-lg md:text-xl font-semibold text-ink-600 mb-6 md:mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl font-semibold text-ink-800 mb-6 md:mb-8 leading-relaxed">
               أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص
             </p>
 
@@ -477,9 +481,12 @@ export default function Home() {
                 return (
                   <div
                     key={item.text}
-                    className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-brand-200 shadow-[0_4px_15px_-4px_rgba(234,179,8,0.25)]"
+                    className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-white/50"
+                    style={{ 
+                      boxShadow: '0 8px 25px -5px rgba(202,138,4,0.6), 0 4px 10px -3px rgba(202,138,4,0.4)'
+                    }}
                   >
-                    <Icon className="w-4 h-4 text-brand-500" />
+                    <Icon className="w-4 h-4 text-ink-800" />
                     <span className="text-xs md:text-sm font-bold text-ink-900">
                       {item.text}
                     </span>
