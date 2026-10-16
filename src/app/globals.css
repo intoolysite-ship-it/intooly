@@ -24,15 +24,15 @@
   --color-ink-900: #111827;
   --color-ink-950: #030712;
 
-  /* ✅ Cairo من Google Fonts عبر <link> في layout.tsx */
-  --font-sans: 'Cairo', ui-sans-serif, system-ui, -apple-system, 
+  /* ✅ Cairo محليًا عبر next/font */
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, -apple-system,
                'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ✅ تطبيق الخط على كل الصفحة */
 html,
 body {
-  font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {

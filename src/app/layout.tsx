@@ -1,10 +1,19 @@
 ﻿import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import { Cairo } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieConsent from '@/components/CookieConsent';
 import ScrollToTop from '@/components/ScrollToTop';
+
+const cairo = Cairo({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '600', '700', '800'],
+  display: 'swap',
+  variable: '--font-cairo',
+  preload: true,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
@@ -105,7 +114,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className="overflow-x-hidden">
+    <html lang="ar" dir="rtl" className={`${cairo.variable} overflow-x-hidden`}>
       <head>
         {/* Schema.org: Organization */}
         <script
@@ -123,18 +132,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(websiteSchema),
           }}
-        />
-
-        {/* Google Fonts: Cairo */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
-          rel="stylesheet"
         />
 
         {/* Google Analytics 4 — مع Cookie Consent Mode */}
