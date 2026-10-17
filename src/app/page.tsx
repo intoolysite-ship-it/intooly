@@ -65,7 +65,7 @@ const categories = [
     icon: ImageIcon,
     title: 'أدوات الصور',
     description: 'إزالة الخلفية، وضغط الصور، وتغيير الأبعاد، وتحويل الصيغ.',
-    href: '/#image-tools',
+    href: '/tools/images',
     color: {
       bg: '#fff7ed',
       border: '#fed7aa',
@@ -78,7 +78,7 @@ const categories = [
     icon: Video,
     title: 'أدوات الفيديو',
     description: 'قص الفيديو وضغطه وتحويله واستخراج الصوت وإنشاء GIF.',
-    href: '/#video-tools',
+    href: '/tools/video',
     color: {
       bg: '#fef2f2',
       border: '#fecaca',
@@ -130,7 +130,7 @@ const categories = [
     icon: BarChart3,
     title: 'أدوات SEO',
     description: 'اكتشاف أفكار الكلمات المفتاحية وتحليل النصوص.',
-    href: '/#seo-tools',
+    href: '/tools/seo',
     color: {
       bg: '#f5f3ff',
       border: '#ddd6fe',
@@ -143,7 +143,7 @@ const categories = [
     icon: QrCode,
     title: 'أدوات الإنتاجية',
     description: 'إنشاء رموز QR للرابط والنص واستخدامات أخرى.',
-    href: '/#productivity-tools',
+    href: '/tools/productivity',
     color: {
       bg: '#fffbeb',
       border: '#fde68a',
