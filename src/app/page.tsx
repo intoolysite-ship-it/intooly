@@ -37,6 +37,7 @@ import {
   Type,
   FileOutput,
   ScanText,
+  Link2,
 } from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
@@ -192,6 +193,19 @@ const featuredTools = [
       iconBg: '#ede9fe',
       iconColor: '#7c3aed',
       shadow: 'rgba(124,58,237,0.15)',
+    },
+  },
+  {
+    icon: Link2,
+    title: 'مولّد روابط UTM',
+    description: 'أنشئ روابط تتبع احترافية لحملاتك التسويقية.',
+    href: '/tools/utm-builder',
+    color: {
+      bg: '#ecfeff',
+      border: '#a5f3fc',
+      iconBg: '#cffafe',
+      iconColor: '#0891b2',
+      shadow: 'rgba(8,145,178,0.15)',
     },
   },
 ];
