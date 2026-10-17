@@ -2,20 +2,14 @@
 import Link from 'next/link';
 import {
   FileText,
-  FileImage,
-  FileType,
-  FileOutput,
-  Image as ImageIcon,
-  ScanText,
   ArrowLeft,
   BookOpen,
-  Sparkles,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'أدوات المستندات المجانية – تحويل الصور والنصوص إلى Word | Intooly',
+  title: 'أدوات المستندات المجانية – تحويل الصور إلى Word | Intooly',
   description:
-    'اكتشف أدوات المستندات المجانية لتحويل الصور إلى Word باستخدام OCR، واستخراج النص من الصور، والتحويل بين صيغ المستندات المختلفة.',
+    'اكتشف أدوات المستندات المجانية لتحويل الصور إلى Word باستخدام OCR. استخرج النص من صور JPG وPNG وأنشئ مستندات قابلة للتحرير.',
   keywords: [
     'أدوات المستندات',
     'تحويل JPG إلى Word',
@@ -31,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'أدوات المستندات المجانية | Intooly',
     description:
-      'حوّل الصور إلى Word باستخدام OCR، واستخرج النص من الصور، والمزيد.',
+      'حوّل الصور إلى Word باستخدام OCR، واستخرج النص من الصور.',
     url: 'https://intooly.com/tools/documents',
     siteName: 'Intooly',
     locale: 'ar_EG',
@@ -45,53 +39,17 @@ const tools = [
     title: 'تحويل JPG إلى Word',
     description: 'استخرج النص من صور JPG وPNG باستخدام OCR، ثم أنشئ ملف Word.',
     href: '/tools/jpg-to-word',
-    available: true,
-  },
-  {
-    icon: FileImage,
-    title: 'تحويل Word إلى JPG',
-    description: 'حوّل صفحات Word إلى صور بجودة عالية.',
-    href: '#',
-    available: false,
-  },
-  {
-    icon: FileType,
-    title: 'تحويل PDF إلى Word',
-    description: 'حوّل ملفات PDF إلى مستندات Word قابلة للتحرير.',
-    href: '#',
-    available: false,
-  },
-  {
-    icon: ScanText,
-    title: 'استخراج النص من PDF',
-    description: 'استخرج النصوص من ملفات PDF باستخدام OCR.',
-    href: '#',
-    available: false,
-  },
-  {
-    icon: FileOutput,
-    title: 'تحويل المستندات إلى PDF',
-    description: 'حوّل صور ومستندات إلى ملف PDF واحد.',
-    href: '#',
-    available: false,
-  },
-  {
-    icon: ImageIcon,
-    title: 'تحويل صور متعددة إلى Word',
-    description: 'اجمع عدة صور في مستند Word واحد.',
-    href: '#',
-    available: false,
   },
 ];
 
 const faqs = [
   {
     q: 'ما أدوات المستندات في Intooly؟',
-    a: 'هي أدوات لتحويل الصور والمستندات بين الصيغ المختلفة، مثل تحويل JPG إلى Word باستخدام OCR، أو تحويل PDF إلى Word، أو تحويل Word إلى صور.',
+    a: 'هي أدوات لتحويل الصور والمستندات بين الصيغ المختلفة. الأداة الحالية هي "تحويل JPG إلى Word" التي تستخدم OCR لاستخراج النص من الصور وإنشاء مستند Word.',
   },
   {
     q: 'هل أدوات المستندات مجانية؟',
-    a: 'نعم، الأدوات المتاحة مجانية بالكامل. بعض الأدوات المستقبلية قد تحتاج إلى موارد إضافية، ولكن ستظل متاحة مجانًا.',
+    a: 'نعم، الأداة المتاحة مجانية بالكامل ولا تتطلب تسجيلًا أو مفتاح API.',
   },
   {
     q: 'ما الفرق بين تحويل JPG إلى Word بوضع OCR ووضع الصورة؟',
@@ -103,11 +61,11 @@ const faqs = [
   },
   {
     q: 'هل تحافظ أدوات المستندات على تنسيق الملف الأصلي؟',
-    a: 'تختلف النتائج حسب الأداة. عند استخدام OCR، قد يتغيّر التنسيق قليلًا (مثل ترتيب الفقرات والأعمدة). يُنصح بمراجعة النتيجة قبل الاستخدام النهائي.',
+    a: 'عند استخدام OCR، قد يتغيّر التنسيق قليلًا (مثل ترتيب الفقرات والأعمدة). يُنصح بمراجعة النتيجة قبل الاستخدام النهائي.',
   },
   {
     q: 'هل تعمل أدوات المستندات على الجوال؟',
-    a: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.',
+    a: 'نعم، الأداة متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.',
   },
 ];
 
@@ -136,7 +94,7 @@ export default function DocumentToolsPage() {
                 أدوات المستندات لتحويل الصور والنصوص إلى مستندات
               </h1>
               <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
-                حوّل صور JPG وPNG إلى مستندات Word باستخدام OCR، واستخرج النص من الصور، وتعرّف على الأدوات المستقبلية لتحويل المستندات بين الصيغ.
+                حوّل صور JPG وPNG إلى مستندات Word باستخدام OCR، واستخرج النص من الصور بسهولة.
               </p>
               <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-ink-600">
                 <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
@@ -163,7 +121,7 @@ export default function DocumentToolsPage() {
       <section className="container mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-black text-ink-900 md:text-3xl">
-            جميع أدوات المستندات المتاحة
+            أدوات المستندات المتاحة
           </h2>
           <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">
             اختر الأداة المناسبة لمهمتك. كل أداة لها صفحة مستقلة تشرح طريقة استخدامها والقيود المهمة.
@@ -176,50 +134,23 @@ export default function DocumentToolsPage() {
             return (
               <Link
                 key={tool.title}
-                href={tool.available ? tool.href : '#'}
-                className={`group flex items-start gap-3 rounded-xl border p-4 text-right transition-all duration-300 ${
-                  tool.available
-                    ? 'border-ink-200 bg-white hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg'
-                    : 'border-dashed border-ink-200 bg-ink-50 cursor-not-allowed opacity-60'
-                }`}
+                href={tool.href}
+                className="group flex items-start gap-3 rounded-xl border border-ink-200 bg-white p-4 text-right transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg"
               >
-                <div
-                  className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-transform ${
-                    tool.available
-                      ? 'bg-brand-100 group-hover:scale-110'
-                      : 'bg-ink-100'
-                  }`}
-                >
-                  <IconComp
-                    className={`h-5 w-5 ${
-                      tool.available ? 'text-brand-600' : 'text-ink-400'
-                    }`}
-                  />
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-100 transition-transform group-hover:scale-110">
+                  <IconComp className="h-5 w-5 text-brand-600" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3
-                    className={`text-sm font-bold transition-colors ${
-                      tool.available
-                        ? 'text-ink-900 group-hover:text-brand-600'
-                        : 'text-ink-500'
-                    }`}
-                  >
+                  <h3 className="text-sm font-bold text-ink-900 transition-colors group-hover:text-brand-600">
                     {tool.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink-600">
                     {tool.description}
                   </p>
-                  {tool.available ? (
-                    <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
-                      استخدام الأداة
-                      <ArrowLeft className="h-3 w-3" />
-                    </div>
-                  ) : (
-                    <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-ink-400">
-                      <Sparkles className="h-3 w-3" />
-                      قريبًا
-                    </div>
-                  )}
+                  <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
+                    استخدام الأداة
+                    <ArrowLeft className="h-3 w-3" />
+                  </div>
                 </div>
               </Link>
             );
@@ -235,7 +166,7 @@ export default function DocumentToolsPage() {
               تحويل الصور والمستندات بسهولة أونلاين
             </h2>
             <p className="mb-4 leading-8 text-ink-700">
-              تُستخدم أدوات المستندات في مهام متعددة، منها تحويل صور JPG وPNG إلى مستندات Word قابلة للتحرير باستخدام OCR، واستخراج النص من الصور، وتحويل ملفات PDF إلى Word، وتحويل المستندات إلى صور.
+              تُستخدم أدوات المستندات في مهام متعددة، منها تحويل صور JPG وPNG إلى مستندات Word قابلة للتحرير باستخدام OCR، واستخراج النص من الصور.
             </p>
             <p className="mb-4 leading-8 text-ink-700">
               تساعد هذه الأدوات الطلاب وأصحاب الأعمال والمستخدمين على تحويل المستندات بسرعة، وتوفير الوقت، وتحسين إنتاجية العمل مع الصور والمستندات.
