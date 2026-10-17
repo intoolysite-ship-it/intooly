@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/disclaimer', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
     { path: '/cookie-policy', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
     { path: '/tools/pdf', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/documents', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/merge-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/split-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/rotate-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },

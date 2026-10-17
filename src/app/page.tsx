@@ -14,6 +14,7 @@ import {
   Archive,
   Maximize,
   FileType,
+  FileImage,
   Crop,
   Palette,
   Film,
@@ -31,8 +32,11 @@ import {
   ImagePlus,
   Plus,
   Files,
-  FileArchive, ArrowLeft,
+  FileArchive,
+  ArrowLeft,
   Type,
+  FileOutput,
+  ScanText,
 } from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
@@ -41,14 +45,14 @@ import HeroSearch from '@/components/HeroSearch';
 export const metadata: Metadata = {
   title: 'Intooly – أدوات مجانية أونلاين للصور والفيديو وPDF',
   description:
-    'اكتشف أدوات مجانية عبر الإنترنت لتعديل الصور وضغطها، وقص الفيديو وتحويله، ودمج ملفات PDF وضغطها، وإنشاء رموز QR باستخدام الأدوات المتاحة على Intooly.',
+    'اكتشف أدوات مجانية عبر الإنترنت لتعديل الصور وضغطها، وقص الفيديو وتحويله، ودمج ملفات PDF وضغطها، وتحويل الصور إلى Word باستخدام OCR، وإنشاء رموز QR باستخدام الأدوات المتاحة على Intooly.',
   alternates: {
     canonical: 'https://intooly.com/',
   },
   openGraph: {
     title: 'Intooly – أدوات مجانية أونلاين للصور والفيديو وPDF',
     description:
-      'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والكلمات المفتاحية والإنتاجية، بواجهة عربية سهلة الاستخدام.',
+      'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والمستندات والكلمات المفتاحية والإنتاجية، بواجهة عربية سهلة الاستخدام.',
     url: 'https://intooly.com/',
     siteName: 'Intooly',
     type: 'website',
@@ -94,6 +98,19 @@ const categories = [
       iconBg: '#dbeafe',
       iconColor: '#2563eb',
       shadow: 'rgba(37,99,235,0.15)',
+    },
+  },
+  {
+    icon: FileType,
+    title: 'أدوات المستندات',
+    description: 'تحويل الصور إلى Word باستخدام OCR، والمزيد من أدوات المستندات.',
+    href: '/tools/documents',
+    color: {
+      bg: '#f0fdf4',
+      border: '#bbf7d0',
+      iconBg: '#dcfce7',
+      iconColor: '#16a34a',
+      shadow: 'rgba(22,163,74,0.15)',
     },
   },
   {
@@ -152,7 +169,7 @@ const featuredTools = [
     },
   },
   {
-    icon: FileArchive, ArrowLeft,
+    icon: FileArchive,
     title: 'ضغط ملفات PDF',
     description: 'قلّل حجم ملفات PDF وفق إمكانات أداة الضغط.',
     href: '/tools/compress-pdf',
@@ -215,6 +232,13 @@ const pdfTools = [
   { icon: Minimize2, title: 'ضغط PDF', href: '/tools/compress-pdf' },
   { icon: RotateCw, title: 'تدوير PDF', href: '/tools/rotate-pdf' },
   { icon: ImagePlus, title: 'تحويل الصور إلى PDF', href: '/tools/jpg-to-pdf' },
+];
+
+const documentsTools = [
+  { icon: FileText, title: 'تحويل JPG إلى Word', href: '/tools/jpg-to-word' },
+  { icon: FileType, title: 'تحويل PDF إلى Word', href: '#', available: false },
+  { icon: FileImage, title: 'تحويل Word إلى JPG', href: '#', available: false },
+  { icon: ScanText, title: 'استخراج النص من PDF', href: '#', available: false },
 ];
 
 const faqs = [
@@ -409,7 +433,7 @@ export default function Home() {
         url: 'https://intooly.com/',
         name: 'Intooly',
         description:
-          'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والكلمات المفتاحية والإنتاجية.',
+          'أدوات عبر الإنترنت للصور والفيديو وملفات PDF والمستندات والكلمات المفتاحية والإنتاجية.',
         inLanguage: 'ar',
         publisher: {
           '@id': 'https://intooly.com/#organization',
@@ -449,19 +473,18 @@ export default function Home() {
   return (
     <div className="min-h-screen" dir="rtl">
       {/* Hero */}
-      <section 
+      <section
         className="relative overflow-hidden py-10 md:py-14 lg:py-16 bg-white"
-        style={{ 
-          
+        style={{
           boxShadow: '0 15px 50px -10px rgba(202,138,4,0.5), 0 8px 20px -5px rgba(202,138,4,0.3)'
         }}
       >
         {/* توهج مركزي قوي #ca8a04 يتلاشى للأطراف */}
-        <div 
+        <div
           className="absolute inset-0 pointer-events-none"
-          style={{ 
+          style={{
             background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(202,138,4,0.6) 0%, rgba(202,138,4,0.35) 25%, rgba(202,138,4,0.15) 50%, transparent 75%)'
-          }} 
+          }}
         />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -470,7 +493,7 @@ export default function Home() {
               intooly أدوات مجانية احترافية
             </h1>
             <p className="text-base sm:text-lg md:text-xl font-semibold text-ink-800 mb-6 md:mb-8 leading-relaxed">
-              أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص
+              أدوات مجانية احترافية لمعالجة الصور والفيديو والمستندات والنصوص
             </p>
 
             <div className="mb-6 md:mb-8">
@@ -490,7 +513,7 @@ export default function Home() {
                   <div
                     key={item.text}
                     className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-white/50"
-                    style={{ 
+                    style={{
                       boxShadow: '0 8px 25px -5px rgba(202,138,4,0.6), 0 4px 10px -3px rgba(202,138,4,0.4)'
                     }}
                   >
@@ -515,7 +538,7 @@ export default function Home() {
             description="اختر الفئة التي تناسب مهمتك للوصول إلى الأدوات المتاحة وتفاصيل استخدامها."
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {categories.map((category) => {
               const Icon = category.icon;
               const color = category.color;
@@ -574,7 +597,7 @@ export default function Home() {
             </h3>
             <p className="text-sm md:text-base text-slate-600 leading-8">
               تجمع Intooly أدوات عبر الإنترنت تساعدك على تنفيذ مهام رقمية شائعة،
-              مثل دمج ملفات PDF وضغطها، وتجهيز الصور، وإنشاء رموز QR. اختر الأداة
+              مثل دمج ملفات PDF وضغطها، وتجهيز الصور، وإنشاء رموز QR، وتحويل الصور إلى مستندات Word. اختر الأداة
               التي تناسب احتياجك، ثم راجع التعليمات والخيارات المتاحة داخل صفحتها
               قبل بدء المعالجة أو تنزيل النتيجة.
             </p>
@@ -582,7 +605,7 @@ export default function Home() {
         </div>
       </section>
 
-            {/* تصفح حسب الحاجة */}
+      {/* تصفح حسب الحاجة */}
       <section id="browse" className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -630,6 +653,19 @@ export default function Home() {
                   'تُستخدم أدوات PDF في مهام متعددة، منها جمع المستندات في ملف واحد، وتقسيم ملف إلى أجزاء، وتدوير الصفحات، وتحويل الصور إلى مستند PDF. وتساعد هذه الوظائف الطلاب وأصحاب الأعمال والمستخدمين على تنظيم المستندات.',
                   'يمكنك أيضًا ضغط ملفات PDF لتقليل حجمها قبل الإرسال، وتحويل صفحات PDF إلى صور لاستخدامها في العروض التقديمية، وإضافة علامة مائية إلى المستندات لحمايتها.',
                   'عند ضغط الملفات أو تحويلها، قد تختلف النتيجة بحسب محتوى المستند وإعدادات الأداة. راجع الملف الناتج قبل استخدامه النهائي.',
+                ],
+              },
+              {
+                icon: FileType,
+                image: '/images/categories/pdf-tools.webp',
+                imageAlt: 'تحويل الصور والمستندات بين الصيغ.',
+                title: 'أدوات المستندات لتحويل الصور والنصوص',
+                count: '1 أداة',
+                href: '/tools/documents',
+                paragraphs: [
+                  'توفّر أدوات المستندات على Intooly وظائف لتحويل الصور إلى مستندات Word باستخدام OCR (التعرف الضوئي على الحروف)، مما يتيح استخراج النصوص من الصور وتحريرها. الأداة الحالية "تحويل JPG إلى Word" تدعم العربية والإنجليزية.',
+                  'هذه الأدوات مفيدة للطلاب الذين يحتاجون إلى تحويل صور المحاضرات إلى نصوص، وللموظفين الذين يستقبلون صورًا تحتوي على نص ويحتاجون إلى تحريره، ولمن يريد تحويل صور الفواتير أو العقود إلى مستندات قابلة للبحث.',
+                  'تختلف دقة OCR حسب جودة الصورة ووضوح الخطوط، لذا يُنصح بمراجعة النص المستخرج قبل الاعتماد عليه.',
                 ],
               },
               {
@@ -714,7 +750,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-{/* Why Intooly and how it works */}
+
+      {/* Why Intooly and how it works */}
       <section className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -728,7 +765,7 @@ export default function Home() {
               {
                 icon: BookOpen,
                 title: 'أدوات مصنفة بوضوح',
-                description: 'انتقل إلى فئات الصور والفيديو وPDF والنصوص.',
+                description: 'انتقل إلى فئات الصور والفيديو وPDF والمستندات والنصوص.',
                 color: { bg: '#fff7ed', border: '#fed7aa', iconBg: '#ffedd5', iconColor: '#ea580c', shadow: 'rgba(234,88,12,0.15)' },
               },
               {
@@ -823,8 +860,6 @@ export default function Home() {
               </details>
             ))}
           </div>
-
-
         </div>
       </section>
 
