@@ -42,7 +42,6 @@ const SEARCH_ITEMS: SearchItem[] = [
 
   // ============ أدوات أخرى ============
   { name: 'مولّد QR Code', href: '/tools/qr-generator', description: 'إنشاء رموز QR', category: 'tool' },
-  { name: 'مولّد الصور بالذكاء الاصطناعي', href: '/tools/ai-image-generator', description: 'توليد الصور', category: 'tool' },
   { name: 'مولّد الكلمات المفتاحية', href: '/tools/keyword-generator', description: 'استخراج كلمات مفتاحية', category: 'tool' },
   { name: 'عدّاد الكلمات', href: '/tools/word-counter', description: 'تحليل النصوص', category: 'tool' },
 

@@ -50,7 +50,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/word-counter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/ai-image-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
   ];
 
   return routes.map((route) => ({

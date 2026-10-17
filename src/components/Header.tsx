@@ -62,7 +62,6 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
       { name: 'عدّاد الكلمات', href: '/tools/word-counter' },
       { name: 'مولّد الكلمات', href: '/tools/keyword-generator' },
       { name: 'مولّد QR', href: '/tools/qr-generator' },
-      { name: 'AI Image', href: '/tools/ai-image-generator' },
     ],
   },
 };

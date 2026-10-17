@@ -114,19 +114,6 @@ const categories = [
     },
   },
   {
-    icon: Sparkles,
-    title: 'أدوات الذكاء الاصطناعي',
-    description: 'توليد الصور بالذكاء الاصطناعي والأدوات الذكية.',
-    href: '/tools/ai-image-generator',
-    color: {
-      bg: '#ecfdf5',
-      border: '#a7f3d0',
-      iconBg: '#d1fae5',
-      iconColor: '#059669',
-      shadow: 'rgba(5,150,105,0.15)',
-    },
-  },
-  {
     icon: BarChart3,
     title: 'أدوات SEO',
     description: 'اكتشاف أفكار الكلمات المفتاحية وتحليل النصوص.',
@@ -236,9 +223,6 @@ const pdfTools = [
 
 const documentsTools = [
   { icon: FileText, title: 'تحويل JPG إلى Word', href: '/tools/jpg-to-word' },
-  { icon: FileType, title: 'تحويل PDF إلى Word', href: '#', available: false },
-  { icon: FileImage, title: 'تحويل Word إلى JPG', href: '#', available: false },
-  { icon: ScanText, title: 'استخراج النص من PDF', href: '#', available: false },
 ];
 
 const faqs = [
@@ -396,7 +380,6 @@ function ColoredToolGrid({
           );
         }
 
-        // Fallback للذهبي
         return (
           <Link
             key={tool.href}
@@ -472,14 +455,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" dir="rtl">
-      {/* Hero */}
       <section
         className="relative overflow-hidden py-10 md:py-14 lg:py-16 bg-white"
         style={{
           boxShadow: '0 15px 50px -10px rgba(202,138,4,0.5), 0 8px 20px -5px rgba(202,138,4,0.3)'
         }}
       >
-        {/* توهج مركزي قوي #ca8a04 يتلاشى للأطراف */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -529,7 +510,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
       <section id="categories" className="py-14 md:py-16 bg-white scroll-mt-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -580,7 +560,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured tools */}
       <section className="py-14 md:py-16 bg-slate-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -605,7 +584,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* تصفح حسب الحاجة */}
       <section id="browse" className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -751,7 +729,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Intooly and how it works */}
       <section className="py-14 md:py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -833,7 +810,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
       <section id="faq" className="py-14 md:py-16 bg-slate-50 scroll-mt-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -863,10 +839,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Blog */}
       <BlogSection />
 
-      {/* Structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
