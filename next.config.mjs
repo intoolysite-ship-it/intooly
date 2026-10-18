@@ -2,7 +2,6 @@
 const nextConfig = {
   output: 'export',
   distDir: 'out',
-  turbopack: {},
   images: {
     unoptimized: true,
   },
