@@ -12,7 +12,7 @@ const cairo = Cairo({
   weight: ['400', '600', '700', '800'],
   display: 'swap',
   variable: '--font-cairo',
-  preload: true,
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -134,10 +134,13 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google Analytics 4 — مع Cookie Consent Mode */}
+        {/* Preconnect: blog.intooly.com (لتحسين LCP) */}
+        <link rel="preconnect" href="https://blog.intooly.com" />
+
+        {/* Google Analytics 4 — مع Cookie Consent Mode (lazyOnload) */}
         <Script
           id="google-analytics-consent"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -160,11 +163,11 @@ export default function RootLayout({
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-GB8VLXYS9Z"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -177,12 +180,12 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google AdSense */}
+        {/* Google AdSense (lazyOnload) */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7439471977682480"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </head>
       <body className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden bg-ink-50 text-ink-800">

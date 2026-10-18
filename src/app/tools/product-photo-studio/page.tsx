@@ -89,7 +89,7 @@ const RMBG_STD = 1.0;
 const ORT_WASM_PATH = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/';
 
 const MODEL_URL_PRIMARY = 'https://huggingface.co/briaai/RMBG-1.4/resolve/main/onnx/model.onnx';
-const MODEL_URL_FALLBACK = '/models/rmbg14.onnx';
+const MODEL_URL_FALLBACK = 'https://huggingface.co/briaai/RMBG-1.4/resolve/main/onnx/model.onnx';
 
 const MAX_IMAGES = 50;
 const MAX_CANVAS_PIXELS = 28_000_000;

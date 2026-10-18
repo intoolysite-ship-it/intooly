@@ -47,7 +47,7 @@ const ORT_WASM_PATH = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/
 const IDB_NAME = 'intooly-rmbg-cache-v2';
 const IDB_VERSION = 2;
 const IDB_STORE = 'models';
-const IDB_MODEL_KEY = 'rmbg14-v1';
+const IDB_MODEL_KEY = 'rmbg14-v2-ort130';
 
 // ============================================================
 // ✅ IndexedDB
