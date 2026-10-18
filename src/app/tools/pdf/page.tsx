@@ -130,7 +130,7 @@ export default function PdfToolsPage() {
         <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
         <div className="container relative mx-auto px-4 py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 gap-8 items-center">
             <div>
               <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-300 bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">
                 <BookOpen className="h-4 w-4" />
@@ -143,14 +143,6 @@ export default function PdfToolsPage() {
                 تعرف على الأدوات المتاحة لدمج ملفات PDF وتقسيمها وضغطها وتدوير
                 الصفحات وتحويل الصور إلى PDF.
               </p>
-            </div>
-            <div className="order-first lg:order-last">
-              <img
-                src="/images/categories/pdf-tools.png"
-                alt="دمج مستندات PDF وتنظيم الصفحات والملفات الرقمية."
-                className="w-full h-auto rounded-2xl shadow-[0_15px_40px_-10px_rgba(245,158,11,0.35)]"
-                loading="eager"
-              />
             </div>
           </div>
         </div>
