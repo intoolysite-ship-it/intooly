@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
@@ -1032,7 +1032,7 @@ export default function BackgroundRemoverPage() {
 
             <div className="inline-flex items-center gap-1.5 bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold mb-3">
               <Sparkles className="w-3 h-3" />
-              نموذج RMBG-1.4 • معالجة محلية 100%
+              معالجة محلية 100%
             </div>
 
             <p className="text-base md:text-lg font-bold text-brand-600 mb-6">
@@ -1072,7 +1072,7 @@ export default function BackgroundRemoverPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
             {[
-              { icon: Wand2, title: 'AI فائق', desc: 'نموذج RMBG-1.4' },
+              { icon: Wand2, title: 'AI فائق', desc: 'ذكاء اصطناعي متقدم' },
               { icon: Zap, title: 'تعديلات حية', desc: 'كل تغيير فوري' },
               { icon: Palette, title: 'خلفيات', desc: 'ألوان وتدرجات' },
               { icon: Droplet, title: 'ظلال', desc: '8 اتجاهات' },
@@ -1124,7 +1124,7 @@ export default function BackgroundRemoverPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* ========== RIGHT: Images (Sticky) ========== */}
-                <div className="lg:col-span-2 space-y-4 lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto lg:pr-2">
+                <div className="lg:col-span-2 space-y-4 lg:sticky lg:top-4 lg:self-start">
 
                   {selectedImage && (
                     <div className={`${cardClass} border rounded-2xl overflow-hidden`}>
@@ -1560,46 +1560,7 @@ export default function BackgroundRemoverPage() {
             </div>
           </article>
 
-          <article className={`${cardClass} border rounded-2xl p-6 md:p-8 text-right`}>
-            <h2 className="text-xl md:text-2xl font-black mb-4 text-ink-900">
-              📚 اقرأ أيضاً: دليل شامل لحذف خلفية الصور
-            </h2>
-            <p className={`text-sm md:text-base ${textClass} mb-6 leading-relaxed`}>
-              تريد تعلم المزيد عن <strong>حذف خلفية الصور</strong>؟
-              اقرأ دليلنا الشامل الذي يشرح:
-            </p>
-            <ul className={`space-y-2 text-sm ${textClass} mb-6`}>
-              <li className="flex gap-2 items-start">
-                <span className="text-brand-500 font-bold">✓</span>
-                <span>أنواع حذف خلفية الصور (يدوي، تلقائي، AI)</span>
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="text-brand-500 font-bold">✓</span>
-                <span>أفضل 7 أدوات لحذف خلفية الصور في 2026</span>
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="text-brand-500 font-bold">✓</span>
-                <span>10 نصائح احترافية لحذف خلفية مثالية</span>
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="text-brand-500 font-bold">✓</span>
-                <span>أخطاء شائعة يجب تجنبها</span>
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="text-brand-500 font-bold">✓</span>
-                <span>مستقبل حذف خلفية الصور والتقنيات الناشئة</span>
-              </li>
-            </ul>
-            <a
-              href="https://blog.intooly.com/%d8%ad%d8%b0%d9%81-%d8%ae%d9%84%d9%81%d9%8a%d8%a9-%d8%a7%d9%84%d8%b5%d9%88%d8%b1/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-            >
-              📖 اقرأ الدليل الشامل
-              <span className="text-lg">←</span>
-            </a>
-          </article>
+          
 
         </div>
       </section>
