@@ -330,8 +330,8 @@ export default function BackgroundRemoverPage() {
         const data = imageData.data;
         const width = canvas.width;
         const height = canvas.height;
-        const blurRadius = Math.min(level, 2);
-        const blendFactor = 0.5 + (level * 0.15);
+        const blurRadius = Math.min(level + 1, 4);
+        const blendFactor = 0.4 + (level * 0.15);
         const alphaCopy = new Uint8ClampedArray(width * height);
         for (let i = 0; i < width * height; i++) alphaCopy[i] = data[i * 4 + 3];
         const blurredAlpha = new Uint8ClampedArray(width * height);
@@ -1367,7 +1367,7 @@ export default function BackgroundRemoverPage() {
                     <div className="mb-4">
                       <label className="text-sm font-bold mb-2 block flex items-center gap-1"><Scissors className="w-4 h-4 text-brand-500" /> تحسين حواف الشعر</label>
                       <div className="grid grid-cols-4 gap-1">
-                        {[{ level: 0, label: 'بدون' }, { level: 1, label: 'خفيف' }, { level: 2, label: 'متوسط' }, { level: 3, label: 'قوي' }].map((item) => (
+                        {[{ level: 0, label: 'بدون' }, { level: 1, label: 'خفيف' }, { level: 2, label: 'متوسط' }, { level: 3, label: 'قوي' }, { level: 4, label: 'قوي جدًا' }].map((item) => (
                           <button key={item.level} onClick={() => setGlobalEdgeRefinement(item.level)} className={`p-2 rounded-lg border-2 text-xs font-bold transition-all ${globalEdgeRefinement === item.level ? 'border-brand-500 bg-brand-50' : 'border-ink-200'}`}>{item.label}</button>
                         ))}
                       </div>
