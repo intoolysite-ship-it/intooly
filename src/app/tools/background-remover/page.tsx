@@ -1256,6 +1256,7 @@ export default function BackgroundRemoverPage() {
                             onMouseMove={draw}
                             onMouseUp={stopDrawing}
                             onMouseLeave={stopDrawing}
+                              draggable={false}
                             className="shadow-lg"
                             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                           />
