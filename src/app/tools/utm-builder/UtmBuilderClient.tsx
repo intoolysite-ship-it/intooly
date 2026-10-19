@@ -1,7 +1,9 @@
 ﻿'use client';
+import Link from 'next/link';
 
 import { useState, useMemo } from 'react';
 import {
+  ArrowLeft,
   Link2,
   Copy,
   Check,
@@ -14,6 +16,7 @@ import {
   HelpCircle,
   Lightbulb,
   Shield,
+
 } from 'lucide-react';
 
 interface UtmFields {
@@ -86,45 +89,46 @@ export default function UtmBuilderClient() {
   return (
     <main dir="rtl" className="min-h-screen bg-ink-50 text-ink-900">
       {/* Hero — بنفس هوية Intooly */}
-      <section
-        className="relative overflow-hidden py-10 md:py-14 lg:py-16 bg-white"
-        style={{
-          boxShadow: '0 15px 50px -10px rgba(202,138,4,0.5), 0 8px 20px -5px rgba(202,138,4,0.3)'
-        }}
-      >
+      <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)] mb-8">
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 opacity-20"
           style={{
-            background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(202,138,4,0.6) 0%, rgba(202,138,4,0.35) 25%, rgba(202,138,4,0.15) 50%, transparent 75%)'
+            backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
           }}
         />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center shadow-sm">
-                <BarChart3 className="w-6 h-6 text-brand-600" />
-              </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-ink-900 leading-tight">
+        <div className="container relative mx-auto px-4 py-10 md:py-14">
+          <Link
+            href="/tools/productivity"
+            className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            جميع أدوات الإنتاجية
+          </Link>
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <BarChart3 className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
+            </div>
+            <div>
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 مولّد روابط UTM
               </h1>
-            </div>
-            <p className="text-base sm:text-lg md:text-xl font-semibold text-ink-800 max-w-2xl mx-auto leading-relaxed">
-              أنشئ روابط UTM احترافية لحملاتك التسويقية. أضف معاملات التتبع وتابع مصادر زياراتك بدقة في Google Analytics.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mt-6">
-              <span className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-white/50 shadow-sm">
-                <Shield className="w-4 h-4 text-ink-800" />
-                <span className="text-xs md:text-sm font-bold text-ink-900">معالجة محلية 100%</span>
-              </span>
-              <span className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-white/50 shadow-sm">
-                <Sparkles className="w-4 h-4 text-ink-800" />
-                <span className="text-xs md:text-sm font-bold text-ink-900">توليد فوري</span>
-              </span>
-              <span className="flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-white/50 shadow-sm">
-                <Copy className="w-4 h-4 text-ink-800" />
-                <span className="text-xs md:text-sm font-bold text-ink-900">نسخ بضغطة</span>
-              </span>
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                أنشئ روابط UTM احترافية لحملاتك التسويقية. أضف معاملات التتبع وتابع مصادر زياراتك بدقة في Google Analytics.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                  🛡️ معالجة محلية 100%
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                  ✨ توليد فوري
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                  📋 نسخ بضغطة
+                </span>
+              </div>
             </div>
           </div>
         </div>

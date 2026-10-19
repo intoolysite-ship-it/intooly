@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { 
+import {
+  ArrowLeft, 
   FileText, BarChart3, Target, Key, BookOpen, 
   Heart, AlertTriangle, Lightbulb, Smartphone,
   GitCompare, Sparkles, ChevronDown, ArrowRight
+
 } from 'lucide-react';
 
 import TextInput from '@/components/word-counter/TextInput';
@@ -379,35 +381,36 @@ export default function WordCounterPage() {
       )}
 
       {/* ===== HERO ===== */}
-      <section className="relative bg-gradient-to-b from-ink-50 to-white py-8 md:py-12 overflow-hidden shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
-        <div 
-          className="absolute inset-0 opacity-20 text-ink-900"
+      <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
+        <div
+          className="absolute inset-0 opacity-20"
           style={{
-            backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
         />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
-              <div className="w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0 shadow-lg">
-                <FileText className="w-5 h-5 md:w-6 md:h-6 text-white" />
-              </div>
-              <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-ink-900 leading-tight">
+        <div className="container relative mx-auto px-4 py-10 md:py-14">
+          <Link
+            href="/tools/seo"
+            className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            جميع أدوات SEO
+          </Link>
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <FileText className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
+            </div>
+            <div>
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 عدّاد الكلمات الذكي
               </h1>
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                حلّل نصك فورياً — كلمات، أحرف، جمل، مؤشر القراءة، كثافة الكلمات، وأكثر. محلي 100%، تحليل ذكي.
+              </p>
             </div>
-
-            <div className="inline-flex items-center gap-1.5 bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold mb-3">
-              <Sparkles className="w-3 h-3" />
-              محلي 100% • 22 دولة عربية • تحليل ذكي
-            </div>
-
-            <p className="text-base md:text-lg font-bold text-brand-600 mb-6">
-              حلّل نصك فورياً — كلمات، أحرف، جمل، مؤشر القراءة، كثافة الكلمات، وأكثر
-            </p>
           </div>
         </div>
       </section>

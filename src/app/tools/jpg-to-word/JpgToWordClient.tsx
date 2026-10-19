@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import Link from 'next/link';
 import {
+  ArrowLeft,
   AlertCircle,
   CheckCircle2,
   Download,
@@ -16,6 +17,7 @@ import {
   Sparkles,
   Upload,
   X,
+
 } from 'lucide-react';
 import { createWorker, OEM } from 'tesseract.js';
 import {
@@ -303,25 +305,47 @@ export default function JpgToWordClient() {
     <main dir="rtl" className="min-h-screen bg-slate-50 text-slate-800">
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
         {/* Hero */}
-        <section className="relative mb-8 overflow-hidden rounded-3xl border border-amber-100 bg-gradient-to-br from-white via-amber-50 to-orange-100 px-5 py-8 sm:px-9 sm:py-10">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: 'radial-gradient(#f59e0b 0.8px, transparent 0.8px)', backgroundSize: '18px 18px' }} />
-          <div className="relative z-10 max-w-3xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/80 px-3 py-1.5 text-sm font-semibold text-amber-800">
-              <Sparkles className="h-4 w-4" /> أداة مجانية من Intooly
-            </div>
-            <h1 className="mb-4 flex flex-wrap items-center gap-3 text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-lg shadow-amber-500/25">
-                <FileText className="h-7 w-7" />
-              </span>
-              تحويل JPG إلى Word
-            </h1>
-            <p className="max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-              استخرج النص من صور JPG وPNG باستخدام OCR، ثم راجعه وعدّله وحمّله في ملف Word. يمكنك أيضًا إنشاء مستند Word يحتوي على الصورة الأصلية.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2 text-sm font-medium text-slate-600">
-              <span className="rounded-full bg-white/90 px-3 py-1.5">يدعم العربية والإنجليزية</span>
-              <span className="rounded-full bg-white/90 px-3 py-1.5">حتى 10 MB</span>
-              <span className="rounded-full bg-white/90 px-3 py-1.5">المعالجة داخل المتصفح</span>
+        <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)] mb-8">
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
+              backgroundSize: '24px 24px',
+            }}
+          />
+          <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
+
+          <div className="container relative mx-auto px-4 py-10 md:py-14">
+            <Link
+              href="/tools/documents"
+              className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              جميع أدوات المستندات
+            </Link>
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+                <FileText className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
+              </div>
+              <div>
+                <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
+                  تحويل JPG إلى Word
+                </h1>
+                <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                  استخرج النص من صور JPG وPNG باستخدام OCR، ثم راجعه وعدّله وحمّله في ملف Word. يمكنك أيضًا إنشاء مستند Word يحتوي على الصورة الأصلية.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                  <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                    ✓ يدعم العربية والإنجليزية
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                    ✓ حتى 10 MB
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 bg-white/90 border border-ink-200 px-3 py-1 rounded-full font-bold text-ink-700">
+                    ✓ المعالجة داخل المتصفح
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

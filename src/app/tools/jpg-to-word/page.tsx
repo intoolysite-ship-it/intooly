@@ -28,6 +28,84 @@ export const metadata: Metadata = {
   },
 };
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'تحويل JPG إلى Word — Intooly',
+  url: 'https://intooly.com/tools/jpg-to-word',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description:
+    'أداة مجانية لتحويل صور JPG وPNG إلى مستندات Word باستخدام OCR (عربي وإنجليزي) داخل المتصفح.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات المستندات', item: 'https://intooly.com/tools/documents' },
+    { '@type': 'ListItem', position: 4, name: 'تحويل JPG إلى Word', item: 'https://intooly.com/tools/jpg-to-word' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'كيف يعمل تحويل JPG إلى Word؟',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'تستخدم الأداة تقنية OCR (التعرف الضوئي على الحروف) لاستخراج النص من الصورة، ثم إنشاء ملف Word قابل للتحرير. كل شيء يعمل داخل متصفحك.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'ما اللغات المدعومة؟',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'ندعم العربية والإنجليزية، ويمكن دمج اللغتين إذا كانت الصورة تحتوي على نصوص مختلطة.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'ما الصيغ المدعومة؟',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'ندعم JPG و PNG. الحد الأقصى لحجم الصورة 10 ميجابايت.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل صوري آمنة؟',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'نعم، جميع الصور تُعالج داخل متصفحك مباشرة. لا نرفع أي صورة إلى خوادمنا.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل الأداة مجانية بالكامل؟',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'نعم، الأداة مجانية بالكامل بدون تسجيل وبدون علامات مائية.',
+      },
+    },
+  ],
+};
+
 export default function JpgToWordPage() {
-  return <JpgToWordClient />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <JpgToWordClient />
+    </>
+  );
 }
