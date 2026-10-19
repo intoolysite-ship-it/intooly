@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 // ============================================================
 // 🎨 محوّل الصور الاحترافي — الصفحة الرئيسية
@@ -483,10 +483,10 @@ export default function ImageConverterPage() {
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl icon-glow bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
                 <ImageIcon className="w-8 h-8 md:w-9 md:h-9 text-white" />
               </div>
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-slate-900">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-slate-900">
                 محوّل الصور
               </h1>
             </div>

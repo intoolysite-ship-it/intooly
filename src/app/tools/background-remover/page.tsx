@@ -1022,10 +1022,10 @@ export default function BackgroundRemoverPage() {
           <div className="max-w-5xl mx-auto text-center">
 
             <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
-              <div className="hero-icon-wrapper w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+              <div className="hero-icon-wrapper icon-glow w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0 shadow-lg">
                 <Scissors className="hero-icon w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
-              <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-ink-900 leading-tight">
+              <h1 className="text-base md:text-xl lg:text-2xl font-extrabold text-ink-900 leading-tight">
                 إزالة الخلفية بالذكاء الاصطناعي
               </h1>
             </div>
@@ -1035,7 +1035,7 @@ export default function BackgroundRemoverPage() {
               معالجة محلية 100%
             </div>
 
-            <p className="text-base md:text-lg font-bold text-brand-600 mb-6">
+            <p className="text-base md:text-lg font-bold text-brand-700t-brand-600 mb-6">
               أزل خلفية أي صورة بدقة احترافية في ثوانٍ
             </p>
           </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 // ============================================================
 // ✂️ أداة قص الصور الاحترافية — الصفحة الرئيسية
@@ -478,10 +478,10 @@ export default function ImageCropperPage() {
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
+              <div className="icon-glow w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
                 <Scissors className="w-8 h-8 md:w-9 md:h-9 text-white" />
               </div>
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-slate-900">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-slate-900">
                 اقتصّ صورك
               </h1>
             </div>
@@ -491,7 +491,7 @@ export default function ImageCropperPage() {
               محلي 100% · قوالب جاهزة · بدون رفع
             </div>
 
-            <p className="text-base md:text-lg text-slate-600 font-bold mb-6 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-brand-700 font-bold mb-6 max-w-2xl mx-auto">
               اقتصّ صورك بأي نسبة أو قالب جاهز — سوشيال ميديا، ماركت بليس، وطباعة
             </p>
 
