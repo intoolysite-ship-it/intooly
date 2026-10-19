@@ -10,6 +10,7 @@ import {
   LayoutGrid,
   FileOutput,
   Minimize2,
+  FileType,
   Stamp,
   ArrowLeft,
   BookOpen,
@@ -69,6 +70,12 @@ const tools = [
     title: 'تحويل PDF إلى JPG',
     description: 'حوّل صفحات PDF إلى صور JPG.',
     href: '/tools/pdf-to-jpg',
+  },
+  {
+    icon: FileType,
+    title: 'تحويل Word إلى PDF',
+    description: 'حوّل مستندات Word (DOCX) إلى PDF داخل المتصفح.',
+    href: '/tools/word-to-pdf',
   },
   {
     icon: Trash2,
