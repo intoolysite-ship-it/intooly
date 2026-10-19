@@ -84,13 +84,13 @@ export default function DocumentToolsPage() {
         <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
         <div className="container relative mx-auto px-4 py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 gap-8 items-center">
             <div>
               <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-300 bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">
                 <BookOpen className="h-4 w-4" />
                 Intooly Document Suite
               </span>
-              <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-black tracking-tight text-ink-900">
+              <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black tracking-tight text-ink-900">
                 أدوات المستندات لتحويل الصور والنصوص إلى مستندات
               </h1>
               <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
@@ -108,11 +108,7 @@ export default function DocumentToolsPage() {
                 </span>
               </div>
             </div>
-            <div className="order-first lg:order-last">
-              <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-[0_15px_40px_-10px_rgba(245,158,11,0.35)]">
-                <FileText className="h-32 w-32 text-white/90" />
-              </div>
-            </div>
+
           </div>
         </div>
       </section>

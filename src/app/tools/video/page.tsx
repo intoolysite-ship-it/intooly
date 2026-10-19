@@ -52,7 +52,7 @@ export default function VideoToolsPage() {
             <BookOpen className="h-4 w-4" />
             Intooly Video Suite
           </span>
-          <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-black tracking-tight text-ink-900">
+          <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black tracking-tight text-ink-900">
             أدوات الفيديو أونلاين لقص المقاطع وضغطها وتحويلها
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
