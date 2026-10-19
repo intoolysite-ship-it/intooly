@@ -7,10 +7,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
+  ArrowLeft,
   Sparkles, Scissors, Trash2, Loader2, AlertCircle,
   CheckCircle2, FileArchive, Zap, Shield, Layers,
   ChevronDown, Info, Play, Image as ImageIcon,
   Package,
+
 } from 'lucide-react';
 
 import type {
@@ -466,49 +468,49 @@ export default function ImageCropperPage() {
       )}
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-slate-50 to-white py-8 md:py-12 overflow-hidden border-b border-slate-200">
+      <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
         <div
-          className="absolute inset-0 opacity-20 text-slate-900"
+          className="absolute inset-0 opacity-20"
           style={{
-            backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
         />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="icon-glow w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
-                <Scissors className="w-8 h-8 md:w-9 md:h-9 text-white" />
-              </div>
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-slate-900">
+        <div className="container relative mx-auto px-4 py-10 md:py-14">
+          <Link
+            href="/tools/images"
+            className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            جميع أدوات الصور
+          </Link>
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <Scissors className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
+            </div>
+            <div>
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 اقتصّ صورك
               </h1>
-            </div>
-
-            <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs md:text-sm font-black mb-4">
-              <Sparkles className="w-4 h-4" />
-              محلي 100% · قوالب جاهزة · بدون رفع
-            </div>
-
-            <p className="text-base md:text-lg text-brand-700 font-bold mb-6 max-w-2xl mx-auto">
-              اقتصّ صورك بأي نسبة أو قالب جاهز — سوشيال ميديا، ماركت بليس، وطباعة
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-              {[
-                { icon: Shield, label: 'خصوصية كاملة', color: 'bg-emerald-100 text-emerald-700' },
-                { icon: Zap, label: 'سريع جداً', color: 'bg-amber-100 text-amber-700' },
-                { icon: Layers, label: 'قوالب جاهزة', color: 'bg-blue-100 text-blue-700' },
-              ].map((badge, i) => (
-                <span
-                  key={i}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black ${badge.color}`}
-                >
-                  <badge.icon className="w-3.5 h-3.5" />
-                  {badge.label}
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                اقتصّ صورك بأي نسبة أو قالب جاهز — سوشيال ميديا، ماركت بليس، وطباعة. معالجة محلية 100% داخل متصفحك.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold">
+                  <Shield className="w-3.5 h-3.5" />
+                  خصوصية كاملة
                 </span>
-              ))}
+                <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-bold">
+                  <Zap className="w-3.5 h-3.5" />
+                  سريع جداً
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold">
+                  <Layers className="w-3.5 h-3.5" />
+                  قوالب جاهزة
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -839,6 +841,53 @@ export default function ImageCropperPage() {
       </section>
 
       {/* SEO Section */}
+      {/* ================================================== */}
+      {/* SEO CONTENT SECTION                                */}
+      {/* ================================================== */}
+      <section className="py-12 md:py-16 bg-white border-t border-ink-100">
+        <div className="container mx-auto px-4 max-w-4xl text-right">
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl mb-4">
+            قص الصور أونلاين — اقتصّ صورك بدقة احترافية
+          </h2>
+          <p className="leading-8 text-ink-700 mb-4">
+            قص الصور هو عملية اقتطاع جزء محدد من الصورة مع الاحتفاظ بالجزء المطلوب فقط. هذا مهم جدًا لتجهيز الصور لمنصات التواصل الاجتماعي (مربع، مستطيل، دائرة)، أو للمتاجر الإلكترونية (نسبة 1:1، 4:3، 16:9)، أو للطباعة (أبعاد دقيقة). مع أداة Intooly، يمكنك قص صورك بأي نسبة أو قالب جاهز مباشرة داخل متصفحك، دون رفعها إلى أي سيرفر خارجي.
+          </p>
+          <p className="leading-8 text-ink-700 mb-4">
+            تدعم الأداة قوالب جاهزة لـ Instagram و Facebook و Twitter و LinkedIn و YouTube وغيرها، بالإضافة إلى إمكانية تحديد منطقة قص مخصصة. كل شيء يعمل محليًا، مما يضمن الخصوصية الكاملة والسرعة الفائقة.
+          </p>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            كيفية استخدام أداة قص الصور
+          </h3>
+          <ol className="space-y-2 leading-8 text-ink-700 list-decimal list-inside mb-4">
+            <li>ارفع صورة بصيغة JPG أو PNG أو WebP.</li>
+            <li>اختر قالبًا جاهزًا (Instagram، Facebook، ...) أو حدد نسبة مخصصة.</li>
+            <li>اسحب وأفلت المنطقة المطلوبة، ثم حمّل الصورة المقتطعة.</li>
+          </ol>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            حالات استخدام شائعة
+          </h3>
+          <ul className="space-y-2 leading-8 text-ink-700 list-disc list-inside mb-4">
+            <li><strong>سوشيال ميديا:</strong> تجهيز صور البوستات والبروفايل بالأبعاد الصحيحة.</li>
+            <li><strong>المتاجر الإلكترونية:</strong> قص صور المنتجات بنسبة 1:1 للمتاجر.</li>
+            <li><strong>الطباعة:</strong> قص الصور بأبعاد دقيقة للطباعة (شهادات، بطاقات، ...).</li>
+            <li><strong>العروض التقديمية:</strong> قص الصور لتناسب شرائح العرض.</li>
+            <li><strong>المواقع:</strong> قص الصور لتتناسب مع تصاميم الموقع.</li>
+          </ul>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            نصائح للحصول على أفضل نتيجة
+          </h3>
+          <ul className="space-y-2 leading-8 text-ink-700 list-disc list-inside">
+            <li>استخدم صورًا عالية الجودة لتجنب البكسل عند التكبير.</li>
+            <li>اختر القالب المناسب للمنصة المستهدفة قبل القص.</li>
+            <li>احتفظ بنسخة أصلية من الصورة قبل القص.</li>
+            <li>عاين النتيجة قبل التحميل للتأكد من الدقة.</li>
+          </ul>
+        </div>
+      </section>
+
       <section className="py-12 md:py-16 bg-white border-t border-slate-200">
         <div className="container mx-auto px-4 max-w-4xl">
           <article className="mb-12">

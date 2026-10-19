@@ -985,59 +985,36 @@ export default function BackgroundRemoverPage() {
       {/* ================================================== */}
       {/* ✅ HERO BANNER                                       */}
       {/* ================================================== */}
-      <section className="relative bg-gradient-to-b from-ink-50 to-white py-8 md:py-12 overflow-hidden shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
+      <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
         <div
-          className="absolute inset-0 opacity-20 text-ink-900"
+          className="absolute inset-0 opacity-20"
           style={{
-            backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
-        ></div>
+        />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <style jsx>{`
-          @keyframes gentle-bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-3px) scale(1.05); }
-          }
-          @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(234, 179, 8, 0); }
-          }
-          @keyframes icon-wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-6deg); }
-            75% { transform: rotate(6deg); }
-          }
-          .hero-icon-wrapper {
-            animation: gentle-bounce 3s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
-          }
-          .hero-icon-wrapper:hover .hero-icon {
-            animation: icon-wiggle 0.6s ease-in-out;
-          }
-        `}</style>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-5xl mx-auto text-center">
-
-            <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
-              <div className="hero-icon-wrapper icon-glow w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0 shadow-lg">
-                <Scissors className="hero-icon w-5 h-5 md:w-6 md:h-6 text-white" />
-              </div>
-              <h1 className="text-base md:text-xl lg:text-2xl font-extrabold text-ink-900 leading-tight">
+        <div className="container relative mx-auto px-4 py-10 md:py-14">
+          <Link
+            href="/tools/images"
+            className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            جميع أدوات الصور
+          </Link>
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <Scissors className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
+            </div>
+            <div>
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 إزالة الخلفية بالذكاء الاصطناعي
               </h1>
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                أزل خلفية أي صورة بدقة احترافية في ثوانٍ، مع معالجة محلية 100% داخل متصفحك — بدون رفع الصور إلى أي سيرفر.
+              </p>
             </div>
-
-            <div className="inline-flex items-center gap-1.5 bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold mb-3">
-              <Sparkles className="w-3 h-3" />
-              معالجة محلية 100%
-            </div>
-
-            <p className="text-base md:text-lg font-bold text-brand-700t-brand-600 mb-6">
-              أزل خلفية أي صورة بدقة احترافية في ثوانٍ
-            </p>
           </div>
         </div>
       </section>
@@ -1594,6 +1571,53 @@ export default function BackgroundRemoverPage() {
       {/* ================================================== */}
       {/* RELATED TOOLS — مُصلحة مع cursor-pointer و hover    */}
       {/* ================================================== */}
+      {/* ================================================== */}
+      {/* SEO CONTENT SECTION                                */}
+      {/* ================================================== */}
+      <section className="py-12 md:py-16 bg-white border-t border-ink-100">
+        <div className="container mx-auto px-4 max-w-4xl text-right">
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl mb-4">
+            إزالة خلفية الصور بالذكاء الاصطناعي — دقة احترافية في ثوانٍ
+          </h2>
+          <p className="leading-8 text-ink-700 mb-4">
+            إزالة الخلفية هي عملية فصل الموضوع الرئيسي في الصورة (شخص، منتج، حيوان، أو أي عنصر) عن الخلفية التي تظهر خلفه. تستخدم أداة Intooly نموذج ذكاء اصطناعي متقدم (RMBG-1.4) يعمل مباشرة داخل متصفحك، مما يعني أن صورك لا تُرفع إلى أي سيرفر خارجي، وتحصل على نتيجة احترافية في ثوانٍ.
+          </p>
+          <p className="leading-8 text-ink-700 mb-4">
+            تُستخدم إزالة الخلفية في مجالات متعددة: من تصميم صور المنتجات للمتاجر الإلكترونية، إلى إنشاء صور شخصية احترافية لشبكات التواصل، إلى إعداد مواد العروض التقديمية والتصميم الجرافيكي. مع Intooly، يمكنك الحصول على خلفية شفافة (PNG) أو إضافة خلفية جديدة بلون مخصص في ثوانٍ.
+          </p>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            كيفية استخدام أداة إزالة الخلفية
+          </h3>
+          <ol className="space-y-2 leading-8 text-ink-700 list-decimal list-inside mb-4">
+            <li>ارفع صورة بصيغة JPG أو PNG (يُفضّل صورة عالية الجودة).</li>
+            <li>اضغط على زر "إزالة الخلفية" وانتظر ثوانٍ قليلة.</li>
+            <li>عاين النتيجة، ثم حمّل الصورة بخلفية شفافة أو أضف خلفية جديدة.</li>
+          </ol>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            حالات استخدام شائعة
+          </h3>
+          <ul className="space-y-2 leading-8 text-ink-700 list-disc list-inside mb-4">
+            <li><strong>المتاجر الإلكترونية:</strong> إنشاء صور منتجات بخلفية بيضاء أو شفافة للمتاجر.</li>
+            <li><strong>الشبكات الاجتماعية:</strong> صور شخصية احترافية بخلفية شفافة.</li>
+            <li><strong>التصميم الجرافيكي:</strong> فصل العناصر لاستخدامها في تصاميم متعددة.</li>
+            <li><strong>العروض التقديمية:</strong> صور نظيفة بدون خلفية مشتتة.</li>
+            <li><strong>الطباعة:</strong> صور جاهزة للطباعة على القمصان والأكواب.</li>
+          </ul>
+
+          <h3 className="text-lg font-bold text-ink-900 mt-8 mb-3">
+            نصائح للحصول على أفضل نتيجة
+          </h3>
+          <ul className="space-y-2 leading-8 text-ink-700 list-disc list-inside">
+            <li>استخدم صورًا عالية الجودة (أكبر من 800x800 بكسل).</li>
+            <li>تأكد من وضوح الموضوع الرئيسي وتباينه مع الخلفية.</li>
+            <li>تجنب الصور ذات الخلفيات المزدحمة جدًا أو المشابهة للون الموضوع.</li>
+            <li>احتفظ بنسخة أصلية من الصورة قبل المعالجة.</li>
+          </ul>
+        </div>
+      </section>
+
       <section className="py-12 md:py-16 bg-ink-50">
         <div className="container mx-auto px-4 max-w-5xl text-center">
           <h2 className="text-2xl md:text-3xl font-black mb-6 md:mb-8 text-ink-900">🛠️ أدوات ذات صلة</h2>
