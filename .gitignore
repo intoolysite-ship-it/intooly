@@ -37,3 +37,7 @@ next-env.d.ts
 # Backup and test files
 *.bak
 response.json
+
+# Local backups
+*.backup
+*.working
