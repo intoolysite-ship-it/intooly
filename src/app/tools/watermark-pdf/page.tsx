@@ -280,14 +280,14 @@ export default function WatermarkPdfPage() {
             جميع أدوات PDF
           </Link>
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-              <Stamp className="h-7 w-7 text-brand-600" />
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <Stamp className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-ink-900 sm:text-3xl md:text-4xl">
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 إضافة علامة مائية إلى PDF
               </h1>
-              <p className="mt-2 text-sm leading-7 text-ink-600 sm:text-base">
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
                 أضف علامة مائية نصية إلى كل صفحات PDF. اختر النص، اللون،
                 الحجم، الموضع، والشفافية. كل شيء يعمل داخل متصفحك.
               </p>
@@ -582,9 +582,29 @@ export default function WatermarkPdfPage() {
               </ul>
             </div>
 
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                🔒 خصوصيتك محفوظة
+              </h3>
+              <p className="text-sm leading-7 text-ink-700">
+                جميع الملفات تُعالج داخل متصفحك مباشرة. لا نرفع أي ملف إلى خوادمنا، ولا نحتفظ بأي نسخة.
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-ink-200 bg-white p-5">
               <h3 className="mb-3 text-sm font-bold text-ink-900">
-                أدوات ذات صلة
+                💡 نصائح سريعة
+              </h3>
+              <ul className="space-y-2 text-sm text-ink-700">
+                <li>• اختر شفافية مناسبة (30-50%) لتبقى العلامة مرئية دون حجب المحتوى.</li>
+                <li>• جرّب مواضع مختلفة (وسط، زاوية) للحصول على أفضل نتيجة.</li>
+                <li>• استخدم خطًا واضحًا لعلامة مائية احترافية.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-ink-200 bg-white p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                أدوات PDF شائعة
               </h3>
               <ul className="space-y-2 text-sm">
                 <li>
@@ -598,20 +618,20 @@ export default function WatermarkPdfPage() {
                 </li>
                 <li>
                   <Link
-                    href="/tools/compress-pdf"
+                    href="/tools/split-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    ضغط PDF
+                    تقسيم PDF
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/tools/organize-pdf"
+                    href="/tools/extract-pdf-pages"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    ترتيب الصفحات
+                    استخراج صفحات PDF
                   </Link>
                 </li>
               </ul>

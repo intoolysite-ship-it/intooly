@@ -191,14 +191,14 @@ export default function JpgToPdfPage() {
             جميع أدوات PDF
           </Link>
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-              <FileText className="h-7 w-7 text-brand-600" />
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <FileText className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-ink-900 sm:text-3xl md:text-4xl">
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 تحويل JPG إلى PDF
               </h1>
-              <p className="mt-2 text-sm leading-7 text-ink-600 sm:text-base">
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
                 حوّل صور JPG و PNG و WEBP إلى ملف PDF واحد. أضف صورك، رتّبها، اختر حجم الصفحة، ثم نزّل ملف PDF النهائي. كل شيء يعمل داخل متصفحك دون رفع أي صورة.
               </p>
             </div>
@@ -406,25 +406,47 @@ export default function JpgToPdfPage() {
               </ul>
             </div>
 
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                🔒 خصوصيتك محفوظة
+              </h3>
+              <p className="text-sm leading-7 text-ink-700">
+                جميع الصور تُعالج داخل متصفحك مباشرة. لا نرفع أي صورة إلى خوادمنا، ولا نحتفظ بأي نسخة.
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-ink-200 bg-white p-5">
-              <h3 className="mb-3 text-sm font-bold text-ink-900">أدوات ذات صلة</h3>
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                💡 نصائح سريعة
+              </h3>
+              <ul className="space-y-2 text-sm text-ink-700">
+                <li>• رتّب الصور قبل التحويل للحصول على الترتيب الصحيح.</li>
+                <li>• اختر حجم A4 للمستندات الرسمية.</li>
+                <li>• استخدم صورًا عالية الجودة للحصول على أفضل نتيجة.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-ink-200 bg-white p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                أدوات PDF شائعة
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="/tools/pdf-to-jpg" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
+                  <Link href="/tools/word-to-pdf" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    PDF إلى JPG
+                    Word إلى PDF
                   </Link>
                 </li>
                 <li>
-                  <Link href="/tools/merge-pdf" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
+                  <Link href="/tools/delete-pdf-pages" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    دمج PDF
+                    حذف صفحات PDF
                   </Link>
                 </li>
                 <li>
-                  <Link href="/tools/split-pdf" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
+                  <Link href="/tools/watermark-pdf" className="flex items-center gap-2 text-brand-600 hover:text-brand-700">
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    تقسيم PDF
+                    علامة مائية PDF
                   </Link>
                 </li>
               </ul>

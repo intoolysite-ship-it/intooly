@@ -267,14 +267,14 @@ export default function OrganizePdfPage() {
             جميع أدوات PDF
           </Link>
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-              <LayoutGrid className="h-7 w-7 text-brand-600" />
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <LayoutGrid className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-ink-900 sm:text-3xl md:text-4xl">
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 ترتيب صفحات PDF
               </h1>
-              <p className="mt-2 text-sm leading-7 text-ink-600 sm:text-base">
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
                 رتّب صفحات PDF بالسحب والإفلات، مع إمكانية التدوير والحذف.
                 كل شيء يعمل داخل متصفحك.
               </p>
@@ -545,36 +545,56 @@ export default function OrganizePdfPage() {
               </ul>
             </div>
 
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                🔒 خصوصيتك محفوظة
+              </h3>
+              <p className="text-sm leading-7 text-ink-700">
+                جميع الملفات تُعالج داخل متصفحك مباشرة. لا نرفع أي ملف إلى خوادمنا، ولا نحتفظ بأي نسخة.
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-ink-200 bg-white p-5">
               <h3 className="mb-3 text-sm font-bold text-ink-900">
-                أدوات ذات صلة
+                💡 نصائح سريعة
+              </h3>
+              <ul className="space-y-2 text-sm text-ink-700">
+                <li>• اسحب الصفحات وأفلتها لإعادة ترتيبها.</li>
+                <li>• استخدم أدوات التدوير والحذف لضبط الاتجاه.</li>
+                <li>• عاين النتيجة قبل التنزيل النهائي.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-ink-200 bg-white p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                أدوات PDF شائعة
               </h3>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link
-                    href="/tools/merge-pdf"
+                    href="/tools/compress-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    دمج PDF
+                    ضغط PDF
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/tools/split-pdf"
+                    href="/tools/extract-pdf-pages"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    تقسيم PDF
+                    استخراج صفحات PDF
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/tools/rotate-pdf"
+                    href="/tools/watermark-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    تدوير PDF
+                    علامة مائية PDF
                   </Link>
                 </li>
               </ul>

@@ -224,14 +224,14 @@ export default function PdfToJpgPage() {
             جميع أدوات PDF
           </Link>
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-              <FileImage className="h-7 w-7 text-brand-600" />
+            <div className="icon-glow flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <FileImage className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-ink-900 sm:text-3xl md:text-4xl">
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">
                 تحويل PDF إلى JPG
               </h1>
-              <p className="mt-2 text-sm leading-7 text-ink-600 sm:text-base">
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
                 حوّل صفحات PDF إلى صور JPG قابلة للتنزيل. اختر الصفحات
                 المطلوبة، وجودة الصور، ثم نزّل النتيجة. كل شيء يعمل داخل
                 متصفحك.
@@ -522,36 +522,56 @@ export default function PdfToJpgPage() {
               </ul>
             </div>
 
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                🔒 خصوصيتك محفوظة
+              </h3>
+              <p className="text-sm leading-7 text-ink-700">
+                جميع الملفات تُعالج داخل متصفحك مباشرة. لا نرفع أي ملف إلى خوادمنا، ولا نحتفظ بأي نسخة.
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-ink-200 bg-white p-5">
               <h3 className="mb-3 text-sm font-bold text-ink-900">
-                أدوات ذات صلة
+                💡 نصائح سريعة
+              </h3>
+              <ul className="space-y-2 text-sm text-ink-700">
+                <li>• اختر مستوى الجودة المناسب حسب استخدامك.</li>
+                <li>• حدّد الصفحات المطلوبة فقط لتوفير الوقت.</li>
+                <li>• استخدم ZIP لتنزيل عدة صور دفعة واحدة.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-ink-200 bg-white p-5">
+              <h3 className="mb-3 text-sm font-bold text-ink-900">
+                أدوات PDF شائعة
               </h3>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link
-                    href="/tools/jpg-to-pdf"
+                    href="/tools/word-to-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    JPG إلى PDF
+                    Word إلى PDF
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/tools/split-pdf"
+                    href="/tools/merge-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    تقسيم PDF
+                    دمج PDF
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/tools/extract-pdf-pages"
+                    href="/tools/compress-pdf"
                     className="flex items-center gap-2 text-brand-600 hover:text-brand-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    استخراج صفحات
+                    ضغط PDF
                   </Link>
                 </li>
               </ul>

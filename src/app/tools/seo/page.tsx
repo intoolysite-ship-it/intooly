@@ -47,7 +47,7 @@ export default function SeoToolsPage() {
             <BookOpen className="h-4 w-4" />
             Intooly SEO Suite
           </span>
-          <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black tracking-tight text-ink-900">
+          <h1 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-black tracking-tight text-ink-900">
             أدوات SEO والكلمات المفتاحية وتحليل النصوص
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
@@ -58,7 +58,7 @@ export default function SeoToolsPage() {
 
       <section className="container mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 text-center">
-          <h2 className="text-2xl font-black text-ink-900 md:text-3xl">جميع أدوات SEO المتاحة</h2>
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl">جميع أدوات SEO المتاحة</h2>
           <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">اختر الأداة المناسبة لمهمتك.</p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -86,7 +86,7 @@ export default function SeoToolsPage() {
       <section className="border-t border-ink-100 bg-white">
         <article className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
           <div className="text-right">
-            <h2 className="mb-6 text-2xl font-black text-ink-900 md:text-3xl">البحث عن الكلمات المفتاحية ومراجعة المحتوى</h2>
+            <h2 className="mb-6 text-xl font-black text-ink-900 md:text-2xl">البحث عن الكلمات المفتاحية ومراجعة المحتوى</h2>
             <p className="mb-4 leading-8 text-ink-700">
               يساعد البحث عن الكلمات المفتاحية في اكتشاف عبارات قد يستخدمها الجمهور عند البحث عن موضوع معين. يمكنك استخدام مولّد الكلمات المفتاحية لاستكشاف أفكار مرتبطة بكلمة أساسية، ثم تقييم مدى ملاءمتها لمحتوى موقعك.
             </p>

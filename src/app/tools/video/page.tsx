@@ -52,7 +52,7 @@ export default function VideoToolsPage() {
             <BookOpen className="h-4 w-4" />
             Intooly Video Suite
           </span>
-          <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black tracking-tight text-ink-900">
+          <h1 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-black tracking-tight text-ink-900">
             أدوات الفيديو أونلاين لقص المقاطع وضغطها وتحويلها
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
@@ -63,7 +63,7 @@ export default function VideoToolsPage() {
 
       <section className="container mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 text-center">
-          <h2 className="text-2xl font-black text-ink-900 md:text-3xl">جميع أدوات الفيديو المتاحة</h2>
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl">جميع أدوات الفيديو المتاحة</h2>
           <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">اختر الأداة المناسبة لمهمتك.</p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -91,7 +91,7 @@ export default function VideoToolsPage() {
       <section className="border-t border-ink-100 bg-white">
         <article className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
           <div className="text-right">
-            <h2 className="mb-6 text-2xl font-black text-ink-900 md:text-3xl">قص الفيديو وتحويله وتقليل حجمه أونلاين</h2>
+            <h2 className="mb-6 text-xl font-black text-ink-900 md:text-2xl">قص الفيديو وتحويله وتقليل حجمه أونلاين</h2>
             <p className="mb-4 leading-8 text-ink-700">
               توفّر أدوات الفيديو على Intooly مجموعة من الوظائف التي تساعدك على التعامل مع مقاطع الفيديو عبر الإنترنت. يمكنك قص جزء محدد من الفيديو، وتقليل حجم الملف ليكون مناسبًا للرفع، وتحويل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.
             </p>
