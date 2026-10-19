@@ -69,7 +69,61 @@ const faqs = [
   },
 ];
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'أدوات المستندات — Intooly',
+  url: 'https://intooly.com/tools/documents',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'أدوات مجانية لتحويل الصور إلى مستندات Word باستخدام OCR داخل المتصفح.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات المستندات', item: 'https://intooly.com/tools/documents' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'ما أدوات المستندات في Intooly؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'هي أدوات لتحويل الصور والمستندات بين الصيغ المختلفة، مثل تحويل JPG إلى Word.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل الأدوات مجانية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، الأدوات مجانية بالكامل بدون تسجيل أو مفتاح API.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل يدعم OCR اللغة العربية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، ندعم العربية والإنجليزية، ويمكن دمج اللغتين.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل تعمل على الجوال؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
+    },
+  ],
+};
+
 export default function DocumentToolsPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
   return (
     <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
       {/* Hero */}
@@ -201,5 +255,6 @@ export default function DocumentToolsPage() {
         </article>
       </section>
     </main>
+    </>
   );
 }

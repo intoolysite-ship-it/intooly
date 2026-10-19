@@ -41,7 +41,61 @@ const faqs = [
   { q: 'هل يمكنني استخدام الأدوات على الجوال؟', a: 'نعم، مع مراعاة أن معالجة الملفات الكبيرة قد تحتاج موارد أكبر.' },
 ];
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'أدوات الفيديو — Intooly',
+  url: 'https://intooly.com/tools/video',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'مجموعة أدوات مجانية لتحويل الفيديو وضغطه وقصه واستخراج الصوت منه داخل المتصفح.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات الفيديو', item: 'https://intooly.com/tools/video' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'هل أدوات الفيديو مجانية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الأدوات مجانية بالكامل بدون تسجيل.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'ما الصيغ المدعومة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'ندعم MP4 و WebM و MOV وغيرها. راجع صفحة كل أداة للتفاصيل.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل فيديوهاتي آمنة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الفيديوهات تُعالج داخل متصفحك مباشرة.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل تعمل على الجوال؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
+    },
+  ],
+};
+
 export default function VideoToolsPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
   return (
     <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
       <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
@@ -115,5 +169,6 @@ export default function VideoToolsPage() {
         </article>
       </section>
     </main>
+    </>
   );
 }

@@ -44,9 +44,62 @@ const faqs = [
   { q: 'هل يمكنني استخدام الأدوات على الجوال؟', a: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
 ];
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'أدوات الصور — Intooly',
+  url: 'https://intooly.com/tools/images',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'مجموعة أدوات مجانية لتعديل الصور وضغطها وقصها وتحويل صيغها داخل المتصفح.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات الصور', item: 'https://intooly.com/tools/images' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'هل أدوات تعديل الصور مجانية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل أحتاج إلى تثبيت برامج؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'يمكن استخدام الأدوات المتوافقة مباشرة من متصفح حديث دون تثبيت برنامج منفصل.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'ما الصيغ المدعومة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'تختلف الصيغ المدعومة حسب الأداة. راجع صفحة كل أداة لمعرفة الصيغ التي تدعمها.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل يمكنني استخدام الأدوات على الجوال؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
+    },
+  ],
+};
+
 export default function ImageToolsPage() {
   return (
-    <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
       <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`, backgroundSize: '24px 24px' }} />
         <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
@@ -117,6 +170,7 @@ export default function ImageToolsPage() {
           </div>
         </article>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

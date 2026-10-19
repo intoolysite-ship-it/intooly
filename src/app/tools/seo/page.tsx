@@ -36,7 +36,61 @@ const faqs = [
   { q: 'هل أدوات SEO كافية لتحسين الترتيب؟', a: 'لا. تحسين الترتيب يعتمد أيضًا على جودة المحتوى وفائدته للمستخدم وتجربة الصفحة وسرعة التحميل وعوامل أخرى.' },
 ];
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'أدوات SEO — Intooly',
+  url: 'https://intooly.com/tools/seo',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'أدوات مجانية لتحليل النصوص واكتشاف الكلمات المفتاحية وتحسين محركات البحث.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات SEO', item: 'https://intooly.com/tools/seo' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'ما أدوات SEO في Intooly؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'تشمل مولّد الكلمات المفتاحية وعدّاد الكلمات، لمساعدتك في تحسين محركات البحث.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل الأدوات مجانية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الأدوات مجانية بالكامل بدون تسجيل.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل النتائج دقيقة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'النتائج تعتمد على التحليل المحلي وتقديرات خوارزمياتنا. راجع النتائج قبل الاعتماد عليها.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل بياناتي آمنة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع التحليلات تُجرى داخل متصفحك مباشرة.' },
+    },
+  ],
+};
+
 export default function SeoToolsPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
   return (
     <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
       <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
@@ -110,5 +164,6 @@ export default function SeoToolsPage() {
         </article>
       </section>
     </main>
+    </>
   );
 }

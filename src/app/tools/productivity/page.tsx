@@ -38,7 +38,61 @@ const faqs = [
   { q: 'هل تعمل الأدوات على الجوال؟', a: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
 ];
 
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'أدوات الإنتاجية — Intooly',
+  url: 'https://intooly.com/tools/productivity',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: 'أدوات مجانية لإنشاء رموز QR وروابط UTM وغيرها لتحسين إنتاجيتك.',
+  inLanguage: 'ar',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'أدوات الإنتاجية', item: 'https://intooly.com/tools/productivity' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'ما أدوات الإنتاجية في Intooly؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'تشمل مولّد QR Code ومولّد روابط UTM، لمساعدتك في مهامك اليومية.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل الأدوات مجانية؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الأدوات مجانية بالكامل بدون تسجيل.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل النتائج دائمة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'رموز QR وروابط UTM التي تنشئها دائمة ولا تنتهي.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'هل بياناتي آمنة؟',
+      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع البيانات تُعالج داخل متصفحك مباشرة.' },
+    },
+  ],
+};
+
 export default function ProductivityToolsPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
   return (
     <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
       <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
@@ -112,5 +166,6 @@ export default function ProductivityToolsPage() {
         </article>
       </section>
     </main>
+    </>
   );
 }
