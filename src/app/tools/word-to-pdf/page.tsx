@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import Link from 'next/link';
 import {
   FileText,
@@ -74,53 +75,74 @@ export default function WordToPdfPage() {
     setProgress(10);
 
     try {
+      if (!file || file.size === 0) {
+        throw new Error('الملف فارغ أو غير صالح.');
+      }
+
       const mammoth = (await import('mammoth')).default;
       setProgress(30);
 
       const arrayBuffer = await file.arrayBuffer();
       setProgress(50);
 
-      const result = await mammoth.convertToHtml({ arrayBuffer });
-      const html = result.value;
+      const conversionResult = await mammoth.convertToHtml({ arrayBuffer });
+      let html = conversionResult.value;
+      html = html.replace(/<meta[^>]*charset[^>]*>/gi, '');
       setProgress(70);
 
-      const { jsPDF } = await import('jspdf');
-      const pdf = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'portrait' });
+      if (!html || html.trim().length === 0) {
+        throw new Error('لم يتم استخراج نص من الملف. تأكد أن الملف DOCX صالح.');
+      }
 
-      const container = document.createElement('div');
-      container.innerHTML = html;
-      container.style.cssText = 'position:absolute;left:-9999px;top:0;width:515pt;padding:40pt;background:#ffffff;color:#000000;font-family:Arial, sans-serif;font-size:12pt;line-height:1.6;direction:rtl;text-align:right;';
-      document.body.appendChild(container);
+      const printWindow = window.open('', '_blank', 'width=900,height=700');
+      if (!printWindow) {
+        throw new Error('يرجى السماح بالنوافذ المنبثقة (Pop-ups) لتحويل الملف.');
+      }
 
-      setProgress(85);
+      const safeTitle = file.name.replace(/\.docx$/i, '');
 
-      await pdf.html(container, {
-        x: 40,
-        y: 40,
-        width: 515,
-        windowWidth: 515,
-        autoPaging: 'text',
-        margin: [40, 40, 40, 40],
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-        },
-      });
+      printWindow.document.open();
+      printWindow.document.write('<!DOCTYPE html>');
+      printWindow.document.write('<html dir="rtl" lang="ar">');
+      printWindow.document.write('<head>');
+      printWindow.document.write('<meta charset="UTF-8">');
+      printWindow.document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+      printWindow.document.write('<title>' + safeTitle + '</title>');
+      printWindow.document.write('<style>');
+      printWindow.document.write('@page { size: A4; margin: 20mm; }');
+      printWindow.document.write('body { font-family: "Arial", "Tahoma", sans-serif; font-size: 12pt; line-height: 1.8; color: #000; direction: rtl; text-align: right; padding: 20px; }');
+      printWindow.document.write('h1,h2,h3,h4,h5,h6 { margin-top: 1em; margin-bottom: 0.5em; font-weight: bold; }');
+      printWindow.document.write('p { margin: 0.5em 0; }');
+      printWindow.document.write('ul, ol { padding-right: 2em; }');
+      printWindow.document.write('table { border-collapse: collapse; width: 100%; margin: 1em 0; }');
+      printWindow.document.write('th, td { border: 1px solid #000; padding: 0.5em; text-align: right; }');
+      printWindow.document.write('img { max-width: 100%; height: auto; }');
+      printWindow.document.write('</style>');
+      printWindow.document.write('</head>');
+      printWindow.document.write('<body>');
+      printWindow.document.write(html);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
 
-      document.body.removeChild(container);
+      setProgress(90);
 
-      const pdfBlob = pdf.output('blob');
-      const blobUrl = URL.createObjectURL(pdfBlob);
+      await new Promise((r) => setTimeout(r, 600));
 
-      setResult({
-        fileName: file.name.replace(/\.docx$/i, '') + '.pdf',
-        dataUrl: blobUrl,
-        size: pdfBlob.size,
-        pages: pdf.getNumberOfPages(),
-      });
+      printWindow.focus();
+      printWindow.print();
 
       setProgress(100);
+
+      setTimeout(() => {
+        try { printWindow.close(); } catch { /* ignore */ }
+      }, 1500);
+
+      setResult({
+        fileName: safeTitle + '.pdf',
+        dataUrl: '',
+        size: Math.round(html.length * 2),
+        pages: Math.max(1, Math.ceil(html.length / 3000)),
+      });
     } catch (e) {
       console.error(e);
       setError(e instanceof Error ? 'فشل التحويل: ' + e.message : 'فشل تحويل الملف.');
