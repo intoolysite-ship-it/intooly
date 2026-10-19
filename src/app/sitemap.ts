@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/split-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/rotate-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/jpg-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/word-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/delete-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/extract-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/pdf-to-jpg', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
