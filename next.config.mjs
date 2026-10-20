@@ -5,7 +5,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -17,7 +17,16 @@ const nextConfig = {
         stream: false,
         buffer: false,
         util: false,
+        https: false,
+        http: false,
       };
+
+      // حل مشكلة node: prefix (خاص بـ pptxgenjs) باستخدام NormalModuleReplacementPlugin
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+          resource.request = resource.request.replace(/^node:/, '');
+        })
+      );
     }
 
     // دعم ملفات WASM (مطلوب لـ onnxruntime-web / transformers.js)
