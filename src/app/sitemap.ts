@@ -42,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/compress-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/organize-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/watermark-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/pdf-to-word', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/pdf-to-excel', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/pdf-to-ppt', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/sign-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/protect-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/unlock-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات الصور
     { path: '/tools/background-remover', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },

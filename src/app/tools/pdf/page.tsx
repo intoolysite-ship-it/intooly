@@ -14,6 +14,12 @@ import {
   Stamp,
   ArrowLeft,
   BookOpen,
+  FileText,
+  Table,
+  Presentation,
+  PenTool,
+  KeyRound,
+  Unlock,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -100,6 +106,42 @@ const tools = [
     title: 'علامة مائية PDF',
     description: 'أضف علامة مائية إلى مستند PDF.',
     href: '/tools/watermark-pdf',
+  },
+  {
+    icon: FileText,
+    title: 'تحويل PDF إلى Word',
+    description: 'حوّل ملفات PDF إلى مستندات Word قابلة للتحرير.',
+    href: '/tools/pdf-to-word',
+  },
+  {
+    icon: Table,
+    title: 'تحويل PDF إلى Excel',
+    description: 'حوّل الجداول والبيانات من PDF إلى Excel.',
+    href: '/tools/pdf-to-excel',
+  },
+  {
+    icon: Presentation,
+    title: 'تحويل PDF إلى PowerPoint',
+    description: 'حوّل صفحات PDF إلى شرائح PowerPoint.',
+    href: '/tools/pdf-to-ppt',
+  },
+  {
+    icon: PenTool,
+    title: 'توقيع PDF',
+    description: 'أضف توقيعك الإلكتروني إلى ملفات PDF.',
+    href: '/tools/sign-pdf',
+  },
+  {
+    icon: KeyRound,
+    title: 'حماية PDF بكلمة مرور',
+    description: 'شفّر ملفات PDF بكلمة مرور قوية (AES-256).',
+    href: '/tools/protect-pdf',
+  },
+  {
+    icon: Unlock,
+    title: 'إزالة كلمة مرور PDF',
+    description: 'أزل كلمة المرور من ملفات PDF التي تملك صلاحية الوصول إليها.',
+    href: '/tools/unlock-pdf',
   },
 ];
 
