@@ -30,7 +30,7 @@
     "lucide-react": "^1.52.0",
     "mammoth": "^1.13.0",
     "next": "16.3.8",
-    "onnxruntime-web": "1.19.2",
+    "onnxruntime-web": "^1.31.0-dev.20260918-bc8e7ed75",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",
     "pica": "^10.0.3",

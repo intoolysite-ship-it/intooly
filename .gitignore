@@ -41,3 +41,6 @@ response.json
 # Local backups
 *.backup
 *.working
+
+# AI Models (kept locally)
+public/models/*.onnx
