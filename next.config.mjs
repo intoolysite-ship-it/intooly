@@ -21,12 +21,14 @@ const nextConfig = {
         http: false,
       };
 
-      // حل مشكلة node: prefix (خاص بـ pptxgenjs) باستخدام NormalModuleReplacementPlugin
+      // حل مشكلة node: prefix (خاص بـ pptxgenjs)
       config.plugins.push(
         new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
           resource.request = resource.request.replace(/^node:/, '');
         })
       );
+
+      
     }
 
     // دعم ملفات WASM (مطلوب لـ onnxruntime-web / transformers.js)
