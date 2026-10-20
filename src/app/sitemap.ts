@@ -71,6 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // أدوات الإنتاجية
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/utm-builder', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/what-is-my-ip', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات المستندات
     { path: '/tools/jpg-to-word', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },

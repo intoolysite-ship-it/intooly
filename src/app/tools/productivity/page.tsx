@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
+  Globe,
   QrCode,
   FileText,
   BarChart3,
@@ -29,6 +30,7 @@ const tools = [
   { icon: QrCode, title: 'مولّد QR Code', description: 'أنشئ رمز QR للرابط أو النص ونزّله للاستخدام.', href: '/tools/qr-generator' },
   { icon: FileText, title: 'عدّاد الكلمات', description: 'احسب الكلمات والأحرف في النصوص.', href: '/tools/word-counter' },
   { icon: BarChart3, title: 'مولّد الكلمات المفتاحية', description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.', href: '/tools/keyword-generator' },
+  { icon: Globe, title: 'ما هو عنوان IP الخاص بي؟', description: 'اكتشف عنوان IP العام وموقعك على الخريطة ومزود الخدمة.', href: '/tools/what-is-my-ip' },
 ];
 
 const faqs = [
