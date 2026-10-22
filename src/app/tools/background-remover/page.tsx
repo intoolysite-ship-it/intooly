@@ -42,8 +42,7 @@ type BgPreset = {
 const RMBG_INPUT_SIZE = 1024;
 const RMBG_MODEL_URL = 'https://huggingface.co/briaai/RMBG-1.4/resolve/main/onnx/model.onnx';
 const RMBG_MODEL_URL_FALLBACK = '/models/rmbg14.onnx';
-const ORT_WASM_PATH = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/';
-
+const ORT_WASM_PATH = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.0-dev.20260918-bc8e7ed75/dist/';
 const IDB_NAME = 'intooly-rmbg-cache-v2';
 const IDB_VERSION = 2;
 const IDB_STORE = 'models';
@@ -290,12 +289,25 @@ export default function BackgroundRemoverPage() {
         console.log('[Model] Inputs:', session.inputNames, 'Outputs:', session.outputNames);
         sessionRef.current = session;
         return session;
+      
       } catch (e) {
+        console.error('[RMBG] الخطأ الأصلي أثناء تحميل النموذج:', e);
+        console.error('[RMBG] تفاصيل الخطأ:', {
+          name: e instanceof Error ? e.name : typeof e,
+          message: e instanceof Error ? e.message : String(e),
+          stack: e instanceof Error ? e.stack : undefined,
+        });
+
         modelLoadingPromiseRef.current = null;
-        throw new Error('فشل تحميل النموذج: ' + (e instanceof Error ? e.message : 'unknown'));
+
+        throw new Error(
+          'فشل تحميل النموذج: ' +
+            (e instanceof Error ? e.message : String(e))
+        );
       } finally {
         modelLoadingPromiseRef.current = null;
       }
+
     })();
 
     return modelLoadingPromiseRef.current;
