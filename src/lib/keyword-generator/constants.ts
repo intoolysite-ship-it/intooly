@@ -258,51 +258,51 @@ export const COMPETITION_TIERS: CompetitionTier[] = [
     minScore: -1,
     maxScore: -1,
     icon: '❓',
-    description: 'اقتراح فقط — لا تتوفر بيانات منافسة',
+    description: 'لم يتم حساب تقدير المنافسة لهذه الكلمة',
   },
   {
     id: 'very-easy',
     label: 'سهلة جداً',
     labelEn: 'Very Easy',
     color: 'green',
-    hex: '#22c55e',
+    hex: '#15803d',
     minScore: 0,
-    maxScore: 25,
+    maxScore: 20,
     icon: '🟢',
-    description: 'فرصة ذهبية — منافسة منخفضة جداً',
+    description: 'تقدير منافسة منخفض جداً — فرصة جيدة للمواقع الجديدة',
   },
   {
     id: 'easy',
     label: 'سهلة',
     labelEn: 'Easy',
-    color: 'yellow',
-    hex: '#eab308',
-    minScore: 26,
-    maxScore: 50,
-    icon: '🟡',
-    description: 'مناسبة للمواقع الجديدة والمبتدئين',
+    color: 'green',
+    hex: '#22c55e',
+    minScore: 21,
+    maxScore: 35,
+    icon: '🟢',
+    description: 'تقدير منافسة منخفض — مناسبة للمبتدئين',
   },
   {
     id: 'medium',
     label: 'متوسطة',
     labelEn: 'Medium',
     color: 'orange',
-    hex: '#f97316',
-    minScore: 51,
-    maxScore: 75,
+    hex: '#f59e0b',
+    minScore: 36,
+    maxScore: 48,
     icon: '🟠',
-    description: 'تحتاج جهداً ومحتوى قوياً',
+    description: 'تقدير منافسة متوسط — تحتاج محتوى قويًا',
   },
   {
     id: 'hard',
-    label: 'عالية',
+    label: 'صعبة',
     labelEn: 'Hard',
     color: 'red',
-    hex: '#ef4444',
-    minScore: 76,
+    hex: '#dc2626',
+    minScore: 49,
     maxScore: 100,
     icon: '🔴',
-    description: 'للمواقع القوية فقط',
+    description: 'تقدير منافسة مرتفع — للمواقع القوية فقط',
   },
 ];
 
@@ -495,8 +495,8 @@ export const KEYWORD_LENGTH_TYPES = {
 // ============================================
 
 export const COMPETITION_WEIGHTS = {
-  KEYWORD_LENGTH: 0.30,    // طول الكلمة
-  WORD_COUNT: 0.20,        // عدد الكلمات
-  INTENT: 0.20,            // نية البحث
-  GOOGLE_PRESENCE: 0.30,   // حضور الكلمة في نتائج Google
+  KEYWORD_LENGTH: 0.35,
+  GOOGLE_PRESENCE: 0.30,
+  INTENT: 0.20,
+  ROOT_OVERLAP: 0.15,
 } as const;

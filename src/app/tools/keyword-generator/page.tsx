@@ -1,5 +1,4 @@
-﻿
-'use client';
+﻿'use client';
 
 import { useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
@@ -28,7 +27,10 @@ import type {
   ToolStatus,
 } from '@/lib/keyword-generator/types';
 
-import { KEYWORD_MESSAGES } from '@/lib/keyword-generator/constants';
+import {
+  KEYWORD_MESSAGES,
+  COUNTRIES,
+} from '@/lib/keyword-generator/constants';
 import { generateKeywords } from '@/lib/keyword-generator/keywordGenerator';
 import { buildClusters } from '@/lib/keyword-generator/clusterBuilder';
 import { generateContentPlan } from '@/lib/keyword-generator/contentSuggestor';
@@ -243,8 +245,8 @@ export default function KeywordGeneratorPage() {
     },
     {
       icon: '📊',
-      title: 'توضيح حدود البيانات',
-      desc: 'اقتراحات Google لا توفر وحدها حجم البحث الشهري أو صعوبة المنافسة.',
+      title: 'تقدير المنافسة',
+      desc: 'تقدير آلي مبني على طول الكلمة ووجودها في الاقتراحات ونية البحث وتشابه الجذر، وليس بيانات Ahrefs/Semrush.',
     },
     {
       icon: '🎯',
@@ -306,8 +308,8 @@ export default function KeywordGeneratorPage() {
       a: 'لا. اقتراحات Google وحدها لا تكشف عدد عمليات البحث الشهرية. لذلك لا ينبغي اعتبار ترتيب الاقتراح أو درجة الصلة تقديراً لحجم البحث.',
     },
     {
-      q: 'هل يمكن معرفة مستوى المنافسة؟',
-      a: 'لا تتوفر حالياً بيانات موثوقة كافية لحساب صعوبة المنافسة الفعلية من اقتراحات Google وحدها. للحصول على تقدير متخصص، استخدم أداة SEO توفر بيانات المنافسة وتوضح منهجيتها.',
+      q: 'كيف تُحسب درجة المنافسة؟',
+      a: 'درجة المنافسة تقديرية مبنية على 4 عوامل: طول الكلمة، ووجودها في اقتراحات Google، ونية البحث، وتشابه الجذر مع كلمات أخرى. وهي ليست بيانات Ahrefs أو Semrush، ولا تُغني عن أدوات SEO المتخصصة.',
     },
     {
       q: 'هل تصنيف نية البحث دقيق دائماً؟',
@@ -358,6 +360,11 @@ export default function KeywordGeneratorPage() {
     },
   ];
 
+  // البحث عن الدولة المدخلة لعرضها في شريط السياق
+  const currentCountry = COUNTRIES.find(
+    (c) => c.code === input.country
+  );
+
   return (
     <div className="min-h-screen bg-ink-50 text-ink-900" dir="rtl">
       {/* HERO */}
@@ -394,7 +401,7 @@ export default function KeywordGeneratorPage() {
 
               <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
                 اكتشف اقتراحات الكلمات المفتاحية، ونظّمها حسب نية البحث
-                والموضوع، مع توضيح حدود البيانات المتاحة.
+                والموضوع، مع تقدير منافسة مبني على 4 عوامل.
               </p>
             </div>
           </div>
@@ -489,14 +496,29 @@ export default function KeywordGeneratorPage() {
 
           {hasResults && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-950">
-                <p className="font-bold">ملاحظة حول دقة البيانات</p>
-                <p>
-                  اقتراحات Google تساعد في اكتشاف عبارات مرتبطة بموضوعك،
-                  لكنها لا توفر وحدها حجم البحث الشهري أو مستوى المنافسة.
-                  تعامل مع نية البحث وتصنيف الفرص على أنهما تحليل آلي
-                  مبدئي، وليس ضماناً لوجود طلب أو سهولة الترتيب.
-                </p>
+              {/* شريط السياق: الكلمة المبحوث عنها */}
+              <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border-2 border-brand-200 bg-brand-50 p-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-bold text-brand-700">
+                    🔎 نتائج البحث عن:
+                  </span>
+                  <span className="text-base font-extrabold text-ink-900 break-words">
+                    «{input.keyword}»
+                  </span>
+                  {currentCountry && (
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-ink-600">
+                      <span>{currentCountry.flag}</span>
+                      <span>{currentCountry.name}</span>
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleNewSearch}
+                  className="flex-shrink-0 rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-brand-600 shadow-sm transition hover:bg-brand-100"
+                >
+                  بحث جديد
+                </button>
               </div>
 
               {error && (
@@ -546,8 +568,8 @@ export default function KeywordGeneratorPage() {
             <p className="mb-4 text-right text-base leading-relaxed text-ink-600">
               تجمع الأداة اقتراحات الكلمات، وتتيح تصنيفها آلياً حسب نية
               البحث والموضوع، وإنشاء مجموعات مقترحة وخطة محتوى أولية.
-              وتختلف هذه النتائج عن بيانات حجم البحث أو صعوبة المنافسة
-              التي تتطلب مصادر متخصصة.
+              وتقدم الأداة أيضاً تقديراً لمنافسة الكلمات بناءً على 4 عوامل
+              قابلة للقياس.
             </p>
 
             <ul className="mb-4 space-y-2 pr-6 text-right text-base leading-relaxed text-ink-600">
@@ -556,6 +578,9 @@ export default function KeywordGeneratorPage() {
               </li>
               <li className="list-disc">
                 تصنيف آلي مبدئي لنية البحث.
+              </li>
+              <li className="list-disc">
+                تقدير منافسة مبني على 4 عوامل قابلة للقياس.
               </li>
               <li className="list-disc">
                 تجميع الكلمات المتقاربة موضوعياً.
@@ -568,8 +593,7 @@ export default function KeywordGeneratorPage() {
             <p className="text-right text-base leading-relaxed text-ink-600">
               يتم التحليل والتصدير داخل المتصفح، بينما يتطلب جلب اقتراحات
               Google اتصالاً بالخدمة الخارجية المستخدمة في الأداة.
-              لا تُعد الاقتراحات وحدها دليلاً على حجم البحث أو المنافسة
-              أو ضماناً للظهور في نتائج البحث.
+              درجة المنافسة تقديرية وليست بيانات Ahrefs أو Semrush.
             </p>
           </article>
 

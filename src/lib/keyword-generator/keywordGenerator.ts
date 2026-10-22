@@ -1,16 +1,16 @@
-﻿
-/**
+﻿/**
  * مولّد الكلمات المفتاحية — Intooly
  * جلب اقتراحات Google Autocomplete وتوليد اقتراحات إضافية ملائمة.
  *
  * تنبيه:
  * - اقتراحات Google ليست بيانات حجم بحث.
- * - لا تتوفر درجة منافسة حقيقية من Google Autocomplete.
+ * - درجة المنافسة تقديرية مبنية على 4 عوامل قابلة للقياس، وليست بيانات Ahrefs/Semrush.
  * - الاقتراحات المولّدة آلياً ليست بيانات بحث فعلية.
  */
 
 import {
   LOCAL_VOCABULARY,
+  COMPETITION_WEIGHTS,
   type CountryCode,
   type DataSource,
   type CompetitionLevel,
@@ -101,10 +101,13 @@ export async function fetchGoogleSuggestions(
 }
 
 /**
- * جلب الاقتراحات الأساسية فقط.
+ * جلب الاقتراحات الأساسية + اقتراحات إضافية عبر البادئات العربية.
  *
  * لا نضيف كلمة «كيف» إلى البحث تلقائياً عند قلة النتائج؛
  * لأن ذلك قد ينتج اقتراحات بعيدة عن نية المستخدم.
+ *
+ * بدلاً من ذلك، نستخدم بادئات عربية شائعة (ا، ب، ت، م، و، ال، ك، ف)
+ * لإرجاع اقتراحات أكثر صلة، للوصول إلى عدد أكبر من الكلمات الحقيقية.
  */
 export async function fetchExtendedSuggestions(
   keyword: string,
@@ -112,24 +115,42 @@ export async function fetchExtendedSuggestions(
   language: string,
   onProgress?: (progress: number) => void
 ): Promise<string[]> {
+  const allSuggestions: string[] = [];
+
+  // 1. الاقتراحات الأساسية
   try {
-    const result = await fetchGoogleSuggestions(
+    const base = await fetchGoogleSuggestions(
       keyword,
       country,
       language
     );
-
-    onProgress?.(100);
-
-    return removeDuplicates(
-      result.suggestions.filter(
-        (suggestion) => suggestion.trim().length > 0
-      )
-    );
+    allSuggestions.push(...base.suggestions);
+    onProgress?.(40);
   } catch (error) {
     console.warn('فشل جلب الاقتراحات الأساسية:', error);
-    throw error;
   }
+
+  // 2. اقتراحات إضافية عبر بادئات عربية شائعة
+  const prefixes = ['ا', 'ب', 'ت', 'م', 'و', 'ال', 'ك', 'ف'];
+
+  for (const prefix of prefixes) {
+    try {
+      const extended = await fetchGoogleSuggestions(
+        `${keyword} ${prefix}`,
+        country,
+        language
+      );
+      allSuggestions.push(...extended.suggestions);
+    } catch (error) {
+      // تجاهل أخطاء البادئات الفردية
+    }
+  }
+
+  onProgress?.(100);
+
+  return removeDuplicates(
+    allSuggestions.filter((suggestion) => suggestion.trim().length > 0)
+  );
 }
 
 // ============================================
@@ -195,14 +216,11 @@ function isLearningTopic(keyword: string): boolean {
 /**
  * تحديد ما إذا كان إلحاق عبارة زمنية أو وصفية مناسباً.
  */
-function getApplicableLongTailTemplates(
-  keyword: string
-): string[] {
+function getApplicableLongTailTemplates(keyword: string): string[] {
   const value = normalizeArabic(keyword);
   const templates: string[] = [];
 
   if (isListOrCreativeQuery(keyword)) {
-    // عبارات ملائمة لاستعلامات القوائم والأسماء والأفكار.
     if (/اسماء|اسم\b/.test(value)) {
       templates.push(
         '{keyword} جديدة',
@@ -321,8 +339,7 @@ export function generateSuggestions(
     }
   }
 
-  // الكلمات المرتبطة: لا نضيف أوصافاً مثل «مجاني» و«احترافي»
-  // إلى موضوع لا علاقة له بالأدوات أو المنتجات.
+  // الكلمات المرتبطة
   if (includeRelated) {
     if (listQuery) {
       // استخدمنا قوالب خاصة بالقوائم أعلاه لتجنب التكرار.
@@ -585,7 +602,7 @@ export function analyzeKeyword(
   language: 'ar' | 'en',
   source: DataSource,
   type: 'actual' | 'question' | 'long-tail' | 'related' | 'comparison',
-  _googleSuggestions: string[] = []
+  googleSuggestions: string[] = []
 ): Keyword {
   const wordCount = getWordCount(text);
   const characterCount = text.length;
@@ -596,10 +613,29 @@ export function analyzeKeyword(
     confidence: intentConfidence,
   } = classifyIntent(text);
 
-  // لا توجد لدينا بيانات فعلية تكفي لتحديد المنافسة.
-  const competitionScore = -1;
-  const competitionReason: CompetitionReason | undefined = undefined;
+  // حساب تقدير المنافسة بناءً على 4 عوامل
+  const competitionResult = calculateCompetitionScore(
+    text,
+    intent,
+    googleSuggestions
+  );
+
+  const competitionScore = competitionResult.score;
   const competitionLevel = getCompetitionLevel(competitionScore);
+
+  const competitionReason: CompetitionReason | undefined =
+    competitionScore >= 0
+      ? {
+          keywordLength: characterCount,
+          wordCount,
+          intent,
+          googlePresence:
+            competitionResult.breakdown.find(
+              (b) => b.factor === 'وجود في Google'
+            )?.score ?? 0,
+          breakdown: competitionResult.breakdown,
+        }
+      : undefined;
 
   const opportunityType = getOpportunityType(
     intent,
@@ -636,14 +672,153 @@ export function analyzeKeyword(
 }
 
 // ============================================
+// 8-ب. حساب درجة المنافسة (تقديرية مبنية على 4 عوامل)
+// ============================================
+
+/**
+ * حساب تقدير المنافسة بناءً على 4 عوامل:
+ * - طول الكلمة (35%): كلمات أكثر = منافسة أقل
+ * - وجودها في Google (30%): إن ظهرت = منافسة أعلى
+ * - نية البحث (20%): تجاري/شرائي أعلى من معلوماتي
+ * - تشابه الجذر (15%): كلمات متشاركة الجذر = منافسة أعلى
+ */
+function calculateCompetitionScore(
+  text: string,
+  intent: SearchIntent,
+  googleSuggestions: string[]
+): {
+  score: number;
+  breakdown: {
+    factor: string;
+    weight: number;
+    score: number;
+    contribution: number;
+  }[];
+} {
+  const wordCount = getWordCount(text);
+  const normalizedText = normalizeArabic(text);
+
+  // 1. طول الكلمة
+  let lengthScore = 100;
+  if (wordCount >= 6) lengthScore = 10;
+  else if (wordCount === 5) lengthScore = 25;
+  else if (wordCount === 4) lengthScore = 40;
+  else if (wordCount === 3) lengthScore = 60;
+  else if (wordCount === 2) lengthScore = 80;
+  else if (wordCount === 1) lengthScore = 100;
+
+  // 2. وجود في اقتراحات Google
+  const indexInGoogle = googleSuggestions.findIndex(
+    (s) => normalizeArabic(s) === normalizedText
+  );
+  let googleScore = 30;
+  if (indexInGoogle >= 0) {
+    if (indexInGoogle <= 2) googleScore = 95;
+    else if (indexInGoogle <= 5) googleScore = 80;
+    else if (indexInGoogle <= 9) googleScore = 65;
+    else googleScore = 50;
+  }
+
+  // 3. نية البحث
+  let intentScore = 40;
+  if (intent === 'transactional') intentScore = 95;
+  else if (intent === 'commercial') intentScore = 85;
+  else if (intent === 'informational') intentScore = 45;
+  else if (intent === 'navigational') intentScore = 55;
+  else intentScore = 40;
+
+  // 4. تشابه الجذر
+  const rootOverlapScore = calculateRootOverlap(
+    normalizedText,
+    googleSuggestions
+  );
+
+  // الدرجة النهائية
+  const total =
+    lengthScore * COMPETITION_WEIGHTS.KEYWORD_LENGTH +
+    googleScore * COMPETITION_WEIGHTS.GOOGLE_PRESENCE +
+    intentScore * COMPETITION_WEIGHTS.INTENT +
+    rootOverlapScore * COMPETITION_WEIGHTS.ROOT_OVERLAP;
+
+  const score = Math.round(Math.min(100, Math.max(0, total)));
+
+  return {
+    score,
+    breakdown: [
+      {
+        factor: 'طول الكلمة',
+        weight: COMPETITION_WEIGHTS.KEYWORD_LENGTH,
+        score: lengthScore,
+        contribution: Math.round(
+          lengthScore * COMPETITION_WEIGHTS.KEYWORD_LENGTH
+        ),
+      },
+      {
+        factor: 'وجود في Google',
+        weight: COMPETITION_WEIGHTS.GOOGLE_PRESENCE,
+        score: googleScore,
+        contribution: Math.round(
+          googleScore * COMPETITION_WEIGHTS.GOOGLE_PRESENCE
+        ),
+      },
+      {
+        factor: 'نية البحث',
+        weight: COMPETITION_WEIGHTS.INTENT,
+        score: intentScore,
+        contribution: Math.round(
+          intentScore * COMPETITION_WEIGHTS.INTENT
+        ),
+      },
+      {
+        factor: 'تشابه الجذر',
+        weight: COMPETITION_WEIGHTS.ROOT_OVERLAP,
+        score: rootOverlapScore,
+        contribution: Math.round(
+          rootOverlapScore * COMPETITION_WEIGHTS.ROOT_OVERLAP
+        ),
+      },
+    ],
+  };
+}
+
+/**
+ * حساب تشابه الجذر مع الكلمات الأخرى في اقتراحات Google.
+ * كلما زادت الكلمات المتشاركة = الموضوع مشبع = منافسة أعلى.
+ */
+function calculateRootOverlap(
+  normalizedText: string,
+  googleSuggestions: string[]
+): number {
+  if (googleSuggestions.length === 0) return 30;
+
+  const words = normalizedText.split(' ').filter((w) => w.length >= 3);
+  if (words.length === 0) return 30;
+
+  let matchCount = 0;
+  for (const suggestion of googleSuggestions) {
+    const normalizedSuggestion = normalizeArabic(suggestion);
+    const hasCommonWord = words.some((w) =>
+      normalizedSuggestion.includes(w)
+    );
+    if (hasCommonWord) matchCount++;
+  }
+
+  const ratio = matchCount / googleSuggestions.length;
+
+  if (ratio >= 0.6) return 90;
+  if (ratio >= 0.3) return 60;
+  return 30;
+}
+
+// ============================================
 // 9. مستوى المنافسة
 // ============================================
 
 function getCompetitionLevel(score: number): CompetitionLevel {
   if (score < 0) return 'unknown';
-  if (score <= 25) return 'very-easy';
-  if (score <= 50) return 'easy';
-  if (score <= 75) return 'medium';
+  if (score <= 20) return 'very-easy';
+  if (score <= 35) return 'easy';
+  if (score <= 48) return 'medium';
   return 'hard';
 }
 
@@ -656,8 +831,6 @@ function getOpportunityType(
   wordCount: number,
   competitionLevel: CompetitionLevel
 ): OpportunityType {
-  // لا نصنف الكلمة على أنها مناسبة لموقع جديد
-  // اعتماداً على طولها وحده أو منافسة غير معروفة.
   if (
     wordCount >= 4 &&
     (competitionLevel === 'very-easy' ||
