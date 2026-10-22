@@ -1,185 +1,262 @@
-﻿/**
- * مولّد الكلمات المفتاحية
- * جلب الاقتراحات الفعلية + التوليد الذكي
+﻿
+/**
+ * مولّد الكلمات المفتاحية — Intooly
+ * جلب اقتراحات Google Autocomplete وتوليد اقتراحات إضافية ملائمة.
+ *
+ * تنبيه:
+ * - اقتراحات Google ليست بيانات حجم بحث.
+ * - لا تتوفر درجة منافسة حقيقية من Google Autocomplete.
+ * - الاقتراحات المولّدة آلياً ليست بيانات بحث فعلية.
  */
 
-import { 
-  KEYWORD_CONFIG, 
-  COUNTRIES,
+import {
+  LOCAL_VOCABULARY,
   type CountryCode,
   type DataSource,
+  type CompetitionLevel,
+  type SearchIntent,
+  type OpportunityType,
 } from './constants';
-import type { 
-  SuggestResponse, 
+
+import type {
+  SuggestResponse,
   GeneratedSuggestion,
+  Keyword,
+  KeywordInput,
+  CompetitionReason,
 } from './types';
+
 import {
   normalizeArabic,
   removeDuplicates,
-  filterSuggestions,
-  isQuestion,
-  isComparison,
+  classifyIntent,
+  getWordCount,
+  getLengthType,
 } from './arabicAnalyzer';
 
 // ============================================
 // 1. جلب الاقتراحات من Google Autocomplete
 // ============================================
 
-/**
- * جلب الاقتراحات من Google Suggest API
- */
-/**
- * جلب الاقتراحات من Google Suggest عبر 3 بروكسيات متعددة
- */
 export async function fetchGoogleSuggestions(
   keyword: string,
   country: CountryCode,
   language: string
 ): Promise<SuggestResponse> {
   const countryLower = country === 'ALL' ? 'us' : country.toLowerCase();
-  
-  // استخدام Cloudflare Worker
-  const workerUrl = `https://intooly-suggest.intoolysite.workers.dev/?q=${encodeURIComponent(keyword)}&country=${countryLower}&hl=${language}`;
-  
+
+  const workerUrl =
+    `https://intooly-suggest.intoolysite.workers.dev/` +
+    `?q=${encodeURIComponent(keyword)}` +
+    `&country=${encodeURIComponent(countryLower)}` +
+    `&hl=${encodeURIComponent(language)}`;
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000);
-  
+
   try {
     const response = await fetch(workerUrl, {
       method: 'GET',
       signal: controller.signal,
     });
-    
-    clearTimeout(timeoutId);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
-    
+
     const data = await response.json();
-    const suggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
-    
+
+    const suggestions: string[] = Array.isArray(data?.suggestions)
+      ? data.suggestions.filter(
+          (item: unknown): item is string =>
+            typeof item === 'string' && item.trim().length > 0
+        )
+      : [];
+
     return {
-      suggestions,
+      suggestions: removeDuplicates(suggestions),
       source: 'actual' as DataSource,
       country,
       language,
     };
   } catch (error) {
-    clearTimeout(timeoutId);
-    
     if (error instanceof Error && error.name === 'AbortError') {
-      throw { error: 'انتهت مهلة الطلب', code: 'TIMEOUT', retryable: true };
+      throw {
+        error: 'انتهت مهلة الطلب',
+        code: 'TIMEOUT',
+        retryable: true,
+      };
     }
-    
-    throw { error: 'فشل الاتصال', code: 'NETWORK', retryable: true };
+
+    console.warn('تعذّر جلب اقتراحات Google:', error);
+
+    throw {
+      error: 'تعذّر الاتصال بخدمة الاقتراحات',
+      code: 'NETWORK',
+      retryable: true,
+    };
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
+/**
+ * جلب الاقتراحات الأساسية فقط.
+ *
+ * لا نضيف كلمة «كيف» إلى البحث تلقائياً عند قلة النتائج؛
+ * لأن ذلك قد ينتج اقتراحات بعيدة عن نية المستخدم.
+ */
 export async function fetchExtendedSuggestions(
   keyword: string,
   country: CountryCode,
   language: string,
   onProgress?: (progress: number) => void
 ): Promise<string[]> {
-  const allSuggestions: string[] = [];
-  
-  // 1. الاقتراحات الأساسية
   try {
-    const base = await fetchGoogleSuggestions(keyword, country, language);
-    allSuggestions.push(...base.suggestions);
-    if (onProgress) onProgress(50);
-  } catch (e) {
-    console.warn('فشل جلب الاقتراحات الأساسية:', e);
+    const result = await fetchGoogleSuggestions(
+      keyword,
+      country,
+      language
+    );
+
+    onProgress?.(100);
+
+    return removeDuplicates(
+      result.suggestions.filter(
+        (suggestion) => suggestion.trim().length > 0
+      )
+    );
+  } catch (error) {
+    console.warn('فشل جلب الاقتراحات الأساسية:', error);
+    throw error;
   }
-  
-  // 2. اقتراحات "كيف" (لزيادة التنوع)
-  if (allSuggestions.length < 10) {
-    try {
-      const howTo = await fetchGoogleSuggestions(`${keyword} كيف`, country, language);
-      allSuggestions.push(...howTo.suggestions);
-      if (onProgress) onProgress(80);
-    } catch (e) {
-      console.warn('فشل جلب اقتراحات "كيف":', e);
-    }
-  }
-  
-  return removeDuplicates(allSuggestions);
 }
 
 // ============================================
-// 2. توليد الاقتراحات المولّدة آلياً
+// 2. تحديد طبيعة الكلمة المفتاحية
 // ============================================
 
 /**
- * قوالب الأسئلة العربية
+ * استعلامات تتعلق غالباً بقوائم أو أفكار أو أسماء.
+ * لا يناسبها عادةً توليد أسئلة مثل «أين» و«لماذا».
  */
-const QUESTION_TEMPLATES = [
-  'كيف {keyword}',
-  'ما هو {keyword}',
-  'ما هي {keyword}',
-  'لماذا {keyword}',
-  'متى {keyword}',
-  'أين {keyword}',
-  'ما أفضل {keyword}',
-  'كيفية {keyword}',
-  'طريقة {keyword}',
-  'شرح {keyword}',
-  'معنى {keyword}',
-  'تعريف {keyword}',
-];
+function isListOrCreativeQuery(keyword: string): boolean {
+  const value = normalizeArabic(keyword);
+
+  const patterns = [
+    /اسماء|اسماء|اسم\b/,
+    /افكار|عبارات|كلمات|جمل|رسائل/,
+    /تهنئه|تهاني|اقتباسات|حالات/,
+    /وصفات|اكلات|حلويات|مشروبات/,
+    /قصص|نكت|الغاز|ألغاز/,
+    /بحرف|تبدأ بحرف|تنتهي بحرف/,
+    /صور|خلفيات|تصاميم/,
+  ];
+
+  return patterns.some((pattern) => pattern.test(value));
+}
 
 /**
- * قوالب المقارنات
+ * موضوعات تتعلق بأداة أو منتج أو خدمة رقمية.
  */
-const COMPARISON_TEMPLATES = [
-  '{keyword} vs',
-  '{keyword} ضد',
-  'الفرق بين {keyword}',
-  '{keyword} مقارنة',
-  'أفضل من {keyword}',
-  '{keyword} بدائل',
-  '{keyword} مقابل',
-];
+function isToolOrProductQuery(keyword: string): boolean {
+  const value = normalizeArabic(keyword);
+
+  const patterns = [
+    /اداه|ادوات|مولد|منشئ|محرر|محول|ضاغط/,
+    /برنامج|تطبيق|موقع|منصه|خدمه/,
+    /حاسبه|حساب|تحويل|ضغط|تصغير|تكبير/,
+    /pdf|jpg|png|svg|mp3|mp4|qr/,
+    /ذكاء اصطناعي|ذكاء صناعي/,
+    /افضل هاتف|لابتوب|كمبيوتر|كاميرا/,
+  ];
+
+  return patterns.some((pattern) => pattern.test(value));
+}
 
 /**
- * قوالب العبارات الطويلة
+ * موضوعات يمكن أن تناسبها أسئلة تعليمية.
  */
-const LONG_TAIL_TEMPLATES = [
-  '{keyword} للمبتدئين',
-  '{keyword} خطوة بخطوة',
-  '{keyword} بالعربي',
-  '{keyword} 2026',
-  '{keyword} مجانا',
-  '{keyword} مجاناً',
-  '{keyword} بدون تسجيل',
-  '{keyword} اونلاين',
-  '{keyword} أونلاين',
-  '{keyword} عبر الإنترنت',
-  '{keyword} في السعودية',
-  '{keyword} في مصر',
-  '{keyword} في الإمارات',
-  '{keyword} للمبتدئين بالعربي',
-  '{keyword} دليل شامل',
-  '{keyword} أفضل طريقة',
-];
+function isLearningTopic(keyword: string): boolean {
+  const value = normalizeArabic(keyword);
+
+  const patterns = [
+    /تعلم|تعليم|شرح|دراسه|دراسة/,
+    /برمجه|برمجة|تسويق|تصميم|تحليل/,
+    /سيو|seo|javascript|typescript|python|html|css/,
+    /ذكاء اصطناعي|ذكاء صناعي|امن سيبراني/,
+    /طريقه|كيفية|كيفيه|خطوات|دليل/,
+    /ما هو|ما هي|معنى|مفهوم|تعريف/,
+  ];
+
+  return patterns.some((pattern) => pattern.test(value));
+}
 
 /**
- * قوالب الكلمات المرتبطة
+ * تحديد ما إذا كان إلحاق عبارة زمنية أو وصفية مناسباً.
  */
-const RELATED_TEMPLATES = [
-  '{keyword}',
-  'أفضل {keyword}',
-  '{keyword} مجاني',
-  '{keyword} سهل',
-  '{keyword} سريع',
-  '{keyword} احترافي',
-  '{keyword} 2026',
-];
+function getApplicableLongTailTemplates(
+  keyword: string
+): string[] {
+  const value = normalizeArabic(keyword);
+  const templates: string[] = [];
 
-/**
- * توليد اقتراحات مولّدة آلياً
- */
+  if (isListOrCreativeQuery(keyword)) {
+    // عبارات ملائمة لاستعلامات القوائم والأسماء والأفكار.
+    if (/اسماء|اسم\b/.test(value)) {
+      templates.push(
+        '{keyword} جديدة',
+        '{keyword} نادرة',
+        '{keyword} ومعانيها',
+        '{keyword} للبنات',
+        '{keyword} للأولاد'
+      );
+    } else if (/بحرف/.test(value)) {
+      templates.push(
+        '{keyword} جديدة',
+        '{keyword} نادرة',
+        '{keyword} ومعانيها'
+      );
+    } else {
+      templates.push(
+        '{keyword} جديدة',
+        'أفضل {keyword}',
+        '{keyword} متنوعة'
+      );
+    }
+
+    return templates;
+  }
+
+  if (isToolOrProductQuery(keyword)) {
+    templates.push(
+      '{keyword} مجانا',
+      '{keyword} بدون تسجيل',
+      '{keyword} اونلاين',
+      '{keyword} بالعربي',
+      '{keyword} للكمبيوتر',
+      '{keyword} للموبايل'
+    );
+  }
+
+  if (isLearningTopic(keyword)) {
+    templates.push(
+      'شرح {keyword}',
+      '{keyword} للمبتدئين',
+      '{keyword} خطوة بخطوة',
+      '{keyword} بالعربي',
+      '{keyword} أمثلة'
+    );
+  }
+
+  // لا نضيف عبارات عامة لمجرد زيادة عدد النتائج.
+  return templates;
+}
+
+// ============================================
+// 3. توليد الاقتراحات آلياً
+// ============================================
+
 export function generateSuggestions(
   keyword: string,
   includeQuestions: boolean = true,
@@ -188,72 +265,127 @@ export function generateSuggestions(
 ): GeneratedSuggestion[] {
   const suggestions: GeneratedSuggestion[] = [];
   const trimmedKeyword = keyword.trim();
-  
-  if (!trimmedKeyword) return suggestions;
-  
-  // توليد الأسئلة
-  if (includeQuestions) {
-    for (const template of QUESTION_TEMPLATES) {
-      const text = template.replace('{keyword}', trimmedKeyword);
-      suggestions.push({
-        text,
-        type: 'question',
-        confidence: 80,
-      });
-    }
-    
-    // مقارنات
-    for (const template of COMPARISON_TEMPLATES) {
-      const text = template.replace('{keyword}', trimmedKeyword);
-      suggestions.push({
-        text,
-        type: 'comparison',
-        confidence: 75,
-      });
+
+  if (!trimmedKeyword) {
+    return suggestions;
+  }
+
+  const listQuery = isListOrCreativeQuery(trimmedKeyword);
+  const toolQuery = isToolOrProductQuery(trimmedKeyword);
+  const learningTopic = isLearningTopic(trimmedKeyword);
+
+  // الأسئلة: نولدها فقط عندما يكون الموضوع مناسباً لها.
+  if (includeQuestions && !listQuery) {
+    if (toolQuery) {
+      const questionTemplates = [
+        'كيفية استخدام {keyword}',
+        'طريقة استخدام {keyword}',
+        'كيف يعمل {keyword}',
+        'هل {keyword} مجاني',
+      ];
+
+      for (const template of questionTemplates) {
+        suggestions.push({
+          text: template.replace('{keyword}', trimmedKeyword),
+          type: 'question',
+          confidence: 70,
+        });
+      }
+    } else if (learningTopic) {
+      const questionTemplates = [
+        'شرح {keyword}',
+        'ما معنى {keyword}',
+        'ما المقصود بـ {keyword}',
+      ];
+
+      for (const template of questionTemplates) {
+        suggestions.push({
+          text: template.replace('{keyword}', trimmedKeyword),
+          type: 'question',
+          confidence: 65,
+        });
+      }
     }
   }
-  
-  // توليد العبارات الطويلة
+
+  // العبارات الطويلة: نستخدم فقط القوالب الملائمة لطبيعة الاستعلام.
   if (includeLongTail) {
-    for (const template of LONG_TAIL_TEMPLATES) {
-      const text = template.replace('{keyword}', trimmedKeyword);
+    const templates = getApplicableLongTailTemplates(trimmedKeyword);
+
+    for (const template of templates) {
       suggestions.push({
-        text,
+        text: template.replace('{keyword}', trimmedKeyword),
         type: 'long-tail',
-        confidence: 70,
+        confidence: 65,
       });
     }
   }
-  
-  // توليد الكلمات المرتبطة
+
+  // الكلمات المرتبطة: لا نضيف أوصافاً مثل «مجاني» و«احترافي»
+  // إلى موضوع لا علاقة له بالأدوات أو المنتجات.
   if (includeRelated) {
-    for (const template of RELATED_TEMPLATES) {
-      const text = template.replace('{keyword}', trimmedKeyword);
-      suggestions.push({
-        text,
-        type: 'related',
-        confidence: 60,
-      });
+    if (listQuery) {
+      // استخدمنا قوالب خاصة بالقوائم أعلاه لتجنب التكرار.
+    } else if (toolQuery) {
+      const relatedTemplates = [
+        'بدائل {keyword}',
+        'أفضل بدائل {keyword}',
+        '{keyword} للكمبيوتر',
+        '{keyword} للموبايل',
+      ];
+
+      for (const template of relatedTemplates) {
+        suggestions.push({
+          text: template.replace('{keyword}', trimmedKeyword),
+          type: 'related',
+          confidence: 60,
+        });
+      }
+    } else if (learningTopic) {
+      const relatedTemplates = [
+        'أنواع {keyword}',
+        'أمثلة على {keyword}',
+      ];
+
+      for (const template of relatedTemplates) {
+        suggestions.push({
+          text: template.replace('{keyword}', trimmedKeyword),
+          type: 'related',
+          confidence: 55,
+        });
+      }
     }
   }
-  
-  // إزالة التكرار
+
+  // إزالة التكرارات مع استبعاد الكلمة الأصلية.
   const seen = new Set<string>();
   const unique: GeneratedSuggestion[] = [];
-  
-  for (const s of suggestions) {
-    const key = normalizeArabic(s.text);
-    if (!seen.has(key) && s.text !== trimmedKeyword) {
-      seen.add(key);
-      unique.push(s);
+
+  for (const suggestion of suggestions) {
+    const text = suggestion.text.trim();
+    const normalized = normalizeArabic(text);
+
+    if (
+      !text ||
+      normalized === normalizeArabic(trimmedKeyword) ||
+      seen.has(normalized)
+    ) {
+      continue;
     }
+
+    seen.add(normalized);
+
+    unique.push({
+      ...suggestion,
+      text,
+    });
   }
-  
+
   return unique;
 }
 
 // ============================================
-// 3. دمج الاقتراحات الفعلية والمولّدة
+// 4. دمج الاقتراحات الفعلية والمولّدة
 // ============================================
 
 export interface CombinedSuggestion {
@@ -263,9 +395,6 @@ export interface CombinedSuggestion {
   confidence: number;
 }
 
-/**
- * دمج الاقتراحات الفعلية من Google مع المولّدة آلياً
- */
 export function combineSuggestions(
   keyword: string,
   googleSuggestions: string[],
@@ -273,171 +402,164 @@ export function combineSuggestions(
 ): CombinedSuggestion[] {
   const combined: CombinedSuggestion[] = [];
   const seen = new Set<string>();
-  
-  // 1. إضافة الاقتراحات الفعلية (أولوية عالية)
+  const normalizedKeyword = normalizeArabic(keyword);
+
+  // اقتراحات Google أولاً، مع الحفاظ على ترتيب وصولها.
   for (const suggestion of googleSuggestions) {
-    const key = normalizeArabic(suggestion);
-    if (!seen.has(key)) {
-      seen.add(key);
-      combined.push({
-        text: suggestion,
-        source: 'actual' as DataSource,
-        type: 'actual',
-        confidence: 100,
-      });
+    const text = suggestion.trim();
+    const key = normalizeArabic(text);
+
+    if (!text || key === normalizedKeyword || seen.has(key)) {
+      continue;
     }
+
+    seen.add(key);
+
+    combined.push({
+      text,
+      source: 'actual' as DataSource,
+      type: 'actual',
+      confidence: 100,
+    });
   }
-  
-  // 2. إضافة الاقتراحات المولّدة
-  for (const gen of generated) {
-    const key = normalizeArabic(gen.text);
-    if (!seen.has(key)) {
-      seen.add(key);
-      combined.push({
-        text: gen.text,
-        source: 'none' as DataSource,
-        type: gen.type,
-        confidence: gen.confidence,
-      });
+
+  // الاقتراحات المولّدة تضاف بعد اقتراحات Google.
+  for (const suggestion of generated) {
+    const text = suggestion.text.trim();
+    const key = normalizeArabic(text);
+
+    if (!text || key === normalizedKeyword || seen.has(key)) {
+      continue;
     }
+
+    seen.add(key);
+
+    combined.push({
+      text,
+      source: 'none' as DataSource,
+      type: suggestion.type,
+      confidence: suggestion.confidence,
+    });
   }
-  
+
   return combined;
 }
 
-
-
 // ============================================
-// حساب مؤشر كثافة الطلب من ترتيب Google
+// 5. مؤشر الطلب
 // ============================================
 
 /**
- * حساب مؤشر كثافة الطلب بناءً على ترتيب الكلمة في اقتراحات Google
- * الاقتراحات الأولى = الأكثر بحثاً
+ * لا يمكن استنتاج حجم البحث أو مستوى الطلب من ترتيب
+ * اقتراحات Google Autocomplete وحده.
+ *
+ * أبقينا الدالة للتوافق مع الاستدعاءات المحتملة،
+ * وتعيد -1 للدلالة على عدم توفر بيانات موثوقة.
  */
 export function calculateTrendScore(
-  keyword: string,
-  googleSuggestions: string[]
+  _keyword: string,
+  _googleSuggestions: string[]
 ): number {
-  if (googleSuggestions.length === 0) return 0;
-  
-  const normalized = normalizeArabic(keyword);
-  const index = googleSuggestions.findIndex(
-    s => normalizeArabic(s) === normalized
-  );
-  
-  if (index === -1) {
-    // الكلمة ليست في اقتراحات Google (مولّدة)
-    return 0;
-  }
-  
-  // الترتيب يبدأ من 0
-  // 0-2 → مرتفع جداً (90-100)
-  // 3-6 → مرتفع (70-89)
-  // 7-11 → متوسط (50-69)
-  // 12+ → منخفض (30-49)
-  
-  if (index <= 2) return 95 - index * 2;      // 95, 93, 91
-  if (index <= 6) return 85 - (index - 3) * 3; // 85, 82, 79, 76
-  if (index <= 11) return 65 - (index - 7) * 3; // 65, 62, 59, 56, 53
-  return Math.max(30, 50 - (index - 12) * 2);   // 50, 48, 46...
+  return -1;
 }
 
-
 // ============================================
-// 4. الدالة الرئيسية — توليد الكلمات
+// 6. المصطلحات المحلية
 // ============================================
 
-import { 
-  LOCAL_VOCABULARY,
-  COMPETITION_TIERS,
-  INTENT_TYPES,
-  OPPORTUNITY_TYPES,
-  COMPETITION_WEIGHTS,
-  type CompetitionLevel,
-  type SearchIntent,
-  type OpportunityType,
-} from './constants';
-import type { 
-  Keyword, 
-  KeywordInput,
-  CompetitionReason,
-} from './types';
-import { 
-  classifyIntent, 
-  getWordCount, 
-  getLengthType,
-} from './arabicAnalyzer';
-
-/**
- * الحصول على الكلمة المحلية حسب الدولة
- */
-export function getLocalTerm(keyword: string, country: CountryCode): string {
+export function getLocalTerm(
+  keyword: string,
+  country: CountryCode
+): string {
   const normalized = normalizeArabic(keyword);
-  
-  for (const [standard, translations] of Object.entries(LOCAL_VOCABULARY)) {
+
+  for (const [standard, translations] of Object.entries(
+    LOCAL_VOCABULARY
+  )) {
     if (normalizeArabic(standard) === normalized) {
       return translations[country] || keyword;
     }
   }
-  
+
   return keyword;
 }
 
-/**
- * توليد الكلمات المفتاحية الكاملة
- */
+// ============================================
+// 7. توليد الكلمات المفتاحية
+// ============================================
+
 export async function generateKeywords(
   input: KeywordInput,
   onProgress?: (progress: number, message: string) => void
 ): Promise<Keyword[]> {
-  const { keyword, country, maxResults, includeQuestions, includeLongTail, includeRelated } = input;
+  const {
+    keyword,
+    country,
+    maxResults,
+    includeQuestions,
+    includeLongTail,
+    includeRelated,
+  } = input;
+
   const language = input.language === 'all' ? 'ar' : input.language;
-  
+
   if (!keyword || keyword.trim().length < 2) {
     throw new Error('الكلمة قصيرة جداً');
   }
-  
-  // 1. جلب الاقتراحات الفعلية
-  if (onProgress) onProgress(10, 'جاري جلب الاقتراحات من Google...');
-  
+
+  const cleanKeyword = keyword.trim();
+
+  onProgress?.(10, 'جاري جلب الاقتراحات من Google...');
+
   let googleSuggestions: string[] = [];
+
   try {
     googleSuggestions = await fetchExtendedSuggestions(
-      keyword,
+      cleanKeyword,
       country,
       language,
-      (p) => onProgress && onProgress(10 + p * 0.4, 'جاري جلب الاقتراحات...')
+      (progress) => {
+        onProgress?.(
+          10 + progress * 0.4,
+          'جاري جلب الاقتراحات...'
+        );
+      }
     );
-  } catch (e) {
-    console.warn('فشل جلب الاقتراحات:', e);
+  } catch (error) {
+    // نستمر في إنشاء اقتراحات ملائمة حتى لو تعذر الاتصال.
+    console.warn('تعذر جلب اقتراحات Google:', error);
   }
-  
-  // 2. توليد الاقتراحات المولّدة
-  if (onProgress) onProgress(55, 'جاري توليد اقتراحات إضافية...');
-  
+
+  onProgress?.(55, 'جاري توليد اقتراحات إضافية...');
+
   const generated = generateSuggestions(
-    keyword,
+    cleanKeyword,
     includeQuestions,
     includeLongTail,
     includeRelated
   );
-  
-  // 3. دمج الاقتراحات
-  if (onProgress) onProgress(70, 'جاري دمج الاقتراحات...');
-  
-  const combined = combineSuggestions(keyword, googleSuggestions, generated);
-  
-  // 4. تصفية وترتيب
+
+  onProgress?.(70, 'جاري دمج الاقتراحات...');
+
+  const combined = combineSuggestions(
+    cleanKeyword,
+    googleSuggestions,
+    generated
+  );
+
+  const safeMaxResults = Number.isFinite(maxResults)
+    ? Math.max(0, Math.floor(maxResults))
+    : combined.length;
+
   const filtered = removeDuplicates(
-    combined.map(c => c.text)
-  ).slice(0, maxResults);
-  
-  // 5. تحليل كل كلمة
-  if (onProgress) onProgress(80, 'جاري تحليل النية والمنافسة...');
-  
+    combined.map((item) => item.text)
+  ).slice(0, safeMaxResults);
+
+  onProgress?.(80, 'جاري تحليل نية البحث...');
+
   const keywords: Keyword[] = filtered.map((text) => {
-    const sourceItem = combined.find(c => c.text === text);
+    const sourceItem = combined.find((item) => item.text === text);
+
     return analyzeKeyword(
       text,
       country,
@@ -447,56 +569,51 @@ export async function generateKeywords(
       googleSuggestions
     );
   });
-  
-  if (onProgress) onProgress(100, 'اكتمل!');
-  
+
+  onProgress?.(100, 'اكتمل!');
+
   return keywords;
 }
 
 // ============================================
-// 5. تحليل الكلمة الواحدة
+// 8. تحليل الكلمة المفتاحية
 // ============================================
 
-/**
- * تحليل كلمة مفتاحية واحدة
- */
 export function analyzeKeyword(
   text: string,
   country: CountryCode,
   language: 'ar' | 'en',
   source: DataSource,
   type: 'actual' | 'question' | 'long-tail' | 'related' | 'comparison',
-  googleSuggestions: string[] = []
+  _googleSuggestions: string[] = []
 ): Keyword {
   const wordCount = getWordCount(text);
   const characterCount = text.length;
   const lengthType = getLengthType(wordCount);
-  
-  // تحليل النية
-  const { intent, confidence: intentConfidence } = classifyIntent(text);
-  
-  // حساب المنافسة
-  const { score: competitionScore, reason: competitionReason } = calculateCompetition(
-    text,
-    wordCount,
+
+  const {
     intent,
-    source
-  );
-  
-  // تحديد مستوى المنافسة
+    confidence: intentConfidence,
+  } = classifyIntent(text);
+
+  // لا توجد لدينا بيانات فعلية تكفي لتحديد المنافسة.
+  const competitionScore = -1;
+  const competitionReason: CompetitionReason | undefined = undefined;
   const competitionLevel = getCompetitionLevel(competitionScore);
-  
-  // تحديد تصنيف الفرصة
-  const opportunityType = getOpportunityType(intent, wordCount, competitionLevel);
-  
-  // حساب الصلة
-  const relevanceScore = type === 'actual' ? 100 : type === 'question' ? 80 : 60;
-  
-  // حساب كثافة الطلب من ترتيب Google
-  const trendScore = calculateTrendScore(text, googleSuggestions);
-  
+
+  const opportunityType = getOpportunityType(
+    intent,
+    wordCount,
+    competitionLevel
+  );
+
+  const relevanceScore =
+    type === 'actual' ? 100 :
+    type === 'question' ? 80 :
+    60;
+
   return {
-    id: `kw-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+    id: `kw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     text,
     country,
     language,
@@ -513,67 +630,14 @@ export function analyzeKeyword(
     relevanceScore,
     hasActualData: source === 'actual',
     dataSource: source,
-    trendScore,
+    trendScore: undefined,
     createdAt: new Date(),
   };
 }
 
 // ============================================
-// 6. حساب المنافسة
+// 9. مستوى المنافسة
 // ============================================
-
-function calculateCompetition(
-  text: string,
-  wordCount: number,
-  intent: SearchIntent,
-  source: DataSource
-): { score: number; reason: CompetitionReason } {
-  // للكلمات المولّدة: نحسب المؤشر تقديرياً (مع توضيح ذلك)
-  // للكلمات الفعلية: نحسب المؤشر بناءً على العوامل
-  
-  // حساب العوامل
-  // 1. طول الكلمة (كلمات أطول = منافسة أقل)
-  const lengthScore = Math.max(0, 100 - (wordCount - 1) * 15);
-  
-  // 2. عدد الكلمات
-  const wordCountScore = Math.max(0, 100 - (wordCount - 1) * 20);
-  
-  // 3. نية البحث
-  const intentScore = 
-    intent === 'informational' ? 30 :
-    intent === 'navigational' ? 40 :
-    intent === 'commercial' ? 65 :
-    intent === 'transactional' ? 80 : 50;
-  
-  // 4. حضور الكلمة في Google (تقديري بناءً على طول الكلمة)
-  const googlePresenceScore = Math.min(100, 50 + (wordCount - 1) * 10);
-  
-  // الحساب الموزون
-  const totalScore = Math.round(
-    lengthScore * COMPETITION_WEIGHTS.KEYWORD_LENGTH +
-    wordCountScore * COMPETITION_WEIGHTS.WORD_COUNT +
-    intentScore * COMPETITION_WEIGHTS.INTENT +
-    googlePresenceScore * COMPETITION_WEIGHTS.GOOGLE_PRESENCE
-  );
-  
-  const clampedScore = Math.max(0, Math.min(100, totalScore));
-  
-  return {
-    score: clampedScore,
-    reason: {
-      keywordLength: lengthScore,
-      wordCount: wordCountScore,
-      intent,
-      googlePresence: googlePresenceScore,
-      breakdown: [
-        { factor: 'طول الكلمة', weight: COMPETITION_WEIGHTS.KEYWORD_LENGTH, score: lengthScore, contribution: Math.round(lengthScore * COMPETITION_WEIGHTS.KEYWORD_LENGTH) },
-        { factor: 'عدد الكلمات', weight: COMPETITION_WEIGHTS.WORD_COUNT, score: wordCountScore, contribution: Math.round(wordCountScore * COMPETITION_WEIGHTS.WORD_COUNT) },
-        { factor: 'نية البحث', weight: COMPETITION_WEIGHTS.INTENT, score: intentScore, contribution: Math.round(intentScore * COMPETITION_WEIGHTS.INTENT) },
-        { factor: 'حضور الكلمة', weight: COMPETITION_WEIGHTS.GOOGLE_PRESENCE, score: googlePresenceScore, contribution: Math.round(googlePresenceScore * COMPETITION_WEIGHTS.GOOGLE_PRESENCE) },
-      ],
-    },
-  };
-}
 
 function getCompetitionLevel(score: number): CompetitionLevel {
   if (score < 0) return 'unknown';
@@ -584,7 +648,7 @@ function getCompetitionLevel(score: number): CompetitionLevel {
 }
 
 // ============================================
-// 7. تحديد تصنيف الفرصة
+// 10. تصنيف الفرصة
 // ============================================
 
 function getOpportunityType(
@@ -592,20 +656,23 @@ function getOpportunityType(
   wordCount: number,
   competitionLevel: CompetitionLevel
 ): OpportunityType {
-  // كلمات طويلة + منافسة منخفضة = مناسبة للمواقع الجديدة
-  if (wordCount >= 4 && (competitionLevel === 'very-easy' || competitionLevel === 'easy')) {
+  // لا نصنف الكلمة على أنها مناسبة لموقع جديد
+  // اعتماداً على طولها وحده أو منافسة غير معروفة.
+  if (
+    wordCount >= 4 &&
+    (competitionLevel === 'very-easy' ||
+      competitionLevel === 'easy')
+  ) {
     return 'new-site';
   }
-  
-  // نية شرائية = فرصة تجارية
+
   if (intent === 'transactional' || intent === 'commercial') {
     return 'commercial';
   }
-  
-  // نية معلوماتية = فرصة محتوى
+
   if (intent === 'informational') {
     return 'content';
   }
-  
+
   return 'general';
 }

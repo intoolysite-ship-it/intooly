@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ثوابت مولّد الكلمات المفتاحية
  * يدعم 22 دولة عربية + الأسواق العالمية
  */
@@ -426,10 +426,10 @@ export interface DataSourceInfo {
 export const DATA_SOURCES: DataSourceInfo[] = [
   {
     id: 'actual',
-    label: 'بيانات فعلية',
+    label: 'اقتراحات Google',
     icon: '✅',
     color: 'green',
-    description: 'من Google Autocomplete — اقتراحات حقيقية',
+    description: 'اقتراحات حقيقية من Google Autocomplete، وليست بيانات حجم البحث',
   },
   {
     id: 'trends',

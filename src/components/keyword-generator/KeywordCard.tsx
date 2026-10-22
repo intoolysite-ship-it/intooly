@@ -1,14 +1,15 @@
-﻿'use client';
+﻿
+'use client';
 
-import { 
-  Copy, Check, Info, Target, Lightbulb, 
-  TrendingUp, Database, Flame 
+import {
+  Copy, Check, Info, Target, Lightbulb,
+  TrendingUp, Database, Flame
 } from 'lucide-react';
 import { useState } from 'react';
 import CompetitivenessGauge from './CompetitivenessGauge';
-import { 
-  INTENT_TYPES, 
-  OPPORTUNITY_TYPES, 
+import {
+  INTENT_TYPES,
+  OPPORTUNITY_TYPES,
   DATA_SOURCES,
   COUNTRIES,
   KEYWORD_MESSAGES,
@@ -23,43 +24,101 @@ interface KeywordCardProps {
 export default function KeywordCard({ keyword, onCopy }: KeywordCardProps) {
   const [copied, setCopied] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  
+
   const country = COUNTRIES.find(c => c.code === keyword.country);
   const intent = INTENT_TYPES.find(i => i.id === keyword.intent);
-  const opportunity = OPPORTUNITY_TYPES.find(o => o.id === keyword.opportunityType);
-  const dataSource = DATA_SOURCES.find(d => d.id === keyword.dataSource);
-  
-  const handleCopy = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(keyword.text);
+  const opportunity = OPPORTUNITY_TYPES.find(
+    o => o.id === keyword.opportunityType
+  );
+  const dataSource = DATA_SOURCES.find(
+    d => d.id === keyword.dataSource
+  );
+
+  const handleCopy = async () => {
+    if (!navigator.clipboard) return;
+
+    try {
+      await navigator.clipboard.writeText(keyword.text);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+
       if (onCopy) onCopy(keyword.text);
+
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
     }
   };
-  
 
-  // كثافة الطلب
+  // مؤشر تقديري داخلي، وليس حجم البحث الفعلي.
   const getTrendInfo = (score: number | undefined) => {
-    if (!score || score === 0) return { icon: '❓', label: 'غير محدد', color: '#9ca3af' };
-    if (score >= 90) return { icon: '🔥', label: 'طلب مرتفع جداً', color: '#dc2626' };
-    if (score >= 70) return { icon: '📈', label: 'طلب مرتفع', color: '#ea580c' };
-    if (score >= 50) return { icon: '📊', label: 'طلب متوسط', color: '#eab308' };
-    if (score >= 30) return { icon: '📉', label: 'طلب منخفض', color: '#65a30d' };
-    return { icon: '❓', label: 'غير محدد', color: '#9ca3af' };
+    if (score === undefined || score <= 0) {
+      return {
+        icon: '❓',
+        label: 'غير متاح',
+        color: '#9ca3af',
+      };
+    }
+
+    if (score >= 90) {
+      return {
+        icon: '🔥',
+        label: 'مؤشر مرتفع جدًا',
+        color: '#dc2626',
+      };
+    }
+
+    if (score >= 70) {
+      return {
+        icon: '📈',
+        label: 'مؤشر مرتفع',
+        color: '#ea580c',
+      };
+    }
+
+    if (score >= 50) {
+      return {
+        icon: '📊',
+        label: 'مؤشر متوسط',
+        color: '#eab308',
+      };
+    }
+
+    if (score >= 30) {
+      return {
+        icon: '📉',
+        label: 'مؤشر منخفض',
+        color: '#65a30d',
+      };
+    }
+
+    return {
+      icon: '❓',
+      label: 'مؤشر منخفض جدًا',
+      color: '#9ca3af',
+    };
   };
-  
+
   const trendInfo = getTrendInfo(keyword.trendScore);
-  
+
+  const sourceLabel =
+    keyword.dataSource === 'actual'
+      ? 'Google Autocomplete'
+      : keyword.dataSource === 'trends'
+        ? 'Google Trends'
+        : keyword.dataSource === 'estimated'
+          ? 'تقدير آلي'
+          : 'اقتراح مولّد';
+
   return (
     <div className="bg-white border-2 border-ink-200 rounded-2xl p-4 hover:border-brand-300 hover:shadow-lg transition-all">
-      
+
       {/* الرأس */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
           <h3 className="font-extrabold text-ink-900 text-base md:text-lg break-words">
             {keyword.text}
           </h3>
+
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             {country && (
               <span className="inline-flex items-center gap-1 text-xs text-ink-600 font-bold">
@@ -67,18 +126,22 @@ export default function KeywordCard({ keyword, onCopy }: KeywordCardProps) {
                 <span>{country.name}</span>
               </span>
             )}
+
             <span className="text-xs text-ink-400">•</span>
+
             <span className="text-xs text-ink-600 font-bold">
               {keyword.wordCount} كلمة
             </span>
           </div>
         </div>
-        
+
         {/* زر النسخ */}
         <button
+          type="button"
           onClick={handleCopy}
           className="flex-shrink-0 w-9 h-9 rounded-lg bg-ink-100 hover:bg-brand-100 flex items-center justify-center transition-colors"
           title="نسخ"
+          aria-label="نسخ الكلمة المفتاحية"
         >
           {copied ? (
             <Check className="w-4 h-4 text-green-600" />
@@ -87,8 +150,8 @@ export default function KeywordCard({ keyword, onCopy }: KeywordCardProps) {
           )}
         </button>
       </div>
-      
-      {/* المؤشر + التحليل */}
+
+      {/* مؤشر المنافسة والتحليل */}
       <div className="flex items-center gap-4 mb-3">
         <CompetitivenessGauge
           score={keyword.competitionScore}
@@ -97,97 +160,144 @@ export default function KeywordCard({ keyword, onCopy }: KeywordCardProps) {
           showDetails={true}
           breakdown={keyword.competitionReason?.breakdown}
         />
-        
+
         <div className="flex-1 space-y-2">
-          {/* النية */}
+
+          {/* نية البحث */}
           {intent && (
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-xs flex-wrap">
               <span className="text-base">{intent.icon}</span>
-              <span className="font-bold text-ink-700">{intent.label}</span>
-              <span className="text-ink-400">({keyword.intentConfidence}%)</span>
+              <span className="font-bold text-ink-700">
+                {intent.label}
+              </span>
+              <span
+                className="text-ink-400"
+                title="تصنيف آلي تقديري وليس نسبة ثقة مقاسة"
+              >
+                (تصنيف آلي تقديري)
+              </span>
             </div>
           )}
-          
-          {/* الفرصة */}
+
+          {/* نوع الفرصة */}
           {opportunity && (
             <div className="flex items-center gap-2 text-xs">
               <span className="text-base">{opportunity.icon}</span>
-              <span className="font-bold text-ink-700">{opportunity.label}</span>
+              <span className="font-bold text-ink-700">
+                {opportunity.label}
+              </span>
             </div>
           )}
-          
-          {/* مصدر البيانات */}
+
+          {/* مصدر الاقتراح */}
           {dataSource && (
             <div className="flex items-center gap-2 text-xs">
               <span className="text-base">{dataSource.icon}</span>
-              <span className="text-ink-600">{dataSource.label}</span>
+              <span className="text-ink-600">
+                {keyword.dataSource === 'actual'
+                  ? 'اقتراحات Google'
+                  : dataSource.label}
+              </span>
             </div>
           )}
         </div>
       </div>
-      
 
-      {/* كثافة الطلب */}
+      {/* المؤشر التقديري */}
       {keyword.trendScore !== undefined && keyword.trendScore > 0 && (
-        <div className="flex items-center gap-2 mt-2 p-2 rounded-lg bg-ink-50 border border-ink-200">
+        <div
+          className="flex items-center gap-2 mt-2 p-2 rounded-lg bg-ink-50 border border-ink-200"
+          title="مؤشر داخلي تقديري، وليس حجم البحث الشهري أو بيانات طلب فعلية"
+        >
           <span className="text-xl">{trendInfo.icon}</span>
+
           <div className="flex-1">
             <p className="text-xs font-bold text-ink-700">
-              كثافة الطلب: <span style={{ color: trendInfo.color }}>{trendInfo.label}</span>
+              المؤشر التقديري:{' '}
+              <span style={{ color: trendInfo.color }}>
+                {trendInfo.label}
+              </span>
             </p>
+
             <div className="w-full bg-ink-200 rounded-full h-1.5 mt-1 overflow-hidden">
-              <div 
+              <div
                 className="h-full rounded-full transition-all"
-                style={{ 
-                  width: `${keyword.trendScore}%`,
-                  backgroundColor: trendInfo.color 
+                style={{
+                  width: `${Math.max(
+                    0,
+                    Math.min(100, keyword.trendScore)
+                  )}%`,
+                  backgroundColor: trendInfo.color,
                 }}
               />
             </div>
           </div>
-          <span className="text-xs font-bold" style={{ color: trendInfo.color }}>
-            {keyword.trendScore}%
+
+          <span
+            className="text-xs font-bold"
+            style={{ color: trendInfo.color }}
+          >
+            {keyword.trendScore}/100
           </span>
         </div>
       )}
-      
+
       {/* تفاصيل قابلة للفتح */}
       <button
+        type="button"
         onClick={() => setShowDetails(!showDetails)}
         className="w-full text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center justify-center gap-1 py-1"
+        aria-expanded={showDetails}
       >
         <Info className="w-3 h-3" />
         {showDetails ? 'إخفاء التفاصيل' : 'عرض التفاصيل'}
       </button>
-      
+
       {showDetails && (
         <div className="mt-3 pt-3 border-t border-ink-100 space-y-2 text-xs">
-          <div className="flex justify-between">
+
+          <div className="flex justify-between gap-2">
             <span className="text-ink-600">عدد الأحرف:</span>
-            <span className="font-bold">{keyword.characterCount}</span>
+            <span className="font-bold">
+              {keyword.characterCount}
+            </span>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between gap-2">
             <span className="text-ink-600">نوع الطول:</span>
             <span className="font-bold">
-              {keyword.lengthType === 'short' ? 'قصيرة' :
-               keyword.lengthType === 'medium' ? 'متوسطة' :
-               keyword.lengthType === 'long' ? 'طويلة' : 'طويلة جداً'}
+              {keyword.lengthType === 'short'
+                ? 'قصيرة'
+                : keyword.lengthType === 'medium'
+                  ? 'متوسطة'
+                  : keyword.lengthType === 'long'
+                    ? 'طويلة'
+                    : 'طويلة جدًا'}
             </span>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between gap-2">
             <span className="text-ink-600">صلة الكلمة:</span>
-            <span className="font-bold">{keyword.relevanceScore}%</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-ink-600">بيانات فعلية:</span>
-            <span className={`font-bold ${keyword.hasActualData ? 'text-green-600' : 'text-orange-500'}`}>
-              {keyword.hasActualData ? '✅ نعم' : '⚠️ لا'}
+            <span className="font-bold">
+              {keyword.relevanceScore}%
             </span>
           </div>
-          
+
+          <div className="flex justify-between gap-2">
+            <span className="text-ink-600">مصدر الاقتراح:</span>
+            <span className="font-bold text-left">
+              {sourceLabel}
+            </span>
+          </div>
+
           <div className="mt-2 pt-2 border-t border-ink-100">
             <p className="text-[10px] text-ink-500 leading-relaxed">
               {KEYWORD_MESSAGES.DISCLAIMER_COMPETITION}
+            </p>
+            <p className="text-[10px] text-ink-500 leading-relaxed mt-1">
+              المؤشر التقديري لا يمثل حجم البحث الشهري، ولا يؤكد
+              عدد عمليات البحث عن الكلمة. اقتراحات Google لا توفر
+              وحدها بيانات حجم البحث أو مستوى الطلب الفعلي.
             </p>
           </div>
         </div>
