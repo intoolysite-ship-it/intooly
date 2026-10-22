@@ -29,7 +29,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^1.52.0",
     "mammoth": "^1.13.0",
-    "next": "16.3.8",
+    "next": "^16.4.1",
     "onnxruntime-web": "^1.31.0-dev.20260918-bc8e7ed75",
     "pdf-lib": "^1.17.1",
     "pdf-lib-encrypt": "^1.0.3",
@@ -41,7 +41,7 @@
     "react-dom": "19.2.8",
     "react-leaflet": "^5.0.0",
     "tesseract.js": "^7.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
