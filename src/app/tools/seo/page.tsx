@@ -1,10 +1,11 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   BarChart3,
   FileText,
   ArrowLeft,
   BookOpen,
+  Tag,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
 const tools = [
   { icon: BarChart3, title: 'مولّد الكلمات المفتاحية', description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.', href: '/tools/keyword-generator' },
   { icon: FileText, title: 'عدّاد الكلمات', description: 'احسب الكلمات والأحرف في النصوص.', href: '/tools/word-counter' },
+  { icon: Tag, title: 'أداة Meta Tags الشاملة', description: 'أنشئ وسوم SEO كاملة (Title, Description, Robots, Open Graph) مع معاينة فورية.', href: '/tools/seo-meta-tags' },
 ];
 
 const faqs = [
