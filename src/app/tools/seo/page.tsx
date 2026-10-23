@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   BookOpen,
   Tag,
+  Search,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ const tools = [
   { icon: BarChart3, title: 'مولّد الكلمات المفتاحية', description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.', href: '/tools/keyword-generator' },
   { icon: FileText, title: 'عدّاد الكلمات', description: 'احسب الكلمات والأحرف في النصوص.', href: '/tools/word-counter' },
   { icon: Tag, title: 'أداة Meta Tags الشاملة', description: 'أنشئ وسوم SEO كاملة (Title, Description, Robots, Open Graph) مع معاينة فورية.', href: '/tools/seo-meta-tags' },
+  { icon: Search, title: 'فاحص SEO الشامل', description: 'حلّل HTML صفحتك: العناوين، الصور، الروابط، والبيانات المنظمة. مع تقرير تفاعلي ودرجة إرشادية.', href: '/tools/seo-checker' },
 ];
 
 const faqs = [
