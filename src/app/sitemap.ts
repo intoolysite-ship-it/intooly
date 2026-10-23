@@ -1,4 +1,4 @@
-﻿import { MetadataRoute } from 'next';
+import { MetadataRoute } from 'next';
 
 export const dynamic = 'force-static';
 
@@ -67,6 +67,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // أدوات SEO
     { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/word-counter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/seo-meta-tags', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-23') },
 
     // أدوات الإنتاجية
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
