@@ -68,6 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/word-counter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/seo-meta-tags', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-23') },
+    { path: '/tools/seo-checker', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-24') },
 
     // أدوات الإنتاجية
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },

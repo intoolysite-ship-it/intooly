@@ -566,58 +566,59 @@ export default function SeoCheckerPage() {
 
           {/* ============ محتوى SEO ============ */}
           <div className="mt-12 space-y-8 text-ink-700">
-            <article className="prose prose-lg max-w-none prose-headings:text-ink-900 prose-headings:font-black prose-p:leading-8 prose-p:text-ink-600 prose-li:text-ink-600 prose-strong:text-ink-900">
-              <h2 id="what-is-seo-checker">ما هي أداة SEO Checker؟</h2>
-              <p>
+            <article className="max-w-none">
+              <h2 id="what-is-seo-checker" className="mb-4 text-2xl font-black text-ink-900">ما هي أداة SEO Checker؟</h2>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">
                 أداة SEO Checker، أو فاحص تحسين محركات البحث، هي أداة تساعد على مراجعة العناصر التقنية والمحتوى الموجود داخل صفحة الويب، بهدف اكتشاف المشكلات المحتملة التي قد تؤثر في فهم محركات البحث للصفحة أو في طريقة عرضها ومساعدة المستخدمين على الوصول إلى محتواها.
               </p>
-              <p>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">
                 يركز فاحص SEO للصفحات من Intooly على تحليل HTML المتاح، بما في ذلك عنوان الصفحة والوصف التعريفي ووسوم العناوين والروابط والصور ووسوم المشاركة الاجتماعية والبيانات المنظمة بصيغة JSON-LD. تظهر نتائج الفحص في تقرير يوضح العناصر التي اجتازت الاختبار، والملاحظات التي تستحق المراجعة، والمعلومات الإضافية التي ينبغي فهمها في سياق الصفحة.
               </p>
-              <p>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">
                 من المهم معرفة أن الفحص الأولي لا يغني عن مراجعة جودة المحتوى أو نية البحث أو إمكانية الزحف والفهرسة الفعلية. كما أن النتيجة الرقمية إرشادية وليست درجة صادرة عن Google.
               </p>
 
-              <h2 id="how-to-use">كيف تستخدم أداة فحص SEO؟</h2>
-              <ol>
-                <li><strong>أدخل كود HTML:</strong> الصق كود الصفحة في الحقل المخصص، أو ارفع ملف HTML محفوظًا على جهازك.</li>
-                <li><strong>جرّب الفحص باستخدام الرابط:</strong> أدخل عنوان الصفحة وحاول جلب HTML من الخادم.</li>
-                <li><strong>ابدأ التحليل:</strong> اضغط على زر بدء فحص SEO لتحليل العناصر التي اكتشفها الفاحص.</li>
-                <li><strong>راجع النتائج:</strong> افحص عنوان الصفحة والوصف والعناوين والصور والروابط والبيانات المنظمة.</li>
-                <li><strong>طبّق التوصيات:</strong> ابدأ بالملاحظات الأكثر أهمية بالنسبة إلى هدف الصفحة، ثم راجع العناصر الأخرى.</li>
-                <li><strong>صدّر التقرير:</strong> يمكنك نسخ ملخص النتائج أو تنزيل التقرير بصيغتي JSON وCSV أو طباعته.</li>
+              <h2 id="how-to-use" className="mb-4 mt-8 text-2xl font-black text-ink-900">كيف تستخدم أداة فحص SEO؟</h2>
+              <ol className="mb-4 list-decimal space-y-2 pr-5 text-base leading-relaxed text-ink-600">
+                <li><strong className="text-ink-900">أدخل كود HTML:</strong> الصق كود الصفحة في الحقل المخصص، أو ارفع ملف HTML محفوظًا على جهازك.</li>
+                <li><strong className="text-ink-900">جرّب الفحص باستخدام الرابط:</strong> أدخل عنوان الصفحة وحاول جلب HTML من الخادم.</li>
+                <li><strong className="text-ink-900">ابدأ التحليل:</strong> اضغط على زر بدء فحص SEO لتحليل العناصر التي اكتشفها الفاحص.</li>
+                <li><strong className="text-ink-900">راجع النتائج:</strong> افحص عنوان الصفحة والوصف والعناوين والصور والروابط والبيانات المنظمة.</li>
+                <li><strong className="text-ink-900">طبّق التوصيات:</strong> ابدأ بالملاحظات الأكثر أهمية بالنسبة إلى هدف الصفحة، ثم راجع العناصر الأخرى.</li>
+                <li><strong className="text-ink-900">صدّر التقرير:</strong> يمكنك نسخ ملخص النتائج أو تنزيل التقرير بصيغتي JSON وCSV أو طباعته.</li>
               </ol>
 
-              <h2 id="what-it-checks">ما العناصر التي يفحصها SEO Checker؟</h2>
-              <h3>1. عنوان الصفحة SEO Title</h3>
-              <p>يُعد عنوان الصفحة من العناصر المهمة لفهم موضوعها، وقد يُستخدم مصدرًا للرابط المعروض في نتائج البحث. يتحقق الفاحص من وجود وسم <code>&lt;title&gt;</code> ويعرض محتواه وطوله، وينبهك إذا كان مفقودًا أو خارج النطاق الإرشادي.</p>
+              <h2 id="what-it-checks" className="mb-4 mt-8 text-2xl font-black text-ink-900">ما العناصر التي يفحصها SEO Checker؟</h2>
               
-              <h3>2. الوصف التعريفي Meta Description</h3>
-              <p>يفحص التقرير وجود وسم الوصف التعريفي ويعرض النص وطوله. اكتب وصفًا فريدًا لكل صفحة، واجعله طبيعيًا ومفيدًا. لا يوجد طول ثابت يضمن ظهور الوصف كاملًا في نتائج البحث.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">1. عنوان الصفحة SEO Title</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يُعد عنوان الصفحة من العناصر المهمة لفهم موضوعها، وقد يُستخدم مصدرًا للرابط المعروض في نتائج البحث. يتحقق الفاحص من وجود وسم <code>&lt;title&gt;</code> ويعرض محتواه وطوله، وينبهك إذا كان مفقودًا أو خارج النطاق الإرشادي.</p>
+              
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">2. الوصف التعريفي Meta Description</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يفحص التقرير وجود وسم الوصف التعريفي ويعرض النص وطوله. اكتب وصفًا فريدًا لكل صفحة، واجعله طبيعيًا ومفيدًا. لا يوجد طول ثابت يضمن ظهور الوصف كاملًا في نتائج البحث.</p>
 
-              <h3>3. العناوين الرئيسية H1 وH2 وH3</h3>
-              <p>تساعد العناوين على تنظيم المحتوى وتوضيح العلاقة بين الأقسام. يفحص SEO Checker عدد عناوين H1، ويرصد عناوين المستويات H2 إلى H6 الموجودة في HTML المقدم.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">3. العناوين الرئيسية H1 وH2 وH3</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">تساعد العناوين على تنظيم المحتوى وتوضيح العلاقة بين الأقسام. يفحص SEO Checker عدد عناوين H1، ويرصد عناوين المستويات H2 إلى H6 الموجودة في HTML المقدم.</p>
 
-              <h3>4. الرابط الأساسي Canonical</h3>
-              <p>يشير وسم Canonical إلى عنوان URL الذي تفضّل الصفحة اعتباره النسخة الأساسية عند وجود صفحات متشابهة. يتحقق الفاحص من وجود الوسم ويعرض قيمته.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">4. الرابط الأساسي Canonical</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يشير وسم Canonical إلى عنوان URL الذي تفضّل الصفحة اعتباره النسخة الأساسية عند وجود صفحات متشابهة. يتحقق الفاحص من وجود الوسم ويعرض قيمته.</p>
 
-              <h3>5. تعليمات Robots والفهرسة</h3>
-              <p>يمكن أن تحتوي الصفحة على تعليمات مثل <code>noindex</code> و<code>nofollow</code>. يعرض الفاحص التعليمات المكتشفة وينبهك عند العثور على <code>noindex</code> لأنه قد يمنع فهرسة الصفحة.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">5. تعليمات Robots والفهرسة</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يمكن أن تحتوي الصفحة على تعليمات مثل <code>noindex</code> و<code>nofollow</code>. يعرض الفاحص التعليمات المكتشفة وينبهك عند العثور على <code>noindex</code> لأنه قد يمنع فهرسة الصفحة.</p>
 
-              <h3>6. النص البديل للصور Alt Text</h3>
-              <p>يساعد النص البديل على توضيح محتوى الصور عندما لا يمكن رؤيتها. يرصد الفاحص الصور التي لا تحتوي على نص بديل، ويعرض لك روابط هذه الصور المحددة لتتمكن من إصلاحها بسرعة.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">6. النص البديل للصور Alt Text</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يساعد النص البديل على توضيح محتوى الصور عندما لا يمكن رؤيتها. يرصد الفاحص الصور التي لا تحتوي على نص بديل، ويعرض لك روابط هذه الصور المحددة لتتمكن من إصلاحها بسرعة.</p>
 
-              <h3>7. الروابط الداخلية والخارجية</h3>
-              <p>يعرض التقرير عدد الروابط التي عثر عليها في HTML، ويبحث عن الروابط التي لا تحتوي على نص ظاهر أو تسمية مناسبة.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">7. الروابط الداخلية والخارجية</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يعرض التقرير عدد الروابط التي عثر عليها في HTML، ويبحث عن الروابط التي لا تحتوي على نص ظاهر أو تسمية مناسبة.</p>
 
-              <h3>8. وسوم Open Graph وTwitter Card</h3>
-              <p>تساعد وسوم المشاركة الاجتماعية على تحديد العنوان والوصف والصورة التي يمكن أن تظهر عند مشاركة رابط الصفحة على المنصات.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">8. وسوم Open Graph وTwitter Card</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">تساعد وسوم المشاركة الاجتماعية على تحديد العنوان والوصف والصورة التي يمكن أن تظهر عند مشاركة رابط الصفحة على المنصات.</p>
 
-              <h3>9. البيانات المنظمة JSON-LD</h3>
-              <p>يتحقق SEO Checker من وجود كتل JSON-LD ويحاول تحليل صياغتها باعتبارها JSON. نجاح تحليل JSON لا يعني أن المخطط صحيح وفق مواصفات Schema.org.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">9. البيانات المنظمة JSON-LD</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يتحقق SEO Checker من وجود كتل JSON-LD ويحاول تحليل صياغتها باعتبارها JSON. نجاح تحليل JSON لا يعني أن المخطط صحيح وفق مواصفات Schema.org.</p>
 
-              <h3>10. لغة الصفحة وإعداد العرض للأجهزة المحمولة</h3>
-              <p>يفحص التقرير خاصية <code>lang</code> على عنصر HTML ووسم <code>viewport</code> وتعريف ترميز الأحرف عند توفره.</p>
+              <h3 className="mb-2 mt-6 text-lg font-bold text-ink-900">10. لغة الصفحة وإعداد العرض للأجهزة المحمولة</h3>
+              <p className="mb-4 text-base leading-relaxed text-ink-600">يفحص التقرير خاصية <code>lang</code> على عنصر HTML ووسم <code>viewport</code> وتعريف ترميز الأحرف عند توفره.</p>
             </article>
 
             {/* FAQ Section */}
@@ -636,7 +637,7 @@ export default function SeoCheckerPage() {
                       <span>{faq.q}</span>
                       <span className="text-brand-600 group-open:rotate-180 transition-transform">▾</span>
                     </summary>
-                    <div className="border-t border-ink-100 p-4 text-sm leading-7 text-ink-600">
+                    <div className="border-t border-ink-100 p-4 text-sm leading-relaxed text-ink-600">
                       {faq.a}
                     </div>
                   </details>
@@ -644,16 +645,27 @@ export default function SeoCheckerPage() {
               </div>
             </div>
 
-            {/* دليل سريع */}
-            <div className="rounded-2xl border-2 border-brand-200 bg-brand-50 p-6">
-              <h2 className="text-lg font-extrabold text-brand-900">💡 نصائح لتحسين SEO</h2>
-              <ul className="mt-3 space-y-1.5 text-sm text-brand-900 list-disc pr-5 leading-7">
-                <li>ابدأ بالمشاكل الحرجة (الخطوط الحمراء) قبل التحذيرات.</li>
-                <li>لا تكرر الكلمة المفتاحية بشكل مفرط — اكتب للبشر أولًا.</li>
-                <li>تأكد أن المحتوى يخدم نية البحث (معلوماتي، تجاري، شرائي).</li>
-                <li>راجع النتائج الفعلية في Google Search Console بانتظام.</li>
-                <li>لا تعتمد على أداة واحدة — استخدم أدوات متخصصة للبيانات الفعلية.</li>
-              </ul>
+            {/* أدوات ذات صلة */}
+            <div className="mt-10">
+              <h2 className="mb-6 text-right text-2xl font-black text-ink-900">أدوات ذات صلة</h2>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                {[
+                  { title: 'أداة Meta Tags الشاملة', href: '/tools/seo-meta-tags', desc: 'إنشاء وسوم SEO معاينة حية', icon: '🏷️' },
+                  { title: 'مولّد الكلمات المفتاحية', href: '/tools/keyword-generator', desc: 'اكتشف أفكارًا للكلمات المفتاحية', icon: '🔍' },
+                  { title: 'عدّاد الكلمات', href: '/tools/word-counter', desc: 'احسب الكلمات والأحرف في النصوص', icon: '🔢' },
+                  { title: 'دليل أدوات SEO', href: '/tools/seo', desc: 'استكشف جميع أدوات SEO', icon: '📊' },
+                ].map((tool) => (
+                  <Link
+                    key={tool.href}
+                    href={tool.href}
+                    className="block rounded-xl border-2 border-ink-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-brand-400 hover:shadow-lg"
+                  >
+                    <div className="mb-2 text-3xl">{tool.icon}</div>
+                    <h3 className="text-sm font-extrabold text-ink-900">{tool.title}</h3>
+                    <p className="mt-1 text-xs text-ink-600">{tool.desc}</p>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
