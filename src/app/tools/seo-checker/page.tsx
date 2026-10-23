@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 /**
  * صفحة أداة SEO Checker — Intooly
@@ -427,109 +427,138 @@ export default function SeoCheckerPage() {
           {/* ============ التقرير ============ */}
           {report && (
             <div className="mt-6 space-y-4">
+              {/* ===== الملخص التنفيذي (Executive Summary) ===== */}
               <div className="rounded-2xl border-2 border-ink-200 bg-white p-5 md:p-6 shadow-sm">
-                <div className="flex flex-col md:flex-row md:items-center gap-6">
-                  <div className="flex justify-center md:justify-start">
-                    <ScoreGauge score={report.score} size="md" label="درجة SEO" />
+                <div className="mb-6">
+                  <p className="text-xs font-bold text-brand-600 uppercase tracking-wider mb-1">
+                    التقرير التنفيذي
+                  </p>
+                  <h2 className="text-2xl font-black text-ink-900">
+                    نظرة عامة وأولويات
+                  </h2>
+                  <p className="mt-1 text-sm text-ink-600">
+                    أهم المؤشرات والمشاكل التي تحتاج إلى انتباه فوري.
+                  </p>
+                </div>
+
+                {/* المؤشرات الأساسية */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="rounded-xl border-2 border-ink-200 bg-white p-4 flex flex-col items-center justify-center">
+                    <ScoreGauge score={report.score} size="sm" label="درجة SEO" />
                   </div>
-                  <div className="flex-1">
-                    <h2 className="text-xl font-extrabold text-ink-900 break-words">
-                      {report.pageTitle}
-                    </h2>
-                    <p className="mt-1 text-xs text-ink-500 break-all" dir="ltr">
-                      {report.source}
-                    </p>
-                    <div className="mt-3">
-                      <StatsCards
-                        passed={report.passed}
-                        warnings={report.warnings}
-                        errors={report.errors}
-                        infos={report.infos}
-                        total={report.totalChecks}
-                      />
-                    </div>
+                  <div className="md:col-span-3">
+                    <StatsCards
+                      passed={report.passed}
+                      warnings={report.warnings}
+                      errors={report.errors}
+                      infos={report.infos}
+                      total={report.totalChecks}
+                    />
                   </div>
                 </div>
 
-                {report.fetchInfo && (
-                  <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                    <div className="rounded-lg bg-ink-50 p-2">
+                {/* الملخص + الخطوة التالية */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="rounded-xl border-l-4 border-brand-500 bg-brand-50 p-4">
+                    <p className="font-bold text-brand-900 mb-1">ماذا يكشف هذا التقرير؟</p>
+                    <p className="text-sm leading-relaxed text-brand-900/80">
+                      يفحص التقرير {report.totalChecks} عنصرًا من HTML. تم اجتياز {report.passed} عنصرًا، وهناك {report.warnings + report.errors} عنصرًا يحتاج إلى مراجعة.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border-l-4 border-amber-500 bg-amber-50 p-4">
+                    <p className="font-bold text-amber-900 mb-1">أهم خطوة تالية</p>
+                    <p className="text-sm leading-relaxed text-amber-900/80">
+                      {report.errors > 0
+                        ? `ابدأ بإصلاح ${report.errors} مشكلة حرجة أولًا (خطوط حمراء)، ثم راجع ${report.warnings} تحذيرًا.`
+                        : report.warnings > 0
+                          ? `راجع ${report.warnings} تحذيرًا لتحسين الدرجة.`
+                          : 'لا توجد مشاكل حرجة. راجع التحسينات الاختيارية لرفع الدرجة.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Top Priorities */}
+                <div className="rounded-xl border-2 border-ink-200 bg-ink-50 p-4">
+                  <p className="font-bold text-ink-900 mb-3 text-sm">أهم الأولويات</p>
+                  <div className="space-y-2">
+                    {report.issues
+                      .filter((i) => i.status === 'error' || i.severity === 'critical' || i.severity === 'high')
+                      .slice(0, 4)
+                      .map((issue) => (
+                        <div
+                          key={issue.id}
+                          className="flex items-center gap-2 text-sm text-ink-700"
+                        >
+                          <span className={`inline-block w-2 h-2 rounded-full ${issue.status === 'error' ? 'bg-red-500' : 'bg-amber-500'}`} />
+                          <span className="font-bold">{issue.title}</span>
+                          <span className="text-xs text-ink-500">— {issue.details}</span>
+                        </div>
+                      ))}
+                    {report.issues.filter((i) => i.status === 'error' || i.severity === 'critical' || i.severity === 'high').length === 0 && (
+                      <p className="text-sm text-emerald-700 font-bold">✓ لا توجد أولويات حرجة — الصفحة في حالة جيدة.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* معلومات Fetch */}
+              {report.fetchInfo && (
+                <div className="rounded-xl border-2 border-ink-200 bg-white p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                    <div>
                       <span className="text-ink-500">HTTP:</span>{' '}
                       <strong>{report.fetchInfo.status}</strong>
                     </div>
-                    <div className="rounded-lg bg-ink-50 p-2">
-                      <span className="text-ink-500">زمن:</span>{' '}
+                    <div>
+                      <span className="text-ink-500">زمن الاستجابة:</span>{' '}
                       <strong>{report.fetchInfo.responseTimeMs}ms</strong>
                     </div>
-                    <div className="rounded-lg bg-ink-50 p-2 truncate">
+                    <div className="truncate">
                       <span className="text-ink-500">النوع:</span>{' '}
                       <strong>{report.fetchInfo.contentType || '—'}</strong>
                     </div>
-                    <div className="rounded-lg bg-ink-50 p-2">
+                    <div>
                       <span className="text-ink-500">تحويل:</span>{' '}
                       <strong>{report.fetchInfo.redirected ? 'نعم' : 'لا'}</strong>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
+              {/* أزرار التصدير */}
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={copyReport}
-                  className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50"
-                >
-                  <Clipboard className="w-3.5 h-3.5" />
-                  نسخ التقرير
+                <button type="button" onClick={copyReport} className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50">
+                  <Clipboard className="w-3.5 h-3.5" /> نسخ التقرير
                 </button>
-                <button
-                  type="button"
-                  onClick={exportJson}
-                  className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50"
-                >
-                  <ArrowDownToLine className="w-3.5 h-3.5" />
-                  JSON
+                <button type="button" onClick={exportJson} className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50">
+                  <ArrowDownToLine className="w-3.5 h-3.5" /> JSON
                 </button>
-                <button
-                  type="button"
-                  onClick={exportCsv}
-                  className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50"
-                >
-                  <ArrowDownToLine className="w-3.5 h-3.5" />
-                  CSV
+                <button type="button" onClick={exportCsv} className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50">
+                  <ArrowDownToLine className="w-3.5 h-3.5" /> CSV
                 </button>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  طباعة
+                <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-1.5 rounded-lg border-2 border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-700 hover:bg-ink-50">
+                  <FileText className="w-3.5 h-3.5" /> طباعة
                 </button>
               </div>
 
+              {/* فلاتر المشاكل */}
               <div className="flex flex-wrap items-center gap-2 rounded-xl border-2 border-ink-200 bg-white p-3">
                 <span className="flex items-center gap-1 text-xs font-bold text-ink-600">
-                  <ListFilter className="w-3.5 h-3.5" />
-                  تصفية:
+                  <ListFilter className="w-3.5 h-3.5" /> تصفية:
                 </span>
-                {(
-                  [
-                    { id: 'all' as const, label: 'الكل', count: report.totalChecks },
-                    { id: 'pass' as const, label: 'اجتاز', count: report.passed },
-                    { id: 'warning' as const, label: 'تحذير', count: report.warnings },
-                    { id: 'error' as const, label: 'خطأ', count: report.errors },
-                    { id: 'info' as const, label: 'معلومة', count: report.infos },
-                  ]
-                ).map((f) => (
+                {[
+                  { id: 'all' as const, label: 'الكل', count: report.totalChecks },
+                  { id: 'pass' as const, label: 'اجتاز', count: report.passed },
+                  { id: 'warning' as const, label: 'تحذير', count: report.warnings },
+                  { id: 'error' as const, label: 'خطأ', count: report.errors },
+                  { id: 'info' as const, label: 'معلومة', count: report.infos },
+                ].map((f) => (
                   <button
                     key={f.id}
                     type="button"
                     onClick={() => setFilter(f.id)}
                     className={`rounded-full px-3 py-1 text-xs font-bold transition ${
-                      filter === f.id
-                        ? 'bg-brand-600 text-white'
-                        : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
+                      filter === f.id ? 'bg-brand-600 text-white' : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                     }`}
                   >
                     {f.label} ({f.count})
@@ -537,6 +566,7 @@ export default function SeoCheckerPage() {
                 ))}
               </div>
 
+              {/* القائمة التفصيلية */}
               <div className="space-y-2">
                 {filteredIssues.length === 0 && (
                   <div className="rounded-xl border-2 border-dashed border-ink-300 p-8 text-center text-sm text-ink-500">
@@ -552,10 +582,10 @@ export default function SeoCheckerPage() {
                 ))}
               </div>
 
+              {/* إفصاح */}
               <div className="rounded-xl border-2 border-amber-200 bg-amber-50 p-4 text-xs leading-6 text-amber-950">
                 <p className="font-bold flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4" />
-                  ملاحظة حول الدرجة
+                  <ShieldCheck className="w-4 h-4" /> ملاحظة حول الدرجة
                 </p>
                 <p className="mt-1">
                   الدرجة مؤشر إرشادي مبني على الفحوص الظاهرة في HTML فقط. لا تمثل ترتيب Google، ولا تقيس سرعة الموقع أو الفهرسة الفعلية.
@@ -563,8 +593,7 @@ export default function SeoCheckerPage() {
               </div>
             </div>
           )}
-
-          {/* ============ محتوى SEO ============ */}
+{/* ============ محتوى SEO ============ */}
           <div className="mt-12 space-y-8 text-ink-700">
             <article className="max-w-none">
               <h2 id="what-is-seo-checker" className="mb-4 text-2xl font-black text-ink-900">ما هي أداة SEO Checker؟</h2>

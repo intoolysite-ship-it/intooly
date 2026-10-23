@@ -1,7 +1,8 @@
 ﻿'use client';
 
 /**
- * 4 بطاقات ملخصة لنتائج الفحص.
+ * 4 بطاقات ملخصة أفقية — تشبه لوحات التحكم الاحترافية.
+ * كل بطاقة تعرض: أيقونة + عنوان + رقم كبير + شريط تقدم نسبي.
  */
 
 import { CheckCircle2, AlertTriangle, XCircle, Info } from 'lucide-react';
@@ -28,24 +29,28 @@ function StatCard({ label, value, total, icon: Icon, color }: StatCardProps) {
       bg: 'bg-emerald-50',
       border: 'border-emerald-200',
       text: 'text-emerald-700',
+      bar: 'bg-emerald-500',
       icon: 'text-emerald-600',
     },
     amber: {
       bg: 'bg-amber-50',
       border: 'border-amber-200',
       text: 'text-amber-700',
+      bar: 'bg-amber-500',
       icon: 'text-amber-600',
     },
     red: {
       bg: 'bg-red-50',
       border: 'border-red-200',
       text: 'text-red-700',
+      bar: 'bg-red-500',
       icon: 'text-red-600',
     },
     sky: {
       bg: 'bg-sky-50',
       border: 'border-sky-200',
       text: 'text-sky-700',
+      bar: 'bg-sky-500',
       icon: 'text-sky-600',
     },
   };
@@ -54,16 +59,24 @@ function StatCard({ label, value, total, icon: Icon, color }: StatCardProps) {
   const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
 
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} p-4`}>
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className={`text-xs font-bold ${c.text}`}>{label}</p>
-          <p className={`text-3xl font-black ${c.text} mt-1`}>{value}</p>
-          <p className={`text-[10px] font-semibold ${c.text} opacity-70 mt-0.5`}>
-            {percentage}% من {total}
-          </p>
-        </div>
-        <Icon className={`w-6 h-6 ${c.icon} opacity-70`} />
+    <div className={`rounded-xl border ${c.border} ${c.bg} p-4 flex flex-col justify-between`}>
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <p className={`text-sm font-bold ${c.text}`}>{label}</p>
+        <Icon className={`w-5 h-5 ${c.icon}`} />
+      </div>
+
+      <div className="flex items-baseline gap-2">
+        <p className={`text-3xl font-black ${c.text}`}>{value}</p>
+        <span className={`text-xs font-bold ${c.text} opacity-70`}>
+          ({percentage}%)
+        </span>
+      </div>
+
+      <div className="mt-3 w-full bg-white/50 rounded-full h-1.5 overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all ${c.bar}`}
+          style={{ width: `${percentage}%` }}
+        />
       </div>
     </div>
   );
