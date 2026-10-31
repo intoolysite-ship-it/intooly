@@ -31,7 +31,12 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-      { icon: Droplet, title: 'استخراج الألوان من الصور', description: 'اعرف أكواد HEX وRGB وHSL من أي صورة بدقة عالية.', href: '/tools/image-color-picker' },
+        {
+    icon: Palette,
+    title: 'مولد لوحات الألوان',
+    description: 'أنشئ لوحات ألوان متناسقة، استخرج الألوان من الصور، وافحص التباين.',
+    href: '/tools/color-palette-generator',
+  },{ icon: Droplet, title: 'استخراج الألوان من الصور', description: 'اعرف أكواد HEX وRGB وHSL من أي صورة بدقة عالية.', href: '/tools/image-color-picker' },
 { icon: ScanText, title: 'تحويل الصورة إلى نص', description: 'استخرج النصوص العربية والإنجليزية من الصور مجاناً باستخدام تقنية OCR.', href: '/tools/convert-image-to-text' },
 { icon: Scissors, title: 'إزالة خلفية الصور', description: 'أزل خلفية الصورة للحصول على خلفية شفافة.', href: '/tools/background-remover' },
   { icon: Archive, title: 'ضغط الصور', description: 'قلّل حجم ملفات الصور لتسهيل رفعها ومشاركتها.', href: '/tools/image-compressor' },
