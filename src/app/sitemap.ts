@@ -51,6 +51,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // أدوات الصور
     { path: '/tools/convert-image-to-text', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/color-palette-generator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
+  
     { path: '/tools/image-color-picker', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
   
   
