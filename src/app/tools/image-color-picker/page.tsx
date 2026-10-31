@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Upload, Copy, Image as ImageIcon, 
-  Trash2, ArrowLeft, Droplet, Palette
+  Trash2, ArrowLeft, Droplet, Check
 } from 'lucide-react';
 
-type ColorData = { hex: string; count: number };
+type ColorData = { hex: string; count: number; rgb: {r:number;g:number;b:number} };
 
 export default function ImageColorPickerPage() {
   const [image, setImage] = useState<File | null>(null);
@@ -15,80 +15,114 @@ export default function ImageColorPickerPage() {
   const [dominantColor, setDominantColor] = useState<ColorData | null>(null);
   const [colorPalette, setColorPalette] = useState<ColorData[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [copiedHex, setCopiedHex] = useState<string | null>(null);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // تحميل الصورة واستخراج الألوان تلقائياً
   useEffect(() => {
     if (imagePreview && canvasRef.current) {
       const img = new Image();
-      img.crossOrigin = "anonymous";
+      // ❌ إزالة crossOrigin - لا نحتاجه للملفات المحلية
       img.onload = () => {
         const canvas = canvasRef.current;
-        if (canvas) {
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0);
-            extractColors(ctx, canvas.width, canvas.height);
-          }
+        if (!canvas) return;
+        
+        // تحديد حجم معقول للـ canvas (لتسريع المعالجة)
+        const maxSize = 400;
+        const scale = Math.min(1, maxSize / Math.max(img.naturalWidth, img.naturalHeight));
+        canvas.width = Math.floor(img.naturalWidth * scale);
+        canvas.height = Math.floor(img.naturalHeight * scale);
+        
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          // استخراج الألوان بعد رسم الصورة
+          setTimeout(() => extractColors(ctx, canvas.width, canvas.height), 50);
         }
+      };
+      img.onerror = () => {
+        console.error('فشل تحميل الصورة');
       };
       img.src = imagePreview;
     }
   }, [imagePreview]);
 
   const rgbToHex = (r: number, g: number, b: number) => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toLowerCase();
+    return '#' + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+  };
+
+  // حساب المسافة بين لونين (Euclidean distance)
+  const colorDistance = (c1: {r:number;g:number;b:number}, c2: {r:number;g:number;b:number}) => {
+    return Math.sqrt(
+      Math.pow(c1.r - c2.r, 2) + 
+      Math.pow(c1.g - c2.g, 2) + 
+      Math.pow(c1.b - c2.b, 2)
+    );
   };
 
   const extractColors = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     setIsProcessing(true);
     
-    // قراءة البكسلات (تخطي بعض البكسلات للسرعة)
-    const step = Math.max(1, Math.floor(Math.min(width, height) / 200));
-    const colorMap = new Map<string, number>();
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const data = imageData.data;
     
-    for (let y = 0; y < height; y += step) {
-      for (let x = 0; x < width; x += step) {
-        const pixel = ctx.getImageData(x, y, 1, 1).data;
-        const r = Math.round(pixel[0] / 32) * 32;
-        const g = Math.round(pixel[1] / 32) * 32;
-        const b = Math.round(pixel[2] / 32) * 32;
-        const hex = rgbToHex(r, g, b);
-        colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
+    // تجميع الألوان المتشابهة (bucketing)
+    const colorMap = new Map<string, { hex: string; count: number; rgb: {r:number;g:number;b:number} }>();
+    const bucketSize = 16; // دقة التجميع
+    
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const a = data[i + 3];
+      
+      // تجاهل البكسلات الشفافة
+      if (a < 128) continue;
+      
+      // تجميع الألوان المتقاربة
+      const rb = Math.round(r / bucketSize) * bucketSize;
+      const gb = Math.round(g / bucketSize) * bucketSize;
+      const bb = Math.round(b / bucketSize) * bucketSize;
+      
+      const key = `${rb},${gb},${bb}`;
+      const hex = rgbToHex(rb, gb, bb);
+      
+      if (colorMap.has(key)) {
+        const existing = colorMap.get(key)!;
+        existing.count++;
+      } else {
+        colorMap.set(key, { hex, count: 1, rgb: { r: rb, g: gb, b: bb } });
       }
     }
 
-    // تحويل إلى مصفوفة وترتيب حسب التكرار
-    const sortedColors = Array.from(colorMap.entries())
-      .map(([hex, count]) => ({ hex, count }))
+    // ترتيب حسب التكرار
+    const sortedColors = Array.from(colorMap.values())
       .sort((a, b) => b.count - a.count);
 
-    // اللون المهيمن
+    // اللون المهيمن (الأكثر تكراراً)
     if (sortedColors.length > 0) {
       setDominantColor(sortedColors[0]);
     }
 
-    // لوحة الألوان - اختيار ألوان متنوعة
+    // بناء لوحة ألوان متنوعة (12 لون)
     const palette: ColorData[] = [];
-    const usedColors = new Set<string>();
+    const minDistance = 50; // الحد الأدنى للمسافة بين الألوان
     
     for (const color of sortedColors) {
       if (palette.length >= 12) break;
       
-      // التحقق من أن اللون مختلف بما يكفي
-      const isDifferent = !Array.from(usedColors).some(existing => {
-        const diff = Math.abs(parseInt(existing.slice(1, 3), 16) - parseInt(color.hex.slice(1, 3), 16)) +
-                     Math.abs(parseInt(existing.slice(3, 5), 16) - parseInt(color.hex.slice(3, 5), 16)) +
-                     Math.abs(parseInt(existing.slice(5, 7), 16) - parseInt(color.hex.slice(5, 7), 16));
-        return diff < 60;
-      });
+      // التحقق من أن اللون مختلف بما يكفي عن الألوان المختارة
+      const isDifferent = palette.every(existing => 
+        colorDistance(color.rgb, existing.rgb) > minDistance
+      );
 
       if (isDifferent) {
         palette.push(color);
-        usedColors.add(color.hex);
       }
     }
 
@@ -108,6 +142,8 @@ export default function ImageColorPickerPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+    setCopiedHex(text);
+    setTimeout(() => setCopiedHex(null), 1500);
   };
 
   const resetAll = () => {
@@ -135,7 +171,7 @@ export default function ImageColorPickerPage() {
                 استخراج الألوان من الصور مجانًا أونلاين
               </h1>
               <p className="mt-1 text-xs leading-6 text-brand-700 sm:text-sm">
-                احصل على أكواد HEX وRGB وHSL بدقة عالية من أي صورة. أداة Image Color Picker من Intooly تعمل محلياً في متصفحك لضمان الخصوصية والسرعة.
+                احصل على أكواد HEX بدقة عالية من أي صورة. أداة Image Color Picker من Intooly تعمل محلياً في متصفحك لضمان الخصوصية والسرعة.
               </p>
             </div>
           </div>
@@ -189,7 +225,11 @@ export default function ImageColorPickerPage() {
                         className="p-2 hover:bg-ink-100 rounded-lg transition"
                         title="نسخ"
                       >
-                        <Copy className="w-5 h-5 text-brand-600" />
+                        {copiedHex === dominantColor.hex ? (
+                          <Check className="w-5 h-5 text-green-600" />
+                        ) : (
+                          <Copy className="w-5 h-5 text-brand-600" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -199,24 +239,36 @@ export default function ImageColorPickerPage() {
                 {colorPalette.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-sm font-bold text-ink-900 text-center">لوحة الألوان</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {colorPalette.map((color, i) => (
                         <div key={i} className="flex items-center gap-2 bg-ink-50 p-2 rounded-lg">
-                          <span className="text-xs font-mono font-bold text-ink-900 w-16 truncate">{color.hex}</span>
                           <div 
-                            className="flex-1 h-10 rounded-lg border border-ink-200 shadow-sm"
+                            className="w-12 h-10 rounded-lg border border-ink-200 shadow-sm flex-shrink-0"
                             style={{ backgroundColor: color.hex }}
                           ></div>
+                          <span className="flex-1 text-xs font-mono font-bold text-ink-900 truncate">{color.hex}</span>
                           <button 
                             onClick={() => copyToClipboard(color.hex)}
                             className="p-1.5 hover:bg-ink-200 rounded-md transition"
                             title="نسخ"
                           >
-                            <Copy className="w-4 h-4 text-brand-600" />
+                            {copiedHex === color.hex ? (
+                              <Check className="w-4 h-4 text-green-600" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-brand-600" />
+                            )}
                           </button>
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* حالة المعالجة */}
+                {isProcessing && (
+                  <div className="text-center py-4">
+                    <div className="inline-block w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-xs text-ink-600 mt-2">جارٍ استخراج الألوان...</p>
                   </div>
                 )}
 
@@ -248,57 +300,17 @@ export default function ImageColorPickerPage() {
           <article className="mb-8">
             <h2 className="text-xl md:text-2xl font-black mb-3 text-right text-ink-900">ما هي أداة استخراج الألوان من الصور؟</h2>
             <p className="text-sm leading-relaxed mb-3 text-ink-700 text-right">
-              أداة استخراج الألوان من الصور من Intooly هي أداة مجانية عبر الإنترنت تساعدك على معرفة أكواد الألوان الموجودة داخل أي صورة بسهولة ودقة. يمكنك رفع صورة من جهازك، ثم تحديد أي نقطة فيها لمعرفة اللون المستخدم والحصول على كوده بصيغ متعددة، مثل HEX وRGB وHSL.
-            </p>
-            <p className="text-sm leading-relaxed text-ink-700 text-right">
-              سواء كنت مصمم جرافيك، أو مطور مواقع، أو مصمم واجهات مستخدم، يمكنك استخدام أداة Image Color Picker للتعرف على الألوان التي تحتاج إليها دون البحث عنها يدويًا أو تثبيت برامج تصميم متخصصة.
+              أداة استخراج الألوان من الصور من Intooly هي أداة مجانية عبر الإنترنت تساعدك على معرفة أكواد الألوان الموجودة داخل أي صورة بسهولة ودقة. يمكنك رفع صورة من جهازك، ثم تحديد أي نقطة فيها لمعرفة اللون المستخدم والحصول على كوده بصيغة HEX.
             </p>
           </article>
 
           <article className="mb-8">
-            <h2 className="text-xl md:text-2xl font-black mb-4 text-right text-ink-900">كيفية استخراج كود اللون من الصورة؟</h2>
+            <h2 className="text-xl md:text-2xl font-black mb-4 text-center text-ink-900">الأسئلة الشائعة</h2>
             <div className="space-y-3">
               {[
-                { step: '1', title: 'ارفع الصورة', desc: 'اختر الصورة من جهازك باستخدام زر رفع الصور (JPG, PNG, WEBP).' },
-                { step: '2', title: 'حدد اللون', desc: 'انقر على النقطة التي تحتوي على اللون المطلوب.' },
-                { step: '3', title: 'احصل على الكود', desc: 'تعرض الأداة كود اللون بصيغة HEX وقيم RGB وHSL فوراً.' },
-                { step: '4', title: 'انسخ واستخدم', desc: 'انسخ الكود إلى مشروعك، أو أضفه إلى لوحة الألوان لتصديره لاحقاً.' }
-              ].map((item, i) => (
-                <div key={i} className="flex gap-3 items-start bg-white p-3 rounded-xl border border-ink-200">
-                  <div className="w-8 h-8 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 text-sm">{item.step}</div>
-                  <div>
-                    <h3 className="font-bold text-ink-900 mb-1 text-sm">{item.title}</h3>
-                    <p className="text-xs text-ink-600">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <article className="mb-8">
-            <h2 className="text-xl md:text-2xl font-black mb-4 text-right text-ink-900">ما صيغ أكواد الألوان التي يمكنك استخراجها؟</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                { title: 'كود HEX', desc: 'صيغة مكونة من 6 أحرف وأرقام (مثل #EA580C)، وهي الأشهر في تصميم المواقع وملفات CSS.' },
-                { title: 'صيغة RGB', desc: 'تعتمد على ثلاثة مكونات (أحمر، أخضر، أزرق) تتراوح قيمتها بين 0 و255 (مثل rgb(234, 88, 12)).' },
-                { title: 'صيغة HSL', desc: 'تعبر عن درجة اللون (Hue)، والتشبع (Saturation)، والإضاءة (Lightness)، مما يسهل تعديل درجات اللون.' }
-              ].map((item, i) => (
-                <div key={i} className="bg-white border border-ink-200 rounded-xl p-4 text-right shadow-sm">
-                  <h3 className="font-bold text-sm mb-2 text-brand-600">{item.title}</h3>
-                  <p className="text-xs text-ink-600 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <article className="mb-8">
-            <h2 className="text-xl md:text-2xl font-black mb-4 text-center text-ink-900">الأسئلة الشائعة حول استخراج الألوان</h2>
-            <div className="space-y-3">
-              {[
-                { q: 'كيف أستخرج الألوان من الصور أونلاين؟', a: 'ارفع الصورة إلى الأداة، ثم انقر على النقطة التي تحتوي على اللون المطلوب. ستظهر قيمة اللون، ويمكنك نسخ الكود واستخدامه فوراً.' },
-                { q: 'هل يمكن استخراج RGB و HEX من الصورة؟', a: 'نعم، توفر الأداة أكواد HEX وقيم RGB و HSL بشكل تلقائي ودقيق عند النقر على أي بكسل في الصورة.' },
-                { q: 'هل تعمل الأداة على الهاتف؟', a: 'نعم، الأداة متوافقة تماماً مع متصفحات الهواتف الذكية وتدعم اللمس لتحديد الألوان بدقة.' },
-                { q: 'هل الصور آمنة ولا يتم رفعها؟', a: 'نعم، تتم جميع عمليات معالجة الصور واستخراج الألوان محلياً داخل متصفحك باستخدام تقنيات الويب الحديثة، ولا يتم إرسال أي صورة إلى خوادمنا.' }
+                { q: 'كيف أستخرج الألوان من الصور أونلاين؟', a: 'ارفع الصورة إلى الأداة، وستقوم تلقائياً باستخراج اللون المهيمن ولوحة من 12 لون مميز مع أكواد HEX.' },
+                { q: 'هل تعمل الأداة على الهاتف؟', a: 'نعم، الأداة متوافقة تماماً مع متصفحات الهواتف الذكية.' },
+                { q: 'هل الصور آمنة ولا يتم رفعها؟', a: 'نعم، تتم جميع العمليات محلياً داخل متصفحك، ولا يتم إرسال أي صورة إلى خوادمنا.' }
               ].map((faq, i) => (
                 <details key={i} className="bg-white border border-ink-200 rounded-xl overflow-hidden group">
                   <summary className="p-3 cursor-pointer font-bold text-ink-900 flex justify-between items-center text-sm">
