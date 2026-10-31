@@ -47,3 +47,14 @@ public/models/*.onnx
 
 # Package backups
 package.json.backup*
+
+# Build output
+out/
+.next/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.tmp
+*.before-*
