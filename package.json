@@ -59,6 +59,9 @@
     "typescript": "^5"
   },
   "overrides": {
-    "minimatch": "^11.0.1"
+    "minimatch": "^11.0.1",
+    "sharp": "0.35.5",
+    "image-size": "2.0.3",
+    "postcss-selector-parser": "6.1.5"
   }
 }
