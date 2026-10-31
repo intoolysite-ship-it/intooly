@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
@@ -8,14 +8,15 @@ import {
   ChevronDown, Trash2, CheckCircle2, Wand2,
   Loader2, AlertCircle, FileArchive, Film, Gauge,
   Maximize2, RotateCcw, RefreshCw, ArrowRightLeft
-
 } from 'lucide-react';
 import { saveAs } from 'file-saver';
 
 // ============================================================
 // ✅ الأنواع
 // ============================================================
-type VideoFormat = 'mp4' | 'webm' | 'mov' | 'mkv' | 'avi';
+type VideoFormat =
+  | 'mp4' | 'webm' | 'mov' | 'mkv' | 'avi'
+  | 'gif' | 'mpeg' | 'ts' | 'flv' | 'vob' | 'wmv';
 type QualityPreset = 'high' | 'medium' | 'low';
 
 type VideoState = {
@@ -37,11 +38,17 @@ type VideoState = {
 // ✅ الثوابت
 // ============================================================
 const FORMATS: { id: VideoFormat; name: string; desc: string; icon: string; mime: string }[] = [
-  { id: 'mp4', name: 'MP4', desc: 'الأكثر توافقاً', icon: '🎬', mime: 'video/mp4' },
-  { id: 'webm', name: 'WebM', desc: 'للويب (VP8)', icon: '🌐', mime: 'video/webm' },
-  { id: 'mov', name: 'MOV', desc: 'لآبل', icon: '🍎', mime: 'video/quicktime' },
-  { id: 'mkv', name: 'MKV', desc: 'جودة عالية', icon: '📦', mime: 'video/x-matroska' },
-  { id: 'avi', name: 'AVI', desc: 'قديم', icon: '📼', mime: 'video/x-msvideo' },
+  { id: 'mp4',  name: 'MP4',  desc: 'الأكثر توافقاً', icon: '🎬', mime: 'video/mp4' },
+  { id: 'webm', name: 'WebM', desc: 'للويب (VP8)',   icon: '🌐', mime: 'video/webm' },
+  { id: 'mov',  name: 'MOV',  desc: 'لآبل',          icon: '🍎', mime: 'video/quicktime' },
+  { id: 'mkv',  name: 'MKV',  desc: 'جودة عالية',   icon: '📦', mime: 'video/x-matroska' },
+  { id: 'avi',  name: 'AVI',  desc: 'قديم',          icon: '📼', mime: 'video/x-msvideo' },
+  { id: 'gif',  name: 'GIF',  desc: 'صور متحركة',   icon: '🎞️', mime: 'image/gif' },
+  { id: 'mpeg', name: 'MPEG', desc: 'MPEG-2',        icon: '📹', mime: 'video/mpeg' },
+  { id: 'ts',   name: 'TS',   desc: 'بث مباشر',     icon: '📡', mime: 'video/mp2t' },
+  { id: 'flv',  name: 'FLV',  desc: 'Flash',         icon: '🔷', mime: 'video/x-flv' },
+  { id: 'vob',  name: 'VOB',  desc: 'DVD',           icon: '💿', mime: 'video/dvd' },
+  { id: 'wmv',  name: 'WMV',  desc: 'Windows Media', icon: '🪟', mime: 'video/x-ms-wmv' },
 ];
 
 const QUALITY_PRESETS: { id: QualityPreset; name: string; desc: string; crf: number; icon: string }[] = [
@@ -50,7 +57,6 @@ const QUALITY_PRESETS: { id: QualityPreset; name: string; desc: string; crf: num
   { id: 'low', name: 'منخفضة', desc: 'حجم أصغر', crf: 28, icon: '🗜️' },
 ];
 
-// ✅ استخدام الملفات المحلية (أسرع وأكثر موثوقية)
 const LOCAL_FFMPEG_BASE = '/assets/ffmpeg';
 
 // ============================================================
@@ -84,14 +90,13 @@ export default function VideoConverterPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // ===== Toast =====
   const showToast = useCallback((message: string, isError = false) => {
     setToast({ message, visible: true, isError });
     setTimeout(() => setToast({ message: '', visible: false, isError: false }), 3500);
   }, []);
 
   // ============================================================
-  // ✅ تحميل FFmpeg — من الملفات المحلية
+  // ✅ تحميل FFmpeg
   // ============================================================
   const loadFFmpeg = useCallback(async (signal?: AbortSignal) => {
     if (ffmpegRef.current) return ffmpegRef.current;
@@ -101,21 +106,17 @@ export default function VideoConverterPage() {
 
     try {
       const { FFmpeg } = await import('@ffmpeg/ffmpeg');
-
       let lastError: Error | null = null;
 
       try {
         if (signal?.aborted) throw new Error('تم الإلغاء');
-
         console.log('[FFmpeg] تحميل من الملفات المحلية...');
-
         const ffmpeg = new FFmpeg();
 
         ffmpeg.on('progress', ({ progress }: { progress: number }) => {
           setVideo(prev => ({ ...prev, progress: Math.round(progress * 100) }));
         });
 
-                // ✅ استخدام URL مطلق (Absolute URL) — يمنع مشكلة file://
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
         await ffmpeg.load({
@@ -313,7 +314,6 @@ export default function VideoConverterPage() {
 
     try {
       const ffmpeg = await loadFFmpeg(signal);
-
       if (signal.aborted) return;
 
       const { fetchFile } = await import('@ffmpeg/util');
@@ -334,49 +334,50 @@ export default function VideoConverterPage() {
       }
 
       if (targetFormat === 'mp4') {
-        args.push('-c:v', 'libx264');
-        args.push('-crf', String(crf));
-        args.push('-preset', 'fast');
-        args.push('-c:a', 'aac');
-        args.push('-b:a', '128k');
+        args.push('-c:v', 'libx264', '-crf', String(crf), '-preset', 'fast');
+        args.push('-c:a', 'aac', '-b:a', '128k');
         args.push('-movflags', '+faststart');
       } else if (targetFormat === 'webm') {
-        args.push('-c:v', 'libvpx');
-        args.push('-b:v', '1M');
-        args.push('-maxrate', '2M');
-        args.push('-bufsize', '4M');
-        args.push('-deadline', 'realtime');
-        args.push('-cpu-used', '5');
-        args.push('-c:a', 'libvorbis');
-        args.push('-b:a', '128k');
+        args.push('-c:v', 'libvpx', '-b:v', '1M', '-maxrate', '2M', '-bufsize', '4M');
+        args.push('-deadline', 'realtime', '-cpu-used', '5');
+        args.push('-c:a', 'libvorbis', '-b:a', '128k');
       } else if (targetFormat === 'mov') {
-        args.push('-c:v', 'libx264');
-        args.push('-crf', String(crf));
-        args.push('-preset', 'fast');
-        args.push('-c:a', 'aac');
-        args.push('-b:a', '128k');
+        args.push('-c:v', 'libx264', '-crf', String(crf), '-preset', 'fast');
+        args.push('-c:a', 'aac', '-b:a', '128k');
       } else if (targetFormat === 'mkv') {
-        args.push('-c:v', 'libx264');
-        args.push('-crf', String(crf));
-        args.push('-preset', 'fast');
-        args.push('-c:a', 'aac');
-        args.push('-b:a', '128k');
+        args.push('-c:v', 'libx264', '-crf', String(crf), '-preset', 'fast');
+        args.push('-c:a', 'aac', '-b:a', '128k');
       } else if (targetFormat === 'avi') {
-        args.push('-c:v', 'mpeg4');
-        args.push('-q:v', '5');
-        args.push('-c:a', 'libmp3lame');
-        args.push('-b:a', '128k');
+        args.push('-c:v', 'mpeg4', '-q:v', '5');
+        args.push('-c:a', 'libmp3lame', '-b:a', '128k');
+      } else if (targetFormat === 'gif') {
+        args.length = 0;
+        args.push('-i', inputName);
+        args.push('-vf', 'fps=10,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse');
+        args.push('-loop', '0');
+      } else if (targetFormat === 'mpeg') {
+        args.push('-c:v', 'mpeg2video', '-q:v', '5');
+        args.push('-c:a', 'mp2', '-b:a', '192k');
+      } else if (targetFormat === 'ts') {
+        args.push('-c:v', 'mpeg2video', '-q:v', '5');
+        args.push('-c:a', 'mp2', '-b:a', '192k');
+        args.push('-f', 'mpegts');
+      } else if (targetFormat === 'flv') {
+        args.push('-c:v', 'libx264', '-crf', String(crf), '-preset', 'fast');
+        args.push('-c:a', 'aac', '-b:a', '128k');
+      } else if (targetFormat === 'vob') {
+        args.push('-c:v', 'mpeg2video', '-q:v', '5');
+        args.push('-c:a', 'mp2', '-b:a', '192k');
+      } else if (targetFormat === 'wmv') {
+        args.push('-c:v', 'msmpeg4v2', '-q:v', '5');
+        args.push('-c:a', 'wmav2', '-b:a', '128k');
       }
 
-      args.push('-threads', '1');
-      args.push('-max_muxing_queue_size', '1024');
-
+      args.push('-threads', '1', '-max_muxing_queue_size', '1024');
       args.push(outputName);
 
       console.log('[FFmpeg] الأمر:', args.join(' '));
-
       await ffmpeg.exec(args);
-
       if (signal.aborted) return;
 
       const data = await ffmpeg.readFile(outputName);
@@ -406,14 +407,10 @@ export default function VideoConverterPage() {
       let errorMessage = 'فشل التحويل';
       if (error instanceof Error) {
         if (error.message.includes('memory access out of bounds')) {
-          console.log('[FFmpeg] إعادة تعيين بعد نفاد الذاكرة...');
-          try {
-            ffmpegRef.current?.terminate?.();
-          } catch {}
+          try { ffmpegRef.current?.terminate?.(); } catch {}
           ffmpegRef.current = null;
           setFfmpegLoaded(false);
-
-          errorMessage = '❌ الذاكرة غير كافية.\n\nالحلول:\n• اختر "أقصى دقة" 480p\n• جودة "منخفضة"\n• جرب MP4 بدل WebM (أخف بكثير)\n• استخدم فيديو أصغر';
+          errorMessage = '❌ الذاكرة غير كافية.\n\nالحلول:\n• اختر "أقصى دقة" 480p\n• جودة "منخفضة"\n• جرب MP4 بدل WebM\n• استخدم فيديو أصغر';
         } else if (error.message.includes('Aborted')) {
           errorMessage = 'تم إلغاء العملية';
         } else {
@@ -421,11 +418,7 @@ export default function VideoConverterPage() {
         }
       }
 
-      setVideo(prev => ({
-        ...prev,
-        status: 'error',
-        errorMessage,
-      }));
+      setVideo(prev => ({ ...prev, status: 'error', errorMessage }));
       showToast('❌ فشل تحويل الفيديو', true);
     } finally {
       abortControllerRef.current = null;
@@ -437,11 +430,10 @@ export default function VideoConverterPage() {
   // ============================================================
   const downloadVideo = async () => {
     if (!video.convertedUrl) return;
-
     try {
       const response = await fetch(video.convertedUrl);
       const blob = await response.blob();
-      saveAs(blob, `converted_${video.file?.name.replace(/\.[^.]+$/, '')}_intoooly.${targetFormat}`);
+      saveAs(blob, `converted_${video.file?.name.replace(/\.[^.]+$/, '')}_intooly.${targetFormat}`);
       showToast('✅ بدأ التنزيل');
     } catch (e) {
       console.error('Download error:', e);
@@ -476,7 +468,6 @@ export default function VideoConverterPage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${bgClass}`} dir="rtl">
-      {/* Toast */}
       {toast.visible && (
         <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full font-semibold shadow-2xl z-50 max-w-lg text-center ${
           toast.isError ? 'bg-red-600 text-white' : 'bg-ink-900 text-white'
@@ -513,7 +504,7 @@ export default function VideoConverterPage() {
                 تحويل صيغ الفيديو
               </h1>
               <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
-                حوّل فيديوهاتك بين MP4, WebM, MOV, MKV, AVI — FFmpeg.wasm، محلياً 100%، بدون رفع.
+                حوّل فيديوهاتك بين 11 صيغة — FFmpeg.wasm، محلياً 100%، بدون رفع.
               </p>
             </div>
           </div>
@@ -525,7 +516,7 @@ export default function VideoConverterPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-5xl mx-auto">
             {[
-              { icon: '🔄', title: '5 صيغ', desc: 'MP4, WebM, MOV, MKV, AVI' },
+              { icon: '🔄', title: '11 صيغة', desc: 'MP4, WebM, MOV, MKV, AVI + 6' },
               { icon: '🔒', title: 'محلي 100%', desc: 'فيديوهاتك لا ترفع' },
               { icon: '🎬', title: 'FFmpeg.wasm', desc: 'تحويل احترافي' },
               { icon: '⚡', title: '3 جودات', desc: 'عالية، متوسطة، منخفضة' },
@@ -553,7 +544,7 @@ export default function VideoConverterPage() {
                 >
                   <Upload className="w-12 h-12 md:w-16 md:h-16 text-brand-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
                   <h3 className="text-xl md:text-2xl font-black mb-2 text-ink-900">اختر فيديو لتحويله</h3>
-                  <p className={`text-xs md:text-sm ${textClass}`}>MP4, MOV, MKV, WebM, AVI — حتى 500 MB</p>
+                  <p className={`text-xs md:text-sm ${textClass}`}>MP4, MOV, MKV, WebM, AVI + 6 صيغ إضافية — حتى 500 MB</p>
                 </div>
                 <input ref={fileInputRef} type="file" accept="video/*" onChange={handleFileSelect} className="hidden" />
 
@@ -576,24 +567,15 @@ export default function VideoConverterPage() {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
 
-                {/* ========== RIGHT: Video Preview ========== */}
                 <div className="space-y-4 lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto lg:pr-2">
                   <div className={`${cardClass} border rounded-2xl overflow-hidden`}>
                     <div className="p-3 border-b border-ink-200/20 flex items-center justify-between gap-2">
                       <h3 className="font-bold text-sm truncate flex-1 text-ink-900">{video.file.name}</h3>
                       <div className="flex items-center gap-1">
-                        <button
-                          onClick={loadNewVideo}
-                          className="p-1.5 hover:bg-brand-100 rounded-lg transition"
-                          title="تحميل فيديو جديد"
-                        >
+                        <button onClick={loadNewVideo} className="p-1.5 hover:bg-brand-100 rounded-lg transition" title="تحميل فيديو جديد">
                           <RefreshCw className="w-4 h-4 text-brand-500" />
                         </button>
-                        <button
-                          onClick={loadNewVideo}
-                          className="p-1.5 hover:bg-red-100 rounded-lg transition"
-                          title="حذف"
-                        >
+                        <button onClick={loadNewVideo} className="p-1.5 hover:bg-red-100 rounded-lg transition" title="حذف">
                           <Trash2 className="w-4 h-4 text-red-500" />
                         </button>
                       </div>
@@ -672,10 +654,7 @@ export default function VideoConverterPage() {
 
                     {video.status === 'done' && video.convertedUrl && (
                       <div className="px-3 pb-3">
-                        <button
-                          onClick={downloadVideo}
-                          className="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-lg text-sm flex items-center justify-center gap-2"
-                        >
+                        <button onClick={downloadVideo} className="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-lg text-sm flex items-center justify-center gap-2">
                           <Download className="w-4 h-4" /> تحميل الفيديو المحوّل ({targetFormat.toUpperCase()})
                         </button>
                       </div>
@@ -683,147 +662,132 @@ export default function VideoConverterPage() {
                   </div>
                 </div>
 
-                {/* ========== LEFT: Settings ========== */}
                 <div className="space-y-4">
                   <div className={`${cardClass} border rounded-2xl p-4`}>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-bold text-lg flex items-center gap-2 text-ink-900">
-                        <Sparkles className="w-5 h-5 text-brand-500" /> إعدادات التحويل
+                        <Wand2 className="w-5 h-5 text-brand-500" />
+                        إعدادات التحويل
                       </h3>
-                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-                        ⚡ فوري
-                      </span>
+                      <button 
+                        onClick={() => {
+                          setQuality('medium');
+                          setMaxResolution(720);
+                          setTargetFormat('mp4');
+                          showToast('✅ تمت إعادة تعيين الإعدادات');
+                        }}
+                        className="text-xs text-brand-600 hover:text-brand-800 flex items-center gap-1 font-bold"
+                      >
+                        <RotateCcw className="w-3 h-3" /> إعادة تعيين
+                      </button>
                     </div>
 
-                    <div className="mb-4">
-                      <label className="text-sm font-bold mb-2 block text-ink-900">الصيغة الهدف</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {FORMATS.map((f) => (
-                          <button
-                            key={f.id}
-                            onClick={() => setTargetFormat(f.id)}
-                            disabled={video.originalFormat === f.id}
-                            className={`p-3 rounded-xl border-2 text-center transition-all ${
-                              targetFormat === f.id
-                                ? 'border-brand-500 bg-brand-50 shadow-md'
-                                : video.originalFormat === f.id
-                                ? 'border-ink-200 opacity-50 cursor-not-allowed'
-                                : 'border-ink-200'
-                            }`}
-                          >
-                            <div className="text-2xl mb-1">{f.icon}</div>
-                            <p className="text-xs font-bold text-ink-900">{f.name}</p>
-                            <p className="text-[10px] text-ink-500 mt-0.5">{f.desc}</p>
-                          </button>
-                        ))}
+                    <div className="space-y-5">
+                      {/* الصيغة الهدف */}
+                      <div>
+                        <label className="text-sm font-bold mb-2 flex items-center gap-2 text-ink-900">
+                          <ArrowRightLeft className="w-4 h-4 text-brand-500" />
+                          الصيغة الهدف
+                        </label>
+                        <select
+                          value={targetFormat}
+                          onChange={(e) => setTargetFormat(e.target.value as VideoFormat)}
+                          className="w-full p-3 rounded-xl border-2 border-ink-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm font-bold text-ink-900 bg-white transition-all cursor-pointer"
+                        >
+                          {FORMATS.map((f) => (
+                            <option
+                              key={f.id}
+                              value={f.id}
+                              disabled={video.originalFormat === f.id}
+                            >
+                              {f.icon} {f.name} — {f.desc}
+                              {video.originalFormat === f.id ? ' (نفس صيغة الأصل)' : ''}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-[10px] text-ink-500 mt-1.5">
+                          💡 الصيغة الحالية للفيديو: <strong>{video.originalFormat?.toUpperCase()}</strong>
+                        </p>
                       </div>
-                    </div>
 
-                    <div className="mb-4">
-                      <label className="text-sm font-bold mb-2 flex items-center gap-2 text-ink-900">
-                        <Gauge className="w-4 h-4 text-brand-500" /> الجودة
-                      </label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {QUALITY_PRESETS.map((q) => (
-                          <button
-                            key={q.id}
-                            onClick={() => setQuality(q.id)}
-                            className={`p-3 rounded-xl border-2 text-center transition-all ${
-                              quality === q.id
-                                ? 'border-brand-500 bg-brand-50'
-                                : 'border-ink-200'
-                            }`}
-                          >
-                            <div className="text-xl mb-1">{q.icon}</div>
-                            <p className="text-xs font-bold text-ink-900">{q.name}</p>
-                            <p className="text-[10px] text-ink-500 mt-0.5">{q.desc}</p>
-                          </button>
-                        ))}
+                      {/* الجودة */}
+                      <div>
+                        <label className="text-sm font-bold mb-2 flex items-center gap-2 text-ink-900">
+                          <Gauge className="w-4 h-4 text-brand-500" />
+                          الجودة
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {QUALITY_PRESETS.map((q) => (
+                            <button
+                              key={q.id}
+                              onClick={() => setQuality(q.id)}
+                              className={`p-3 rounded-xl border-2 text-center transition-all ${
+                                quality === q.id
+                                  ? 'border-brand-500 bg-brand-50 shadow-md'
+                                  : 'border-ink-200 hover:border-brand-300'
+                              }`}
+                            >
+                              <div className="text-xl mb-1">{q.icon}</div>
+                              <p className="text-xs font-bold text-ink-900">{q.name}</p>
+                              <p className="text-[10px] text-ink-500 mt-0.5">{q.desc}</p>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="mb-4">
-                      <label className="text-sm font-bold mb-2 flex items-center gap-2 text-ink-900">
-                        <Maximize2 className="w-4 h-4 text-brand-500" /> أقصى دقة (اختياري)
-                      </label>
-                      <div className="grid grid-cols-4 gap-1">
-                        {[
-                          { val: null, label: 'أصلي' },
-                          { val: 1080, label: '1080p' },
-                          { val: 720, label: '720p' },
-                          { val: 480, label: '480p' },
-                        ].map((opt) => (
-                          <button
-                            key={String(opt.val)}
-                            onClick={() => setMaxResolution(opt.val)}
-                            className={`p-2 rounded-lg border-2 text-xs font-bold transition-all ${
-                              maxResolution === opt.val
-                                ? 'border-brand-500 bg-brand-50'
-                                : 'border-ink-200'
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
+                      {/* الدقة */}
+                      <div>
+                        <label className="text-sm font-bold mb-2 flex items-center gap-2 text-ink-900">
+                          <Maximize2 className="w-4 h-4 text-brand-500" />
+                          أقصى دقة
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {[
+                            { val: 1080, label: '1080p', desc: 'Full HD' },
+                            { val: 720, label: '720p', desc: 'HD' },
+                            { val: 480, label: '480p', desc: 'SD' },
+                          ].map((res) => (
+                            <button
+                              key={res.val}
+                              onClick={() => setMaxResolution(res.val)}
+                              className={`p-3 rounded-xl border-2 text-center transition-all ${
+                                maxResolution === res.val
+                                  ? 'border-brand-500 bg-brand-50 shadow-md'
+                                  : 'border-ink-200 hover:border-brand-300'
+                              }`}
+                            >
+                              <p className="text-sm font-bold text-ink-900">{res.label}</p>
+                              <p className="text-[10px] text-ink-500 mt-0.5">{res.desc}</p>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <p className="text-[10px] text-ink-500 mt-1">
-                        💡 إذا واجهت خطأ "memory out of bounds"، اختر 720p أو 480p
-                      </p>
-                    </div>
 
-                    <button
-                      onClick={() => {
-                        setTargetFormat('mp4');
-                        setQuality('medium');
-                        setMaxResolution(720);
-                      }}
-                      className="w-full py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 bg-ink-100 hover:bg-ink-200 text-ink-700"
-                    >
-                      <RotateCcw className="w-4 h-4" /> إعادة الإعدادات
-                    </button>
+                      {/* زر التحويل */}
+                      <button
+                        onClick={convertVideo}
+                        disabled={video.status === 'converting' || video.status === 'loading-ffmpeg' || video.originalFormat === targetFormat}
+                        className="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-200 transition-all flex items-center justify-center gap-2 text-lg"
+                      >
+                        {video.status === 'loading-ffmpeg' ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            جارٍ تحميل المحرك...
+                          </>
+                        ) : video.status === 'converting' ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            جارٍ التحويل... {video.progress}%
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="w-5 h-5" />
+                            ابدأ التحويل
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <button
-                      onClick={convertVideo}
-                      disabled={video.status === 'converting' || video.status === 'loading-ffmpeg' || video.originalFormat === targetFormat}
-                      className="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-ink-300 disabled:to-ink-400 text-white font-black rounded-xl text-base flex items-center justify-center gap-2 shadow-lg shadow-brand-500/30 transition-all"
-                    >
-                      {video.status === 'loading-ffmpeg' ? (
-                        <><Loader2 className="w-5 h-5 animate-spin" /> تحميل FFmpeg...</>
-                      ) : video.status === 'converting' ? (
-                        <><Loader2 className="w-5 h-5 animate-spin" /> جاري التحويل... {video.progress}%</>
-                      ) : video.status === 'done' ? (
-                        <><CheckCircle2 className="w-5 h-5" /> تم التحويل — جرب صيغة أخرى</>
-                      ) : (
-                        <><ArrowRightLeft className="w-5 h-5" /> ابدأ التحويل</>
-                      )}
-                    </button>
-
-                    <button
-                      onClick={loadNewVideo}
-                      className="w-full py-3 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      تحميل فيديو جديد
-                    </button>
-                  </div>
-
-                  {!ffmpegLoaded && !ffmpegLoading && (
-                    <div className={`${cardClass} border rounded-xl p-3 text-xs ${textClass} flex items-start gap-2`}>
-                      <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-ink-900">ملاحظة:</strong> FFmpeg.wasm سيُحمّل عند أول تحويل (~30 MB) من الخادم المحلي.
-                      </span>
-                    </div>
-                  )}
-
-                  {ffmpegLoading && (
-                    <div className={`${cardClass} border rounded-xl p-3 text-xs bg-blue-50 text-blue-700 flex items-center gap-2`}>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>جاري تحميل FFmpeg (~30 MB)... انتظر قليلاً</span>
-                    </div>
-                  )}
                 </div>
               </div>
             )}
@@ -832,154 +796,92 @@ export default function VideoConverterPage() {
       </section>
 
       {/* ===== SEO CONTENT ===== */}
-      <section className="py-12 md:py-16 bg-white">
+      <section className="py-12 md:py-16 bg-ink-50">
         <div className="container mx-auto px-4 max-w-4xl">
           <article className="mb-12">
             <h2 className="text-2xl md:text-3xl font-black mb-4 text-right text-ink-900">
               ما هي أداة تحويل صيغ الفيديو؟
             </h2>
             <p className={`text-base leading-relaxed mb-4 ${textClass} text-right`}>
-              <strong>أداة تحويل صيغ الفيديو</strong> من intooly هي حل احترافي يعمل بالكامل في متصفحك
-              باستخدام <strong>FFmpeg.wasm</strong> — نسخة كاملة من FFmpeg مُترجمة إلى WebAssembly.
-              هذا يعني أن <strong>فيديوهاتك لا تُرفع إلى أي خادم</strong>، بل تُحوّل محلياً على جهازك.
-            </p>
-            <p className={`text-base leading-relaxed mb-4 ${textClass} text-right`}>
-              تدعم الأداة التحويل بين <strong>MP4</strong>، <strong>WebM</strong>، <strong>MOV</strong>،
-              <strong> MKV</strong>، و<strong> AVI</strong> — أشهر صيغ الفيديو في العالم.
+              أداة <strong>تحويل صيغ الفيديو</strong> هي حل احترافي يعمل بالكامل داخل متصفحك باستخدام تقنية 
+              <strong> WebAssembly</strong> ومكتبة <strong>FFmpeg.wasm</strong>. تتيح لك تحويل فيديوهاتك بين 
+              <strong> 11 صيغة مختلفة</strong> (بما في ذلك MP4, WebM, MOV, MKV, AVI, GIF, MPEG, TS, FLV, VOB, WMV) 
+              دون الحاجة لرفع الملفات إلى أي خادم خارجي، مما يضمن <strong>خصوصية وأماناً بنسبة 100%</strong>.
             </p>
           </article>
 
           <article className="mb-12">
             <h2 className="text-2xl md:text-3xl font-black mb-6 text-right text-ink-900">
-              الفرق بين صيغ الفيديو
+              لماذا تختار أداتنا؟
             </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-ink-300 rounded-lg text-right">
-                <thead className="bg-brand-100">
-                  <tr>
-                    <th className="border border-ink-300 p-3 text-xs md:text-sm font-bold">الصيغة</th>
-                    <th className="border border-ink-300 p-3 text-xs md:text-sm font-bold">التوافق</th>
-                    <th className="border border-ink-300 p-3 text-xs md:text-sm font-bold">الحجم</th>
-                    <th className="border border-ink-300 p-3 text-xs md:text-sm font-bold">الأفضل لـ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { f: 'MP4', c: 'عالمي', s: 'صغير', u: 'الويب، السوشيال ميديا' },
-                    { f: 'WebM', c: 'المتصفحات', s: 'صغير جداً', u: 'تضمين الويب' },
-                    { f: 'MOV', c: 'آبل', s: 'كبير', u: 'التحرير' },
-                    { f: 'MKV', c: 'سطح المكتب', s: 'متغير', u: 'الأرشفة' },
-                    { f: 'AVI', c: 'ويندوز قديم', s: 'كبير جداً', u: 'الأنظمة القديمة' },
-                  ].map((row, i) => (
-                    <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-ink-50'}>
-                      <td className="border border-ink-300 p-3 text-xs md:text-sm font-bold text-brand-600">{row.f}</td>
-                      <td className="border border-ink-300 p-3 text-xs md:text-sm">{row.c}</td>
-                      <td className="border border-ink-300 p-3 text-xs md:text-sm">{row.s}</td>
-                      <td className="border border-ink-300 p-3 text-xs md:text-sm">{row.u}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <article className="mb-12">
-            <h2 className="text-2xl md:text-3xl font-black mb-6 text-right text-ink-900">
-              الميزات الاحترافية
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { icon: '🔄', title: '5 صيغ مدعومة', desc: 'MP4, WebM, MOV, MKV, AVI' },
-                { icon: '🔒', title: 'خصوصية كاملة 100%', desc: 'فيديوهاتك لا تترك جهازك' },
-                { icon: '🎬', title: 'FFmpeg.wasm', desc: 'نفس FFmpeg الأصلي' },
-                { icon: '⚙️', title: '3 مستويات جودة', desc: 'عالية، متوسطة، منخفضة' },
-                { icon: '⚡', title: 'سريع', desc: 'يعمل محلياً بدون انتظار' },
-                { icon: '📱', title: 'جميع الأجهزة', desc: 'جوال، تابلت، كمبيوتر' },
-              ].map((f, i) => (
-                <div key={i} className={`${cardClass} border rounded-xl p-4 text-right`}>
-                  <div className="text-3xl mb-2">{f.icon}</div>
-                  <h3 className="font-bold text-sm mb-1 text-ink-900">{f.title}</h3>
-                  <p className={`text-xs ${textClass} leading-relaxed`}>{f.desc}</p>
+                { title: 'خصوصية تامة', desc: 'لا نرفع أي فيديو. كل المعالجة تتم على جهازك مباشرة.' },
+                { title: '11 صيغة مدعومة', desc: 'من MP4 الشائع إلى GIF المتحرك و VOB الخاص بـ DVD.' },
+                { title: 'تحكم كامل في الجودة', desc: 'اختر بين 3 مستويات جودة ودقة تصل إلى 1080p.' },
+                { title: 'مجاني وبدون حدود', desc: 'لا علامات مائية، لا تسجيل، لا حدود على عدد التحويلات.' },
+              ].map((item, i) => (
+                <div key={i} className={`${cardClass} border rounded-2xl p-5 text-right`}>
+                  <h3 className="font-bold text-base mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-brand-500" />
+                    {item.title}
+                  </h3>
+                  <p className={`text-sm ${textClass} leading-relaxed`}>{item.desc}</p>
                 </div>
               ))}
             </div>
           </article>
+        </div>
+      </section>
 
-          <article className="mb-12">
-            <h2 className="text-2xl md:text-3xl font-black mb-6 text-right text-ink-900">
-              كيفية تحويل صيغة الفيديو — 4 خطوات
-            </h2>
-            <div className="space-y-4">
-              {[
-                { num: 1, title: 'اختر الفيديو', desc: 'اسحب الفيديو أو انقر للاختيار. يدعم MP4, MOV, MKV, WebM, AVI.' },
-                { num: 2, title: 'اختر الصيغة الهدف', desc: 'MP4 للتوافق، WebM للويب، MOV لآبل، MKV للأرشفة، AVI للأنظمة القديمة.' },
-                { num: 3, title: 'اضبط الجودة والأبعاد', desc: 'اختر الجودة وأقصى دقة (للأداء الأفضل).' },
-                { num: 4, title: 'حمّل الفيديو', desc: 'حمّل الفيديو المحوّل بالصيغة المطلوبة.' },
-              ].map((step) => (
-                <div key={step.num} className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 text-white font-extrabold flex items-center justify-center shadow-lg">
-                    {step.num}
-                  </div>
-                  <div className="flex-1 text-right">
-                    <h3 className="font-extrabold text-base mb-1 text-ink-900">{step.title}</h3>
-                    <p className="text-sm text-ink-600 leading-relaxed">{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </article>
+      {/* ===== FAQ ===== */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-8 text-ink-900">الأسئلة الشائعة</h2>
+          <div className="space-y-3">
+            {[
+              { q: 'هل الأداة مجانية بالكامل؟', a: 'نعم، مجانية 100% وبدون أي حدود على عدد الفيديوهات.' },
+              { q: 'هل فيديوهاتي آمنة؟', a: 'بالتأكيد. لا نرفع أي ملف إلى خوادمنا. كل شيء يحدث محلياً في متصفحك.' },
+              { q: 'لماذا يستغرق التحويل وقتاً؟', a: 'يعتمد الوقت على حجم الفيديو ودقته وقوة جهازك. أول استخدام قد يأخذ 30 ثانية لتحميل محرك FFmpeg.' },
+              { q: 'ما هي أفضل صيغة للتحويل؟', a: 'MP4 هي الأكثر توافقاً مع جميع الأجهزة. WebM ممتازة للويب. GIF للصور المتحركة.' },
+              { q: 'هل يمكنني تحويل فيديو بدقة 4K؟', a: 'نعم، لكن قد يستغرق وقتاً أطول ويستهلك ذاكرة أكبر. ننصح بخفض الدقة إلى 1080p أو 720p للسرعة.' },
+            ].map((faq, i) => (
+              <details key={i} className={`${cardClass} border rounded-xl overflow-hidden group`}>
+                <summary className="p-5 cursor-pointer font-bold text-ink-900 flex justify-between items-center">
+                  {faq.q}
+                  <ChevronDown className="w-5 h-5 text-brand-500 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className={`px-5 pb-5 text-sm ${textClass} border-t border-ink-100 pt-3`}>{faq.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <article className="mb-12">
-            <h2 className="text-2xl md:text-3xl font-black mb-6 text-right text-ink-900">
-              الأسئلة الشائعة
-            </h2>
-            <div className="space-y-3">
-              {[
-                { q: 'هل الأداة مجانية بالكامل؟', a: 'نعم، مجانية 100% وبدون حدود على عدد الفيديوهات.' },
-                { q: 'هل فيديوهاتي آمنة؟', a: 'نعم 100%. كل المعالجة تتم محلياً في متصفحك باستخدام FFmpeg.wasm.' },
-                { q: 'ما الصيغ المدعومة؟', a: 'ندعم التحويل بين MP4، WebM، MOV، MKV، AVI.' },
-                { q: 'ما أفضل صيغة للتوافق؟', a: 'MP4 (H.264) — تعمل على جميع الأجهزة والمتصفحات والهواتف.' },
-                { q: 'ما الفرق بين MKV و MP4؟', a: 'MKV يدعم تعدد المسارات والجودة العالية، لكن توافقه أقل. MP4 أكثر توافقاً.' },
-                { q: 'لماذا أول تحويل يأخذ وقتاً؟', a: 'FFmpeg.wasm (~30 MB) يُحمّل مرة واحدة فقط.' },
-                { q: 'ظهر خطأ "memory out of bounds" — ما الحل؟', a: 'الذاكرة غير كافية. اختر "أقصى دقة" 720p أو 480p، وجودة "منخفضة". أو جرب MP4 بدل WebM.' },
-                { q: 'هل يعمل على الجوال؟', a: 'نعم، لكن الأداء يعتمد على قوة الجهاز. Chrome و Edge أفضل.' },
-              ].map((faq, i) => (
-                <details key={i} className={`${cardClass} border rounded-xl overflow-hidden group`}>
-                  <summary className="p-4 cursor-pointer font-bold flex justify-between items-center text-ink-900 hover:bg-brand-50 transition text-right">
-                    <span>{faq.q}</span>
-                    <ChevronDown className="w-5 h-5 text-brand-600 group-open:rotate-180 transition-transform flex-shrink-0" />
-                  </summary>
-                  <div className={`px-4 pb-4 text-sm ${textClass} border-t border-ink-100 pt-3 leading-relaxed text-right`}>
-                    {faq.a}
-                  </div>
-                </details>
-              ))}
-            </div>
-          </article>
-
-          <article>
-            <h2 className="text-2xl md:text-3xl font-black mb-6 text-right text-ink-900">
-              أدوات ذات صلة
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { icon: Film, title: 'ضغط الفيديو', href: '/tools/video-compressor', desc: 'قلّل حجم الفيديو' },
-                { icon: Video, title: 'قص الفيديو', href: '/tools/video-trimmer', desc: 'قص بداية أو نهاية' },
-                { icon: FileArchive, title: 'ضاغط الصور', href: '/tools/image-compressor', desc: 'قلّل حجم الصور' },
-                { icon: Wand2, title: 'إزالة الخلفية', href: '/tools/background-remover', desc: 'AI دقيق' },
-              ].map((tool, i) => (
-                <Link
-                  key={i}
-                  href={tool.href}
-                  className={`${cardClass} border p-5 rounded-xl text-center transition-all hover:border-brand-400 hover:shadow-lg hover:-translate-y-1 cursor-pointer block`}
-                >
-                  <tool.icon className="w-8 h-8 text-brand-500 mx-auto mb-2" />
-                  <h3 className="font-extrabold text-sm text-ink-900">{tool.title}</h3>
-                  <p className={`text-xs ${textClass} mt-1`}>{tool.desc}</p>
-                </Link>
-              ))}
-            </div>
-          </article>
+      {/* ===== RELATED TOOLS ===== */}
+      <section className="py-12 md:py-16 bg-ink-50">
+        <div className="container mx-auto px-4 max-w-5xl text-center">
+          <h2 className="text-2xl md:text-3xl font-black mb-8 text-ink-900">🛠️ أدوات ذات صلة</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: FileArchive, title: 'ضغط الفيديو', href: '/tools/video-compressor' },
+              { icon: Film, title: 'محول الفيديو', href: '/tools/video-converter' },
+              { icon: Download, title: 'فيديو إلى صوت', href: '/tools/video-to-audio' },
+              { icon: Sparkles, title: 'تحويل إلى GIF', href: '/tools/video-to-gif' },
+            ].map((tool, i) => (
+              <Link
+                key={i}
+                href={tool.href}
+                className={`${cardClass} border p-5 rounded-2xl hover:shadow-lg hover:border-brand-400 transition-all group text-right block`}
+              >
+                <tool.icon className="w-8 h-8 text-brand-500 mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="font-bold text-ink-900 mb-2">{tool.title}</h3>
+                <p className="text-xs text-brand-600 flex items-center gap-1">
+                  جرّب الأداة <ArrowLeft className="w-3 h-3" />
+                </p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </div>
