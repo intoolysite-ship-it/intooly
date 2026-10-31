@@ -6,6 +6,7 @@ import {
   Palette,
   Crop,
   FileType,
+  Droplet,
   Maximize,
   ScanText,
   ArrowLeft,
@@ -30,12 +31,14 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-    { icon: ScanText, title: 'تحويل الصورة إلى نص', description: 'استخرج النصوص العربية والإنجليزية من الصور مجاناً باستخدام تقنية OCR.', href: '/tools/convert-image-to-text' },
+      { icon: Droplet, title: 'استخراج الألوان من الصور', description: 'اعرف أكواد HEX وRGB وHSL من أي صورة بدقة عالية.', href: '/tools/image-color-picker' },
+{ icon: ScanText, title: 'تحويل الصورة إلى نص', description: 'استخرج النصوص العربية والإنجليزية من الصور مجاناً باستخدام تقنية OCR.', href: '/tools/convert-image-to-text' },
 { icon: Scissors, title: 'إزالة خلفية الصور', description: 'أزل خلفية الصورة للحصول على خلفية شفافة.', href: '/tools/background-remover' },
   { icon: Archive, title: 'ضغط الصور', description: 'قلّل حجم ملفات الصور لتسهيل رفعها ومشاركتها.', href: '/tools/image-compressor' },
   { icon: Palette, title: 'استوديو صور المنتجات', description: 'جهّز صور المنتجات للمتاجر الإلكترونية والإعلانات.', href: '/tools/product-photo-studio' },
   { icon: Crop, title: 'قص الصور', description: 'حدّد الجزء المطلوب من الصورة وأزل الحواف.', href: '/tools/image-cropper' },
-  { icon: FileType, title: 'تحويل صيغ الصور', description: 'حوّل الصور بين الصيغ المدعومة مثل JPG وPNG.', href: '/tools/image-converter' },
+  { icon: FileType,
+  Droplet, title: 'تحويل صيغ الصور', description: 'حوّل الصور بين الصيغ المدعومة مثل JPG وPNG.', href: '/tools/image-converter' },
   { icon: Maximize,
   ScanText, title: 'تغيير حجم الصور', description: 'غيّر أبعاد الصور بالبكسل لتناسب المواقع.', href: '/tools/image-resizer' },
 ];
