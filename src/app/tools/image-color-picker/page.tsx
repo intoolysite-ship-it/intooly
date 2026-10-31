@@ -138,7 +138,7 @@ export default function ImageColorPickerPage() {
       {/* ===== TOOL SECTION ===== */}
       <section className="py-6 md:py-8">
         <div className="container mx-auto px-4">
-          <div className="bg-white border border-ink-200 rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8 max-w-6xl mx-auto">
+          <div className="bg-white border border-ink-200 rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8 max-w-6xl mx-auto overflow-hidden">
             {!image ? (
               <div 
                 onClick={() => fileInputRef.current?.click()}
@@ -182,7 +182,7 @@ export default function ImageColorPickerPage() {
                         onClick={getPixelColor}
                         onMouseMove={handleMouseMove}
                         onMouseLeave={() => setShowMagnifier(false)}
-                        className="max-w-full h-auto rounded-xl border border-ink-200 cursor-crosshair touch-none"
+                        className="max-w-full h-auto rounded-xl border border-ink-200 cursor-crosshair touch-none block"
                         style={{ maxWidth: '100%', height: 'auto' }}
                       />
                       
@@ -279,7 +279,7 @@ export default function ImageColorPickerPage() {
                     </div>
                   )}
                 </div>
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                
               </div>
             )}
           </div>
