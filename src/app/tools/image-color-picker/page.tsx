@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { 
-  Upload, Copy, Download, Palette, ZoomIn, Image as ImageIcon, 
+  Upload, Copy, Download, Palette, Image as ImageIcon, 
   Check, Trash2, ArrowLeft, FileCode, FileText, Droplet 
 } from 'lucide-react';
 
@@ -14,11 +14,8 @@ export default function ImageColorPickerPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorData | null>(null);
   const [colorHistory, setColorHistory] = useState<ColorData[]>([]);
-  const [showMagnifier, setShowMagnifier] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,18 +48,43 @@ export default function ImageColorPickerPage() {
     return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
   };
 
-  const getPixelColor = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!canvasRef.current || !imgRef.current) return;
+  const handleImageLoad = () => {
+    const canvas = canvasRef.current;
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      if (canvas) {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+      }
+    };
+    img.src = imagePreview || '';
+  };
+
+  const getPixelColor = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
     const rect = canvas.getBoundingClientRect();
+    let clientX: number, clientY: number;
+    
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
+    const x = (clientX - rect.left) * scaleX;
+    const y = (clientY - rect.top) * scaleY;
 
     const pixel = ctx.getImageData(x, y, 1, 1).data;
     const r = pixel[0], g = pixel[1], b = pixel[2];
@@ -76,13 +98,6 @@ export default function ImageColorPickerPage() {
     setSelectedColor(newColor);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    setShowMagnifier(true);
-  };
-
   const addToHistory = () => {
     if (selectedColor && !colorHistory.some(c => c.hex === selectedColor.hex)) {
       setColorHistory(prev => [selectedColor, ...prev].slice(0, 12));
@@ -91,7 +106,6 @@ export default function ImageColorPickerPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // يمكن إضافة toast هنا، لكن سنكتفي بتغيير مؤقت أو alert بسيط
   };
 
   const exportCSS = () => {
@@ -152,7 +166,7 @@ export default function ImageColorPickerPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* العمود الأيمن: الصورة */}
                 <div className="lg:col-span-2 space-y-4">
-                  <div className="bg-ink-50 border border-ink-200 rounded-2xl p-4 relative overflow-hidden">
+                  <div className="bg-ink-50 border border-ink-200 rounded-2xl p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-bold text-ink-900 flex items-center gap-2">
                         <ImageIcon className="w-4 h-4 text-brand-500" /> الصورة المصدر
@@ -162,49 +176,15 @@ export default function ImageColorPickerPage() {
                       </button>
                     </div>
                     
-                    <div className="relative inline-block max-w-full">
-                      <img 
-                        ref={imgRef}
-                        src={imagePreview!} 
-                        alt="Preview" 
-                        className="max-w-full h-auto rounded-xl border border-ink-200 hidden"
-                        onLoad={(e) => {
-                          if (canvasRef.current && imgRef.current) {
-                            canvasRef.current.width = imgRef.current.naturalWidth;
-                            canvasRef.current.height = imgRef.current.naturalHeight;
-                            const ctx = canvasRef.current.getContext('2d');
-                            ctx?.drawImage(imgRef.current, 0, 0);
-                          }
-                        }}
-                      />
+                    <div className="relative w-full">
                       <canvas
                         ref={canvasRef}
                         onClick={getPixelColor}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={() => setShowMagnifier(false)}
+                        onTouchStart={getPixelColor}
+                        onLoad={handleImageLoad}
                         className="max-w-full h-auto rounded-xl border border-ink-200 cursor-crosshair touch-none block"
                         style={{ maxWidth: '100%', height: 'auto' }}
                       />
-                      
-                      {/* Magnifier */}
-                      {showMagnifier && (
-                        <div 
-                          className="absolute pointer-events-none border-2 border-brand-500 rounded-full shadow-xl overflow-hidden bg-white"
-                          style={{
-                            width: '80px', height: '80px',
-                            left: `${cursorPos.x - 40}px`, top: `${cursorPos.y - 40}px`,
-                            backgroundImage: `url(${imagePreview})`,
-                            backgroundSize: `${(canvasRef.current?.width || 800) * 2}px ${(canvasRef.current?.height || 800) * 2}px`,
-                            backgroundPosition: `-${cursorPos.x * 2 - 40}px -${cursorPos.y * 2 - 40}px`,
-                            display: 'block'
-                          }}
-                        >
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-red-500 rounded-full border border-white"></div>
-                          </div>
-                        </div>
-                      )}
-                    a
                     </div>
                   </div>
                 </div>
@@ -279,9 +259,9 @@ export default function ImageColorPickerPage() {
                     </div>
                   )}
                 </div>
-                
               </div>
             )}
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
           </div>
         </div>
       </section>
@@ -304,7 +284,7 @@ export default function ImageColorPickerPage() {
             <div className="space-y-4">
               {[
                 { step: '1', title: 'ارفع الصورة', desc: 'اختر الصورة من جهازك باستخدام زر رفع الصور (JPG, PNG, WEBP).' },
-                { step: '2', title: 'حدد اللون', desc: 'انقر على النقطة التي تحتوي على اللون المطلوب. استخدم العدسة المكبرة للدقة.' },
+                { step: '2', title: 'حدد اللون', desc: 'انقر على النقطة التي تحتوي على اللون المطلوب.' },
                 { step: '3', title: 'احصل على الكود', desc: 'تعرض الأداة كود اللون بصيغة HEX وقيم RGB وHSL فوراً.' },
                 { step: '4', title: 'انسخ واستخدم', desc: 'انسخ الكود إلى مشروعك، أو أضفه إلى لوحة الألوان لتصديره لاحقاً.' }
               ].map((item, i) => (
