@@ -50,6 +50,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/unlock-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات الصور
+    { path: '/tools/convert-image-to-text', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+  
     { path: '/tools/background-remover', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/image-compressor', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/image-resizer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
