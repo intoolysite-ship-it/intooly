@@ -102,8 +102,8 @@ export default function ImageToTextPage() {
       <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle, #1f2937 1px, transparent 1px)`, backgroundSize: '24px 24px' }} />
         <div className="container relative mx-auto px-4 py-10 md:py-14">
-          <Link href="/tools/documents" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
-            <ArrowLeft className="h-4 w-4" /> جميع أدوات المستندات
+          <Link href="/tools/images" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
+            <ArrowLeft className="h-4 w-4" /> جميع أدوات الصور
           </Link>
           <div className="flex items-start gap-3 sm:gap-4">
             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
