@@ -316,10 +316,9 @@ export default function AudioToTextPage() {
         <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
 
         <div className="container relative mx-auto px-4 py-10 md:py-14">
-          <Link href="/tools" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
-            <ArrowLeft className="h-4 w-4" /> جميع الأدوات
-          </Link>
-          <div className="flex items-start gap-3 sm:gap-4">
+<Link href="/tools/audio" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
+  <ArrowLeft className="h-4 w-4" /> جميع أدوات الصوت
+</Link>          <div className="flex items-start gap-3 sm:gap-4">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
               <Headphones className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
