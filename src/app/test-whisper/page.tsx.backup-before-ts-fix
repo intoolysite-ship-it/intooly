@@ -1,0 +1,265 @@
+﻿'use client';
+
+import { useState, useRef } from 'react';
+import { pipeline } from '@huggingface/transformers';
+
+type Transcriber = Awaited<ReturnType<typeof pipeline>>;
+
+export default function TestWhisperPage() {
+  const [status, setStatus] = useState('جاهز للاختبار');
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [device, setDevice] = useState('wasm');
+  const [model, setModel] = useState('onnx-community/whisper-tiny');
+  const [error, setError] = useState('');
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const transcriberRef = useRef<Transcriber | null>(null);
+  const fileUrlRef = useRef<string | null>(null);
+
+  const loadModel = async () => {
+    if (transcriberRef.current) return transcriberRef.current;
+
+    setStatus('جارٍ تحميل النموذج...');
+    setProgress(0);
+
+    const options = {
+      device: device as 'wasm' | 'webgpu',
+      dtype: 'q8' as const,
+      progress_callback: (event: {
+        status?: string;
+        progress?: number;
+        file?: string;
+      }) => {
+        if (typeof event.progress === 'number') {
+          setProgress(Math.round(event.progress));
+        }
+        if (event.status) {
+          setStatus(`${event.status}${event.file ? `: ${event.file}` : ''}`);
+        }
+      },
+    };
+
+    try {
+      const instance = await pipeline(
+        'automatic-speech-recognition',
+        model,
+        options
+      );
+      transcriberRef.current = instance;
+      setStatus('تم تحميل النموذج بنجاح');
+      setProgress(100);
+      return instance;
+    } catch (err) {
+      throw new Error(
+        `تعذر تحميل النموذج: ${
+          err instanceof Error ? err.message : String(err)
+        }`
+      );
+    }
+  };
+
+  const handleFile = (file?: File) => {
+    if (!file) return;
+
+    if (!file.type.startsWith('audio/')) {
+      setError('اختر ملفًا صوتيًا فقط في هذا الاختبار.');
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      setError('حجم الملف يتجاوز 25 ميجابايت.');
+      return;
+    }
+
+    if (fileUrlRef.current) {
+      URL.revokeObjectURL(fileUrlRef.current);
+    }
+
+    fileUrlRef.current = URL.createObjectURL(file);
+
+    if (audioRef.current) {
+      audioRef.current.src = fileUrlRef.current;
+    }
+
+    setError('');
+    setResult('');
+    setStatus(`تم اختيار الملف: ${file.name}`);
+  };
+
+  const transcribe = async () => {
+    const file = fileRef.current?.files?.[0];
+    if (!file) {
+      setError('يرجى اختيار ملف صوتي أولًا.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResult('');
+
+    let audioContext: AudioContext | null = null;
+
+    try {
+      const instance = await loadModel();
+
+      setStatus('جارٍ قراءة الملف الصوتي...');
+
+      audioContext = new AudioContext();
+      const arrayBuffer = await file.arrayBuffer();
+      const decoded = await audioContext.decodeAudioData(arrayBuffer);
+
+      const source = decoded.getChannelData(0);
+      const outputLength = Math.ceil(decoded.duration * 16000);
+      const input = new Float32Array(outputLength);
+
+      if (decoded.sampleRate === 16000) {
+        input.set(source.subarray(0, outputLength));
+      } else {
+        const ratio = decoded.sampleRate / 16000;
+        for (let i = 0; i < outputLength; i++) {
+          const position = i * ratio;
+          const left = Math.floor(position);
+          const right = Math.min(left + 1, source.length - 1);
+          const fraction = position - left;
+          input[i] = (source[left] || 0) * (1 - fraction) +
+            (source[right] || 0) * fraction;
+        }
+      }
+
+      setStatus('جارٍ تحويل الصوت إلى نص...');
+
+      const output = await (instance as (
+        audio: Float32Array,
+        options: object
+      ) => Promise<{ text?: string }>)(input, {
+        language: 'arabic',
+        task: 'transcribe',
+        chunk_length_s: 30,
+        stride_length_s: 5,
+      });
+
+      setResult(output.text || 'لم يتم التعرف على كلام في الملف.');
+      setStatus('اكتمل التحويل بنجاح');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      setStatus('فشل الاختبار');
+    } finally {
+      if (audioContext && audioContext.state !== 'closed') {
+        await audioContext.close().catch(() => {});
+      }
+      setLoading(false);
+    }
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    await navigator.clipboard.writeText(result);
+  };
+
+  return (
+    <main dir="rtl" className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <header className="text-center">
+          <h1 className="text-3xl font-bold">اختبار محرك Whisper</h1>
+          <p className="mt-3 text-slate-600">
+            اختبار تحويل الصوت العربي إلى نص داخل المتصفح
+          </p>
+        </header>
+
+        <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div>
+            <label className="mb-2 block font-semibold">النموذج</label>
+            <select
+              value={model}
+              onChange={(e) => {
+                setModel(e.target.value);
+                transcriberRef.current = null;
+              }}
+              disabled={loading || !!transcriberRef.current}
+              className="w-full rounded-xl border p-3"
+            >
+              <option value="onnx-community/whisper-tiny">Whisper Tiny متعدد اللغات</option>
+              <option value="onnx-community/whisper-base">Whisper Base متعدد اللغات</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold">طريقة التشغيل</label>
+            <select
+              value={device}
+              onChange={(e) => {
+                setDevice(e.target.value);
+                transcriberRef.current = null;
+              }}
+              disabled={loading || !!transcriberRef.current}
+              className="w-full rounded-xl border p-3"
+            >
+              <option value="wasm">WASM - متوافق مع أجهزة أكثر</option>
+              <option value="webgpu">WebGPU - للأجهزة المدعومة</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold">اختر ملفًا صوتيًا</label>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="audio/*"
+              onChange={(e) => handleFile(e.target.files?.[0])}
+              disabled={loading}
+              className="w-full rounded-xl border p-3"
+            />
+          </div>
+
+          <audio ref={audioRef} controls className="w-full" />
+
+          <button
+            onClick={transcribe}
+            disabled={loading}
+            className="w-full rounded-xl bg-orange-600 px-5 py-3 font-bold text-white disabled:opacity-50"
+          >
+            {loading ? 'جارٍ الاختبار...' : 'ابدأ تحويل الصوت إلى نص'}
+          </button>
+
+          <div className="rounded-xl bg-slate-100 p-4">
+            <p className="font-semibold">{status}</p>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-300">
+              <div
+                className="h-full rounded-full bg-orange-500 transition-all"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="mt-2 text-sm text-slate-500">{progress}%</p>
+          </div>
+
+          {error && (
+            <div className="rounded-xl bg-red-50 p-4 text-red-700">
+              {error}
+            </div>
+          )}
+        </section>
+
+        <section className="space-y-3 rounded-2xl border bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">النص الناتج</h2>
+            <button
+              onClick={copyResult}
+              disabled={!result}
+              className="rounded-lg border px-4 py-2 disabled:opacity-40"
+            >
+              نسخ النص
+            </button>
+          </div>
+          <textarea
+            value={result}
+            onChange={(e) => setResult(e.target.value)}
+            placeholder="سيظهر النص هنا بعد انتهاء التحويل..."
+            className="min-h-48 w-full rounded-xl border p-4 leading-8"
+          />
+        </section>
+      </div>
+    </main>
+  );
+}
