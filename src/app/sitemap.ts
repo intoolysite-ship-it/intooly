@@ -71,6 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/video-to-audio', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/video-trimmer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
     { path: '/tools/video-to-gif', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    { path: '/tools/video-thumbnail-maker', priority: 0.85, frequency: 'weekly', lastModified: new Date('2026-11-03') },
 
     // أدوات SEO
     { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },

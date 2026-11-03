@@ -1,24 +1,25 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Archive,
   Share2,
   Music,
   Film,
+  Image as ImageIcon,
   ArrowLeft,
   BookOpen,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'أدوات الفيديو أونلاين مجانًا: قص وضغط وتحويل الفيديو | Intooly',
+  title: 'Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø£ÙˆÙ†Ù„Ø§ÙŠÙ† Ù…Ø¬Ø§Ù†Ù‹Ø§: Ù‚Øµ ÙˆØ¶ØºØ· ÙˆØªØ­ÙˆÙŠÙ„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ | Intooly',
   description:
-    'اكتشف أدوات الفيديو لقص المقاطع وضغطها وتحويلها واستخراج الصوت وإنشاء GIF، مع تفاصيل الاستخدام والقيود لكل أداة.',
+    'Ø§ÙƒØªØ´Ù Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ù„Ù‚Øµ Ø§Ù„Ù…Ù‚Ø§Ø·Ø¹ ÙˆØ¶ØºØ·Ù‡Ø§ ÙˆØªØ­ÙˆÙŠÙ„Ù‡Ø§ ÙˆØ§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„ØµÙˆØª ÙˆØ¥Ù†Ø´Ø§Ø¡ GIFØŒ Ù…Ø¹ ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø§Ø³ØªØ®Ø¯Ø§Ù… ÙˆØ§Ù„Ù‚ÙŠÙˆØ¯ Ù„ÙƒÙ„ Ø£Ø¯Ø§Ø©.',
   alternates: {
     canonical: 'https://intooly.com/tools/video',
   },
   openGraph: {
-    title: 'أدوات الفيديو أونلاين مجانًا | Intooly',
-    description: 'قص الفيديو وضغطه وتحويل صيغته واستخراج الصوت وإنشاء صور GIF متحركة.',
+    title: 'Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø£ÙˆÙ†Ù„Ø§ÙŠÙ† Ù…Ø¬Ø§Ù†Ù‹Ø§ | Intooly',
+    description: 'Ù‚Øµ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØ¶ØºØ·Ù‡ ÙˆØªØ­ÙˆÙŠÙ„ ØµÙŠØºØªÙ‡ ÙˆØ§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„ØµÙˆØª ÙˆØ¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± GIF Ù…ØªØ­Ø±ÙƒØ©.',
     url: 'https://intooly.com/tools/video',
     siteName: 'Intooly',
     locale: 'ar_EG',
@@ -27,29 +28,30 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-  { icon: Archive, title: 'ضغط الفيديو', description: 'قلّل حجم ملفات الفيديو لتسهيل رفعها ومشاركتها.', href: '/tools/video-compressor' },
-  { icon: Share2, title: 'تحويل صيغ الفيديو', description: 'حوّل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.', href: '/tools/video-converter' },
-  { icon: Music, title: 'تحويل الفيديو إلى صوت', description: 'استخرج المسار الصوتي من ملفات الفيديو.', href: '/tools/video-to-audio' },
-  { icon: Film, title: 'قص الفيديو', description: 'حدّد بداية ونهاية المقطع لقص الجزء المطلوب.', href: '/tools/video-trimmer' },
-  { icon: Film, title: 'تحويل الفيديو إلى GIF', description: 'حوّل جزءًا من الفيديو إلى صورة GIF متحركة.', href: '/tools/video-to-gif' },
+  { icon: Archive, title: 'Ø¶ØºØ· Ø§Ù„ÙÙŠØ¯ÙŠÙˆ', description: 'Ù‚Ù„Ù‘Ù„ Ø­Ø¬Ù… Ù…Ù„ÙØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ù„ØªØ³Ù‡ÙŠÙ„ Ø±ÙØ¹Ù‡Ø§ ÙˆÙ…Ø´Ø§Ø±ÙƒØªÙ‡Ø§.', href: '/tools/video-compressor' },
+  { icon: Share2, title: 'ØªØ­ÙˆÙŠÙ„ ØµÙŠØº Ø§Ù„ÙÙŠØ¯ÙŠÙˆ', description: 'Ø­ÙˆÙ‘Ù„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¨ÙŠÙ† Ø§Ù„ØµÙŠØº Ø§Ù„Ù…Ø¯Ø¹ÙˆÙ…Ø© Ù…Ø«Ù„ MP4 ÙˆWebM ÙˆMOV.', href: '/tools/video-converter' },
+  { icon: Music, title: 'ØªØ­ÙˆÙŠÙ„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¥Ù„Ù‰ ØµÙˆØª', description: 'Ø§Ø³ØªØ®Ø±Ø¬ Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„ØµÙˆØªÙŠ Ù…Ù† Ù…Ù„ÙØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ.', href: '/tools/video-to-audio' },
+  { icon: Film, title: 'Ù‚Øµ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ', description: 'Ø­Ø¯Ù‘Ø¯ Ø¨Ø¯Ø§ÙŠØ© ÙˆÙ†Ù‡Ø§ÙŠØ© Ø§Ù„Ù…Ù‚Ø·Ø¹ Ù„Ù‚Øµ Ø§Ù„Ø¬Ø²Ø¡ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨.', href: '/tools/video-trimmer' },
+  { icon: Film, title: 'ØªØ­ÙˆÙŠÙ„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¥Ù„Ù‰ GIF', description: 'Ø­ÙˆÙ‘Ù„ Ø¬Ø²Ø¡Ù‹Ø§ Ù…Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¥Ù„Ù‰ ØµÙˆØ±Ø© GIF Ù…ØªØ­Ø±ÙƒØ©.', href: '/tools/video-to-gif' },
+  { icon: ImageIcon, title: 'ØµØ§Ù†Ø¹ Ø§Ù„ØµÙˆØ± Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ', description: 'Ø£Ù†Ø´Ø¦ ØµÙˆØ±Ø© Ù…ØµØºÙ‘Ø±Ø© Ø¬Ø°Ø§Ø¨Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆØŒ ÙˆØ£Ø¶Ù Ø§Ù„Ù†ØµÙˆØµ ÙˆØµÙ…Ù‘Ù… ØºÙ„Ø§ÙÙ‹Ø§ Ù…Ù†Ø§Ø³Ø¨Ù‹Ø§ Ù„Ù…Ø­ØªÙˆØ§Ùƒ.', href: '/tools/video-thumbnail-maker' },
 ];
 
 const faqs = [
-  { q: 'هل أدوات الفيديو مجانية؟', a: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة.' },
-  { q: 'ما الصيغ المدعومة؟', a: 'تختلف الصيغ المدعومة حسب الأداة. راجع صفحة كل أداة لمعرفة الصيغ التي تدعمها.' },
-  { q: 'كم يستغرق معالجة الفيديو؟', a: 'تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح.' },
-  { q: 'هل يمكنني استخدام الأدوات على الجوال؟', a: 'نعم، مع مراعاة أن معالجة الملفات الكبيرة قد تحتاج موارد أكبر.' },
+  { q: 'Ù‡Ù„ Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ø¬Ø§Ù†ÙŠØ©ØŸ', a: 'ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ø§Ù„Ù…ØªØ§Ø­Ø© Ù…Ø¬Ø§Ù†Ù‹Ø§ ÙˆÙÙ‚Ù‹Ø§ Ù„Ù„ÙˆØ¸Ø§Ø¦Ù ÙˆØ§Ù„Ù‚ÙŠÙˆØ¯ Ø§Ù„Ù…ÙˆØ¶Ø­Ø© ÙÙŠ ØµÙØ­Ø© ÙƒÙ„ Ø£Ø¯Ø§Ø©.' },
+  { q: 'Ù…Ø§ Ø§Ù„ØµÙŠØº Ø§Ù„Ù…Ø¯Ø¹ÙˆÙ…Ø©ØŸ', a: 'ØªØ®ØªÙ„Ù Ø§Ù„ØµÙŠØº Ø§Ù„Ù…Ø¯Ø¹ÙˆÙ…Ø© Ø­Ø³Ø¨ Ø§Ù„Ø£Ø¯Ø§Ø©. Ø±Ø§Ø¬Ø¹ ØµÙØ­Ø© ÙƒÙ„ Ø£Ø¯Ø§Ø© Ù„Ù…Ø¹Ø±ÙØ© Ø§Ù„ØµÙŠØº Ø§Ù„ØªÙŠ ØªØ¯Ø¹Ù…Ù‡Ø§.' },
+  { q: 'ÙƒÙ… ÙŠØ³ØªØºØ±Ù‚ Ù…Ø¹Ø§Ù„Ø¬Ø© Ø§Ù„ÙÙŠØ¯ÙŠÙˆØŸ', a: 'ØªØ¹ØªÙ…Ø¯ Ù…Ø¯Ø© Ø§Ù„Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¹Ù„Ù‰ Ø­Ø¬Ù… Ø§Ù„Ù…Ù„Ù ÙˆØµÙŠØºØªÙ‡ ÙˆÙ‚Ø¯Ø±Ø§Øª Ø§Ù„Ø¬Ù‡Ø§Ø² ÙˆØ§Ù„Ù…ØªØµÙØ­.' },
+  { q: 'Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ù†ÙŠ Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ø¹Ù„Ù‰ Ø§Ù„Ø¬ÙˆØ§Ù„ØŸ', a: 'Ù†Ø¹Ù…ØŒ Ù…Ø¹ Ù…Ø±Ø§Ø¹Ø§Ø© Ø£Ù† Ù…Ø¹Ø§Ù„Ø¬Ø© Ø§Ù„Ù…Ù„ÙØ§Øª Ø§Ù„ÙƒØ¨ÙŠØ±Ø© Ù‚Ø¯ ØªØ­ØªØ§Ø¬ Ù…ÙˆØ§Ø±Ø¯ Ø£ÙƒØ¨Ø±.' },
 ];
 
 const softwareAppSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'أدوات الفيديو — Intooly',
+  name: 'Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ â€” Intooly',
   url: 'https://intooly.com/tools/video',
   applicationCategory: 'MultimediaApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  description: 'مجموعة أدوات مجانية لتحويل الفيديو وضغطه وقصه واستخراج الصوت منه داخل المتصفح.',
+  description: 'Ù…Ø¬Ù…ÙˆØ¹Ø© Ø£Ø¯ÙˆØ§Øª Ù…Ø¬Ø§Ù†ÙŠØ© Ù„ØªØ­ÙˆÙŠÙ„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØ¶ØºØ·Ù‡ ÙˆÙ‚ØµÙ‡ ÙˆØ§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„ØµÙˆØª Ù…Ù†Ù‡ Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ØªØµÙØ­.',
   inLanguage: 'ar',
 };
 
@@ -57,9 +59,9 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
-    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
-    { '@type': 'ListItem', position: 3, name: 'أدوات الفيديو', item: 'https://intooly.com/tools/video' },
+    { '@type': 'ListItem', position: 1, name: 'Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©', item: 'https://intooly.com' },
+    { '@type': 'ListItem', position: 2, name: 'Ø§Ù„Ø£Ø¯ÙˆØ§Øª', item: 'https://intooly.com/tools' },
+    { '@type': 'ListItem', position: 3, name: 'Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ', item: 'https://intooly.com/tools/video' },
   ],
 };
 
@@ -69,23 +71,23 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'هل أدوات الفيديو مجانية؟',
-      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الأدوات مجانية بالكامل بدون تسجيل.' },
+      name: 'Ù‡Ù„ Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ø¬Ø§Ù†ÙŠØ©ØŸ',
+      acceptedAnswer: { '@type': 'Answer', text: 'Ù†Ø¹Ù…ØŒ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ù…Ø¬Ø§Ù†ÙŠØ© Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ Ø¨Ø¯ÙˆÙ† ØªØ³Ø¬ÙŠÙ„.' },
     },
     {
       '@type': 'Question',
-      name: 'ما الصيغ المدعومة؟',
-      acceptedAnswer: { '@type': 'Answer', text: 'ندعم MP4 و WebM و MOV وغيرها. راجع صفحة كل أداة للتفاصيل.' },
+      name: 'Ù…Ø§ Ø§Ù„ØµÙŠØº Ø§Ù„Ù…Ø¯Ø¹ÙˆÙ…Ø©ØŸ',
+      acceptedAnswer: { '@type': 'Answer', text: 'Ù†Ø¯Ø¹Ù… MP4 Ùˆ WebM Ùˆ MOV ÙˆØºÙŠØ±Ù‡Ø§. Ø±Ø§Ø¬Ø¹ ØµÙØ­Ø© ÙƒÙ„ Ø£Ø¯Ø§Ø© Ù„Ù„ØªÙØ§ØµÙŠÙ„.' },
     },
     {
       '@type': 'Question',
-      name: 'هل فيديوهاتي آمنة؟',
-      acceptedAnswer: { '@type': 'Answer', text: 'نعم، جميع الفيديوهات تُعالج داخل متصفحك مباشرة.' },
+      name: 'Ù‡Ù„ ÙÙŠØ¯ÙŠÙˆÙ‡Ø§ØªÙŠ Ø¢Ù…Ù†Ø©ØŸ',
+      acceptedAnswer: { '@type': 'Answer', text: 'Ù†Ø¹Ù…ØŒ Ø¬Ù…ÙŠØ¹ Ø§Ù„ÙÙŠØ¯ÙŠÙˆÙ‡Ø§Øª ØªÙØ¹Ø§Ù„Ø¬ Ø¯Ø§Ø®Ù„ Ù…ØªØµÙØ­Ùƒ Ù…Ø¨Ø§Ø´Ø±Ø©.' },
     },
     {
       '@type': 'Question',
-      name: 'هل تعمل على الجوال؟',
-      acceptedAnswer: { '@type': 'Answer', text: 'نعم، الأدوات متوافقة مع المتصفحات الحديثة على الجوال والأجهزة اللوحية.' },
+      name: 'Ù‡Ù„ ØªØ¹Ù…Ù„ Ø¹Ù„Ù‰ Ø§Ù„Ø¬ÙˆØ§Ù„ØŸ',
+      acceptedAnswer: { '@type': 'Answer', text: 'Ù†Ø¹Ù…ØŒ Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ù…ØªÙˆØ§ÙÙ‚Ø© Ù…Ø¹ Ø§Ù„Ù…ØªØµÙØ­Ø§Øª Ø§Ù„Ø­Ø¯ÙŠØ«Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø¬ÙˆØ§Ù„ ÙˆØ§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ù„ÙˆØ­ÙŠØ©.' },
     },
   ],
 };
@@ -107,18 +109,18 @@ export default function VideoToolsPage() {
             Intooly Video Suite
           </span>
           <h1 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-black tracking-tight text-ink-900">
-            أدوات الفيديو أونلاين لقص المقاطع وضغطها وتحويلها
+            Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø£ÙˆÙ†Ù„Ø§ÙŠÙ† Ù„Ù‚Øµ Ø§Ù„Ù…Ù‚Ø§Ø·Ø¹ ÙˆØ¶ØºØ·Ù‡Ø§ ÙˆØªØ­ÙˆÙŠÙ„Ù‡Ø§
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
-            استكشف أدوات لقص الفيديو وضغطه وتحويل صيغته أو استخراج الصوت وإنشاء صور GIF متحركة.
+            Ø§Ø³ØªÙƒØ´Ù Ø£Ø¯ÙˆØ§Øª Ù„Ù‚Øµ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØ¶ØºØ·Ù‡ ÙˆØªØ­ÙˆÙŠÙ„ ØµÙŠØºØªÙ‡ Ø£Ùˆ Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„ØµÙˆØª ÙˆØ¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± GIF Ù…ØªØ­Ø±ÙƒØ©.
           </p>
         </div>
       </section>
 
       <section className="container mx-auto px-4 py-10 md:py-14">
         <div className="mb-8 text-center">
-          <h2 className="text-xl font-black text-ink-900 md:text-2xl">جميع أدوات الفيديو المتاحة</h2>
-          <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">اختر الأداة المناسبة لمهمتك.</p>
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl">Ø¬Ù…ÙŠØ¹ Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø§Ù„Ù…ØªØ§Ø­Ø©</h2>
+          <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">Ø§Ø®ØªØ± Ø§Ù„Ø£Ø¯Ø§Ø© Ø§Ù„Ù…Ù†Ø§Ø³Ø¨Ø© Ù„Ù…Ù‡Ù…ØªÙƒ.</p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => {
@@ -132,7 +134,7 @@ export default function VideoToolsPage() {
                   <h3 className="text-sm font-bold text-ink-900 transition-colors group-hover:text-brand-600">{tool.title}</h3>
                   <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink-600">{tool.description}</p>
                   <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
-                    استخدام الأداة
+                    Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø£Ø¯Ø§Ø©
                     <ArrowLeft className="h-3 w-3" />
                   </div>
                 </div>
@@ -145,18 +147,18 @@ export default function VideoToolsPage() {
       <section className="border-t border-ink-100 bg-white">
         <article className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
           <div className="text-right">
-            <h2 className="mb-6 text-xl font-black text-ink-900 md:text-2xl">قص الفيديو وتحويله وتقليل حجمه أونلاين</h2>
+            <h2 className="mb-6 text-xl font-black text-ink-900 md:text-2xl">Ù‚Øµ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØªØ­ÙˆÙŠÙ„Ù‡ ÙˆØªÙ‚Ù„ÙŠÙ„ Ø­Ø¬Ù…Ù‡ Ø£ÙˆÙ†Ù„Ø§ÙŠÙ†</h2>
             <p className="mb-4 leading-8 text-ink-700">
-              توفّر أدوات الفيديو على Intooly مجموعة من الوظائف التي تساعدك على التعامل مع مقاطع الفيديو عبر الإنترنت. يمكنك قص جزء محدد من الفيديو، وتقليل حجم الملف ليكون مناسبًا للرفع، وتحويل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.
+              ØªÙˆÙÙ‘Ø± Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¹Ù„Ù‰ Intooly Ù…Ø¬Ù…ÙˆØ¹Ø© Ù…Ù† Ø§Ù„ÙˆØ¸Ø§Ø¦Ù Ø§Ù„ØªÙŠ ØªØ³Ø§Ø¹Ø¯Ùƒ Ø¹Ù„Ù‰ Ø§Ù„ØªØ¹Ø§Ù…Ù„ Ù…Ø¹ Ù…Ù‚Ø§Ø·Ø¹ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¹Ø¨Ø± Ø§Ù„Ø¥Ù†ØªØ±Ù†Øª. ÙŠÙ…ÙƒÙ†Ùƒ Ù‚Øµ Ø¬Ø²Ø¡ Ù…Ø­Ø¯Ø¯ Ù…Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆØŒ ÙˆØªÙ‚Ù„ÙŠÙ„ Ø­Ø¬Ù… Ø§Ù„Ù…Ù„Ù Ù„ÙŠÙƒÙˆÙ† Ù…Ù†Ø§Ø³Ø¨Ù‹Ø§ Ù„Ù„Ø±ÙØ¹ØŒ ÙˆØªØ­ÙˆÙŠÙ„ Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¨ÙŠÙ† Ø§Ù„ØµÙŠØº Ø§Ù„Ù…Ø¯Ø¹ÙˆÙ…Ø© Ù…Ø«Ù„ MP4 ÙˆWebM ÙˆMOV.
             </p>
             <p className="mb-4 leading-8 text-ink-700">
-              تشمل أدوات الفيديو أيضًا إمكانية استخراج المسار الصوتي من الفيديو وتحويله إلى ملف صوتي، وتحويل جزء من الفيديو إلى صورة GIF متحركة. هذه الوظائف مفيدة لصنّاع المحتوى والمسوقين وأصحاب المشاريع الذين يحتاجون إلى معالجة سريعة للفيديو.
+              ØªØ´Ù…Ù„ Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø£ÙŠØ¶Ù‹Ø§ Ø¥Ù…ÙƒØ§Ù†ÙŠØ© Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„ØµÙˆØªÙŠ Ù…Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØªØ­ÙˆÙŠÙ„Ù‡ Ø¥Ù„Ù‰ Ù…Ù„Ù ØµÙˆØªÙŠØŒ ÙˆØªØ­ÙˆÙŠÙ„ Ø¬Ø²Ø¡ Ù…Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ Ø¥Ù„Ù‰ ØµÙˆØ±Ø© GIF Ù…ØªØ­Ø±ÙƒØ©. Ù‡Ø°Ù‡ Ø§Ù„ÙˆØ¸Ø§Ø¦Ù Ù…ÙÙŠØ¯Ø© Ù„ØµÙ†Ù‘Ø§Ø¹ Ø§Ù„Ù…Ø­ØªÙˆÙ‰ ÙˆØ§Ù„Ù…Ø³ÙˆÙ‚ÙŠÙ† ÙˆØ£ØµØ­Ø§Ø¨ Ø§Ù„Ù…Ø´Ø§Ø±ÙŠØ¹ Ø§Ù„Ø°ÙŠÙ† ÙŠØ­ØªØ§Ø¬ÙˆÙ† Ø¥Ù„Ù‰ Ù…Ø¹Ø§Ù„Ø¬Ø© Ø³Ø±ÙŠØ¹Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ.
             </p>
             <p className="mb-4 leading-8 text-ink-700">
-              تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح. قبل معالجة المقاطع الكبيرة، تحقق من متطلبات الأداة وحدود حجم الملف والصيغ التي تدعمها.
+              ØªØ¹ØªÙ…Ø¯ Ù…Ø¯Ø© Ø§Ù„Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¹Ù„Ù‰ Ø­Ø¬Ù… Ø§Ù„Ù…Ù„Ù ÙˆØµÙŠØºØªÙ‡ ÙˆÙ‚Ø¯Ø±Ø§Øª Ø§Ù„Ø¬Ù‡Ø§Ø² ÙˆØ§Ù„Ù…ØªØµÙØ­. Ù‚Ø¨Ù„ Ù…Ø¹Ø§Ù„Ø¬Ø© Ø§Ù„Ù…Ù‚Ø§Ø·Ø¹ Ø§Ù„ÙƒØ¨ÙŠØ±Ø©ØŒ ØªØ­Ù‚Ù‚ Ù…Ù† Ù…ØªØ·Ù„Ø¨Ø§Øª Ø§Ù„Ø£Ø¯Ø§Ø© ÙˆØ­Ø¯ÙˆØ¯ Ø­Ø¬Ù… Ø§Ù„Ù…Ù„Ù ÙˆØ§Ù„ØµÙŠØº Ø§Ù„ØªÙŠ ØªØ¯Ø¹Ù…Ù‡Ø§.
             </p>
 
-            <h3 className="mb-4 mt-10 text-xl font-bold text-ink-900 md:text-2xl">الأسئلة الشائعة</h3>
+            <h3 className="mb-4 mt-10 text-xl font-bold text-ink-900 md:text-2xl">Ø§Ù„Ø£Ø³Ø¦Ù„Ø© Ø§Ù„Ø´Ø§Ø¦Ø¹Ø©</h3>
             <div className="space-y-5">
               {faqs.map((faq) => (
                 <div key={faq.q}>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -51,6 +51,7 @@ const TOOLS_MENU: Record<string, { icon: any; title: string; color: string; item
       { name: 'محول الصيغ', href: '/tools/video-converter' },
       { name: 'إلى صوت', href: '/tools/video-to-audio' },
       { name: 'قص الفيديو', href: '/tools/video-trimmer' },
+      { name: 'صانع الصور المصغّرة للفيديو', href: '/tools/video-thumbnail-maker', hot: true },
     ],
   },
   productivity: {
