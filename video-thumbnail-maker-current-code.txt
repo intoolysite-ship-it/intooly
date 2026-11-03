@@ -1,0 +1,939 @@
+﻿========== PAGE.TSX ==========
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
+import {
+  ImagePlus,
+  Type,
+  Download,
+  Trash2,
+  Plus,
+  RotateCcw,
+  Palette,
+  Layers,
+  Sparkles,
+  Upload,
+  AlignRight,
+  AlignCenter,
+  AlignLeft,
+  Move,
+  Check,
+} from "lucide-react";
+
+type TextLayer = {
+  id: number;
+  text: string;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  bold: boolean;
+  stroke: boolean;
+  shadow: boolean;
+  align: CanvasTextAlign;
+};
+
+type Template = {
+  name: string;
+  background: string;
+  accent: string;
+  title: string;
+  subtitle: string;
+};
+
+const WIDTH = 1280;
+const HEIGHT = 720;
+
+const templates: Template[] = [
+  {
+    name: "Ø´Ø±Ø­ ØªØ¹Ù„ÙŠÙ…ÙŠ",
+    background: "#0f172a",
+    accent: "#f59e0b",
+    title: "Ø´Ø±Ø­ Ù…Ø¨Ø³Ø·",
+    subtitle: "ÙƒÙ„ Ù…Ø§ ØªØ­ØªØ§Ø¬ Ù…Ø¹Ø±ÙØªÙ‡",
+  },
+  {
+    name: "ØªÙ‚Ù†ÙŠØ©",
+    background: "#111827",
+    accent: "#38bdf8",
+    title: "Ø£Ø³Ø±Ø§Ø± Ø§Ù„ØªÙ‚Ù†ÙŠØ©",
+    subtitle: "Ø§ÙƒØªØ´Ù Ø§Ù„Ø¬Ø¯ÙŠØ¯",
+  },
+  {
+    name: "Ø£Ù„Ø¹Ø§Ø¨",
+    background: "#312e81",
+    accent: "#fb7185",
+    title: "ØªØ­Ø¯ÙŠ Ø§Ù„Ø£Ù„Ø¹Ø§Ø¨",
+    subtitle: "Ù‡Ù„ ØªØ³ØªØ·ÙŠØ¹ Ø§Ù„ÙÙˆØ²ØŸ",
+  },
+  {
+    name: "Ù…Ø­ØªÙˆÙ‰ Ø¬Ø°Ø§Ø¨",
+    background: "#7c2d12",
+    accent: "#fbbf24",
+    title: "Ù„Ù† ØªØµØ¯Ù‚ Ø§Ù„Ù†ØªÙŠØ¬Ø©!",
+    subtitle: "Ø´Ø§Ù‡Ø¯ Ø§Ù„ØªÙØ§ØµÙŠÙ„",
+  },
+];
+
+function createLayer(text: string, id: number, y: number): TextLayer {
+  return {
+    id,
+    text,
+    x: WIDTH / 2,
+    y,
+    size: 76,
+    color: "#ffffff",
+    bold: true,
+    stroke: true,
+    shadow: true,
+    align: "center",
+  };
+}
+
+export default function VideoThumbnailMakerPage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
+
+  const [background, setBackground] = useState("#0f172a");
+  const [accent, setAccent] = useState("#f59e0b");
+  const [gradient, setGradient] = useState(true);
+  const [photoMode, setPhotoMode] = useState(false);
+  const [layers, setLayers] = useState<TextLayer[]>([
+    {
+      ...createLayer("Ø¹Ù†ÙˆØ§Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ", 1, 320),
+      size: 82,
+    },
+    {
+      ...createLayer("Ø§ÙƒØªØ¨ Ø¹Ù†ÙˆØ§Ù†Ø§Ù‹ Ø¬Ø°Ø§Ø¨Ø§Ù‹", 2, 420),
+      size: 42,
+      color: "#fbbf24",
+      stroke: false,
+    },
+  ]);
+  const [selectedId, setSelectedId] = useState<number>(1);
+  const [nextId, setNextId] = useState(3);
+  const [status, setStatus] = useState("");
+  const [outputFormat, setOutputFormat] = useState<"png" | "jpeg">("png");
+  const [scale, setScale] = useState(1);
+
+  const selectedLayer =
+    layers.find((layer) => layer.id === selectedId) ?? null;
+
+  const updateSelected = useCallback(
+    (changes: Partial<TextLayer>) => {
+      setLayers((previous) =>
+        previous.map((layer) =>
+          layer.id === selectedId ? { ...layer, ...changes } : layer
+        )
+      );
+    },
+    [selectedId]
+  );
+
+  const drawCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+
+    if (photoMode && imageRef.current) {
+      const img = imageRef.current;
+      const imageScale = Math.max(WIDTH / img.width, HEIGHT / img.height);
+      const w = img.width * imageScale;
+      const h = img.height * imageScale;
+      ctx.drawImage(img, (WIDTH - w) / 2, (HEIGHT - h) / 2, w, h);
+
+      ctx.fillStyle = "rgba(15, 23, 42, 0.32)";
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    } else {
+      if (gradient) {
+        const g = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+        g.addColorStop(0, background);
+        g.addColorStop(1, accent);
+        ctx.fillStyle = g;
+      } else {
+        ctx.fillStyle = background;
+      }
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+
+    // Decorative shapes
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.fillStyle = accent;
+    ctx.beginPath();
+    ctx.arc(1100, 110, 230, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(100, 650, 170, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Accent strip
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, HEIGHT - 14, WIDTH, 14);
+    ctx.fillRect(0, 0, 18, HEIGHT);
+
+    // Text layers
+    layers.forEach((layer) => {
+      ctx.save();
+      ctx.font = `${layer.bold ? "900" : "500"} ${layer.size}px Arial, Tahoma, sans-serif`;
+      ctx.textAlign = layer.align;
+      ctx.textBaseline = "middle";
+      ctx.direction = "rtl";
+
+      if (layer.shadow) {
+        ctx.shadowColor = "rgba(0,0,0,0.65)";
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 5;
+      }
+
+      if (layer.stroke) {
+        ctx.lineJoin = "round";
+        ctx.lineWidth = Math.max(4, layer.size * 0.075);
+        ctx.strokeStyle = "#111827";
+        ctx.strokeText(layer.text, layer.x, layer.y, WIDTH - 100);
+      }
+
+      ctx.fillStyle = layer.color;
+      ctx.fillText(layer.text, layer.x, layer.y, WIDTH - 100);
+
+      // Selection indicator is not included in downloads.
+      if (layer.id === selectedId) {
+        ctx.shadowColor = "transparent";
+        ctx.setLineDash([10, 8]);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(255,255,255,0.8)";
+        ctx.strokeRect(
+          Math.max(24, layer.x - 340),
+          layer.y - layer.size * 0.7,
+          Math.min(680, WIDTH - 48),
+          layer.size * 1.4
+        );
+      }
+
+      ctx.restore();
+    });
+  }, [accent, background, gradient, layers, photoMode, selectedId]);
+
+  useEffect(() => {
+    drawCanvas();
+  }, [drawCanvas]);
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
+
+  function handleUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setStatus("ÙŠØ±Ø¬Ù‰ Ø§Ø®ØªÙŠØ§Ø± Ù…Ù„Ù ØµÙˆØ±Ø© ØµØ§Ù„Ø­.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      setStatus("Ø­Ø¬Ù… Ø§Ù„ØµÙˆØ±Ø© ÙŠØªØ¬Ø§ÙˆØ² 20 Ù…ÙŠØ¬Ø§Ø¨Ø§ÙŠØª.");
+      event.target.value = "";
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+
+      objectUrlRef.current = url;
+      imageRef.current = img;
+      setPhotoMode(true);
+      setStatus("ØªÙ… ØªØ­Ù…ÙŠÙ„ Ø§Ù„ØµÙˆØ±Ø© Ø¨Ù†Ø¬Ø§Ø­.");
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      setStatus("ØªØ¹Ø°Ø± ÙØªØ­ Ø§Ù„ØµÙˆØ±Ø©. Ø¬Ø±Ù‘Ø¨ ØµÙˆØ±Ø© Ø£Ø®Ø±Ù‰.");
+    };
+
+    img.src = url;
+    event.target.value = "";
+  }
+
+  function addText() {
+    const layer = createLayer("Ù†Øµ Ø¬Ø¯ÙŠØ¯", nextId, 520);
+    setLayers((previous) => [...previous, layer]);
+    setSelectedId(nextId);
+    setNextId((value) => value + 1);
+  }
+
+  function removeSelected() {
+    if (!selectedLayer) return;
+
+    const remaining = layers.filter((layer) => layer.id !== selectedId);
+    setLayers(remaining);
+
+    if (remaining.length > 0) {
+      setSelectedId(remaining[remaining.length - 1].id);
+    } else {
+      setSelectedId(-1);
+    }
+  }
+
+  function applyTemplate(template: Template) {
+    setBackground(template.background);
+    setAccent(template.accent);
+    setGradient(true);
+    setPhotoMode(false);
+    imageRef.current = null;
+
+    const first = {
+      ...createLayer(template.title, nextId, 315),
+      size: 82,
+      color: "#ffffff",
+    };
+    const second = {
+      ...createLayer(template.subtitle, nextId + 1, 420),
+      size: 42,
+      color: template.accent,
+      stroke: false,
+    };
+
+    setLayers([first, second]);
+    setSelectedId(nextId);
+    setNextId((value) => value + 2);
+    setStatus(`ØªÙ… ØªØ·Ø¨ÙŠÙ‚ Ù‚Ø§Ù„Ø¨ ${template.name}.`);
+  }
+
+  function downloadImage() {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Render without the editor selection border.
+    const previousSelected = selectedId;
+    setSelectedId(-1);
+
+    requestAnimationFrame(() => {
+      const format = outputFormat === "jpeg" ? "image/jpeg" : "image/png";
+      const quality = outputFormat === "jpeg" ? 0.94 : undefined;
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            setStatus("ØªØ¹Ø°Ø± Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ù…Ù„Ù. Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰.");
+            setSelectedId(previousSelected);
+            return;
+          }
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download =
+            outputFormat === "jpeg"
+              ? "intooly-video-thumbnail.jpg"
+              : "intooly-video-thumbnail.png";
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+
+          setStatus("ØªÙ… ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØµÙˆØ±Ø© Ø¨Ù†Ø¬Ø§Ø­.");
+          setSelectedId(previousSelected);
+        },
+        format,
+        quality
+      );
+    });
+  }
+
+  function resetDesign() {
+    setBackground("#0f172a");
+    setAccent("#f59e0b");
+    setGradient(true);
+    setPhotoMode(false);
+    imageRef.current = null;
+    setLayers([
+      createLayer("Ø¹Ù†ÙˆØ§Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ", 1, 320),
+      {
+        ...createLayer("Ø§ÙƒØªØ¨ Ø¹Ù†ÙˆØ§Ù†Ø§Ù‹ Ø¬Ø°Ø§Ø¨Ø§Ù‹", 2, 420),
+        size: 42,
+        color: "#fbbf24",
+        stroke: false,
+      },
+    ]);
+    setSelectedId(1);
+    setNextId(3);
+    setStatus("ØªÙ…Øª Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØµÙ…ÙŠÙ… Ø¥Ù„Ù‰ Ø§Ù„ÙˆØ¶Ø¹ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠ.");
+  }
+
+  return (
+    <main dir="rtl" className="min-h-screen bg-slate-50 text-slate-900">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <nav
+          aria-label="Ù…Ø³Ø§Ø± Ø§Ù„ØªÙ†Ù‚Ù„"
+          className="mb-5 text-sm text-slate-500"
+        >
+          <a
+            href="/tools/video"
+            className="font-medium transition hover:text-orange-600"
+          >
+            Ø£Ø¯ÙˆØ§Øª Ø§Ù„ÙÙŠØ¯ÙŠÙˆ
+          </a>
+          <span className="mx-2">/</span>
+          <span className="text-slate-700">Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ</span>
+        </nav>
+
+        <header className="mb-8 text-right">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-700">
+            <Sparkles size={16} />
+            Ø£Ø¯Ø§Ø© ØªØµÙ…ÙŠÙ… Ù…Ø¬Ø§Ù†ÙŠØ©
+          </div>
+
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
+            Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ø¬Ø§Ù†Ù‹Ø§
+          </h1>
+
+          <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600 sm:text-lg">
+            ØµÙ…Ù‘Ù… ØµÙˆØ±Ø© Ù…ØµØºÙ‘Ø±Ø© Ø¬Ø°Ø§Ø¨Ø© Ù„ÙÙŠØ¯ÙŠÙˆÙ‡Ø§Øª YouTube Ø¨Ø³Ù‡ÙˆÙ„Ø©. Ø£Ø¶Ù ØµÙˆØ±ØªÙƒ
+            ÙˆØ¹Ù†Ø§ÙˆÙŠÙ†ÙƒØŒ ÙˆØ®ØµØµ Ø§Ù„Ø£Ù„ÙˆØ§Ù† ÙˆØ§Ù„Ø®Ø·ÙˆØ· ÙˆØ§Ù„Ø®Ù„ÙÙŠØ§ØªØŒ Ø«Ù… Ù†Ø²Ù‘Ù„ Ø§Ù„ØªØµÙ…ÙŠÙ… Ø¨Ø¬ÙˆØ¯Ø©
+            Ø¹Ø§Ù„ÙŠØ© Ø¨Ù…Ù‚Ø§Ø³ 1280Ã—720 Ø¨ÙƒØ³Ù„. ØªØªÙ… Ù…Ø¹Ø§Ù„Ø¬Ø© Ø§Ù„ØµÙˆØ± Ø¯Ø§Ø®Ù„ Ù…ØªØµÙØ­Ùƒ Ø¯ÙˆÙ† Ø±ÙØ¹Ù‡Ø§
+            Ø¥Ù„Ù‰ Ø®Ø§Ø¯Ù….
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              "Ù…Ø¬Ø§Ù†ÙŠ",
+              "Ø¨Ø¯ÙˆÙ† ØªØ³Ø¬ÙŠÙ„",
+              "Ù…Ø¹Ø§Ù„Ø¬Ø© Ù…Ø­Ù„ÙŠØ©",
+              "Ù…Ù‚Ø§Ø³ YouTube",
+            ].map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600"
+              >
+                âœ“ {item}
+              </span>
+            ))}
+          </div>
+        </header>
+
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+            <div className="flex items-center gap-2">
+              <div className="rounded-xl bg-orange-100 p-2 text-orange-700">
+                <Layers size={20} />
+              </div>
+              <div>
+                <h2 className="font-bold text-slate-900">Ù…Ø­Ø±Ø± Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ù…ØµØºÙ‘Ø±Ø©</h2>
+                <p className="text-xs text-slate-500">
+                  Ù…Ù‚Ø§Ø³ Ø§Ù„ØªØµÙ…ÙŠÙ… 1280 Ã— 720 Ø¨ÙƒØ³Ù„
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold transition hover:border-orange-400 hover:bg-orange-50"
+              >
+                <Upload size={16} />
+                Ø±ÙØ¹ ØµÙˆØ±Ø©
+              </button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleUpload}
+                className="hidden"
+                aria-label="Ø§Ø®ØªØ± ØµÙˆØ±Ø© Ù„Ù„Ø®Ù„ÙÙŠØ©"
+              />
+
+              <button
+                type="button"
+                onClick={addText}
+                className="inline-flex items-center gap-2 rounded-xl bg-orange-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-700"
+              >
+                <Plus size={17} />
+                Ø¥Ø¶Ø§ÙØ© Ù†Øµ
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="min-w-0 bg-slate-100 p-4 sm:p-7">
+              <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
+                <canvas
+                  ref={canvasRef}
+                  width={WIDTH}
+                  height={HEIGHT}
+                  aria-label="Ù…Ø¹Ø§ÙŠÙ†Ø© ØªØµÙ…ÙŠÙ… Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ù…ØµØºØ±Ø©"
+                  className="block h-auto w-full"
+                  style={{ aspectRatio: "16 / 9" }}
+                />
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                <span>Ø§Ù„Ù…Ù‚Ø§Ø³ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ: 1280 Ã— 720 Ø¨ÙƒØ³Ù„</span>
+                <span>Ø§Ù„Ù†Ø³Ø¨Ø©: 16:9</span>
+              </div>
+
+              {status && (
+                <p
+                  role="status"
+                  className="mt-4 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800"
+                >
+                  {status}
+                </p>
+              )}
+            </div>
+
+            <aside className="space-y-6 border-t border-slate-200 p-5 lg:border-r lg:border-t-0">
+              <section>
+                <h3 className="mb-3 flex items-center gap-2 font-bold">
+                  <Palette size={18} className="text-orange-600" />
+                  Ø§Ù„Ø®Ù„ÙÙŠØ© ÙˆØ§Ù„Ø£Ù„ÙˆØ§Ù†
+                </h3>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="text-sm">
+                    <span className="mb-2 block text-slate-600">Ù„ÙˆÙ† Ø§Ù„Ø®Ù„ÙÙŠØ©</span>
+                    <span className="flex items-center gap-2 rounded-xl border border-slate-200 p-2">
+                      <input
+                        type="color"
+                        value={background}
+                        onChange={(e) => {
+                          setBackground(e.target.value);
+                          setPhotoMode(false);
+                        }}
+                        className="h-8 w-10 cursor-pointer border-0 bg-transparent"
+                        aria-label="Ù„ÙˆÙ† Ø§Ù„Ø®Ù„ÙÙŠØ©"
+                      />
+                      <span className="text-xs text-slate-500">{background}</span>
+                    </span>
+                  </label>
+
+                  <label className="text-sm">
+                    <span className="mb-2 block text-slate-600">Ø§Ù„Ù„ÙˆÙ† Ø§Ù„Ù…Ù…ÙŠØ²</span>
+                    <span className="flex items-center gap-2 rounded-xl border border-slate-200 p-2">
+                      <input
+                        type="color"
+                        value={accent}
+                        onChange={(e) => setAccent(e.target.value)}
+                        className="h-8 w-10 cursor-pointer border-0 bg-transparent"
+                        aria-label="Ø§Ù„Ù„ÙˆÙ† Ø§Ù„Ù…Ù…ÙŠØ²"
+                      />
+                      <span className="text-xs text-slate-500">{accent}</span>
+                    </span>
+                  </label>
+                </div>
+
+                <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={gradient}
+                    onChange={(e) => {
+                      setGradient(e.target.checked);
+                      setPhotoMode(false);
+                    }}
+                    className="accent-orange-600"
+                  />
+                  Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø®Ù„ÙÙŠØ© Ù…ØªØ¯Ø±Ø¬Ø©
+                </label>
+              </section>
+
+              <section>
+                <h3 className="mb-3 flex items-center gap-2 font-bold">
+                  <Type size={18} className="text-orange-600" />
+                  Ø§Ù„Ù†ØµÙˆØµ
+                </h3>
+
+                {layers.length > 0 ? (
+                  <div className="space-y-2">
+                    {layers.map((layer) => (
+                      <button
+                        type="button"
+                        key={layer.id}
+                        onClick={() => setSelectedId(layer.id)}
+                        className={`flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-right text-sm transition ${
+                          layer.id === selectedId
+                            ? "border-orange-400 bg-orange-50 text-orange-800"
+                            : "border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span className="min-w-0 truncate">
+                          {layer.text || "Ù†Øµ ÙØ§Ø±Øº"}
+                        </span>
+                        {layer.id === selectedId && <Check size={16} />}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">
+                    Ø£Ø¶Ù Ù†ØµÙ‹Ø§ Ù„Ø¨Ø¯Ø¡ Ø§Ù„ØªØµÙ…ÙŠÙ….
+                  </p>
+                )}
+
+                {selectedLayer && (
+                  <div className="mt-4 space-y-4">
+                    <label className="block text-sm">
+                      <span className="mb-2 block font-medium text-slate-600">
+                        Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ù†Øµ
+                      </span>
+                      <textarea
+                        value={selectedLayer.text}
+                        onChange={(e) => updateSelected({ text: e.target.value })}
+                        rows={2}
+                        maxLength={140}
+                        className="w-full resize-y rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                        placeholder="Ø§ÙƒØªØ¨ Ø§Ù„Ù†Øµ Ù‡Ù†Ø§"
+                      />
+                    </label>
+
+                    <label className="block text-sm">
+                      <span className="mb-2 flex justify-between text-slate-600">
+                        <span>Ø­Ø¬Ù… Ø§Ù„Ø®Ø·</span>
+                        <span>{selectedLayer.size}px</span>
+                      </span>
+                      <input
+                        type="range"
+                        min="20"
+                        max="150"
+                        value={selectedLayer.size}
+                        onChange={(e) =>
+                          updateSelected({ size: Number(e.target.value) })
+                        }
+                        className="w-full accent-orange-600"
+                      />
+                    </label>
+
+                    <label className="flex items-center justify-between gap-3 text-sm">
+                      <span className="text-slate-600">Ù„ÙˆÙ† Ø§Ù„Ù†Øµ</span>
+                      <input
+                        type="color"
+                        value={selectedLayer.color}
+                        onChange={(e) => updateSelected({ color: e.target.value })}
+                        className="h-9 w-12 cursor-pointer rounded border-0 bg-transparent"
+                        aria-label="Ù„ÙˆÙ† Ø§Ù„Ù†Øµ"
+                      />
+                    </label>
+
+                    <div>
+                      <span className="mb-2 block text-sm text-slate-600">
+                        Ù…Ø­Ø§Ø°Ø§Ø© Ø§Ù„Ù†Øµ
+                      </span>
+                      <div className="grid grid-cols-3 gap-2">
+                        {([
+                          ["right", AlignRight, "ÙŠÙ…ÙŠÙ†"],
+                          ["center", AlignCenter, "ÙˆØ³Ø·"],
+                          ["left", AlignLeft, "ÙŠØ³Ø§Ø±"],
+                        ] as const).map(([align, Icon, label]) => (
+                          <button
+                            type="button"
+                            key={align}
+                            onClick={() => updateSelected({ align })}
+                            aria-label={`Ù…Ø­Ø§Ø°Ø§Ø© ${label}`}
+                            className={`flex items-center justify-center rounded-lg border p-2 transition ${
+                              selectedLayer.align === align
+                                ? "border-orange-400 bg-orange-50 text-orange-700"
+                                : "border-slate-200 hover:bg-slate-50"
+                            }`}
+                          >
+                            <Icon size={17} />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-sm text-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={selectedLayer.bold}
+                          onChange={(e) =>
+                            updateSelected({ bold: e.target.checked })
+                          }
+                          className="accent-orange-600"
+                        />
+                        Ø®Ø· Ø¹Ø±ÙŠØ¶
+                      </label>
+
+                      <label className="flex items-center gap-2 text-sm text-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={selectedLayer.stroke}
+                          onChange={(e) =>
+                            updateSelected({ stroke: e.target.checked })
+                          }
+                          className="accent-orange-600"
+                        />
+                        Ø­Ø¯ÙˆØ¯ Ø­ÙˆÙ„ Ø§Ù„Ù†Øµ
+                      </label>
+
+                      <label className="flex items-center gap-2 text-sm text-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={selectedLayer.shadow}
+                          onChange={(e) =>
+                            updateSelected({ shadow: e.target.checked })
+                          }
+                          className="accent-orange-600"
+                        />
+                        Ø¸Ù„ Ù„Ù„Ù†Øµ
+                      </label>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <label className="text-xs text-slate-600">
+                        Ø§Ù„Ù…ÙˆØ¶Ø¹ Ø§Ù„Ø£ÙÙ‚ÙŠ
+                        <input
+                          type="range"
+                          min="80"
+                          max="1200"
+                          value={selectedLayer.x}
+                          onChange={(e) =>
+                            updateSelected({ x: Number(e.target.value) })
+                          }
+                          className="mt-2 w-full accent-orange-600"
+                        />
+                      </label>
+                      <label className="text-xs text-slate-600">
+                        Ø§Ù„Ù…ÙˆØ¶Ø¹ Ø§Ù„Ø±Ø£Ø³ÙŠ
+                        <input
+                          type="range"
+                          min="50"
+                          max="670"
+                          value={selectedLayer.y}
+                          onChange={(e) =>
+                            updateSelected({ y: Number(e.target.value) })
+                          }
+                          className="mt-2 w-full accent-orange-600"
+                        />
+                      </label>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={removeSelected}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                    >
+                      <Trash2 size={16} />
+                      Ø­Ø°Ù Ø§Ù„Ù†Øµ Ø§Ù„Ù…Ø­Ø¯Ø¯
+                    </button>
+                  </div>
+                )}
+              </section>
+
+              <section>
+                <h3 className="mb-3 font-bold">Ù‚ÙˆØ§Ù„Ø¨ Ø¬Ø§Ù‡Ø²Ø©</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {templates.map((template) => (
+                    <button
+                      type="button"
+                      key={template.name}
+                      onClick={() => applyTemplate(template)}
+                      className="group overflow-hidden rounded-xl border border-slate-200 text-right transition hover:border-orange-400 hover:shadow-md"
+                    >
+                      <span
+                        className="flex aspect-video items-center justify-center px-2 text-center text-xs font-black text-white"
+                        style={{
+                          background: `linear-gradient(135deg, ${template.background}, ${template.accent})`,
+                        }}
+                      >
+                        {template.title}
+                      </span>
+                      <span className="block px-2 py-2 text-xs font-medium text-slate-700">
+                        {template.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <h3 className="mb-3 font-bold">ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØªØµÙ…ÙŠÙ…</h3>
+                <label className="mb-3 block text-sm">
+                  <span className="mb-2 block text-slate-600">ØµÙŠØºØ© Ø§Ù„ØµÙˆØ±Ø©</span>
+                  <select
+                    value={outputFormat}
+                    onChange={(e) =>
+                      setOutputFormat(e.target.value as "png" | "jpeg")
+                    }
+                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-orange-500"
+                  >
+                    <option value="png">PNG â€” Ø¬ÙˆØ¯Ø© Ø¹Ø§Ù„ÙŠØ©</option>
+                    <option value="jpeg">JPG â€” Ø­Ø¬Ù… Ø£ØµØºØ±</option>
+                  </select>
+                </label>
+
+                <button
+                  type="button"
+                  onClick={downloadImage}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 py-3 font-bold text-white shadow-lg shadow-orange-600/20 transition hover:bg-orange-700"
+                >
+                  <Download size={19} />
+                  ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ù…ØµØºÙ‘Ø±Ø©
+                </button>
+
+                <button
+                  type="button"
+                  onClick={resetDesign}
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  <RotateCcw size={16} />
+                  Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØµÙ…ÙŠÙ…
+                </button>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section className="mt-10 space-y-8 text-right">
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              Ù…Ø§ Ø£Ø¯Ø§Ø© Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ØµÙˆØ± Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆØŸ
+            </h2>
+            <p className="mt-3 leading-8 text-slate-600">
+              Ø£Ø¯Ø§Ø© Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ØµÙˆØ± Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ù† Intooly Ù‡ÙŠ Ù…Ø­Ø±Ø± Ù…Ø¬Ø§Ù†ÙŠ
+              ÙŠØ³Ø§Ø¹Ø¯Ùƒ Ø¹Ù„Ù‰ ØªØµÙ…ÙŠÙ… ØµÙˆØ±Ø© Ù…Ø¹Ø§ÙŠÙ†Ø© Ù„ÙÙŠØ¯ÙŠÙˆÙ‡Ø§Øª YouTube ÙˆÙ…Ø­ØªÙˆØ§Ùƒ Ø§Ù„Ù…Ø±Ø¦ÙŠ.
+              ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ø³ØªØ®Ø¯Ø§Ù… ØµÙˆØ±Ø© Ù…Ù† Ø¬Ù‡Ø§Ø²Ùƒ Ø£Ùˆ Ø§Ø®ØªÙŠØ§Ø± Ø®Ù„ÙÙŠØ© Ù„ÙˆÙ†ÙŠØ©ØŒ Ø«Ù… Ø¥Ø¶Ø§ÙØ©
+              Ø§Ù„Ø¹Ù†Ø§ÙˆÙŠÙ† ÙˆØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ø®Ø·ÙˆØ· ÙˆØ§Ù„Ø£Ù„ÙˆØ§Ù† ÙˆØ§Ù„Ù…ÙˆØ§Ø¶Ø¹ Ù‚Ø¨Ù„ ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØªØµÙ…ÙŠÙ….
+            </p>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              ÙƒÙŠÙ ØªØµÙ…Ù… ØµÙˆØ±Ø© Ù…ØµØºÙ‘Ø±Ø© Ø¬Ø°Ø§Ø¨Ø©ØŸ
+            </h2>
+            <ol className="mt-3 list-inside list-decimal space-y-2 leading-8 text-slate-600">
+              <li>Ø§Ø±ÙØ¹ ØµÙˆØ±Ø© Ù…Ù†Ø§Ø³Ø¨Ø© Ø£Ùˆ Ø§Ø®ØªØ± Ø£Ø­Ø¯ Ø§Ù„Ù‚ÙˆØ§Ù„Ø¨ Ø§Ù„Ø¬Ø§Ù‡Ø²Ø©.</li>
+              <li>Ø¹Ø¯Ù‘Ù„ Ø¹Ù†ÙˆØ§Ù† Ø§Ù„ÙÙŠØ¯ÙŠÙˆ ÙˆØ§Ø¬Ø¹Ù„Ù‡ ÙˆØ§Ø¶Ø­Ù‹Ø§ ÙˆØ³Ù‡Ù„ Ø§Ù„Ù‚Ø±Ø§Ø¡Ø©.</li>
+              <li>Ø§Ø®ØªØ± Ø£Ù„ÙˆØ§Ù†Ù‹Ø§ Ù…ØªØ¨Ø§ÙŠÙ†Ø© ØªØ³Ø§Ø¹Ø¯ Ø¹Ù„Ù‰ Ø¥Ø¨Ø±Ø§Ø² Ø§Ù„Ù†Øµ.</li>
+              <li>Ø§Ø¶Ø¨Ø· Ø­Ø¬Ù… Ø§Ù„Ù†Øµ ÙˆÙ…ÙˆØ¶Ø¹Ù‡ Ø­ØªÙ‰ Ù„Ø§ ÙŠØªØ¬Ø§ÙˆØ² Ø­Ø¯ÙˆØ¯ Ø§Ù„ØªØµÙ…ÙŠÙ….</li>
+              <li>Ø§Ø®ØªØ± PNG Ø£Ùˆ JPG Ø«Ù… Ù†Ø²Ù‘Ù„ Ø§Ù„ØµÙˆØ±Ø© Ø¥Ù„Ù‰ Ø¬Ù‡Ø§Ø²Ùƒ.</li>
+            </ol>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              Ù…Ø§ Ù…Ù‚Ø§Ø³ Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ø§Ù„Ù…Ù†Ø§Ø³Ø¨ Ù„ÙŠÙˆØªÙŠÙˆØ¨ØŸ
+            </h2>
+            <p className="mt-3 leading-8 text-slate-600">
+              ØªØ³ØªØ®Ø¯Ù… Ù‡Ø°Ù‡ Ø§Ù„Ø£Ø¯Ø§Ø© Ù…Ø³Ø§Ø­Ø© ØªØµÙ…ÙŠÙ… Ø¨Ø¯Ù‚Ø© 1280Ã—720 Ø¨ÙƒØ³Ù„ ÙˆÙ†Ø³Ø¨Ø© Ø£Ø¨Ø¹Ø§Ø¯
+              16:9ØŒ ÙˆÙ‡ÙŠ Ù†Ø³Ø¨Ø© Ø´Ø§Ø¦Ø¹Ø© Ù„Ù„ØµÙˆØ± Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ù„ÙÙŠØ¯ÙŠÙˆÙ‡Ø§Øª YouTube. Ø§Ø­Ø±Øµ Ø¹Ù„Ù‰
+              Ø£Ù† ÙŠÙƒÙˆÙ† Ø§Ù„Ø¹Ù†ÙˆØ§Ù† ÙˆØ§Ø¶Ø­Ù‹Ø§ Ø¹Ù†Ø¯ Ø¹Ø±Ø¶ Ø§Ù„ØµÙˆØ±Ø© Ø¹Ù„Ù‰ Ø´Ø§Ø´Ø© ØµØºÙŠØ±Ø©ØŒ ÙˆØªØ­Ù‚Ù‚ Ù…Ù†
+              Ù…ØªØ·Ù„Ø¨Ø§Øª Ø§Ù„Ù…Ù†ØµØ© Ø§Ù„Ø­Ø§Ù„ÙŠØ© Ù‚Ø¨Ù„ Ø§Ù„Ù†Ø´Ø±.
+            </p>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              Ø§Ù„Ø£Ø³Ø¦Ù„Ø© Ø§Ù„Ø´Ø§Ø¦Ø¹Ø©
+            </h2>
+            <div className="mt-4 space-y-4">
+              {[
+                {
+                  q: "Ù‡Ù„ Ø£Ø¯Ø§Ø© Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ØµÙˆØ± Ø§Ù„Ù…ØµØºÙ‘Ø±Ø© Ù…Ø¬Ø§Ù†ÙŠØ©ØŸ",
+                  a: "Ù†Ø¹Ù…ØŒ ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø£Ø¯ÙˆØ§Øª Ø§Ù„ØªØ­Ø±ÙŠØ± Ø§Ù„Ù…ØªØ§Ø­Ø© ÙÙŠ Ø§Ù„ØµÙØ­Ø© Ø¯ÙˆÙ† Ø§Ø´ØªØ±Ø§Ùƒ Ù…Ø¯ÙÙˆØ¹.",
+                },
+                {
+                  q: "Ù‡Ù„ Ø£Ø­ØªØ§Ø¬ Ø¥Ù„Ù‰ ØªØ«Ø¨ÙŠØª Ø¨Ø±Ù†Ø§Ù…Ø¬ØŸ",
+                  a: "Ù„Ø§ØŒ ØªØ¹Ù…Ù„ Ø§Ù„Ø£Ø¯Ø§Ø© ÙÙŠ Ù…ØªØµÙØ­ Ø§Ù„ÙˆÙŠØ¨ Ø¹Ù„Ù‰ Ø¬Ù‡Ø§Ø²Ùƒ.",
+                },
+                {
+                  q: "Ù‡Ù„ ÙŠÙ…ÙƒÙ† ÙƒØªØ§Ø¨Ø© Ø§Ù„Ù†Øµ Ø¨Ø§Ù„Ù„ØºØ© Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©ØŸ",
+                  a: "Ù†Ø¹Ù…ØŒ ÙŠÙ…ÙƒÙ†Ùƒ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„Ù†Øµ Ø§Ù„Ø¹Ø±Ø¨ÙŠ ÙˆØ§Ù„Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠ ÙˆØªØ¹Ø¯ÙŠÙ„ Ø­Ø¬Ù…Ù‡ ÙˆÙ„ÙˆÙ†Ù‡ ÙˆÙ…Ø­Ø§Ø°Ø§ØªÙ‡.",
+                },
+                {
+                  q: "Ù‡Ù„ ÙŠÙ…ÙƒÙ†Ù†ÙŠ Ø§Ø³ØªØ®Ø¯Ø§Ù… ØµÙˆØ±Ø© Ù…Ù† Ø¬Ù‡Ø§Ø²ÙŠØŸ",
+                  a: "Ù†Ø¹Ù…ØŒ ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ø®ØªÙŠØ§Ø± ØµÙˆØ±Ø© Ù…Ø­Ù„ÙŠØ© Ù„ØªÙƒÙˆÙ† Ø®Ù„ÙÙŠØ© Ø§Ù„ØªØµÙ…ÙŠÙ…ØŒ ÙˆØªØªÙ… Ù…Ø¹Ø§Ù„Ø¬ØªÙ‡Ø§ Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ØªØµÙØ­.",
+                },
+                {
+                  q: "Ù‡Ù„ ÙŠÙ…ÙƒÙ† ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØµÙˆØ±Ø© Ø¨ØµÙŠØºØ© JPGØŸ",
+                  a: "Ù†Ø¹Ù…ØŒ ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ø®ØªÙŠØ§Ø± PNG Ø£Ùˆ JPG Ù‚Ø¨Ù„ ØªÙ†Ø²ÙŠÙ„ Ø§Ù„ØªØµÙ…ÙŠÙ….",
+                },
+                {
+                  q: "Ù‡Ù„ Ø£Ø³ØªØ·ÙŠØ¹ Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ±Ø© Ø¨Ù…Ù‚Ø§Ø³ 1280Ã—720ØŸ",
+                  a: "Ù†Ø¹Ù…ØŒ ØªÙ†ØªØ¬ Ø§Ù„Ø£Ø¯Ø§Ø© ØªØµÙ…ÙŠÙ…Ù‹Ø§ Ø¨Ø£Ø¨Ø¹Ø§Ø¯ 1280Ã—720 Ø¨ÙƒØ³Ù„ ÙˆÙ†Ø³Ø¨Ø© 16:9.",
+                },
+              ].map((item) => (
+                <details
+                  key={item.q}
+                  className="group rounded-2xl border border-slate-200 bg-white p-4"
+                >
+                  <summary className="cursor-pointer list-none font-bold text-slate-800 marker:hidden">
+                    <span className="flex items-center justify-between gap-4">
+                      {item.q}
+                      <span className="text-xl text-orange-600 transition group-open:rotate-45">
+                        +
+                      </span>
+                    </span>
+                  </summary>
+                  <p className="mt-3 leading-7 text-slate-600">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+========== LAYOUT.TSX ==========
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ø¬Ø§Ù†Ù‹Ø§ Ø£ÙˆÙ†Ù„Ø§ÙŠÙ† | Video Thumbnail Maker",
+  description:
+    "Ø£Ù†Ø´Ø¦ ØµÙˆØ±Ø© Ù…ØµØºÙ‘Ø±Ø© Ù„ÙÙŠØ¯ÙŠÙˆÙ‡Ø§Øª YouTube Ù…Ø¬Ø§Ù†Ù‹Ø§. Ø£Ø¶Ù Ø§Ù„ØµÙˆØ± ÙˆØ§Ù„Ù†ØµÙˆØµ ÙˆØ®ØµØµ Ø§Ù„Ø£Ù„ÙˆØ§Ù† ÙˆØ§Ù„Ø®Ø·ÙˆØ· ÙˆØ§Ù„Ø®Ù„ÙÙŠØ§ØªØŒ Ø«Ù… Ù†Ø²Ù‘Ù„ Ø§Ù„ØªØµÙ…ÙŠÙ… Ø¨Ù…Ù‚Ø§Ø³ 1280Ã—720 Ø¨ØµÙŠØºØªÙŠ PNG ÙˆJPG.",
+  alternates: {
+    canonical: "https://intooly.com/tools/video-thumbnail-maker",
+  },
+  openGraph: {
+    title: "Ø¥Ù†Ø´Ø§Ø¡ ØµÙˆØ± Ù…ØµØºÙ‘Ø±Ø© Ù„Ù„ÙÙŠØ¯ÙŠÙˆ Ù…Ø¬Ø§Ù†Ù‹Ø§ | Intooly",
+    description:
+      "ØµÙ…Ù‘Ù… ØµÙˆØ±Ø© Ù…ØµØºÙ‘Ø±Ø© Ù„ÙÙŠØ¯ÙŠÙˆÙƒ Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ù…Ø­Ø±Ø± Ù…Ø¬Ø§Ù†ÙŠ ÙŠØ¯Ø¹Ù… Ø§Ù„Ù†ØµÙˆØµ Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© ÙˆØ§Ù„Ø®Ù„ÙÙŠØ§Øª ÙˆØ§Ù„Ø£Ù„ÙˆØ§Ù† ÙˆØ§Ù„ØªÙ†Ø²ÙŠÙ„ Ø¨Ø¬ÙˆØ¯Ø© Ø¹Ø§Ù„ÙŠØ©.",
+    url: "https://intooly.com/tools/video-thumbnail-maker",
+    siteName: "Intooly",
+    type: "website",
+    locale: "ar",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export default function VideoThumbnailMakerLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return children;
+}
