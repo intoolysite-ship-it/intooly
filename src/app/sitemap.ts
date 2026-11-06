@@ -23,161 +23,112 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/cookie-policy', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
     
     // تصنيفات الأدوات
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/pdf', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/documents', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/images', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
+        { path: '/tools/health-fitness', priority: 0.8, changeFrequency: 'weekly', lastModified: new Date() },
+    { path: '/tools/bmi-calculator', priority: 0.9, changeFrequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/seo', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/productivity', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات PDF
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/merge-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/split-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/rotate-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/jpg-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/word-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/delete-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/extract-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/pdf-to-jpg', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/compress-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/organize-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/watermark-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/pdf-to-word', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/pdf-to-excel', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/pdf-to-ppt', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/sign-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/protect-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/unlock-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات الصور
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/convert-image-to-text', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/color-palette-generator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/heic-to-jpg', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-  
-  
-  
+
     { path: '/tools/image-color-picker', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-  
-  
-  
+
     { path: '/tools/background-remover', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/image-compressor', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/image-resizer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/image-converter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/image-cropper', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/product-photo-studio', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات الفيديو
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-compressor', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-converter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-to-audio', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-trimmer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-to-gif', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video-thumbnail-maker', priority: 0.85, frequency: 'weekly', lastModified: new Date('2026-11-03') },
 
     // أدوات SEO
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/word-counter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/seo-meta-tags', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-23') },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/seo-checker', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-24') },
 
     // أدوات الإنتاجية
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/utm-builder', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/what-is-my-ip', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
 
     // أدوات المستندات
-    { path: '/tools/bmi-calculator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/jpg-to-word', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
   ];
