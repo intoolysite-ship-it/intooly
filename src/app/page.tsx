@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Sparkles,
@@ -38,8 +38,7 @@ import {
   FileOutput,
   ScanText,
   Link2,
-  Mic, // ✅ تمت الإضافة
-} from 'lucide-react';
+  Mic, Activity } from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
 import HeroSearch from '@/components/HeroSearch';
@@ -63,7 +62,20 @@ export const metadata: Metadata = {
 };
 
 const categories = [
+
   {
+    icon: Activity,
+    title: "الصحة واللياقة البدنية",
+    description: "حاسبات صحية مجانية لمؤشر كتلة الجسم، الوزن المثالي، والسعرات الحرارية.",
+    href: "/tools/health-fitness",
+    color: {
+      bg: '#f0fdf4',
+      border: '#bbf7d0',
+      iconBg: '#dcfce7',
+      iconColor: '#16a34a',
+      shadow: 'rgba(22,163,74,0.15)',
+    },
+  },  {
     icon: ImageIcon,
     title: 'أدوات الصور',
     description: 'إزالة الخلفية، وضغط الصور، وتغيير الأبعاد، وتحويل الصيغ.',
