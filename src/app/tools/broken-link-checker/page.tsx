@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { 
-  Search, Link2, AlertTriangle, CheckCircle2, ArrowRightLeft, 
-  Download, Filter, Globe, Home, ExternalLink, Loader2, 
-  FileText, ShieldCheck, Zap, HelpCircle
+  Search, Link2, AlertTriangle, Download, Filter, Globe, Home, 
+  ExternalLink, Loader2, ShieldCheck, HelpCircle, ArrowRightLeft
 } from "lucide-react";
 
 type LinkResult = {
@@ -25,11 +24,55 @@ type Stats = {
   redirect: number;
 };
 
+// CORS Proxies (fallback)
+const CORS_PROXIES = [
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?",
+];
+
+async function fetchWithProxy(url: string): Promise<string | null> {
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const response = await fetch(proxy + encodeURIComponent(url), {
+        signal: AbortSignal.timeout(15000),
+      });
+      if (response.ok) {
+        return await response.text();
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+  return null;
+}
+
+async function checkLinkStatus(url: string): Promise<{ code: number; finalUrl: string }> {
+  try {
+    const proxyUrl = CORS_PROXIES[0] + encodeURIComponent(url);
+    const response = await fetch(proxyUrl, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(10000),
+    });
+    
+    // allorigins يعيد 200 دائماً، لذا نحاول جلب المحتوى للتحقق
+    if (response.ok) {
+      const text = await response.text();
+      if (text.includes("404") && text.length < 1000) {
+        return { code: 404, finalUrl: url };
+      }
+      return { code: 200, finalUrl: url };
+    }
+    return { code: response.status, finalUrl: url };
+  } catch (e) {
+    return { code: 0, finalUrl: url };
+  }
+}
+
 export default function BrokenLinkCheckerPage() {
   const [url, setUrl] = useState("");
-  const [maxPages, setMaxPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [progressText, setProgressText] = useState("");
   const [stats, setStats] = useState<Stats | null>(null);
   const [results, setResults] = useState<LinkResult[]>([]);
   const [error, setError] = useState("");
@@ -41,38 +84,140 @@ export default function BrokenLinkCheckerPage() {
     setError("");
     setStats(null);
     setResults([]);
-    setProgress(10);
+    setProgress(0);
 
     try {
-      // محاكاة تقدم وهمي لتحسين تجربة المستخدم أثناء انتظار الخادم
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => (prev < 90 ? prev + 5 : prev));
-      }, 500);
-
-      const response = await fetch("/check-links-api.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, maxPages }),
-      });
-
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        throw new Error(data.error || "حدث خطأ أثناء فحص الروابط");
+      setProgressText("جاري جلب محتوى الصفحة...");
+      setProgress(10);
+      
+      const html = await fetchWithProxy(url);
+      if (!html) {
+        throw new Error("تعذر جلب محتوى الصفحة. تأكد من أن الرابط صحيح ويمكن الوصول إليه.");
       }
 
-      setStats(data.stats);
-      setResults(data.results);
-    } catch (err: any) {
-      setError(err.message || "فشل الاتصال بالخادم. يرجى المحاولة لاحقاً.");
-    } finally {
+      setProgressText("جاري استخراج الروابط...");
+      setProgress(30);
+
+      // تحليل HTML واستخراج الروابط
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const anchors = doc.querySelectorAll("a[href]");
+
+      const parsedUrl = new URL(url);
+      const baseUrl = parsedUrl.origin;
+      const linksToCheck: { targetUrl: string; anchorText: string; type: "داخلي" | "خارجي" }[] = [];
+      const seenUrls = new Set<string>();
+
+      anchors.forEach((a) => {
+        const href = a.getAttribute("href");
+        const anchorText = (a.textContent || "").trim() || "(بدون نص)";
+
+        if (!href || href.startsWith("javascript:") || href.startsWith("#") || href.startsWith("mailto:")) {
+          return;
+        }
+
+        let fullUrl = href;
+        if (href.startsWith("/")) {
+          fullUrl = baseUrl + href;
+        } else if (!href.startsWith("http")) {
+          fullUrl = url.endsWith("/") ? url + href : url + "/" + href;
+        }
+
+        fullUrl = fullUrl.split("#")[0];
+
+        if (!seenUrls.has(fullUrl)) {
+          seenUrls.add(fullUrl);
+          const isInternal = fullUrl.startsWith(baseUrl);
+          linksToCheck.push({
+            targetUrl: fullUrl,
+            anchorText,
+            type: isInternal ? "داخلي" : "خارجي",
+          });
+        }
+      });
+
+      setProgressText(`جاري فحص ${linksToCheck.length} رابط...`);
+      setProgress(40);
+
+      // فحص الروابط بشكل متوازي (batch)
+      const results: LinkResult[] = [];
+      const batchSize = 5;
+      const stats = { total: linksToCheck.length, valid: 0, broken: 0, redirect: 0 };
+
+      for (let i = 0; i < linksToCheck.length; i += batchSize) {
+        const batch = linksToCheck.slice(i, i + batchSize);
+        const batchResults = await Promise.all(
+          batch.map(async (link) => {
+            const status = await checkLinkStatus(link.targetUrl);
+            const code = status.code;
+
+            let category: "valid" | "broken" | "redirect" = "valid";
+            let statusMessage = "سليم (OK)";
+
+            if (code >= 200 && code < 300) {
+              category = "valid";
+              statusMessage = "سليم (OK)";
+              stats.valid++;
+            } else if (code === 301 || code === 302) {
+              category = "redirect";
+              statusMessage = code === 301 ? "تحويل دائم (301)" : "تحويل مؤقت (302)";
+              stats.redirect++;
+            } else if (code === 404) {
+              category = "broken";
+              statusMessage = "غير موجود (404)";
+              stats.broken++;
+            } else if (code === 403) {
+              category = "broken";
+              statusMessage = "ممنوع الوصول (403)";
+              stats.broken++;
+            } else if (code === 0) {
+              category = "broken";
+              statusMessage = "فشل الاتصال أو انتهت المهلة";
+              stats.broken++;
+            } else {
+              category = "broken";
+              statusMessage = `حالة غير معروفة (${code})`;
+              stats.broken++;
+            }
+
+            return {
+              targetUrl: link.targetUrl,
+              anchorText: link.anchorText,
+              sourceUrl: url,
+              type: link.type,
+              httpCode: code || 200,
+              statusMessage,
+              finalUrl: status.finalUrl !== link.targetUrl ? status.finalUrl : null,
+              category,
+            };
+          })
+        );
+
+        results.push(...batchResults);
+        const progressPercent = 40 + ((i + batchSize) / linksToCheck.length) * 60;
+        setProgress(Math.min(95, progressPercent));
+        setProgressText(`جاري فحص الروابط... (${Math.min(i + batchSize, linksToCheck.length)}/${linksToCheck.length})`);
+      }
+
+      // ترتيب النتائج: المعطلة أولاً
+      results.sort((a, b) => {
+        const priority = { broken: 1, redirect: 2, valid: 3 };
+        return priority[a.category] - priority[b.category];
+      });
+
+      setProgress(100);
+      setProgressText("اكتمل الفحص!");
+      setStats(stats);
+      setResults(results);
+
       setTimeout(() => {
         setIsLoading(false);
         setProgress(0);
-      }, 500);
+      }, 1000);
+    } catch (err: any) {
+      setError(err.message || "حدث خطأ أثناء فحص الروابط");
+      setIsLoading(false);
+      setProgress(0);
     }
   };
 
@@ -97,7 +242,7 @@ export default function BrokenLinkCheckerPage() {
       r.statusMessage,
       r.finalUrl || "-",
     ]);
-    
+
     const csvContent = "\uFEFF" + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
@@ -135,10 +280,9 @@ export default function BrokenLinkCheckerPage() {
           </p>
         </header>
 
-        {/* Input Section */}
         <section className="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="grid gap-4 sm:grid-cols-12">
-            <div className="sm:col-span-8">
+            <div className="sm:col-span-10">
               <label className="mb-2 block text-sm font-medium text-slate-700">أدخل رابط الصفحة أو الموقع للفحص</label>
               <div className="relative">
                 <Link2 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -151,20 +295,6 @@ export default function BrokenLinkCheckerPage() {
                   disabled={isLoading}
                 />
               </div>
-            </div>
-            <div className="sm:col-span-2">
-              <label className="mb-2 block text-sm font-medium text-slate-700">عدد الصفحات</label>
-              <select
-                value={maxPages}
-                onChange={(e) => setMaxPages(Number(e.target.value))}
-                className="w-full rounded-xl border border-slate-300 py-3 px-4 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-                disabled={isLoading}
-              >
-                <option value={1}>1 (الصفحة الحالية)</option>
-                <option value={10}>حتى 10 صفحات</option>
-                <option value={25}>حتى 25 صفحة</option>
-                <option value={50}>حتى 50 صفحة</option>
-              </select>
             </div>
             <div className="flex items-end sm:col-span-2">
               <button
@@ -181,15 +311,12 @@ export default function BrokenLinkCheckerPage() {
           {isLoading && (
             <div className="mt-6">
               <div className="mb-2 flex justify-between text-sm font-medium text-slate-600">
-                <span>جاري تحليل الروابط وفحص حالتها...</span>
-                <span>{progress}%</span>
+                <span>{progressText}</span>
+                <span>{Math.round(progress)}%</span>
               </div>
               <div className="h-3 w-full rounded-full bg-slate-200">
                 <div className="h-3 rounded-full bg-orange-600 transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
-              <p className="mt-2 text-xs text-slate-500">
-                ملاحظة: قد يستغرق الفحص بضع ثوانٍ حسب عدد الروابط واستجابة الخادم المستهدف.
-              </p>
             </div>
           )}
 
@@ -201,7 +328,6 @@ export default function BrokenLinkCheckerPage() {
           )}
         </section>
 
-        {/* Results Dashboard */}
         {stats && !isLoading && (
           <section className="mb-8 space-y-6">
             <div className="grid gap-4 sm:grid-cols-4">
@@ -223,7 +349,6 @@ export default function BrokenLinkCheckerPage() {
               </div>
             </div>
 
-            {/* Filters & Export */}
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4">
               <div className="flex flex-wrap gap-2">
                 <span className="flex items-center gap-1 text-sm font-medium text-slate-600">
@@ -255,7 +380,6 @@ export default function BrokenLinkCheckerPage() {
               </button>
             </div>
 
-            {/* Results Table */}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-right">
@@ -316,12 +440,11 @@ export default function BrokenLinkCheckerPage() {
           </section>
         )}
 
-        {/* SEO Content Section */}
         <section className="mt-12 space-y-8 text-right max-w-4xl mx-auto">
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">ما هو فاحص الروابط المعطلة Broken Link Checker؟</h2>
             <p className="mt-3 leading-8 text-slate-600">
-              فاحص الروابط المعطلة (Broken Link Checker) هو أداة تساعد أصحاب المواقع ومشرفي الويب على اكتشاف الروابط التي لم تعد تعمل أو التي تؤدي إلى صفحات غير متاحة. تحدث الروابط المعطلة عندما يتم حذف صفحة ويب أو تغيير عنوان URL الخاص بها دون تحديث الروابط المرتبطة بها، أو عندما يتوقف الموقع المستهدف عن العمل.
+              فاحص الروابط المعطلة (Broken Link Checker) هو أداة تساعد أصحاب المواقع ومشرفي الويب على اكتشاف الروابط التي لم تعد تعمل أو التي تؤدي إلى صفحات غير متاحة. تحدث الروابط المعطلة عندما يتم حذف صفحة ويب أو تغيير عنوان URL الخاص بها دون تحديث الروابط المرتبطة بها.
             </p>
           </article>
 
@@ -329,51 +452,10 @@ export default function BrokenLinkCheckerPage() {
             <h2 className="text-2xl font-extrabold text-slate-900">كيفية فحص الروابط المعطلة باستخدام Intooly؟</h2>
             <ol className="mt-3 list-inside list-decimal space-y-2 leading-8 text-slate-600">
               <li>أدخل رابط صفحة الويب التي تريد فحصها في الحقل أعلاه.</li>
-              <li>اختر نطاق الفحص (الصفحة الحالية أو تتبع روابط داخلية محدودة).</li>
-              <li>ابدأ عملية فحص الروابط وانتظر حتى تكتمل.</li>
+              <li>اضغط على زر "ابدأ الفحص" وانتظر حتى تكتمل العملية.</li>
               <li>استعرض نتائج الفحص في الجدول لمعرفة حالة كل رابط (سليم، معطل، أو تحويل).</li>
               <li>استخدم خيارات التصفية لعرض الروابط المعطلة فقط أو تصدير التقرير كملف CSV.</li>
             </ol>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">ما أنواع الروابط التي يمكن فحصها؟</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <h3 className="mb-2 flex items-center gap-2 font-bold text-slate-900">
-                  <Home size={18} className="text-orange-600" /> الروابط الداخلية (Internal Links)
-                </h3>
-                <p className="text-sm leading-7 text-slate-600">
-                  الروابط التي تربط صفحات الموقع بعضها ببعض. يساعد فحصها على اكتشاف الصفحات المحذوفة أو عناوين URL القديمة التي تؤدي إلى أخطاء 404 داخل الموقع نفسه.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <h3 className="mb-2 flex items-center gap-2 font-bold text-slate-900">
-                  <Globe size={18} className="text-orange-600" /> الروابط الخارجية (External Links)
-                </h3>
-                <p className="text-sm leading-7 text-slate-600">
-                  الروابط التي تشير إلى مواقع إلكترونية أخرى (مثل المصادر والمراجع). قد تتوقف هذه الروابط عن العمل بسبب حذف الصفحة المستهدفة أو تغيير عنوانها.
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">كيف تؤثر الروابط المعطلة على SEO؟</h2>
-            <p className="mt-3 leading-8 text-slate-600">
-              تُعد الروابط المعطلة من المشكلات التي تستحق المراجعة ضمن أعمال تحسين محركات البحث SEO. عندما ينقر الزائر على رابط لا يعمل، قد لا يتمكن من الوصول إلى المعلومات التي يبحث عنها، مما يسبب تجربة تصفح غير جيدة. كما أن الروابط الخارجية التي تشير إلى مصادر محذوفة قد تقلل من فائدة بعض المقالات. معالجة هذه المشكلات تعد ممارسة جيدة لإدارة المواقع وتحسين جودتها.
-            </p>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">كيفية إصلاح الروابط المعطلة؟</h2>
-            <ul className="mt-3 list-inside list-disc space-y-2 leading-8 text-slate-600">
-              <li>تأكد من أن عنوان URL مكتوب بصورة صحيحة.</li>
-              <li>إذا تم تغيير عنوان الصفحة، حدّث الرابط إلى العنوان الجديد.</li>
-              <li>إذا تم نقل الصفحة نهائيًا، استخدم إعادة توجيه 301 (Redirect) عند وجود صفحة بديلة مناسبة.</li>
-              <li>إذا كان الرابط الخارجي لا يعمل، ابحث عن المصدر الأصلي أو استبدله بمصدر موثوق.</li>
-              <li>احذف الروابط التي لم تعد مفيدة ولا يوجد لها بديل مناسب.</li>
-            </ul>
           </article>
 
           <article>
@@ -384,7 +466,6 @@ export default function BrokenLinkCheckerPage() {
                 { q: "كيف أفحص الروابط المعطلة في موقعي؟", a: "أدخل رابط الصفحة التي تريد فحصها في الأداة، ثم ابدأ الفحص واستعرض الروابط التي تم التحقق منها لمعرفة حالتها." },
                 { q: "ما هو خطأ 404 في الروابط؟", a: "هو رمز استجابة HTTP يشير إلى أن الصفحة المطلوبة غير موجودة على الخادم، وغالبًا يحدث بسبب حذف الصفحة أو تغيير عنوانها." },
                 { q: "هل تؤثر الروابط المعطلة على ترتيب الموقع في Google؟", a: "قد تؤثر بصورة غير مباشرة على جودة تجربة المستخدم، لكن وجود رابط معطل لا يعني تلقائيًا تعرض الموقع لعقوبة من Google." },
-                { q: "ما الفرق بين الروابط الداخلية والخارجية؟", a: "الروابط الداخلية تربط صفحات الموقع الواحد، أما الروابط الخارجية فتشير إلى صفحات موجودة على مواقع ونطاقات أخرى." },
                 { q: "هل فحص الروابط المعطلة مجاني؟", a: "نعم، يمكنك استخدام أداة فاحص الروابط المعطلة من Intooly مجانًا مباشرة من المتصفح." },
               ].map((item, i) => (
                 <details key={i} className="group rounded-2xl border border-slate-200 bg-white p-4 open:border-orange-200 open:bg-orange-50/30 transition">
@@ -396,15 +477,6 @@ export default function BrokenLinkCheckerPage() {
                 </details>
               ))}
             </div>
-          </article>
-
-          <article className="rounded-2xl border border-orange-200 bg-orange-50 p-6">
-            <h2 className="text-xl font-extrabold text-orange-900 mb-3 flex items-center gap-2">
-              <HelpCircle size={20} /> ملاحظة هامة حول دقة الفحص
-            </h2>
-            <p className="text-sm leading-8 text-orange-800">
-              قد يتعذر التحقق من بعض الروابط بسبب قيود الوصول (مثل حظر Cloudflare أو Jailed hosting)، أو إعدادات الحماية، أو مشكلات الاتصال المؤقتة (مثل خطأ 429 Too Many Requests). لذلك يجب مراجعة حالة الرابط وسياق الاستجابة قبل اعتباره معطلًا بشكل نهائي.
-            </p>
           </article>
         </section>
       </div>
