@@ -33,6 +33,12 @@ export const metadata: Metadata = {
 
 const tools = [
   {
+    icon: FileImage,
+    title: "قارئ بيانات الصور EXIF",
+    description: "استخرج معلومات الكاميرا، إعدادات التصوير، والموقع الجغرافي من صورك محلياً وبأمان.",
+    href: "/tools/exif-viewer",
+  },
+  {
     icon: FileImage, // ✅ أداة تحويل HEIC إلى JPG
     title: 'تحويل HEIC إلى JPG',
     description: 'حوّل صور iPhone بصيغة HEIC وHEIF إلى JPG بسهولة وأمان.',
