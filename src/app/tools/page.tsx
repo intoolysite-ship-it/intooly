@@ -48,10 +48,22 @@ const categories = [
     badge: null,
   },
   {
+    icon: ImageIcon,
+    title: "قارئ بيانات الصور EXIF",
+    description: "استخرج معلومات الكاميرا، إعدادات التصوير، والموقع الجغرافي من صورك محلياً وبأمان.",
+    href: "/tools/exif-viewer",
+  },
+  {
     icon: Activity,
     title: "فاحص الروابط المعطلة",
     description: "اكتشف الروابط المعطلة والتالفة وروابط 404 في موقعك مجانًا مع تقرير تفصيلي.",
     href: "/tools/broken-link-checker",
+  },
+  {
+    icon: ImageIcon,
+    title: "قارئ بيانات الصور EXIF",
+    description: "استخرج معلومات الكاميرا، إعدادات التصوير، والموقع الجغرافي من صورك محلياً وبأمان.",
+    href: "/tools/exif-viewer",
   },
   {
     icon: Activity,

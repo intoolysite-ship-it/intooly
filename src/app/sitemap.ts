@@ -30,6 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   
     { path: '/tools/images', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
         { path: '/tools/health-fitness', priority: 0.8, frequency: 'weekly', lastModified: new Date() },
+    { path: '/tools/exif-viewer', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
+  
     { path: '/tools/broken-link-checker', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/bmi-calculator', priority: 0.9, frequency: 'weekly', lastModified: new Date() },
