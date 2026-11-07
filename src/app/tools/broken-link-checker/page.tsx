@@ -49,7 +49,7 @@ export default function BrokenLinkCheckerPage() {
         setProgress((prev) => (prev < 90 ? prev + 5 : prev));
       }, 500);
 
-      const response = await fetch("/api/check-links.php", {
+      const response = await fetch("/check-links-api.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, maxPages }),
