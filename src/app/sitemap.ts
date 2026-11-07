@@ -29,8 +29,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/tools/documents', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
   
     { path: '/tools/images', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-        { path: '/tools/health-fitness', priority: 0.8, changeFrequency: 'weekly', lastModified: new Date() },
-    { path: '/tools/bmi-calculator', priority: 0.9, changeFrequency: 'weekly', lastModified: new Date() },
+        { path: '/tools/health-fitness', priority: 0.8, frequency: 'weekly', lastModified: new Date() },
+    { path: '/tools/broken-link-checker', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
+  
+    { path: '/tools/bmi-calculator', priority: 0.9, frequency: 'weekly', lastModified: new Date() },
   
     { path: '/tools/video', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
   
@@ -136,7 +138,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
     url: `${baseUrl}${route.path}`,
     lastModified: route.lastModified,
-    changeFrequency: route.frequency,
+    frequency: route.frequency,
     priority: route.priority,
   }));
 }

@@ -49,6 +49,12 @@ const categories = [
   },
   {
     icon: Activity,
+    title: "فاحص الروابط المعطلة",
+    description: "اكتشف الروابط المعطلة والتالفة وروابط 404 في موقعك مجانًا مع تقرير تفصيلي.",
+    href: "/tools/broken-link-checker",
+  },
+  {
+    icon: Activity,
     title: "الصحة واللياقة البدنية",
     description: "حاسبات صحية مجانية لمؤشر كتلة الجسم، الوزن المثالي، السعرات الحرارية، وأدوات التغذية واللياقة.",
     href: "/tools/health-fitness",
