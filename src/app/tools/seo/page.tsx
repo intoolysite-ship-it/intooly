@@ -7,6 +7,7 @@ import {
   BookOpen,
   Tag,
   Search,
+  Link2,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -27,6 +28,8 @@ export const metadata: Metadata = {
 };
 
 const tools = [
+  { icon: Link2, title: 'فاحص الروابط المعطلة', description: 'اكتشف الروابط المعطلة والتالفة وروابط 404 في موقعك مجانًا مع تقرير تفصيلي.', href: '/tools/broken-link-checker' },
+
   { icon: BarChart3, title: 'مولّد الكلمات المفتاحية', description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.', href: '/tools/keyword-generator' },
   { icon: FileText, title: 'عدّاد الكلمات', description: 'احسب الكلمات والأحرف في النصوص.', href: '/tools/word-counter' },
   { icon: Tag, title: 'أداة Meta Tags الشاملة', description: 'أنشئ وسوم SEO كاملة (Title, Description, Robots, Open Graph) مع معاينة فورية.', href: '/tools/seo-meta-tags' },
