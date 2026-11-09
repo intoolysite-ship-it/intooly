@@ -241,6 +241,21 @@ export default function RootLayout({
             `
           }}
         />
+              <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://intooly.com/#organization",
+              "name": "Intooly",
+              "url": "https://intooly.com",
+              "logo": "https://intooly.com/icon.png",
+              "description": "Intooly is a free online platform providing tools for images, video, audio, PDF, SEO, and calculations. All tools are 100% free and process data locally in the browser to protect user privacy.",
+              "sameAs": []
+            }).replace(/</g, "\\u003c")
+          }}
+        />
   </body>
     </html>
   );
