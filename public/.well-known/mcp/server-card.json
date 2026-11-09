@@ -1,0 +1,20 @@
+{
+  "name": "Intooly MCP Server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for Intooly, providing access to free online tool information and utilities.",
+  "endpoint": "https://intooly.com/api/mcp",
+  "capabilities": ["tools", "resources"],
+  "tools": [
+    {
+      "name": "get_tool_info",
+      "description": "Get information about a specific tool on Intooly",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "tool_name": { "type": "string", "description": "Name of the tool (e.g., 'exif-viewer', 'bmi-calculator')" }
+        },
+        "required": ["tool_name"]
+      }
+    }
+  ]
+}

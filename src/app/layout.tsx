@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { Cairo } from 'next/font/google';
 import './globals.css';
@@ -187,7 +187,18 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-      </head>
+              <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      "@type": "Organization",
+      "@id": "https://intooly.com/#organization",
+      "name": "Intooly",
+      "url": "https://intooly.com",
+      "logo": "https://intooly.com/icon.png",
+      "contactPoint": { "@type": "ContactPoint", "telephone": "+1-000-000-0000", "contactType": "customer support", "areaServed": "Global", "availableLanguage": ["Arabic", "English"] },
+      "address": { "@type": "PostalAddress", "addressCountry": "EG" },
+      "sameAs": ["https://twitter.com/intooly", "https://www.linkedin.com/company/intooly", "https://github.com/intoolysite-ship-it/intooly"],
+      "makesOffer": { "@type": "Offer", "name": "Free Online Tools", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://intooly.com/tools" }
+    }).replace(/</g, "\\u003c") }} />
+  </head>
       <body className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden bg-ink-50 text-ink-800">
         <Header />
         <main className="flex-grow w-full max-w-full overflow-x-hidden">
@@ -196,7 +207,41 @@ export default function RootLayout({
         <Footer />
         <CookieConsent />
         <ScrollToTop />
-      </body>
+              
+              <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://intooly.com/#organization",
+              "name": "Intooly",
+              "url": "https://intooly.com",
+              "logo": "https://intooly.com/icon.png",
+              "contactPoint": { "@type": "ContactPoint", "telephone": "+1-000-000-0000", "contactType": "customer support", "areaServed": "Global", "availableLanguage": ["Arabic", "English"] },
+              "address": { "@type": "PostalAddress", "addressCountry": "EG" },
+              "sameAs": ["https://twitter.com/intooly", "https://www.linkedin.com/company/intooly", "https://github.com/intoolysite-ship-it/intooly"],
+              "makesOffer": { "@type": "Offer", "name": "Free Online Tools", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://intooly.com/tools" }
+            }).replace(/</g, "\\u003c")
+          }}
+        />
+            <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof navigator !== 'undefined' && navigator.modelContext) {
+                navigator.modelContext.registerTool({
+                  name: "get_intooly_info",
+                  description: "Get general information about Intooly's free online tools",
+                  inputSchema: { type: "object", properties: {} },
+                  execute: async () => {
+                    return { content: "Intooly provides 100% free online tools for images, video, audio, PDF, SEO, and calculations. All tools prioritize user privacy with local browser processing where possible." };
+                  }
+                });
+              }
+            `
+          }}
+        />
+  </body>
     </html>
   );
 }

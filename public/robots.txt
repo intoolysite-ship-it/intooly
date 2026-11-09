@@ -1,9 +1,4 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
-
-# منع فهرسة أي مسارات إدارية مستقبلية
-Disallow: /admin/
-Disallow: /api/
-
-# رابط خريطة الموقع
 Sitemap: https://intooly.com/sitemap.xml
+Content-Signal: search=yes, ai-train=no

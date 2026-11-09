@@ -1,0 +1,15 @@
+# Intooly
+Intooly is a platform providing free online tools for images, video, audio, PDF, SEO, and calculations.
+
+## Core Tools
+- [Broken Link Checker](https://intooly.com/tools/broken-link-checker)
+- [EXIF Viewer & Privacy Checker](https://intooly.com/tools/exif-viewer)
+- [Calculators (BMI, Age, Calories)](https://intooly.com/tools/calculators)
+- [Health & Fitness Tools](https://intooly.com/tools/health-fitness)
+- [SEO Tools](https://intooly.com/tools/seo)
+- [Image Tools](https://intooly.com/tools/images)
+- [PDF Tools](https://intooly.com/tools/pdf)
+
+## About
+All tools are 100% free, process data locally in the browser when possible, and respect user privacy.
+Price: Free (0 USD)
