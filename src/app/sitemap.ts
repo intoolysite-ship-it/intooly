@@ -1,146 +1,53 @@
 import { MetadataRoute } from 'next';
+import * as fs from 'fs';
+import * as path from 'path';
 
+// إجبار Next.js على توليد هذا الملف بشكل ثابت أثناء البناء (مطلوب لـ output: export)
 export const dynamic = 'force-static';
-
-const SITE_LAUNCH_DATE = new Date('2025-01-01');
-const LAST_MAJOR_UPDATE = new Date('2026-10-17');
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://intooly.com';
+  const lastModified = new Date();
 
-  const routes: Array<{
-    path: string;
-    priority: number;
-    frequency: 'daily' | 'weekly' | 'monthly';
-    lastModified: Date;
-  }> = [
-    { path: '', priority: 1.0, frequency: 'daily', lastModified: LAST_MAJOR_UPDATE },
-    { path: '/about', priority: 0.7, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
-    { path: '/contact', priority: 0.7, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
-    { path: '/privacy-policy', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
-    { path: '/terms', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
-    { path: '/disclaimer', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
-    { path: '/cookie-policy', priority: 0.5, frequency: 'monthly', lastModified: SITE_LAUNCH_DATE },
+  // 1. الصفحات الأساسية والثابتة
+  const baseRoutes: MetadataRoute.Sitemap = [
+    { url: baseUrl, lastModified, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${baseUrl}/about`, lastModified, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/contact`, lastModified, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/privacy-policy`, lastModified, changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${baseUrl}/terms`, lastModified, changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${baseUrl}/tools`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     
-    // تصنيفات الأدوات
-  
-    { path: '/tools/pdf', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/documents', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/images', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-        { path: '/tools/health-fitness', priority: 0.8, frequency: 'weekly', lastModified: new Date() },
-    { path: '/tools/exif-viewer', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-  
-    { path: '/tools/broken-link-checker', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-  
-    { path: '/tools/bmi-calculator', priority: 0.9, frequency: 'weekly', lastModified: new Date() },
-  
-    { path: '/tools/video', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/seo', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/productivity', priority: 0.95, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-
-    // أدوات PDF
-  
-    { path: '/tools/merge-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/split-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/rotate-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/jpg-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/word-to-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/delete-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/extract-pdf-pages', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/pdf-to-jpg', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/compress-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/organize-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/watermark-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/pdf-to-word', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/pdf-to-excel', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/pdf-to-ppt', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/sign-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/protect-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/unlock-pdf', priority: 0.9, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-
-    // أدوات الصور
-  
-    { path: '/tools/convert-image-to-text', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/color-palette-generator', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-  
-    { path: '/tools/heic-to-jpg', priority: 0.85, frequency: 'weekly', lastModified: new Date() },
-
-    { path: '/tools/image-color-picker', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-
-    { path: '/tools/background-remover', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/image-compressor', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/image-resizer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/image-converter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/image-cropper', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/product-photo-studio', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-
-    // أدوات الفيديو
-  
-    { path: '/tools/video-compressor', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/video-converter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/video-to-audio', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/video-trimmer', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/video-to-gif', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/video-thumbnail-maker', priority: 0.85, frequency: 'weekly', lastModified: new Date('2026-11-03') },
-
-    // أدوات SEO
-  
-    { path: '/tools/keyword-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/word-counter', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/seo-meta-tags', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-23') },
-  
-    { path: '/tools/seo-checker', priority: 0.9, frequency: 'weekly', lastModified: new Date('2026-10-24') },
-
-    // أدوات الإنتاجية
-  
-    { path: '/tools/qr-generator', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/utm-builder', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-  
-    { path: '/tools/what-is-my-ip', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
-
-    // أدوات المستندات
-  
-    { path: '/tools/jpg-to-word', priority: 0.85, frequency: 'weekly', lastModified: LAST_MAJOR_UPDATE },
+    // التصنيفات الرئيسية
+    { url: `${baseUrl}/tools/calculators`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/health-fitness`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/images`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/pdf`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/video`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/audio`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/seo`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/tools/productivity`, lastModified, changeFrequency: 'weekly', priority: 0.85 },
   ];
 
-  return routes.map((route) => ({
-    url: `${baseUrl}${route.path}`,
-    lastModified: route.lastModified,
-    frequency: route.frequency,
-    priority: route.priority,
-  }));
+  // 2. المسح التلقائي لمجلد الأدوات (Dynamic Tools Scanning)
+  const toolsDir = path.join(process.cwd(), 'src', 'app', 'tools');
+  let dynamicToolRoutes: MetadataRoute.Sitemap = [];
+
+  if (fs.existsSync(toolsDir)) {
+    // قراءة جميع المجلدات داخل src/app/tools
+    const folders = fs.readdirSync(toolsDir, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory() && !dirent.name.startsWith('[')) // تجاهل المجلدات الديناميكية مثل [slug]
+      .map(dirent => dirent.name);
+
+    // تحويل كل مجلد إلى رابط في خريطة الموقع
+    dynamicToolRoutes = folders.map(folder => ({
+      url: `${baseUrl}/tools/${folder}`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+  }
+
+  // 3. دمج الصفحات الأساسية مع الأدوات المكتشفة تلقائياً
+  return [...baseRoutes, ...dynamicToolRoutes];
 }
