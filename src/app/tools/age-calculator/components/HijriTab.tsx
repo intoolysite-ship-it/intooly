@@ -110,12 +110,12 @@ export function HijriTab({ hook }: Props) {
       {!error && age && hijriAge && hijriBirth && (
         <>
           {/* العمر الهجري */}
-          <div className="rounded-2xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-md">
-            <div className="text-center text-sm font-semibold text-orange-700 mb-2">
+          <div className="rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 shadow-md">
+            <div className="text-center text-sm font-semibold text-yellow-700 mb-2">
               عمرك بالتقويم الهجري
             </div>
             <div className="flex flex-wrap justify-center items-baseline gap-x-2 gap-y-1 text-3xl sm:text-4xl font-extrabold text-slate-900">
-              <span className="text-orange-600">{hijriAge.years}</span>
+              <span className="text-yellow-600">{hijriAge.years}</span>
               <span className="text-base font-semibold text-slate-600">سنة</span>
               <span className="text-yellow-600">{hijriAge.months}</span>
               <span className="text-base font-semibold text-slate-600">شهر</span>
@@ -128,7 +128,7 @@ export function HijriTab({ hook }: Props) {
           </div>
 
           {/* العمر الميلادي للمقارنة */}
-          <ResultCard title="عمرك بالتقويم الميلادي (للمقارنة)" accent="navy">
+          <ResultCard title="عمرك بالتقويم الميلادي (للمقارنة)" accent="dark">
             <div className="flex flex-wrap justify-center items-baseline gap-x-2 gap-y-1 text-2xl font-extrabold text-slate-800">
               <span>{age.years}</span><span className="text-sm font-semibold text-slate-600">سنة</span>
               <span>{age.months}</span><span className="text-sm font-semibold text-slate-600">شهر</span>
@@ -138,17 +138,17 @@ export function HijriTab({ hook }: Props) {
 
           {/* إحصاءات */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ResultCard title="إجمالي الأيام" accent="orange">
-              <BigNumber value={age.totalDays} label="يوم" accent="orange" />
+            <ResultCard title="إجمالي الأيام" accent="gold">
+              <BigNumber value={age.totalDays} label="يوم" accent="gold" />
             </ResultCard>
             <ResultCard title="إجمالي الأسابيع" accent="gold">
               <BigNumber value={age.totalWeeks} label="أسبوع" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الأشهر" accent="orange">
-              <BigNumber value={age.totalMonths} label="شهر" accent="orange" />
+            <ResultCard title="إجمالي الأشهر" accent="gold">
+              <BigNumber value={age.totalMonths} label="شهر" accent="gold" />
             </ResultCard>
-            <ResultCard title="السنوات المكتملة" accent="navy">
-              <BigNumber value={age.years} label="سنة" accent="navy" />
+            <ResultCard title="السنوات المكتملة" accent="dark">
+              <BigNumber value={age.years} label="سنة" accent="dark" />
             </ResultCard>
           </div>
 
@@ -160,3 +160,4 @@ export function HijriTab({ hook }: Props) {
     </div>
   );
 }
+

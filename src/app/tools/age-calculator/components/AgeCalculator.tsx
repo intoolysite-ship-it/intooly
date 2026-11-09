@@ -19,14 +19,14 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { key: 'basic',      label: 'الأساسية',   icon: '🎂' },
-  { key: 'at-date',    label: 'تاريخ محدد', icon: '📅' },
+  { key: 'basic',      label: 'الأساسية',    icon: '🎂' },
+  { key: 'at-date',    label: 'تاريخ محدد',  icon: '📅' },
   { key: 'birthday',   label: 'عيد الميلاد', icon: '🎉' },
-  { key: 'hijri',      label: 'هجري',       icon: '🌙' },
-  { key: 'diff',       label: 'فرق العمر',  icon: '👥' },
-  { key: 'child',      label: 'الأطفال',    icon: '👶' },
-  { key: 'milestones', label: 'محطات',      icon: '🏆' },
-  { key: 'stats',      label: 'إحصائيات',   icon: '📊' },
+  { key: 'hijri',      label: 'هجري',        icon: '🌙' },
+  { key: 'diff',       label: 'فرق العمر',   icon: '👥' },
+  { key: 'child',      label: 'الأطفال',     icon: '👶' },
+  { key: 'milestones', label: 'محطات',       icon: '🏆' },
+  { key: 'stats',      label: 'إحصائيات',    icon: '📊' },
 ];
 
 export function AgeCalculator() {
@@ -39,10 +39,10 @@ export function AgeCalculator() {
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🎂</span>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800">
             حاسبة العمر الذكية
-          </h1>
-          <span className="hidden sm:inline-block text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+          </h2>
+          <span className="hidden sm:inline-block text-xs font-bold bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full border border-yellow-200">
             Pro
           </span>
         </div>
@@ -53,7 +53,7 @@ export function AgeCalculator() {
           <button
             type="button"
             onClick={resetAll}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-yellow-50 hover:border-yellow-300 hover:text-yellow-700 transition"
           >
             ↺ إعادة تعيين
           </button>
@@ -73,8 +73,8 @@ export function AgeCalculator() {
                 className={`
                   flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition
                   ${isActive
-                    ? 'bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow'
-                    : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700'}
+                    ? 'bg-gradient-to-b from-yellow-400 to-yellow-500 text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:bg-yellow-50 hover:text-yellow-700'}
                 `}
               >
                 <span className="text-base">{tab.icon}</span>

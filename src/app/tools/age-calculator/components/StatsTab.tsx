@@ -75,29 +75,29 @@ export function StatsTab({ hook }: Props) {
       {age && !birthError && !referenceError && stats && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ResultCard title="السنوات المكتملة" accent="orange">
-              <BigNumber value={age.years} label="سنة" accent="orange" />
+            <ResultCard title="السنوات المكتملة" accent="gold">
+              <BigNumber value={age.years} label="سنة" accent="gold" />
             </ResultCard>
             <ResultCard title="الأشهر المكتملة" accent="gold">
               <BigNumber value={age.totalMonths} label="شهر" accent="gold" />
             </ResultCard>
-            <ResultCard title="الأسابيع المكتملة" accent="orange">
-              <BigNumber value={age.totalWeeks} label="أسبوع" accent="orange" />
+            <ResultCard title="الأسابيع المكتملة" accent="gold">
+              <BigNumber value={age.totalWeeks} label="أسبوع" accent="gold" />
             </ResultCard>
-            <ResultCard title="الأيام الكلية" accent="navy">
-              <BigNumber value={age.totalDays} label="يوم" accent="navy" />
+            <ResultCard title="الأيام الكلية" accent="dark">
+              <BigNumber value={age.totalDays} label="يوم" accent="dark" />
             </ResultCard>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <ResultCard title="نسبة ما مضى من السنة" accent="orange">
+            <ResultCard title="نسبة ما مضى من السنة" accent="gold">
               <div className="space-y-2">
-                <div className="text-2xl font-extrabold text-orange-600 text-center">
+                <div className="text-2xl font-extrabold text-yellow-600 text-center">
                   {stats.yearProgress.toFixed(1)}%
                 </div>
-                <div className="w-full h-2 bg-orange-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-yellow-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-orange-500"
+                    className="h-full bg-yellow-500"
                     style={{ width: `${Math.min(100, stats.yearProgress)}%` }}
                   />
                 </div>
@@ -109,15 +109,15 @@ export function StatsTab({ hook }: Props) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <ResultCard title="السنوات الكبيسة التي عشتها" accent="orange">
-              <BigNumber value={stats.leapYears} label="سنة كبيسة" accent="orange" />
+            <ResultCard title="السنوات الكبيسة التي عشتها" accent="gold">
+              <BigNumber value={stats.leapYears} label="سنة كبيسة" accent="gold" />
             </ResultCard>
-            <ResultCard title="الأيام المتبقية لعيد ميلادك" accent="navy">
-              <BigNumber value={age.nextBirthday.daysLeft} label="يوم" accent="navy" />
+            <ResultCard title="الأيام المتبقية لعيد ميلادك" accent="dark">
+              <BigNumber value={age.nextBirthday.daysLeft} label="يوم" accent="dark" />
             </ResultCard>
           </div>
 
-          <ResultCard title="ملخص قابل للنسخ" accent="navy">
+          <ResultCard title="ملخص قابل للنسخ" accent="dark">
             <pre className="text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed" dir="rtl">
 {`تاريخ الميلاد: ${birth.day}/${birth.month}/${birth.year}
 يوم الميلاد: ${age.birthWeekday}
@@ -135,3 +135,4 @@ export function StatsTab({ hook }: Props) {
     </div>
   );
 }
+

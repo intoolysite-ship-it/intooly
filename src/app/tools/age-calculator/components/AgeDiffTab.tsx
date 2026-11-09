@@ -68,8 +68,8 @@ export function AgeDiffTab({ hook }: Props) {
       {ageDifference && !birthError && !secondBirthError && (
         <>
           {/* من الأكبر؟ */}
-          <div className="rounded-2xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-md text-center">
-            <div className="text-sm font-semibold text-orange-700 mb-2">
+          <div className="rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 shadow-md text-center">
+            <div className="text-sm font-semibold text-yellow-700 mb-2">
               {ageDifference.older === 'equal'
                 ? 'الشخصان في نفس العمر'
                 : ageDifference.older === 'first'
@@ -78,7 +78,7 @@ export function AgeDiffTab({ hook }: Props) {
             </div>
             {ageDifference.older !== 'equal' && (
               <div className="flex flex-wrap justify-center items-baseline gap-x-2 gap-y-1 text-3xl sm:text-4xl font-extrabold text-slate-900">
-                <span className="text-orange-600">{ageDifference.years}</span>
+                <span className="text-yellow-600">{ageDifference.years}</span>
                 <span className="text-base font-semibold text-slate-600">سنة</span>
                 <span className="text-yellow-600">{ageDifference.months}</span>
                 <span className="text-base font-semibold text-slate-600">شهر</span>
@@ -90,26 +90,26 @@ export function AgeDiffTab({ hook }: Props) {
 
           {/* إحصاءات الفرق */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ResultCard title="إجمالي الأيام" accent="orange">
-              <BigNumber value={ageDifference.totalDays} label="يوم" accent="orange" />
+            <ResultCard title="إجمالي الأيام" accent="gold">
+              <BigNumber value={ageDifference.totalDays} label="يوم" accent="gold" />
             </ResultCard>
             <ResultCard title="إجمالي الأسابيع" accent="gold">
               <BigNumber value={Math.floor(ageDifference.totalDays / 7)} label="أسبوع" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الأشهر" accent="orange">
-              <BigNumber value={ageDifference.years * 12 + ageDifference.months} label="شهر" accent="orange" />
+            <ResultCard title="إجمالي الأشهر" accent="gold">
+              <BigNumber value={ageDifference.years * 12 + ageDifference.months} label="شهر" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الساعات" accent="navy">
-              <BigNumber value={ageDifference.totalDays * 24} label="ساعة" accent="navy" />
+            <ResultCard title="إجمالي الساعات" accent="dark">
+              <BigNumber value={ageDifference.totalDays * 24} label="ساعة" accent="dark" />
             </ResultCard>
           </div>
 
           {/* مقارنة العمرين */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <ResultCard title="عمر الشخص الأول اليوم" accent="orange">
+            <ResultCard title="عمر الشخص الأول اليوم" accent="gold">
               {firstAge && (
                 <div className="text-center">
-                  <div className="text-2xl font-extrabold text-orange-700">
+                  <div className="text-2xl font-extrabold text-yellow-700">
                     {firstAge.years} <span className="text-sm font-semibold text-slate-600">سنة</span>
                   </div>
                   <div className="text-sm text-slate-600 mt-1">
@@ -136,3 +136,4 @@ export function AgeDiffTab({ hook }: Props) {
     </div>
   );
 }
+

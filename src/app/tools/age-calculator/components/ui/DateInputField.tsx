@@ -29,6 +29,9 @@ export function DateInputField({
     onChange({ ...value, [field]: num });
   };
 
+  const baseInput =
+    'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-center text-base text-slate-800 transition focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-200 hover:border-slate-400';
+
   return (
     <div className="space-y-1">
       <label
@@ -47,7 +50,7 @@ export function DateInputField({
             max={31}
             value={value.day}
             onChange={(e) => update('day', e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-center text-base focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className={baseInput}
           />
         </div>
         <div>
@@ -58,7 +61,7 @@ export function DateInputField({
             max={12}
             value={value.month}
             onChange={(e) => update('month', e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-center text-base focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className={baseInput}
           />
         </div>
         <div>
@@ -69,7 +72,7 @@ export function DateInputField({
             max={maxYear}
             value={value.year}
             onChange={(e) => update('year', e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-center text-base focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className={baseInput}
           />
         </div>
       </div>

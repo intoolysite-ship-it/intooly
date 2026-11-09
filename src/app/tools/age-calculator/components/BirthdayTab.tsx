@@ -53,26 +53,26 @@ export function BirthdayTab({ hook }: Props) {
       </div>
 
       {/* العد التنازلي الرئيسي */}
-      <div className="rounded-2xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-md">
+      <div className="rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 shadow-md">
         <div className="text-center">
-          <div className="text-sm font-semibold text-orange-700 mb-1">
+          <div className="text-sm font-semibold text-yellow-700 mb-1">
             الوقت المتبقي لعيد ميلادك القادم
           </div>
-          <div className="text-4xl sm:text-5xl font-extrabold text-orange-600">
+          <div className="text-4xl sm:text-5xl font-extrabold text-yellow-600">
             {next.daysLeft.toLocaleString('en-US')}
           </div>
           <div className="text-base font-semibold text-slate-700 mt-1">يوم متبقٍ</div>
-          <div className="mt-4 pt-4 border-t border-orange-200/60 text-sm text-slate-700 space-y-1">
+          <div className="mt-4 pt-4 border-t border-yellow-200/60 text-sm text-slate-700 space-y-1">
             <div>
               <strong className="text-slate-900">{fmt(next.dateInput)}</strong>
               {' — '}
-              <span className="text-orange-700 font-semibold">{next.weekday}</span>
+              <span className="text-yellow-700 font-semibold">{next.weekday}</span>
             </div>
             {hijriNext && (
               <div className="text-xs text-slate-500">الموافق {formatHijriAr(hijriNext)}</div>
             )}
             <div className="text-slate-600">
-              ستُكمل <strong className="text-orange-700">{next.ageTurning}</strong> سنة
+              ستُكمل <strong className="text-yellow-700">{next.ageTurning}</strong> سنة
             </div>
           </div>
         </div>
@@ -86,16 +86,16 @@ export function BirthdayTab({ hook }: Props) {
             <div className="text-xs text-slate-500 mt-1">سنة أكملتها</div>
           </div>
         </ResultCard>
-        <ResultCard title="عدد أعياد الميلاد التي مرت" accent="orange">
+        <ResultCard title="عدد أعياد الميلاد التي مرت" accent="gold">
           <div className="text-center">
-            <div className="text-lg font-bold text-orange-700">{age.years}</div>
+            <div className="text-lg font-bold text-yellow-700">{age.years}</div>
             <div className="text-xs text-slate-500 mt-1">عيد ميلاد</div>
           </div>
         </ResultCard>
       </div>
 
       {/* التاريخ الميلادي والهجري */}
-      <ResultCard title="تاريخ ميلادك بالتقويمين" accent="navy">
+      <ResultCard title="تاريخ ميلادك بالتقويمين" accent="dark">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-center">
           <div>
             <div className="text-xs text-slate-500 mb-1">ميلادي</div>
@@ -113,8 +113,8 @@ export function BirthdayTab({ hook }: Props) {
       </ResultCard>
 
       {/* أعياد ميلاد قادمة متعددة */}
-      <ResultCard title="أعياد الميلاد القادمة" accent="orange">
-        <div className="divide-y divide-orange-100">
+      <ResultCard title="أعياد الميلاد القادمة" accent="gold">
+        <div className="divide-y divide-yellow-100">
           {[0, 1, 2].map((offset) => {
             const year = next.dateInput.year + offset;
             let d = { year, month: birth.month, day: birth.day };
@@ -131,7 +131,7 @@ export function BirthdayTab({ hook }: Props) {
                   {d.day} {getMonthNameAr(d.month)} {year}
                 </div>
                 <div className="text-slate-500 text-xs">{wd}</div>
-                <div className="text-orange-700 font-semibold">{age} سنة</div>
+                <div className="text-yellow-700 font-semibold">{age} سنة</div>
               </div>
             );
           })}
@@ -140,3 +140,4 @@ export function BirthdayTab({ hook }: Props) {
     </div>
   );
 }
+

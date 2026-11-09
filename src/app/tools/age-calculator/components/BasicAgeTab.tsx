@@ -49,13 +49,13 @@ export function BasicAgeTab({ hook }: Props) {
       {age && !birthError && (
         <>
           {/* البطاقة الرئيسية */}
-          <div className="rounded-2xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-md">
+          <div className="rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 shadow-md">
             <div className="text-center space-y-2">
-              <div className="text-sm font-semibold text-orange-700">
+              <div className="text-sm font-semibold text-yellow-700">
                 عمرك بالتفصيل
               </div>
               <div className="flex flex-wrap justify-center items-baseline gap-x-2 gap-y-1 text-3xl sm:text-4xl font-extrabold text-slate-900">
-                <span className="text-orange-600">{age.years}</span>
+                <span className="text-yellow-600">{age.years}</span>
                 <span className="text-base font-semibold text-slate-600">سنة</span>
                 <span className="text-yellow-600">{age.months}</span>
                 <span className="text-base font-semibold text-slate-600">شهر</span>
@@ -63,7 +63,7 @@ export function BasicAgeTab({ hook }: Props) {
                 <span className="text-base font-semibold text-slate-600">يوم</span>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-orange-200/60 text-center text-sm text-slate-600 space-y-1">
+            <div className="mt-4 pt-4 border-t border-yellow-200/60 text-center text-sm text-slate-600 space-y-1">
               <div>
                 وُلدت يوم <strong className="text-slate-800">{birthWeekdayAr}</strong>
                 {' — '}
@@ -80,17 +80,17 @@ export function BasicAgeTab({ hook }: Props) {
 
           {/* إحصاءات الوحدات */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ResultCard title="إجمالي الأيام" accent="orange">
-              <BigNumber value={age.totalDays} label="يوم" accent="orange" />
+            <ResultCard title="إجمالي الأيام" accent="gold">
+              <BigNumber value={age.totalDays} label="يوم" accent="gold" />
             </ResultCard>
             <ResultCard title="إجمالي الأسابيع" accent="gold">
               <BigNumber value={age.totalWeeks} label="أسبوع" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الأشهر" accent="orange">
-              <BigNumber value={age.totalMonths} label="شهر" accent="orange" />
+            <ResultCard title="إجمالي الأشهر" accent="gold">
+              <BigNumber value={age.totalMonths} label="شهر" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الساعات" accent="navy">
-              <BigNumber value={age.totalHours} label="ساعة (تقدير)" accent="navy" />
+            <ResultCard title="إجمالي الساعات" accent="dark">
+              <BigNumber value={age.totalHours} label="ساعة (تقدير)" accent="dark" />
             </ResultCard>
           </div>
 
@@ -98,16 +98,16 @@ export function BasicAgeTab({ hook }: Props) {
             <ResultCard title="إجمالي الدقائق" accent="gold">
               <BigNumber value={age.totalMinutes} label="دقيقة (تقدير)" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الثواني" accent="navy">
-              <BigNumber value={age.totalSeconds} label="ثانية (تقدير)" accent="navy" />
+            <ResultCard title="إجمالي الثواني" accent="dark">
+              <BigNumber value={age.totalSeconds} label="ثانية (تقدير)" accent="dark" />
             </ResultCard>
           </div>
 
           {/* عيد الميلاد القادم */}
-          <ResultCard title="عيد ميلادك القادم" accent="orange">
+          <ResultCard title="عيد ميلادك القادم" accent="gold">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <div className="text-2xl font-extrabold text-orange-600">
+                <div className="text-2xl font-extrabold text-yellow-600">
                   {age.nextBirthday.daysLeft.toLocaleString('en-US')}
                   <span className="text-sm font-semibold text-slate-600 mr-1">يوم متبقٍ</span>
                 </div>
@@ -133,3 +133,4 @@ export function BasicAgeTab({ hook }: Props) {
     </div>
   );
 }
+

@@ -65,12 +65,12 @@ export function AgeAtDateTab({ hook }: Props) {
       {/* النتيجة */}
       {ageAtCustomDate && !birthError && !customDateError ? (
         <>
-          <div className="rounded-2xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 shadow-md">
-            <div className="text-center text-sm font-semibold text-orange-700 mb-2">
+          <div className="rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 shadow-md">
+            <div className="text-center text-sm font-semibold text-yellow-700 mb-2">
               {isFuture ? 'سيكون عمرك في' : 'كان عمرك في'} {formatDateAr(customDate)}
             </div>
             <div className="flex flex-wrap justify-center items-baseline gap-x-2 gap-y-1 text-3xl sm:text-4xl font-extrabold text-slate-900">
-              <span className="text-orange-600">{ageAtCustomDate.years}</span>
+              <span className="text-yellow-600">{ageAtCustomDate.years}</span>
               <span className="text-base font-semibold text-slate-600">سنة</span>
               <span className="text-yellow-600">{ageAtCustomDate.months}</span>
               <span className="text-base font-semibold text-slate-600">شهر</span>
@@ -85,17 +85,17 @@ export function AgeAtDateTab({ hook }: Props) {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ResultCard title="إجمالي الأيام" accent="orange">
-              <BigNumber value={ageAtCustomDate.totalDays} label="يوم" accent="orange" />
+            <ResultCard title="إجمالي الأيام" accent="gold">
+              <BigNumber value={ageAtCustomDate.totalDays} label="يوم" accent="gold" />
             </ResultCard>
             <ResultCard title="إجمالي الأسابيع" accent="gold">
               <BigNumber value={ageAtCustomDate.totalWeeks} label="أسبوع" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي الأشهر" accent="orange">
-              <BigNumber value={ageAtCustomDate.totalMonths} label="شهر" accent="orange" />
+            <ResultCard title="إجمالي الأشهر" accent="gold">
+              <BigNumber value={ageAtCustomDate.totalMonths} label="شهر" accent="gold" />
             </ResultCard>
-            <ResultCard title="إجمالي السنوات" accent="navy">
-              <BigNumber value={ageAtCustomDate.years} label="سنة" accent="navy" />
+            <ResultCard title="إجمالي السنوات" accent="dark">
+              <BigNumber value={ageAtCustomDate.years} label="سنة" accent="dark" />
             </ResultCard>
           </div>
         </>
@@ -116,9 +116,10 @@ function QuickButton({ label, onClick }: { label: string; onClick: () => void })
     <button
       type="button"
       onClick={onClick}
-      className="px-3 py-1.5 text-xs font-semibold rounded-full border border-orange-300 text-orange-700 bg-white hover:bg-orange-50 transition"
+      className="px-3 py-1.5 text-xs font-semibold rounded-full border border-yellow-300 text-yellow-700 bg-white hover:bg-yellow-50 transition"
     >
       {label}
     </button>
   );
 }
+

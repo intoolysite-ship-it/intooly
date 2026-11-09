@@ -33,8 +33,8 @@ export function MilestonesTab({ hook }: Props) {
 
       {/* المحطات */}
       {!birthError && milestones.length > 0 && (
-        <ResultCard title="جدول محطات العمر" accent="orange">
-          <div className="divide-y divide-orange-100">
+        <ResultCard title="جدول محطات العمر" accent="gold">
+          <div className="divide-y divide-yellow-100">
             {milestones.map((m) => (
               <div key={m.targetDays} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <div className="flex items-center gap-2">
@@ -52,7 +52,7 @@ export function MilestonesTab({ hook }: Props) {
                     ✓ {formatDateAr(m.reachedDate)}
                   </div>
                 ) : (
-                  <div className="text-sm text-orange-700 font-semibold">
+                  <div className="text-sm text-yellow-700 font-semibold">
                     متبقٍ {m.daysUntil?.toLocaleString('en-US')} يوم
                   </div>
                 )}
@@ -68,3 +68,4 @@ export function MilestonesTab({ hook }: Props) {
     </div>
   );
 }
+
