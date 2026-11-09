@@ -38,7 +38,8 @@ import {
   FileOutput,
   ScanText,
   Link2,
-  Mic, Activity } from 'lucide-react';
+  Mic, Activity, Calculator,
+} from 'lucide-react';
 
 import BlogSection from '@/components/BlogSection';
 import HeroSearch from '@/components/HeroSearch';
@@ -63,7 +64,20 @@ export const metadata: Metadata = {
 
 const categories = [
 
+  
   {
+    icon: Calculator,
+    title: "الحاسبات والأدوات الحسابية",
+    description: "مجموعة شاملة من الحاسبات المجانية: مؤشر كتلة الجسم، العمر، السعرات، والنسب المئوية.",
+    href: "/tools/calculators",
+    color: {
+      bg: '#f0fdf4',
+      border: '#bbf7d0',
+      iconBg: '#dcfce7',
+      iconColor: '#16a34a',
+      shadow: 'rgba(22,163,74,0.15)',
+    },
+  },{
     icon: Activity,
     title: "الصحة واللياقة البدنية",
     description: "حاسبات صحية مجانية لمؤشر كتلة الجسم، الوزن المثالي، والسعرات الحرارية.",
