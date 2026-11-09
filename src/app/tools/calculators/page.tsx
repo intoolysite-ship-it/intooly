@@ -18,12 +18,6 @@ export const metadata = {
 
 const tools = [
   {
-    icon: Activity,
-    title: 'حاسبة مؤشر كتلة الجسم (BMI)',
-    description: 'احسب مؤشر كتلة جسمك بدقة، وتعرف على وزنك المثالي وحالة صحتك العامة بناءً على المعايير العالمية.',
-    href: '/tools/bmi-calculator',
-  },
-  {
     icon: Calendar,
     title: 'حاسبة العمر الدقيقة',
     description: 'احسب عمرك بالضبط بالسنوات والأشهر والأيام، واكتشف يوم ميلادك القادم والمراحل العمرية المختلفة.',
