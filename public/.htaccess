@@ -1,9 +1,11 @@
 <IfModule mod_headers.c>
-  Header set Link "<https://intooly.com/llms.txt>; rel=\"alternate\"; type=\"text/plain\""
+  # Emit RFC 8288 Link header pointing to llms.txt
+  Header set Link '<https://intooly.com/llms.txt>; rel="alternate"; type="text/plain"'
 </IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTP_ACCEPT} text/markdown
-  RewriteRule ^$ /agent-summary.md [L,T=text/markdown]
+  # Serve Markdown when an agent asks for it (Accept: text/markdown)
+  RewriteCond %{HTTP_ACCEPT} text/markdown [NC]
+  RewriteRule ^/?$ /agent-summary.md [L,T=text/markdown]
 </IfModule>

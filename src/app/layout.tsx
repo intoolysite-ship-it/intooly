@@ -256,6 +256,44 @@ export default function RootLayout({
             }).replace(/</g, "\\u003c")
           }}
         />
+              <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://intooly.com/#organization",
+              "name": "Intooly",
+              "url": "https://intooly.com",
+              "logo": "https://intooly.com/icon.png",
+              "description": "Intooly is a free online platform providing tools for images, video, audio, PDF, SEO, and calculations.",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+20-100-000-0000",
+                "contactType": "customer support",
+                "areaServed": "Global",
+                "availableLanguage": ["Arabic", "English"]
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "EG",
+                "addressLocality": "Cairo"
+              },
+              "sameAs": [
+                "https://twitter.com/intooly",
+                "https://www.linkedin.com/company/intooly"
+              ],
+              "makesOffer": {
+                "@type": "Offer",
+                "name": "Free Online Tools",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://intooly.com/tools"
+              }
+            }).replace(/</g, "\\u003c")
+          }}
+        />
   </body>
     </html>
   );
