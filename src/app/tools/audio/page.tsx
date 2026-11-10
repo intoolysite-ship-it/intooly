@@ -29,7 +29,13 @@ export const metadata: Metadata = {
 };
 
 const tools = [
+  
   {
+    icon: Scissors,
+    title: 'قص الأغاني',
+    description: 'قص ملفات MP3 وتقطيع الأغاني بدقة، وإنشاء نغمات رنين، ومعاينة الموجة الصوتية مباشرة من المتصفح.',
+    href: '/tools/song-cutter',
+  },{
     icon: Mic,
     title: 'تحويل الصوت الى نص',
     description: 'فرّغ التسجيلات والمحاضرات بدقة عالية باستخدام الذكاء الاصطناعي محليًا داخل متصفحك.',
