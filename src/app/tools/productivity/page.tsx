@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Globe,
@@ -7,6 +7,7 @@ import {
   BarChart3,
   ArrowLeft,
   BookOpen,
+  Barcode,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -27,7 +28,13 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-  { icon: QrCode, title: 'مولّد QR Code', description: 'أنشئ رمز QR للرابط أو النص ونزّله للاستخدام.', href: '/tools/qr-generator' },
+  
+  {
+    icon: Barcode,
+    title: 'قارئ الباركود',
+    description: 'قراءة وفك رموز الباركود من الكاميرا أو الصور محلياً مع تحليل GS1 ووضع الجرد.',
+    href: '/tools/barcode-reader',
+  },{ icon: QrCode, title: 'مولّد QR Code', description: 'أنشئ رمز QR للرابط أو النص ونزّله للاستخدام.', href: '/tools/qr-generator' },
   { icon: FileText, title: 'عدّاد الكلمات', description: 'احسب الكلمات والأحرف في النصوص.', href: '/tools/word-counter' },
   { icon: BarChart3, title: 'مولّد الكلمات المفتاحية', description: 'اكتشف أفكارًا وعبارات مرتبطة بكلمتك الأساسية.', href: '/tools/keyword-generator' },
   { icon: Globe, title: 'ما هو عنوان IP الخاص بي؟', description: 'اكتشف عنوان IP العام وموقعك على الخريطة ومزود الخدمة.', href: '/tools/what-is-my-ip' },
