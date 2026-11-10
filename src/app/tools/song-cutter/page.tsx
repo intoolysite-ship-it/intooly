@@ -64,7 +64,7 @@ export default function SongCutterPage() {
       const ffmpeg = new FFmpeg();
       
       // تحميل من CDN موثوق
-      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
+      const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
       
       await ffmpeg.load({
         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
@@ -76,7 +76,7 @@ export default function SongCutterPage() {
       console.log("FFmpeg loaded successfully");
     } catch (err: any) {
       console.error("FFmpeg load error:", err);
-      throw new Error("فشل تحميل محرك المعالجة. يرجى تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة. الخطأ: " + err.message);
+      console.error("FFmpeg load details:", err); throw new Error("فشل تحميل محرك المعالجة. يرجى: 1) تعطيل Ad-blocker 2) استخدام Chrome/Edge 3) تحديث الصفحة 4) التحقق من اتصالك بالإنترنت");
     }
   }, [ffmpegLoaded]);
 
