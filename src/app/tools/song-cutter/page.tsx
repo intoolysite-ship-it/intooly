@@ -6,15 +6,14 @@ import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
-import { Upload, Play, Pause, Scissors, Download, ZoomIn, ZoomOut, Music, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Upload, Play, Pause, Scissors, Download, ZoomIn, ZoomOut, Music, AlertTriangle, CheckCircle2, RefreshCw } from "lucide-react";
 
 const faqQuestions = [
   { q: "كيف يمكن قص الأغاني أونلاين؟", a: "افتح أداة قص الأغاني، وارفع الملف الصوتي، ثم حدد نقطة البداية والنهاية من الموجة الصوتية. استمع إلى المقطع، وبعد التأكد من النتيجة قم بتصديره وحفظه." },
   { q: "كيف أقص أغنية بصيغة MP3؟", a: "ارفع ملف MP3 إلى الأداة، وحدد الجزء الذي تريد الاحتفاظ به، ثم عاين المقطع واختر تصدير الملف بالصيغ المتاحة." },
-  { q: "هل يمكن قص الأغاني مجانًا؟", a: "نعم، يمكنك استخدام أداة قص الأغاني من Intooly مجانًا وفق حدود حجم الملف (حتى 50 ميجابايت لضمان أداء المتصفح) ومدة المعالجة." },
-  { q: "هل يمكن قص الأغاني من الهاتف؟", a: "نعم، يمكن استخدام الأداة من متصفح الهاتف لرفع الملفات الصوتية وتحديد المقاطع ومعاينتها وحفظها، مع مراعاة توافق المتصفح والجهاز." },
-  { q: "كيف أحول جزءًا من أغنية إلى نغمة رنين؟", a: "ارفع الأغنية، وحدد الجزء الذي تريد استخدامه كنغمة رنين (يفضل 30 ثانية)، ثم عاينه واحفظه بصيغة MP3 أو M4A المناسبة للهاتف." },
-  { q: "هل يؤثر قص الأغنية على جودة الصوت؟", a: "لا يؤدي تحديد جزء من الملف بالضرورة إلى تقليل الجودة، لكن إعادة ترميز الصوت بصيغة مضغوطة مثل MP3 قد تسبب فقدًا طفيفًا. الأداة تحاول الحفاظ على أعلى جودة ممكنة." }
+  { q: "هل يمكن قص الأغاني مجانًا؟", a: "نعم، يمكنك استخدام أداة قص الأغاني من Intooly مجانًا وفق حدود حجم الملف (حتى 50 ميجابايت لضمان أداء المتصفح)." },
+  { q: "هل يمكن قص الأغاني من الهاتف؟", a: "نعم، يمكن استخدام الأداة من متصفح الهاتف، مع مراعاة أن بعض متصفحات الهاتف القديمة قد تواجه صعوبة في معالجة الملفات الكبيرة." },
+  { q: "لماذا لا تعمل الأداة؟", a: "تأكد من تعطيل مانع الإعلانات (Ad-blocker) لأنه قد يمنع تحميل ملفات المعالجة (WASM). كما تأكد من أن الملف بصيغة MP3 أو WAV سليمة." }
 ];
 
 export default function SongCutterPage() {
@@ -28,51 +27,62 @@ export default function SongCutterPage() {
   const [processStep, setProcessStep] = useState("");
   const [error, setError] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
+  const [isWaveSurferReady, setIsWaveSurferReady] = useState(false);
 
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const regionsRef = useRef<any>(null);
-  
-  // تهيئة المرجع كـ null لتجنب التنفيذ أثناء بناء الخادم (SSR)
   const ffmpegRef = useRef<any>(null);
 
   // Initialize WaveSurfer
   useEffect(() => {
     if (typeof window === "undefined" || !waveformRef.current) return;
 
-    const ws = WaveSurfer.create({
-      container: waveformRef.current,
-      waveColor: "#f97316",
-      progressColor: "#c2410c",
-      cursorColor: "#1e293b",
-      barWidth: 2,
-      barGap: 1,
-      height: 120,
-      normalize: true,
-      minPxPerSec: zoom,
-    });
+    try {
+      const ws = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "#f97316",
+        progressColor: "#c2410c",
+        cursorColor: "#1e293b",
+        barWidth: 2,
+        barGap: 1,
+        height: 120,
+        normalize: true,
+        minPxPerSec: 10,
+      });
 
-    const regions = ws.registerPlugin(RegionsPlugin.create());
-    regionsRef.current = regions;
+      const regions = ws.registerPlugin(RegionsPlugin.create());
+      regionsRef.current = regions;
 
-    regions.on("region-updated", (region: any) => {
-      setStartTime(region.start);
-      setEndTime(region.end);
-    });
+      regions.on("region-updated", (region: any) => {
+        setStartTime(region.start);
+        setEndTime(region.end);
+      });
 
-    regions.on("region-clicked", (region: any, e: MouseEvent) => {
-      e.stopPropagation();
-      region.play();
-    });
+      regions.on("region-clicked", (region: any, e: MouseEvent) => {
+        e.stopPropagation();
+        region.play();
+      });
 
-    ws.on("play", () => setIsPlaying(true));
-    ws.on("pause", () => setIsPlaying(false));
-    ws.on("finish", () => setIsPlaying(false));
+      ws.on("play", () => setIsPlaying(true));
+      ws.on("pause", () => setIsPlaying(false));
+      ws.on("finish", () => setIsPlaying(false));
+      ws.on("ready", () => setIsWaveSurferReady(true));
+      ws.on("error", (err: any) => {
+        console.error("WaveSurfer error:", err);
+        setError("تعذر تحميل الملف الصوتي. يرجى التأكد من أنه ملف MP3 أو WAV صالح وغير تالف.");
+      });
 
-    wavesurferRef.current = ws;
+      wavesurferRef.current = ws;
+    } catch (err) {
+      console.error("Failed to initialize WaveSurfer:", err);
+      setError("حدث خطأ في تهيئة مشغل الصوت. يرجى تحديث الصفحة.");
+    }
 
     return () => {
-      ws.destroy();
+      if (wavesurferRef.current) {
+        wavesurferRef.current.destroy();
+      }
     };
   }, []);
 
@@ -83,7 +93,6 @@ export default function SongCutterPage() {
   }, [zoom]);
 
   const loadFFmpeg = async () => {
-    // حماية صارمة: التأكد من أن الكود يعمل في المتصفح فقط
     if (typeof window === "undefined") return;
 
     if (!ffmpegRef.current) {
@@ -92,21 +101,26 @@ export default function SongCutterPage() {
     
     const ffmpeg = ffmpegRef.current;
     if (!ffmpeg.loaded) {
-      setProcessStep("جاري تحميل محرك المعالجة...");
-      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-      });
+      setProcessStep("جاري تحميل محرك المعالجة (قد يستغرق بضع ثوانٍ)...");
+      try {
+        const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
+        await ffmpeg.load({
+          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+        });
+      } catch (err) {
+        console.error("FFmpeg load error:", err);
+        throw new Error("فشل تحميل محرك المعالجة. يرجى تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة.");
+      }
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
     if (selectedFile.size > 50 * 1024 * 1024) {
-      setError("حجم الملف يتجاوز 50 ميجابايت. يرجى اختيار ملف أصغر لضمان أداء المتصفح.");
+      setError("حجم الملف يتجاوز 50 ميجابايت. يرجى اختيار ملف أصغر.");
       return;
     }
 
@@ -114,39 +128,31 @@ export default function SongCutterPage() {
     setDownloadUrl("");
     setFile(selectedFile);
     setFileName(selectedFile.name);
+    setIsWaveSurferReady(false);
 
     const url = URL.createObjectURL(selectedFile);
+    
     if (wavesurferRef.current) {
-      wavesurferRef.current.load(url);
-      
-      wavesurferRef.current.on("ready", () => {
-        const duration = wavesurferRef.current?.getDuration() || 0;
-        setEndTime(duration);
-        
-        regionsRef.current?.clearRegions();
-        const regionEnd = Math.min(30, duration);
-        regionsRef.current?.addRegion({
-          start: 0,
-          end: regionEnd,
-          color: "rgba(249, 115, 22, 0.3)",
-          drag: true,
-          resize: true,
-        });
-        setStartTime(0);
-        setEndTime(regionEnd);
-      });
+      try {
+        await wavesurferRef.current.load(url);
+      } catch (err) {
+        console.error("Load error:", err);
+        setError("تعذر قراءة الملف. يرجى التأكد من أنه ملف صوتي صالح.");
+      }
+    } else {
+      setError("مشغل الصوت غير جاهز. يرجى تحديث الصفحة.");
     }
   };
 
   const togglePlay = () => {
-    if (wavesurferRef.current) {
+    if (wavesurferRef.current && isWaveSurferReady) {
       wavesurferRef.current.playPause();
     }
   };
 
   const playSelection = () => {
     const regions = regionsRef.current?.getRegions();
-    if (regions && regions.length > 0) {
+    if (regions && regions.length > 0 && isWaveSurferReady) {
       regions[0].play();
     }
   };
@@ -184,15 +190,22 @@ export default function SongCutterPage() {
 
     try {
       await loadFFmpeg();
+      
       const ffmpeg = ffmpegRef.current;
-      const inputName = "input" + file.name.substring(file.name.lastIndexOf("."));
+      if (!ffmpeg || !ffmpeg.loaded) {
+        throw new Error("محرك المعالجة غير محمّل. يرجى تحديث الصفحة.");
+      }
+
+      const ext = file.name.substring(file.name.lastIndexOf(".")) || ".mp3";
+      const inputName = "input" + ext;
       const outputName = "output.mp3";
 
       setProcessStep("جاري قراءة الملف...");
-      await ffmpeg.writeFile(inputName, await fetchFile(file));
+      const fileData = await fetchFile(file);
+      await ffmpeg.writeFile(inputName, fileData);
 
       setProcessStep("جاري معالجة الصوت...");
-      const duration = endTime - startTime;
+      const duration = Math.max(0.1, endTime - startTime); // Prevent 0 duration
       
       await ffmpeg.exec([
         "-i", inputName,
@@ -200,6 +213,7 @@ export default function SongCutterPage() {
         "-t", duration.toString(),
         "-c:a", "libmp3lame",
         "-q:a", "2",
+        "-y",
         outputName
       ]);
 
@@ -211,9 +225,9 @@ export default function SongCutterPage() {
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
 
-    } catch (err) {
-      console.error(err);
-      setError("حدث خطأ أثناء معالجة الملف. يرجى التأكد من أن الملف بصيغة مدعومة (MP3, WAV, M4A).");
+    } catch (err: any) {
+      console.error("Processing error:", err);
+      setError(err.message || "حدث خطأ غير متوقع أثناء المعالجة. يرجى تجربة ملف آخر.");
     } finally {
       setIsProcessing(false);
       setProcessStep("");
@@ -259,31 +273,33 @@ export default function SongCutterPage() {
                 <div>
                   <h3 className="font-bold text-slate-900">{fileName}</h3>
                   <p className="text-sm text-slate-500">
-                    المدة الإجمالية: {formatTime(wavesurferRef.current?.getDuration() || 0)}
+                    المدة الإجمالية: {isWaveSurferReady ? formatTime(wavesurferRef.current?.getDuration() || 0) : "جاري التحميل..."}
                   </p>
                 </div>
                 <button 
-                  onClick={() => { setFile(null); setDownloadUrl(""); setError(""); }}
-                  className="text-sm text-red-600 hover:text-red-800 font-semibold"
+                  onClick={() => { setFile(null); setDownloadUrl(""); setError(""); setIsWaveSurferReady(false); }}
+                  className="text-sm text-red-600 hover:text-red-800 font-semibold flex items-center gap-1"
                 >
-                  إزالة الملف
+                  <RefreshCw size={14} /> إزالة الملف
                 </button>
               </div>
 
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div ref={waveformRef} className="w-full"></div>
+                <div ref={waveformRef} className="w-full min-h-[120px]"></div>
                 
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={togglePlay}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white transition hover:bg-orange-700"
+                      disabled={!isWaveSurferReady}
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white transition hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isPlaying ? <Pause size={20} /> : <Play size={20} />}
                     </button>
                     <button 
                       onClick={playSelection}
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                      disabled={!isWaveSurferReady}
+                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       معاينة المقطع
                     </button>
@@ -327,16 +343,20 @@ export default function SongCutterPage() {
               <div className="flex flex-wrap gap-3">
                 <button 
                   onClick={cutAudio}
-                  disabled={isProcessing}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700 disabled:opacity-50"
+                  disabled={isProcessing || !isWaveSurferReady}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isProcessing ? <span className="animate-pulse">{processStep}</span> : <><Scissors size={20} /> قص الجزء المحدد وتنزيله</>}
                 </button>
               </div>
 
               {error && (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 flex items-center gap-2">
-                  <AlertTriangle size={20} /> {error}
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 flex items-start gap-2">
+                  <AlertTriangle size={20} className="flex-shrink-0 mt-0.5" /> 
+                  <div>
+                    <p className="font-semibold">{error}</p>
+                    <p className="text-sm mt-1">💡 نصيحة: إذا استمرت المشكلة، جرب تعطيل مانع الإعلانات (Ad-blocker) أو استخدم متصفحاً آخر مثل Chrome أو Edge.</p>
+                  </div>
                 </div>
               )}
 
@@ -361,20 +381,8 @@ export default function SongCutterPage() {
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">ما هي أداة قص الأغاني أونلاين؟</h2>
             <p className="mt-3 leading-8 text-slate-600">
-              أداة قص الأغاني هي أداة مجانية عبر الإنترنت تتيح لك تحديد جزء معين من الملف الصوتي وحفظه كملف مستقل، بدلًا من الاحتفاظ بالتسجيل كاملًا. تساعدك أداة قص الأغاني من Intooly على التحكم في بداية ونهاية المقطع، والاستماع إلى الجزء المحدد، وتعديله قبل التصدير.
+              أداة قص الأغاني هي أداة مجانية عبر الإنترنت تتيح لك تحديد جزء معين من الملف الصوتي وحفظه كملف مستقل، بدلًا من الاحتفاظ بالتسجيل كاملًا.
             </p>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">كيفية قص الأغاني باستخدام Intooly</h2>
-            <ol className="mt-4 list-decimal list-inside space-y-2 leading-8 text-slate-600">
-              <li>افتح أداة قص الأغاني من Intooly.</li>
-              <li>اضغط على زر رفع ملف صوتي أو اسحب الملف إلى منطقة الرفع.</li>
-              <li>انتظر حتى تتم معالجة الملف وعرض الموجة الصوتية.</li>
-              <li>حدد نقطة بداية المقطع الذي تريد الاحتفاظ به ونقطة النهاية.</li>
-              <li>استمع إلى الجزء المحدد للتأكد من النتيجة.</li>
-              <li>اضغط على زر "قص الجزء المحدد وتنزيله" لحفظ الملف بصيغة MP3.</li>
-            </ol>
           </article>
 
           <article className="rounded-2xl border border-orange-200 bg-orange-50 p-6">
