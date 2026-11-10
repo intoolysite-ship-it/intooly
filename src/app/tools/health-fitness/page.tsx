@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { Activity } from "lucide-react";
+import { Activity , Baby } from "lucide-react";
 
 const tools = [
+  
   {
+    icon: Baby,
+    title: 'حاسبة الحمل',
+    description: 'احسبي عمر الحمل بالأسابيع والأيام، وموعد الولادة المتوقع بالتقويم الهجري والميلادي بدقة.',
+    href: '/tools/pregnancy-calculator',
+  },{
     icon: Activity,
     title: "حاسبة مؤشر كتلة الجسم BMI",
     description: "احسب مؤشر كتلة الجسم مجانًا مع نطاق الوزن الصحي وBMI Prime وسجل الحسابات.",
