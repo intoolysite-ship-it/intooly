@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Upload, Play, Pause, Scissors, Download, ZoomIn, ZoomOut, Music, AlertTriangle, CheckCircle2, RefreshCw } from "lucide-react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { Upload, Play, Pause, Scissors, Download, Music, AlertTriangle, CheckCircle2, RefreshCw } from "lucide-react";
 
 const faqQuestions = [
   { q: "كيف يمكن قص الأغاني أونلاين؟", a: "افتح أداة قص الأغاني، وارفع الملف الصوتي، ثم حدد نقطة البداية والنهاية. استمع إلى المقطع، ثم قم بتصديره وحفظه." },
-  { q: "لماذا لا تعمل الأداة؟", a: "تأكد من تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة. الأداة تتطلب متصفح حديث مثل Chrome أو Edge." }
+  { q: "لماذا لا تعمل الأداة؟", a: "تأكد من تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة. الأداة تتطلب متصفح حديث مثل Chrome أو Edge." },
+  { q: "هل يمكن قص الأغاني مجانًا؟", a: "نعم، يمكنك استخدام أداة قص الأغاني من Intooly مجانًا وفق حدود حجم الملف (حتى 50 ميجابايت)." },
+  { q: "هل يمكن قص الأغاني من الهاتف؟", a: "نعم، يمكن استخدام الأداة من متصفح الهاتف، مع مراعاة أن بعض متصفحات الهاتف القديمة قد تواجه صعوبة في معالجة الملفات الكبيرة." }
 ];
 
 export default function SongCutterPage() {
@@ -16,8 +18,8 @@ export default function SongCutterPage() {
   const [fileName, setFileName] = useState("");
   const [audioUrl, setAudioUrl] = useState<string>("");
   const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [zoom, setZoom] = useState(50);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -27,70 +29,7 @@ export default function SongCutterPage() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ffmpegRef = useRef<any>(null);
-
-  // تحليل الصوت وعرض الموجة
-  const analyzeAudio = useCallback(async (url: string) => {
-    if (!audioRef.current || !canvasRef.current) return;
-
-    try {
-      const audio = audioRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      
-      if (!ctx) {
-        setError("تعذر رسم الموجة الصوتية");
-        return;
-      }
-
-      // إنشاء AudioContext لتحليل الصوت
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const analyser = audioContext.createAnalyser();
-      const source = audioContext.createMediaElementSource(audio);
-      
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
-      analyser.fftSize = 256;
-      
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      
-      const draw = () => {
-        if (!isLoaded) return;
-        
-        requestAnimationFrame(draw);
-        
-        analyser.getByteFrequencyData(dataArray);
-        
-        ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        const barWidth = (canvas.width / bufferLength) * 2.5;
-        let barHeight;
-        let x = 0;
-        
-        for (let i = 0; i < bufferLength; i++) {
-          barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
-          
-          const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
-          gradient.addColorStop(0, "#f97316");
-          gradient.addColorStop(1, "#c2410c");
-          
-          ctx.fillStyle = gradient;
-          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-          
-          x += barWidth + 1;
-        }
-      };
-      
-      draw();
-      setIsLoaded(true);
-    } catch (err) {
-      console.error("Audio analysis error:", err);
-      setError("تعذر تحليل الملف الصوتي. يرجى التأكد من أنه ملف MP3 صالح.");
-    }
-  }, [isLoaded]);
+  const ffmpegRef = useRef<FFmpeg | null>(null);
 
   const loadFFmpeg = async () => {
     if (typeof window === "undefined") return;
@@ -133,7 +72,6 @@ export default function SongCutterPage() {
     const url = URL.createObjectURL(selectedFile);
     setAudioUrl(url);
     
-    // Reset times
     setStartTime(0);
     setEndTime(0);
   };
@@ -143,7 +81,13 @@ export default function SongCutterPage() {
       const dur = audioRef.current.duration;
       setDuration(dur);
       setEndTime(dur);
-      analyzeAudio(audioUrl);
+      setIsLoaded(true);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
     }
   };
 
@@ -155,6 +99,24 @@ export default function SongCutterPage() {
         audioRef.current.play();
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const playSelection = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = startTime;
+      audioRef.current.play();
+      setIsPlaying(true);
+      
+      const checkEnd = () => {
+        if (audioRef.current && audioRef.current.currentTime >= endTime) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+          audioRef.current.removeEventListener("timeupdate", checkEnd);
+        }
+      };
+      
+      audioRef.current.addEventListener("timeupdate", checkEnd);
     }
   };
 
@@ -180,6 +142,8 @@ export default function SongCutterPage() {
       await loadFFmpeg();
       
       const ffmpeg = ffmpegRef.current;
+      if (!ffmpeg) throw new Error("محرك المعالجة غير متاح");
+      
       const ext = file.name.substring(file.name.lastIndexOf(".")) || ".mp3";
       const inputName = "input" + ext;
       const outputName = "output.mp3";
@@ -200,7 +164,7 @@ export default function SongCutterPage() {
       ]);
 
       const data = await ffmpeg.readFile(outputName);
-      const blob = new Blob([data], { type: "audio/mp3" });
+      const uint8Array = new Uint8Array(data as Uint8Array); const blob = new Blob([uint8Array], { type: "audio/mp3" });
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
       setProcessStep("تم بنجاح!");
@@ -212,6 +176,13 @@ export default function SongCutterPage() {
       setIsProcessing(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+    };
+  }, [audioUrl, downloadUrl]);
 
   return (
     <main dir="rtl" className="min-h-screen bg-slate-50 text-slate-900">
@@ -253,28 +224,34 @@ export default function SongCutterPage() {
                   <h3 className="font-bold text-slate-900">{fileName}</h3>
                   <p className="text-sm text-slate-500">المدة: {formatTime(duration)}</p>
                 </div>
-                <button onClick={() => { setFile(null); setAudioUrl(""); setError(""); }} className="text-sm text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
+                <button onClick={() => { setFile(null); setAudioUrl(""); setError(""); setIsLoaded(false); }} className="text-sm text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
                   <RefreshCw size={14} /> إزالة
                 </button>
               </div>
 
-              {/* Audio Element (Hidden) */}
+              {/* Audio Element */}
               <audio 
                 ref={audioRef} 
                 src={audioUrl} 
                 onLoadedMetadata={handleAudioLoaded}
+                onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
-                className="hidden"
+                className="w-full"
+                controls
               />
 
-              {/* Waveform Canvas */}
+              {/* Progress Bar */}
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <canvas 
-                  ref={canvasRef} 
-                  width={800} 
-                  height={120}
-                  className="w-full h-32 rounded-lg bg-white"
-                />
+                <div className="mb-2 flex justify-between text-sm text-slate-600">
+                  <span>الحالي: {formatTime(currentTime)}</span>
+                  <span>المدة: {formatTime(duration)}</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-slate-200">
+                  <div 
+                    className="h-2 rounded-full bg-orange-600 transition-all"
+                    style={{ width: `${(currentTime / duration) * 100}%` }}
+                  ></div>
+                </div>
                 
                 <div className="mt-4 flex items-center justify-between">
                   <button 
@@ -284,15 +261,12 @@ export default function SongCutterPage() {
                     {isPlaying ? <Pause size={20} /> : <Play size={20} />}
                   </button>
                   
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => setZoom(Math.max(10, zoom - 10))} className="p-2 text-slate-600 hover:text-orange-600">
-                      <ZoomOut size={20} />
-                    </button>
-                    <span className="text-xs text-slate-500">تكبير</span>
-                    <button onClick={() => setZoom(Math.min(200, zoom + 10))} className="p-2 text-slate-600 hover:text-orange-600">
-                      <ZoomIn size={20} />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={playSelection}
+                    className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                  >
+                    معاينة المقطع المحدد
+                  </button>
                 </div>
               </div>
 
