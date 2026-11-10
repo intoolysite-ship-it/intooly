@@ -25,7 +25,13 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-  { icon: ImageIcon, title: 'صانع الصور المصغرة للفيديو', description: 'أنشئ صوراً مصغرة جذابة لفيديوهاتك على يوتيوب ومنصات التواصل.', href: '/tools/video-thumbnail-maker' },
+  
+  {
+    icon: ImageIcon,
+    title: 'تحميل الصورة المصغرة',
+    description: 'استخراج وتنزيل الصور المصغرة لفيديوهات يوتيوب بجميع الجودات المتاحة (HD, Full HD) بضغطة زر.',
+    href: '/tools/youtube-thumbnail-downloader',
+  },{ icon: ImageIcon, title: 'صانع الصور المصغرة للفيديو', description: 'أنشئ صوراً مصغرة جذابة لفيديوهاتك على يوتيوب ومنصات التواصل.', href: '/tools/video-thumbnail-maker' },
   { icon: Archive, title: 'ضغط الفيديو', description: 'قلّل حجم ملفات الفيديو لتسهيل رفعها ومشاركتها.', href: '/tools/video-compressor' },
   { icon: Share2, title: 'تحويل صيغ الفيديو', description: 'حوّل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.', href: '/tools/video-converter' },
   { icon: Music, title: 'تحويل الفيديو إلى صوت', description: 'استخرج المسار الصوتي من ملفات الفيديو.', href: '/tools/video-to-audio' },
