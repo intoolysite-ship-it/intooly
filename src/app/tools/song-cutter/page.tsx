@@ -64,11 +64,9 @@ export default function SongCutterPage() {
       const ffmpeg = new FFmpeg();
       
       // تحميل من CDN موثوق
-      const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
-      
       await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+        coreURL: "/ffmpeg-core.js",
+        wasmURL: "/ffmpeg-core.wasm",
       });
       
       ffmpegRef.current = ffmpeg;
