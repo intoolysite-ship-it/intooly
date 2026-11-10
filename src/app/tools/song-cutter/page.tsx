@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Upload, Play, Pause, Scissors, Download, Music, AlertTriangle, CheckCircle2, RefreshCw, Volume2, Zap, Layers, Clock } from "lucide-react";
+import { Upload, Play, Pause, Scissors, Download, Music, AlertTriangle, CheckCircle2, RefreshCw, Volume2, Zap, Layers } from "lucide-react";
 
 type Region = {
   id: string;
@@ -43,39 +43,44 @@ export default function SongCutterPage() {
   const [ringtoneMode, setRingtoneMode] = useState(false);
   const [mergeClips, setMergeClips] = useState(false);
   const [waveformData, setWaveformData] = useState<number[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState<number>(0);
   const [zoom, setZoom] = useState(1);
+  const [ffmpegLoaded, setFfmpegLoaded] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ffmpegRef = useRef<any>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Load FFmpeg lazily
+  // Load FFmpeg
   const loadFFmpeg = useCallback(async () => {
     if (typeof window === "undefined") return;
 
-    if (!ffmpegRef.current) {
+    if (ffmpegRef.current && ffmpegLoaded) return;
+
+    try {
+      setProcessStep("جاري تحميل محرك المعالجة...");
       const { FFmpeg } = await import("@ffmpeg/ffmpeg");
       const { toBlobURL } = await import("@ffmpeg/util");
-      ffmpegRef.current = new FFmpeg();
       
-      setProcessStep("جاري تحميل محرك المعالجة...");
-      try {
-        const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
-        await ffmpegRef.current.load({
-          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-        });
-      } catch (err) {
-        console.error("FFmpeg load error:", err);
-        throw new Error("فشل تحميل محرك المعالجة. يرجى تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة.");
-      }
+      const ffmpeg = new FFmpeg();
+      
+      // تحميل من CDN موثوق
+      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
+      
+      await ffmpeg.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+      });
+      
+      ffmpegRef.current = ffmpeg;
+      setFfmpegLoaded(true);
+      console.log("FFmpeg loaded successfully");
+    } catch (err: any) {
+      console.error("FFmpeg load error:", err);
+      throw new Error("فشل تحميل محرك المعالجة. يرجى تعطيل مانع الإعلانات (Ad-blocker) وتحديث الصفحة. الخطأ: " + err.message);
     }
-  }, []);
+  }, [ffmpegLoaded]);
 
-  // Draw waveform on canvas
+  // Draw waveform
   const drawWaveform = useCallback(() => {
     if (!canvasRef.current || waveformData.length === 0) return;
     
@@ -92,7 +97,6 @@ export default function SongCutterPage() {
     ctx.fillStyle = "#f8fafc";
     ctx.fillRect(0, 0, width, height);
 
-    // Draw waveform bars
     for (let i = 0; i < waveformData.length; i++) {
       const x = i * (barWidth + gap);
       if (x > width) break;
@@ -106,7 +110,6 @@ export default function SongCutterPage() {
       ctx.fillRect(x, height - barHeight, barWidth, barHeight);
     }
 
-    // Draw regions
     regions.forEach((region) => {
       const startX = (region.start / duration) * width;
       const endX = (region.end / duration) * width;
@@ -120,7 +123,6 @@ export default function SongCutterPage() {
       ctx.strokeRect(startX, 0, endX - startX, height);
     });
 
-    // Draw current time indicator
     if (duration > 0) {
       const currentX = (currentTime / duration) * width;
       ctx.strokeStyle = "#1e293b";
@@ -136,7 +138,6 @@ export default function SongCutterPage() {
     drawWaveform();
   }, [drawWaveform]);
 
-  // Handle file upload
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
@@ -152,12 +153,12 @@ export default function SongCutterPage() {
     setFileName(selectedFile.name);
     setRegions([]);
     setActiveRegionId("");
+    setFfmpegLoaded(false);
     
     const url = URL.createObjectURL(selectedFile);
     setAudioUrl(url);
   };
 
-  // Analyze audio and create waveform
   const handleAudioLoaded = async () => {
     if (!audioRef.current) return;
     
@@ -166,7 +167,6 @@ export default function SongCutterPage() {
     
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      audioContextRef.current = audioContext;
       
       const response = await fetch(audioUrl);
       const arrayBuffer = await response.arrayBuffer();
@@ -187,7 +187,6 @@ export default function SongCutterPage() {
       
       setWaveformData(filteredData);
       
-      // Create default region (first 30 seconds or full duration)
       const regionEnd = Math.min(30, dur);
       const newRegion: Region = {
         id: Date.now().toString(),
@@ -197,6 +196,8 @@ export default function SongCutterPage() {
       };
       setRegions([newRegion]);
       setActiveRegionId(newRegion.id);
+      
+      audioContext.close();
     } catch (err) {
       console.error("Audio analysis error:", err);
       setError("تعذر تحليل الملف الصوتي. يرجى التأكد من أنه ملف صالح.");
@@ -293,7 +294,6 @@ export default function SongCutterPage() {
       await ffmpeg.writeFile(inputName, await fetchFile(file!));
 
       if (mergeClips && regions.length > 1) {
-        // Merge multiple clips
         setProcessStep("جاري دمج المقاطع...");
         const outputFiles: string[] = [];
         
@@ -314,7 +314,6 @@ export default function SongCutterPage() {
           outputFiles.push(tempOutput);
         }
 
-        // Create concat file
         const concatContent = outputFiles.map(f => `file '${f}'`).join("\n");
         await ffmpeg.writeFile("concat.txt", concatContent);
 
@@ -328,33 +327,39 @@ export default function SongCutterPage() {
           "output.mp3"
         ]);
       } else {
-        // Process single or multiple regions separately
         setProcessStep("جاري معالجة الصوت...");
         const region = regions[0];
         const clipDuration = region.end - region.start;
         
-        let filters: string[] = [];
-        if (fadeIn) filters.push(`afade=t=in:st=0:d=2`);
-        if (fadeOut) filters.push(`afade=t=out:st=${clipDuration - 2}:d=2`);
-        if (volume !== 100) filters.push(`volume=${volume / 100}`);
-
-        const filterComplex = filters.length > 0 ? `-af "${filters.join(",")}"` : "";
-        
-        await ffmpeg.exec([
+        const args = [
           "-i", inputName,
           "-ss", region.start.toString(),
           "-t", clipDuration.toString(),
           "-c:a", "libmp3lame",
           "-q:a", "2",
-          ...filterComplex.split(" ").filter(f => f),
-          "-y",
-          "output.mp3"
-        ]);
+        ];
+
+        // إضافة الفلاتر
+        const filters: string[] = [];
+        if (fadeIn) filters.push(`afade=t=in:st=0:d=2`);
+        if (fadeOut && clipDuration > 4) filters.push(`afade=t=out:st=${clipDuration - 2}:d=2`);
+        if (volume !== 100) filters.push(`volume=${volume / 100}`);
+
+        if (filters.length > 0) {
+          args.push("-af", filters.join(","));
+        }
+
+        args.push("-y", "output.mp3");
+
+        console.log("FFmpeg args:", args);
+        await ffmpeg.exec(args);
       }
 
       setProcessStep("جاري تحضير الملف...");
       const data = await ffmpeg.readFile("output.mp3");
-      const uint8Array = new Uint8Array(data as Uint8Array);
+      
+      // تحويل صحيح للبيانات
+      const uint8Array = new Uint8Array(data.buffer);
       const blob = new Blob([uint8Array], { type: "audio/mp3" });
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
@@ -381,9 +386,6 @@ export default function SongCutterPage() {
     return () => {
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
     };
   }, [audioUrl, downloadUrl]);
 
@@ -427,7 +429,7 @@ export default function SongCutterPage() {
                   <h3 className="font-bold text-slate-900">{fileName}</h3>
                   <p className="text-sm text-slate-500">المدة: {formatTime(duration)}</p>
                 </div>
-                <button onClick={() => { setFile(null); setAudioUrl(""); setError(""); setRegions([]); }} className="text-sm text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
+                <button onClick={() => { setFile(null); setAudioUrl(""); setError(""); setRegions([]); setFfmpegLoaded(false); }} className="text-sm text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
                   <RefreshCw size={14} /> إزالة
                 </button>
               </div>
@@ -470,7 +472,6 @@ export default function SongCutterPage() {
                 </div>
               </div>
 
-              {/* Regions Management */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 flex items-center gap-2">
@@ -523,7 +524,6 @@ export default function SongCutterPage() {
                 ))}
               </div>
 
-              {/* Advanced Options */}
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
                   <Zap size={20} /> خيارات متقدمة
@@ -572,7 +572,6 @@ export default function SongCutterPage() {
                 )}
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-wrap gap-3">
                 <button 
                   onClick={cutAudio}
@@ -606,17 +605,15 @@ export default function SongCutterPage() {
           )}
         </section>
 
-        {/* SEO Content */}
         <section className="mt-12 space-y-8 max-w-4xl mx-auto text-right border-t border-slate-200 pt-10">
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">قص الأغاني أونلاين مجانًا – قص ملفات MP3 وتقطيع الصوت بسهولة</h2>
             <p className="mt-3 leading-8 text-slate-600">هل تريد قص الأغاني أو استخراج مقطع معين من أغنية طويلة؟ مع أداة <strong>قص الأغاني من Intooly</strong> يمكنك تحديد الجزء الذي تريده من الملف الصوتي بدقة، والاستماع إليه قبل حفظه، وإنشاء نغمات رنين للهاتف، وتقطيع ملفات MP3 وغيرها من الصيغ الصوتية المدعومة بسهولة.</p>
-            <p className="mt-3 leading-8 text-slate-600">توفر أداة قص الأغاني أونلاين تجربة سهلة ومناسبة للمبتدئين والمحترفين، دون الحاجة إلى تثبيت برامج تحرير صوت معقدة. يمكنك رفع الملف الصوتي، وعرض الموجة الصوتية، وتحديد بداية المقطع ونهايته، ثم معاينة النتيجة وتنزيل الملف بعد الانتهاء.</p>
           </article>
 
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">ما هي أداة قص الأغاني أونلاين؟</h2>
-            <p className="mt-3 leading-8 text-slate-600">أداة قص الأغاني هي أداة مجانية عبر الإنترنت تتيح لك تحديد جزء معين من الملف الصوتي وحفظه كملف مستقل، بدلًا من الاحتفاظ بالتسجيل كاملًا. تساعدك أداة قص الأغاني من Intooly على التحكم في بداية ونهاية المقطع، والاستماع إلى الجزء المحدد، وتعديله قبل التصدير.</p>
+            <p className="mt-3 leading-8 text-slate-600">أداة قص الأغاني هي أداة مجانية عبر الإنترنت تتيح لك تحديد جزء معين من الملف الصوتي وحفظه كملف مستقل، بدلًا من الاحتفاظ بالتسجيل كاملًا.</p>
           </article>
 
           <article>
@@ -632,35 +629,6 @@ export default function SongCutterPage() {
               <li>اختر صيغة التصدير المتاحة.</li>
               <li>اضغط على زر قص الأغنية وتنزيل المقطع.</li>
             </ol>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">قص الأغاني MP3 بدقة عالية</h2>
-            <p className="mt-3 leading-8 text-slate-600">تُعد صيغة MP3 من أكثر الصيغ الصوتية انتشارًا، ولذلك فإن دعم قص ملفات MP3 من أهم الوظائف التي يحتاج إليها المستخدم. تتيح لك أداة قص الأغاني تحديد الجزء المطلوب من الملف، ومعاينته قبل الحفظ، ثم تصديره بصيغة مناسبة.</p>
-            <ul className="mt-4 list-disc list-inside space-y-2 text-slate-600">
-              <li>استخراج المقطع المفضل من أغنية طويلة.</li>
-              <li>قص مقدمة الأغنية أو نهايتها.</li>
-              <li>حذف جزء غير مرغوب فيه.</li>
-              <li>إنشاء نغمة رنين للهاتف.</li>
-              <li>إعداد مقطع موسيقي قصير.</li>
-            </ul>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">إنشاء نغمة رنين من الأغاني</h2>
-            <p className="mt-3 leading-8 text-slate-600">إذا كنت تبحث عن طريقة لإنشاء نغمة رنين مميزة من أغنيتك المفضلة، فيمكنك استخدام أداة قص الأغاني لتحديد المقطع المناسب وحفظه كملف صوتي. بدلًا من استخدام الأغنية كاملة كنغمة رنين، يمكنك اختيار جزء قصير منها، مثل المقطع الموسيقي المميز أو اللازمة أو بداية الأغنية.</p>
-          </article>
-
-          <article>
-            <h2 className="text-2xl font-extrabold text-slate-900">الصيغ الصوتية المدعومة</h2>
-            <ul className="mt-4 list-disc list-inside space-y-2 text-slate-600">
-              <li><strong>MP3:</strong> صيغة شائعة للموسيقى والأغاني.</li>
-              <li><strong>WAV:</strong> صيغة صوتية مناسبة للتعامل مع الصوت غير المضغوط.</li>
-              <li><strong>M4A:</strong> صيغة مستخدمة في العديد من الأجهزة والتطبيقات.</li>
-              <li><strong>AAC:</strong> صيغة صوتية مضغوطة ذات انتشار واسع.</li>
-              <li><strong>OGG:</strong> صيغة صوتية مفتوحة.</li>
-              <li><strong>FLAC:</strong> صيغة صوتية مضغوطة دون فقدان البيانات.</li>
-            </ul>
           </article>
 
           <article className="rounded-2xl border border-orange-200 bg-orange-50 p-6">
