@@ -50,29 +50,32 @@ export default function SongCutterPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ffmpegRef = useRef<any>(null);
 
+  // ✅ الحل الجذري: استخدام classWorkerURL محلي و CDN للـ Core
   const loadFFmpeg = useCallback(async () => {
     if (typeof window === "undefined") return;
-    if (ffmpegRef.current && ffmpegLoaded) return;
+    if (ffmpegRef.current?.loaded) return;
 
     try {
       setProcessStep("جاري تحميل محرك المعالجة...");
       const { FFmpeg } = await import("@ffmpeg/ffmpeg");
       const ffmpeg = new FFmpeg();
 
-      const base = `${window.location.origin}/ffmpeg`;
+      const CDN_BASE = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
+      const localBase = `${window.location.origin}/ffmpeg`;
+
       await ffmpeg.load({
-        coreURL: `${base}/ffmpeg-core.js`,
-        wasmURL: `${base}/ffmpeg-core.wasm`,
-        classWorkerURL: `${base}/worker.js`, 
+        coreURL: `${CDN_BASE}/ffmpeg-core.js`,
+        wasmURL: `${CDN_BASE}/ffmpeg-core.wasm`,
+        classWorkerURL: `${localBase}/worker.js`, // المفتاح: استخدام worker غير محزوم لتجاوز Webpack
       });
 
       ffmpegRef.current = ffmpeg;
       setFfmpegLoaded(true);
     } catch (err: any) {
       console.error("FFmpeg load error:", err);
-      setError("فشل تحميل محرك المعالجة. يرجى التأكد من وجود ملفات ffmpeg-core في مجلد public/ffmpeg وتحديث الصفحة.");
+      setError("فشل تحميل محرك المعالجة: " + (err.message || "خطأ غير معروف. تأكد من تعطيل Ad-blocker"));
     }
-  }, [ffmpegLoaded]);
+  }, []);
 
   const drawWaveform = useCallback(() => {
     if (!canvasRef.current || waveformData.length === 0) return;
@@ -588,7 +591,7 @@ export default function SongCutterPage() {
                   <AlertTriangle size={20} /> 
                   <div>
                     <p className="font-semibold">{error}</p>
-                    <p className="text-sm mt-1">💡 تأكد من وجود الملفات في مجلد public/ffmpeg وتعطيل Ad-blocker</p>
+                    <p className="text-sm mt-1">💡 تأكد من تعطيل Ad-blocker واستخدام Chrome/Edge</p>
                   </div>
                 </div>
               )}
