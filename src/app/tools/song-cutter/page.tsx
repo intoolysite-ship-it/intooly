@@ -50,35 +50,30 @@ export default function SongCutterPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ffmpegRef = useRef<any>(null);
 
-  // Load FFmpeg
   const loadFFmpeg = useCallback(async () => {
     if (typeof window === "undefined") return;
-
     if (ffmpegRef.current && ffmpegLoaded) return;
 
     try {
       setProcessStep("جاري تحميل محرك المعالجة...");
       const { FFmpeg } = await import("@ffmpeg/ffmpeg");
-      const { toBlobURL } = await import("@ffmpeg/util");
-      
       const ffmpeg = new FFmpeg();
-      
-      // تحميل من CDN موثوق
+
+      const base = `${window.location.origin}/ffmpeg`;
       await ffmpeg.load({
-        coreURL: "/ffmpeg-core.js",
-        wasmURL: "/ffmpeg-core.wasm",
+        coreURL: `${base}/ffmpeg-core.js`,
+        wasmURL: `${base}/ffmpeg-core.wasm`,
+        classWorkerURL: `${base}/worker.js`, 
       });
-      
+
       ffmpegRef.current = ffmpeg;
       setFfmpegLoaded(true);
-      console.log("FFmpeg loaded successfully");
     } catch (err: any) {
       console.error("FFmpeg load error:", err);
-      console.error("FFmpeg load details:", err); throw new Error("فشل تحميل محرك المعالجة. يرجى: 1) تعطيل Ad-blocker 2) استخدام Chrome/Edge 3) تحديث الصفحة 4) التحقق من اتصالك بالإنترنت");
+      setError("فشل تحميل محرك المعالجة. يرجى التأكد من وجود ملفات ffmpeg-core في مجلد public/ffmpeg وتحديث الصفحة.");
     }
   }, [ffmpegLoaded]);
 
-  // Draw waveform
   const drawWaveform = useCallback(() => {
     if (!canvasRef.current || waveformData.length === 0) return;
     
@@ -337,7 +332,6 @@ export default function SongCutterPage() {
           "-q:a", "2",
         ];
 
-        // إضافة الفلاتر
         const filters: string[] = [];
         if (fadeIn) filters.push(`afade=t=in:st=0:d=2`);
         if (fadeOut && clipDuration > 4) filters.push(`afade=t=out:st=${clipDuration - 2}:d=2`);
@@ -349,19 +343,28 @@ export default function SongCutterPage() {
 
         args.push("-y", "output.mp3");
 
-        console.log("FFmpeg args:", args);
         await ffmpeg.exec(args);
       }
 
       setProcessStep("جاري تحضير الملف...");
       const data = await ffmpeg.readFile("output.mp3");
-      
-      // تحويل صحيح للبيانات
       const uint8Array = new Uint8Array(data.buffer);
       const blob = new Blob([uint8Array], { type: "audio/mp3" });
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
       setProcessStep("تم بنجاح!");
+
+      // تنظيف الملفات المؤقتة في ffmpeg
+      try {
+        await ffmpeg.deleteFile(inputName);
+        await ffmpeg.deleteFile("output.mp3");
+        if (mergeClips) {
+          for (let i = 0; i < regions.length; i++) {
+            await ffmpeg.deleteFile(`temp${i}.mp3`).catch(() => {});
+          }
+          await ffmpeg.deleteFile("concat.txt").catch(() => {});
+        }
+      } catch (e) { /* تجاهل أخطاء التنظيف */ }
 
     } catch (err: any) {
       console.error("Processing error:", err);
@@ -585,7 +588,7 @@ export default function SongCutterPage() {
                   <AlertTriangle size={20} /> 
                   <div>
                     <p className="font-semibold">{error}</p>
-                    <p className="text-sm mt-1">💡 جرب تعطيل Ad-blocker أو استخدام Chrome/Edge</p>
+                    <p className="text-sm mt-1">💡 تأكد من وجود الملفات في مجلد public/ffmpeg وتعطيل Ad-blocker</p>
                   </div>
                 </div>
               )}
@@ -594,6 +597,7 @@ export default function SongCutterPage() {
                 <div className="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
                   <CheckCircle2 size={48} className="mx-auto mb-3 text-green-600" />
                   <h3 className="mb-2 text-lg font-bold text-green-900">تم القص بنجاح!</h3>
+                  <audio src={downloadUrl} controls className="w-full mb-4 max-w-md mx-auto rounded-lg border border-green-300" />
                   <a href={downloadUrl} download={`cut-${fileName}`} className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700">
                     <Download size={20} /> تنزيل MP3
                   </a>
