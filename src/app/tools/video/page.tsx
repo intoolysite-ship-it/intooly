@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   BookOpen,
   Image as ImageIcon,
+Video,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -26,7 +27,13 @@ export const metadata: Metadata = {
 
 const tools = [
   
+  
   {
+    icon: Video,
+    title: 'تحميل فيديوهات اليوتيوب',
+    description: 'تعرف على خيارات حفظ فيديوهات اليوتيوب المسموح بها رسمياً مع أدوات معالجة الفيديو المحلية.',
+    href: '/tools/youtube-video-downloader',
+  },{
     icon: ImageIcon,
     title: 'تحميل الصورة المصغرة',
     description: 'استخراج وتنزيل الصور المصغرة لفيديوهات يوتيوب بجميع الجودات المتاحة (HD, Full HD) بضغطة زر.',
