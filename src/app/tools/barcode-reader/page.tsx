@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Html5Qrcode } from "html5-qrcode";
-import { Camera, Upload, Clipboard, Trash2, Download, Copy, CheckCircle2, AlertTriangle, Barcode, FileText } from "lucide-react";
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import { Camera, Upload, Clipboard, Trash2, Download, Copy, CheckCircle2, AlertTriangle, Barcode, FileText, RefreshCw } from "lucide-react";
 
 type ScanResult = {
   id: string;
@@ -28,7 +28,11 @@ export default function BarcodeReaderPage() {
   const [results, setResults] = useState<ScanResult[]>([]);
   const [lastResult, setLastResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState("");
+  const [cameras, setCameras] = useState<Array<{ id: string; label: string }>>([]);
+  const [selectedCameraId, setSelectedCameraId] = useState<string>("");
+  const [permissionDenied, setPermissionDenied] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const readerContainerRef = useRef<HTMLDivElement>(null);
 
   const validateCheckDigit = (code: string): boolean => {
     if (!/^\d{12,13}$/.test(code)) return true;
@@ -58,7 +62,7 @@ export default function BarcodeReaderPage() {
     return Object.keys(gs1Data).length > 0 ? gs1Data : null;
   };
 
-  const handleScan = (decodedText: string, decodedResult: any) => {
+  const handleScan = useCallback((decodedText: string, decodedResult: any) => {
     const isValid = validateCheckDigit(decodedText);
     const gs1Data = parseGS1(decodedText);
     
@@ -74,30 +78,94 @@ export default function BarcodeReaderPage() {
     setLastResult(newResult);
     setResults((prev) => [newResult, ...prev]);
     setError("");
+  }, []);
+
+  const getCameras = async () => {
+    try {
+      const devices = await Html5Qrcode.getCameras();
+      if (devices && devices.length > 0) {
+        setCameras(devices);
+        setSelectedCameraId(devices[0].id);
+        setPermissionDenied(false);
+      } else {
+        setError("لم يتم العثور على كاميرا متصلة بالجهاز.");
+      }
+    } catch (err) {
+      setPermissionDenied(true);
+      setError("لم يتم منح إذن الوصول إلى الكاميرا. يرجى السماح بالوصول من إعدادات المتصفح ثم إعادة المحاولة.");
+    }
   };
 
   const startCamera = async () => {
     setError("");
+    setPermissionDenied(false);
+    
+    // أولاً، نحصل على قائمة الكاميرات
+    await getCameras();
+    
+    if (cameras.length === 0 && !permissionDenied) return;
+    
     setIsScanning(true);
-    try {
-      scannerRef.current = new Html5Qrcode("reader");
-      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-      await scannerRef.current.start(
-        { facingMode: "environment" },
-        config,
-        handleScan,
-        (errorMessage: string) => { /* Ignore continuous scan errors */ }
-      );
-    } catch (err) {
-      setError("تعذر الوصول إلى الكاميرا. يرجى منح الإذن أو استخدام وضع رفع الصورة.");
-      setIsScanning(false);
-    }
+    
+    // ننتظر قليلاً للتأكد من أن العنصر #reader موجود في DOM
+    setTimeout(async () => {
+      try {
+        if (scannerRef.current) {
+          await scannerRef.current.stop().catch(() => {});
+          scannerRef.current.clear();
+        }
+        
+        scannerRef.current = new Html5Qrcode("reader", { verbose: false });
+        const config = { 
+          fps: 10, 
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.0
+        };
+        
+        const cameraId = selectedCameraId || cameras[0]?.id;
+        
+        if (cameraId) {
+          await scannerRef.current.start(
+            cameraId,
+            config,
+            handleScan,
+            (errorMessage: string) => { /* Ignore continuous scan errors */ }
+          );
+        } else {
+          // Fallback: استخدام facingMode
+          await scannerRef.current.start(
+            { facingMode: "environment" },
+            config,
+            handleScan,
+            (errorMessage: string) => { /* Ignore continuous scan errors */ }
+          );
+        }
+      } catch (err: any) {
+        console.error("Camera start error:", err);
+        setIsScanning(false);
+        
+        if (err?.name === "NotAllowedError" || err?.message?.includes("Permission")) {
+          setPermissionDenied(true);
+          setError("تم رفض إذن الوصول إلى الكاميرا. يرجى السماح بالوصول من إعدادات المتصفح (أيقونة القفل بجانب شريط العنوان) ثم إعادة تحميل الصفحة.");
+        } else if (err?.name === "NotFoundError") {
+          setError("لم يتم العثور على كاميرا في جهازك. يرجى التأكد من توصيل كاميرا أو استخدام وضع رفع الصورة.");
+        } else if (err?.name === "NotReadableError") {
+          setError("الكاميرا مستخدمة من قبل تطبيق آخر. يرجى إغلاق التطبيقات الأخرى التي تستخدم الكاميرا ثم إعادة المحاولة.");
+        } else {
+          setError(`تعذر تشغيل الكاميرا: ${err?.message || "خطأ غير معروف"}. جرب استخدام وضع رفع الصورة.`);
+        }
+      }
+    }, 300);
   };
 
   const stopCamera = async () => {
     if (scannerRef.current && isScanning) {
-      await scannerRef.current.stop();
-      scannerRef.current.clear();
+      try {
+        await scannerRef.current.stop();
+        scannerRef.current.clear();
+      } catch (err) {
+        console.error("Stop camera error:", err);
+      }
       setIsScanning(false);
     }
   };
@@ -107,11 +175,24 @@ export default function BarcodeReaderPage() {
     if (!file) return;
     setError("");
     try {
-      const scanner = new Html5Qrcode("reader-file");
+      const scanner = new Html5Qrcode("reader-file", { verbose: false });
       const result = await scanner.scanFile(file, true);
       handleScan(result, { result: { format: { formatName: "File Scan" } } });
     } catch (err) {
       setError("لم يتم العثور على باركود واضح في الصورة. يرجى تحسين الإضاءة أو اقتصاص الصورة.");
+    }
+  };
+
+  const switchCamera = async () => {
+    if (cameras.length < 2) return;
+    const currentIndex = cameras.findIndex(c => c.id === selectedCameraId);
+    const nextIndex = (currentIndex + 1) % cameras.length;
+    const newCameraId = cameras[nextIndex].id;
+    setSelectedCameraId(newCameraId);
+    
+    if (isScanning) {
+      await stopCamera();
+      setTimeout(() => startCamera(), 300);
     }
   };
 
@@ -127,7 +208,7 @@ export default function BarcodeReaderPage() {
           if (blob) {
             const file = new File([blob], "clipboard.png", { type: blob.type });
             try {
-              const scanner = new Html5Qrcode("reader-clipboard");
+              const scanner = new Html5Qrcode("reader-clipboard", { verbose: false });
               const result = await scanner.scanFile(file, true);
               handleScan(result, { result: { format: { formatName: "Clipboard" } } });
             } catch {
@@ -213,17 +294,64 @@ export default function BarcodeReaderPage() {
             </button>
           </div>
 
-          <div className="mb-6 min-h-[300px] rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center relative overflow-hidden">
-            {mode === "camera" && !isScanning && (
+          <div ref={readerContainerRef} className="mb-6 min-h-[300px] rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center relative overflow-hidden">
+            {mode === "camera" && !isScanning && !permissionDenied && (
               <button onClick={startCamera} className="flex flex-col items-center gap-3 text-slate-600 hover:text-orange-600">
                 <Camera size={48} />
                 <span className="font-bold">اضغط لبدء الكاميرا</span>
+                <span className="text-xs text-slate-400">سيطلب المتصفح إذن الوصول للكاميرا</span>
               </button>
             )}
-            {mode === "camera" && isScanning && <div id="reader" className="w-full h-full min-h-[300px]"></div>}
+            
+            {mode === "camera" && permissionDenied && (
+              <div className="flex flex-col items-center gap-3 text-red-600 p-8 text-center">
+                <AlertTriangle size={48} />
+                <span className="font-bold">تم رفض إذن الكاميرا</span>
+                <p className="text-sm text-slate-600 max-w-md">
+                  يرجى الضغط على أيقونة القفل 🔒 في شريط عنوان المتصفح، ثم السماح بالوصول إلى الكاميرا، وأعد تحميل الصفحة.
+                </p>
+                <button 
+                  onClick={() => { setPermissionDenied(false); startCamera(); }}
+                  className="mt-2 flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white hover:bg-orange-700"
+                >
+                  <RefreshCw size={16} /> إعادة المحاولة
+                </button>
+              </div>
+            )}
+            
+            {mode === "camera" && isScanning && (
+              <div className="w-full">
+                <div id="reader" className="w-full"></div>
+                {cameras.length > 1 && (
+                  <div className="mt-3 flex justify-center gap-2">
+                    <select 
+                      value={selectedCameraId} 
+                      onChange={(e) => { setSelectedCameraId(e.target.value); }}
+                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    >
+                      {cameras.map((cam) => (
+                        <option key={cam.id} value={cam.id}>{cam.label || `كاميرا ${cameras.indexOf(cam) + 1}`}</option>
+                      ))}
+                    </select>
+                    <button 
+                      onClick={switchCamera}
+                      className="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-300"
+                    >
+                      تبديل الكاميرا
+                    </button>
+                    <button 
+                      onClick={stopCamera}
+                      className="rounded-lg bg-red-100 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-200"
+                    >
+                      إيقاف
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
             
             {mode === "file" && (
-              <label className="flex flex-col items-center gap-3 cursor-pointer text-slate-600 hover:text-orange-600 w-full h-full justify-center">
+              <label className="flex flex-col items-center gap-3 cursor-pointer text-slate-600 hover:text-orange-600 w-full h-full justify-center p-8">
                 <Upload size={48} />
                 <span className="font-bold">اضغط لاختيار صورة أو اسحبها هنا</span>
                 <span className="text-xs text-slate-400">JPG, PNG, WEBP</span>
@@ -240,8 +368,16 @@ export default function BarcodeReaderPage() {
           </div>
 
           {error && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 flex items-center gap-2">
-              <AlertTriangle size={20} /> {error}
+            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 flex items-start gap-2">
+              <AlertTriangle size={20} className="flex-shrink-0 mt-0.5" /> 
+              <div>
+                <p className="font-semibold">{error}</p>
+                {permissionDenied && (
+                  <p className="mt-2 text-sm">
+                    💡 <strong>الحل:</strong> انقر على أيقونة القفل 🔒 أو أيقونة الكاميرا 📷 في شريط عنوان المتصفح (أعلى الصفحة)، واختر "السماح" (Allow) للكاميرا، ثم أعد تحميل الصفحة.
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
