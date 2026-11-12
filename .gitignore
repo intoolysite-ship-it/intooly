@@ -1,60 +1,49 @@
-# dependencies
-/node_modules
-/.pnp
+﻿# Dependencies
+node_modules/
+.pnp
 .pnp.js
 
-# testing
-/coverage
+# Testing
+coverage/
 
-# next.js
-/.next/
-/dist/
+# Next.js
+.next/
+out/
+build/
+dist/
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Production
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# Debug
+*.log
+npm-debug.log*
+
+# Local env files
 .env*.local
 .env
 
-# vercel
+# Vercel
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
-# Build outputs
-/out
-/public_html
-
-# Backup and test files
-*.bak
-response.json
-
-# Local backups
+# Backup files (لن يتم تتبعها)
 *.backup
-*.working
+*.backup2
+*.backup3
+*.backup4
 
-# AI Models (kept locally)
-public/models/*.onnx
-
-# Package backups
-package.json.backup*
-
-# Build output
-out/
-.next/
-
-# Backup files
-*.bak
-*.backup
-*.old
-*.tmp
-*.before-*
+# Temporary reports
+lighthouse-report.json
+*-current-code.txt
