@@ -1,15 +1,19 @@
-import type { Metadata, Viewport } from 'next';
+﻿import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import { Cairo } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieConsent from '@/components/CookieConsent';
 import ScrollToTop from '@/components/ScrollToTop';
 
-const cairo = Cairo({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '600', '700', '800'],
+const cairo = localFont({
+  src: [
+    { path: './fonts/Cairo-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/Cairo-600.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/Cairo-700.woff2', weight: '700', style: 'normal' },
+    { path: './fonts/Cairo-800.woff2', weight: '800', style: 'normal' },
+  ],
   display: 'swap',
   variable: '--font-cairo',
   preload: false,
