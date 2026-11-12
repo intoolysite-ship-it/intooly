@@ -149,17 +149,17 @@ export default function VideoConverterPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     await processSelectedFile(file);
-    e.target.value = '';
+    e.target.value = ''; // لتفريغ الحقل بعد الاختيار
   };
 
-  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) await processSelectedFile(file);
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
@@ -351,11 +351,11 @@ export default function VideoConverterPage() {
           <div className="bg-white border border-slate-200 rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8">
 
             {!video.file ? (
-              <div
+              <label htmlFor="video-upload"
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                onClick={() => fileInputRef.current?.click()}
+                
                 className={`border-2 border-dashed rounded-2xl p-8 md:p-16 cursor-pointer transition-all text-center group ${
                   isDragging ? 'border-orange-500 bg-orange-50 scale-[1.02]' : 'border-orange-300 bg-orange-50/50 hover:bg-orange-50'
                 }`}
@@ -367,7 +367,15 @@ export default function VideoConverterPage() {
                 <p className="text-xs md:text-sm text-slate-500">
                   MP4, MOV, MKV, WebM, AVI, GIF + 5 صيغ إضافية
                 </p>
-              </div>
+                <input
+                  id="video-upload"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="video/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </label>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
 
