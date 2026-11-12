@@ -1,4 +1,5 @@
 ﻿"use client";
+import Image from 'next/image';
 import Link from "next/link";
 import { faqQuestions } from "./faq-data";
 
@@ -121,14 +122,17 @@ export default function ContentSections() {
 
         {/* صورة توضيحية - TODO */}
         <figure className="my-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          {/* TODO: ضع الصورة في public/og/song-cutter-ui.png ثم استبدل هذا التعليق بـ:
-          <Image src="/og/song-cutter-ui.png" alt="شرح استخدام أداة قص الاغاني MP3 من Intooly" width={1200} height={630} className="rounded-xl w-full h-auto" />
-          */}
-          <div className="flex items-center justify-center h-48 rounded-xl bg-slate-100 text-slate-400 text-sm">
-            📷 [صورة توضيحية لواجهة الأداة - تُضاف لاحقاً]
-          </div>
-          <figcaption className="mt-3 text-center text-xs text-slate-500">
-            شرح استخدام أداة قص الاغاني MP3 من Intooly
+          <Image
+            src="/images/song-cutter-ui.png"
+            alt="شرح استخدام أداة قص الاغاني MP3 أونلاين من Intooly - واجهة تقطيع الأغاني مع الموجة الصوتية"
+            title="أداة قص الاغاني MP3 أونلاين مجاناً - تقطيع الأغاني وتعديل المقاطع | Intooly"
+            width={1200}
+            height={630}
+            className="rounded-xl w-full h-auto border border-slate-200"
+          />
+
+          <figcaption className="mt-3 text-center text-sm text-slate-600 font-medium">
+            واجهة أداة قص الاغاني من Intooly: ارفع ملف MP3، حدد المقطع بدقة، وعاين النتيجة قبل الحفظ.
           </figcaption>
         </figure>
       </section>
