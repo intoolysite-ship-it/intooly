@@ -47,3 +47,6 @@ next-env.d.ts
 # Temporary reports
 lighthouse-report.json
 *-current-code.txt
+
+# Backup files
+*.bak
