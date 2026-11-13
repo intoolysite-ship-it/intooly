@@ -16,6 +16,8 @@ import { faqQuestions } from './faq-data';
 import LiveClock from '@/components/hijri/LiveClock';
 import ConversionHistory, { saveConversion } from '@/components/hijri/ConversionHistory';
 import HijriCalendar from '@/components/hijri/HijriCalendar';
+import DateDifference from '@/components/hijri/DateDifference';
+import AddSubtractDays from '@/components/hijri/AddSubtractDays';
 
 type Direction = 'hijri-to-gregorian' | 'gregorian-to-hijri';
 
@@ -285,6 +287,14 @@ export default function HijriPage() {
 
         <div className="mt-6">
           <HijriCalendar />
+        </div>
+
+        <div className="mt-6">
+          <DateDifference />
+        </div>
+
+        <div className="mt-6">
+          <AddSubtractDays />
         </div>
 
         {/* ===== SEO CONTENT ===== */}
