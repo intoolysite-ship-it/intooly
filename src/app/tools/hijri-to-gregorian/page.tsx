@@ -319,25 +319,37 @@ export default function HijriPage() {
 
         {/* صفحات ذات صلة */}
         <div className="mt-10">
-          <h2 className="text-2xl font-extrabold text-slate-900 mb-4 text-center">صفحات ذات صلة</h2>
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-6 text-center">صفحات ذات صلة</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Link
-              href="/tools/hijri-to-gregorian/hijri-today"
-              className="group rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 shadow-sm transition hover:-translate-y-1 hover:border-emerald-400 hover:shadow-md"
-            >
-              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
-                📅
-              </div>
-              <h3 className="mb-2 font-bold text-slate-900 transition group-hover:text-emerald-700">
-                التاريخ الهجري اليوم
-              </h3>
-              <p className="text-sm leading-6 text-slate-600">
-                اعرف تاريخ اليوم بالهجري والميلادي مباشرة مع اسم اليوم والساعة الحية.
-              </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-emerald-600">
-                اذهب للصفحة ←
-              </span>
-            </Link>
+            {[
+              { href: '/tools/hijri-to-gregorian/hijri-today', title: 'التاريخ الهجري اليوم', desc: 'تاريخ اليوم بالهجري والميلادي مباشرة.', icon: '📅', color: 'emerald' },
+              { href: '/tools/hijri-to-gregorian/age-calculator', title: 'حساب العمر بالهجري', desc: 'احسب عمرك بالتقويم الهجري والميلادي بدقة.', icon: '🎂', color: 'pink' },
+              { href: '/tools/hijri-to-gregorian/date-difference', title: 'الفرق بين تاريخين', desc: 'احسب الفرق بين أي تاريخين بالسنوات والأشهر والأيام.', icon: '📊', color: 'orange' },
+              { href: '/tools/hijri-to-gregorian/months', title: 'الأشهر الهجرية', desc: 'دليل شامل للأشهر الهجرية الاثني عشر.', icon: '📆', color: 'blue' },
+              { href: '/tools/hijri-to-gregorian/birth-date', title: 'تحويل تاريخ الميلاد', desc: 'حوّل تاريخ ميلادك بين التقويمين.', icon: '🎁', color: 'purple' },
+              { href: '/tools/hijri-to-gregorian/1447', title: 'التقويم الهجري 1447', desc: 'تقويم كامل للسنة 1447 هـ مع التواريخ الميلادية.', icon: '🗓️', color: 'indigo' },
+              { href: '/tools/hijri-to-gregorian/islamic-events', title: 'المناسبات الإسلامية', desc: 'المناسبات الإسلامية القادمة مع عد تنازلي.', icon: '🎉', color: 'teal' },
+              { href: '/tools/hijri-to-gregorian/add-days', title: 'إضافة/طرح أيام', desc: 'أضف أو اطرح أياماً أو أشهراً أو سنوات من تاريخ.', icon: '➕', color: 'cyan' },
+              { href: '/tools/hijri-to-gregorian/comparison', title: 'مقارنة التقويمين', desc: 'الفرق بين التقويم الهجري والميلادي.', icon: '🔍', color: 'amber' },
+              { href: '/tools/hijri-to-gregorian/date-converter', title: 'محول التاريخ المبسط', desc: 'تحويل سريع بين الهجري والميلادي.', icon: '🔄', color: 'slate' },
+            ].map((tool) => (
+              <Link
+                key={tool.href}
+                href={tool.href}
+                className={`group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md hover:border-${tool.color}-300`}
+              >
+                <div className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-${tool.color}-50 text-2xl`}>
+                  {tool.icon}
+                </div>
+                <h3 className={`mb-2 font-bold text-slate-900 transition group-hover:text-${tool.color}-700`}>
+                  {tool.title}
+                </h3>
+                <p className="text-sm leading-6 text-slate-600">{tool.desc}</p>
+                <span className={`mt-3 inline-flex items-center gap-1 text-sm font-bold text-${tool.color}-600`}>
+                  اذهب للصفحة ←
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
 
