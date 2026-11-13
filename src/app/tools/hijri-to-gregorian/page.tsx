@@ -18,6 +18,7 @@ import ConversionHistory, { saveConversion } from '@/components/hijri/Conversion
 import HijriCalendar from '@/components/hijri/HijriCalendar';
 import DateDifference from '@/components/hijri/DateDifference';
 import AddSubtractDays from '@/components/hijri/AddSubtractDays';
+import IslamicEvents from '@/components/hijri/IslamicEvents';
 
 type Direction = 'hijri-to-gregorian' | 'gregorian-to-hijri';
 
@@ -295,6 +296,10 @@ export default function HijriPage() {
 
         <div className="mt-6">
           <AddSubtractDays />
+        </div>
+
+        <div className="mt-6">
+          <IslamicEvents />
         </div>
 
         {/* ===== SEO CONTENT ===== */}
