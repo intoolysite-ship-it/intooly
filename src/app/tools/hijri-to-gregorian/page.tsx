@@ -317,6 +317,30 @@ export default function HijriPage() {
           <DocumentExpiry />
         </div>
 
+        {/* صفحات ذات صلة */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-4 text-center">صفحات ذات صلة</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/tools/hijri-to-gregorian/hijri-today"
+              className="group rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 shadow-sm transition hover:-translate-y-1 hover:border-emerald-400 hover:shadow-md"
+            >
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
+                📅
+              </div>
+              <h3 className="mb-2 font-bold text-slate-900 transition group-hover:text-emerald-700">
+                التاريخ الهجري اليوم
+              </h3>
+              <p className="text-sm leading-6 text-slate-600">
+                اعرف تاريخ اليوم بالهجري والميلادي مباشرة مع اسم اليوم والساعة الحية.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-emerald-600">
+                اذهب للصفحة ←
+              </span>
+            </Link>
+          </div>
+        </div>
+
         {/* ===== SEO CONTENT ===== */}
         <article className="space-y-12 max-w-4xl mx-auto text-right border-t border-slate-200 pt-10 mt-10">
 
