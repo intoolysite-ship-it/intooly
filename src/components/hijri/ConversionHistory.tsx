@@ -22,6 +22,7 @@ export default function ConversionHistory({
 }) {
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   // تحميل السجل من localStorage
@@ -93,6 +94,34 @@ export default function ConversionHistory({
     );
   }
 
+  // عند عدم وجود سجلات → شريط صغير
+  if (entries.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-purple-200 bg-purple-50/50 p-3 text-center">
+        <p className="text-xs text-slate-500 flex items-center justify-center gap-2">
+          <History size={14} className="text-purple-400" />
+          سيتم حفظ آخر 10 تحويلات تلقائياً بعد أول تحويل
+        </p>
+      </div>
+    );
+  }
+
+  // مطوي افتراضياً
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="w-full rounded-xl border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-3 text-center hover:border-purple-400 transition group"
+      >
+        <span className="inline-flex items-center gap-2 text-sm font-bold text-purple-800">
+          <History size={16} className="text-purple-600" />
+          عرض سجل التحويلات
+          <span className="bg-purple-600 text-white text-xs px-2 py-0.5 rounded-full">{entries.length}</span>
+        </span>
+      </button>
+    );
+  }
+
   return (
     <div className="rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
@@ -101,22 +130,24 @@ export default function ConversionHistory({
           <h3 className="font-bold text-sm">سجل آخر التحويلات</h3>
           <span className="text-xs bg-white px-2 py-0.5 rounded-full font-bold">{entries.length}</span>
         </div>
-        {entries.length > 0 && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-xs text-slate-600 hover:text-slate-800 font-bold flex items-center gap-1"
+            title="طي السجل"
+          >
+            ✕ طي
+          </button>
           <button
             onClick={clearHistory}
             className="text-xs text-red-600 hover:text-red-700 font-bold flex items-center gap-1"
           >
             <Trash2 size={12} /> مسح الكل
           </button>
-        )}
+        </div>
       </div>
 
-      {entries.length === 0 ? (
-        <p className="text-sm text-slate-500 text-center py-4">
-          لا توجد تحويلات محفوظة بعد. سيتم حفظ آخر 10 تحويلات تلقائياً.
-        </p>
-      ) : (
-        <div className="space-y-2">
+      <div className="space-y-2">
           {entries.map((entry) => (
             <div
               key={entry.id}
@@ -158,7 +189,6 @@ export default function ConversionHistory({
             </div>
           ))}
         </div>
-      )}
     </div>
   );
 }

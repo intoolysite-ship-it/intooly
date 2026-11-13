@@ -15,6 +15,7 @@ import {
 import { faqQuestions } from './faq-data';
 import LiveClock from '@/components/hijri/LiveClock';
 import ConversionHistory, { saveConversion } from '@/components/hijri/ConversionHistory';
+import HijriCalendar from '@/components/hijri/HijriCalendar';
 
 type Direction = 'hijri-to-gregorian' | 'gregorian-to-hijri';
 
@@ -281,6 +282,10 @@ export default function HijriPage() {
         )}
 
         <ConversionHistory />
+
+        <div className="mt-6">
+          <HijriCalendar />
+        </div>
 
         {/* ===== SEO CONTENT ===== */}
         <article className="space-y-12 max-w-4xl mx-auto text-right border-t border-slate-200 pt-10 mt-10">
