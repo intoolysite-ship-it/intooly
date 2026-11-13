@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { RotateCw, Trophy, AlertCircle, X, PartyPopper } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { RotateCw, Trophy, AlertCircle, X, PartyPopper, Share2, Copy, ImageDown, Trash2 } from 'lucide-react';
 import type { WheelImage, WheelOption } from '@/lib/picker-wheel/types';
 import { processWheelImage } from '@/lib/picker-wheel/image-processor';
 import { saveWheelImage, deleteWheelImage } from '@/lib/picker-wheel/storage';
@@ -15,6 +15,9 @@ const confettiColors = [
   '#ec4899', '#a855f7', '#14b8a6', '#ef4444',
 ];
 
+// 🆕 Toast System
+type Toast = { message: string; type: 'success' | 'error' | 'info' };
+
 export default function WheelController() {
   const [options, setOptions] = useState<WheelOption[]>(DEFAULT_OPTIONS);
   const [showImages, setShowImages] = useState(DEFAULT_WHEEL_SETTINGS.showImages);
@@ -25,6 +28,16 @@ export default function WheelController() {
   const [isImageProcessing, setIsImageProcessing] = useState(false);
   const imageUrlsRef = useRef<Set<string>>(new Set());
 
+  // 🆕 الميزات الجديدة
+  const [eliminationMode, setEliminationMode] = useState(DEFAULT_WHEEL_SETTINGS.removeWinnerAfterSpin);
+  const [spinDuration, setSpinDuration] = useState(DEFAULT_WHEEL_SETTINGS.spinDuration);
+  const [toast, setToast] = useState<Toast | null>(null);
+
+  const showToast = useCallback((message: string, type: Toast['type'] = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  }, []);
+
   const {
     rotation,
     isSpinning,
@@ -34,15 +47,57 @@ export default function WheelController() {
     reset,
   } = useWheelSpin({
     options,
-    duration: DEFAULT_WHEEL_SETTINGS.spinDuration * 1000,
+    duration: spinDuration * 1000,
     extraTurns: 5,
     soundEnabled,
   });
 
+  // 🆕 استعادة العجلة المشتركة من sessionStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const shared = sessionStorage.getItem("intooly-shared-wheel");
+      if (shared) {
+        const data = JSON.parse(shared);
+        if (data.o && Array.isArray(data.o) && data.o.length >= 2) {
+          const restored = data.o.map((opt: any, i: number) => ({
+            id: `shared-${Date.now()}-${i}`,
+            label: opt.l || "خيار",
+            color: opt.c || "#ea580c",
+            weight: opt.w || 1,
+            winCount: 0,
+          }));
+          setOptions(restored);
+          showToast("✅ تم استعادة العجلة المشتركة", "success");
+        }
+        sessionStorage.removeItem("intooly-shared-wheel");
+      }
+    } catch (e) {
+      console.warn("فشل استعادة العجلة", e);
+    }
+  }, [showToast]);
+
   useEffect(() => {
     if (winner) {
       setShowWinnerModal(true);
+
+      // 🆕 وضع الإقصاء: احذف الفائز بعد ثانيتين
+      if (eliminationMode) {
+        const winnerId = winner.id;
+        const winnerLabel = winner.label;
+        setTimeout(() => {
+          setOptions((prev) => {
+            if (prev.length <= 2) {
+              showToast('لا يمكن الإقصاء - يجب الاحتفاظ بخيارين على الأقل', 'error');
+              return prev;
+            }
+            return prev.filter((o) => o.id !== winnerId);
+          });
+          showToast(`تم إقصاء "${winnerLabel}" من العجلة`, 'info');
+        }, 2500);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [winner]);
 
   const handleOptionsChange = (nextOptions: WheelOption[]) => {
@@ -57,48 +112,36 @@ export default function WheelController() {
       imageUrlsRef.current.clear();
     };
   }, []);
+
   const handleImageSelect = async (optionId: string, file: File | null) => {
     setImageError(null);
-
     const currentOption = options.find((option) => option.id === optionId);
     if (!currentOption) return;
-
     const oldImageId = currentOption.imageId;
 
     if (!file) {
       setOptions((previous) =>
         previous.map((option) =>
-          option.id === optionId
-            ? { ...option, imageId: undefined }
-            : option,
-        ),
+          option.id === optionId ? { ...option, imageId: undefined } : option
+        )
       );
-
       setImageUrls((previous) => {
         const next = { ...previous };
         delete next[optionId];
         return next;
       });
-
-      if (
-        oldImageId &&
-        !options.some(
-          (option) => option.id !== optionId && option.imageId === oldImageId,
-        )
-      ) {
+      if (oldImageId && !options.some((o) => o.id !== optionId && o.imageId === oldImageId)) {
         await deleteWheelImage(oldImageId);
       }
       return;
     }
 
     setIsImageProcessing(true);
-
     let savedImageId: string | null = null;
 
     try {
       const processed = await processWheelImage(file);
       const imageId = crypto.randomUUID();
-
       const image: WheelImage = {
         id: imageId,
         blob: processed.blob,
@@ -106,51 +149,61 @@ export default function WheelController() {
         width: processed.width,
         height: processed.height,
       };
-
       await saveWheelImage(image);
       savedImageId = imageId;
-
       const imageUrl = URL.createObjectURL(processed.blob);
       imageUrlsRef.current.add(imageUrl);
-
-      setImageUrls((previous) => ({
-        ...previous,
-        [optionId]: imageUrl,
-      }));
-
+      setImageUrls((previous) => ({ ...previous, [optionId]: imageUrl }));
       setOptions((previous) =>
         previous.map((option) =>
-          option.id === optionId
-            ? { ...option, imageId }
-            : option,
-        ),
-      );
-
-      if (
-        oldImageId &&
-        !options.some(
-          (option) => option.id !== optionId && option.imageId === oldImageId,
+          option.id === optionId ? { ...option, imageId } : option
         )
-      ) {
+      );
+      if (oldImageId && !options.some((o) => o.id !== optionId && o.imageId === oldImageId)) {
         await deleteWheelImage(oldImageId);
       }
     } catch (error) {
-      if (savedImageId) {
-        await deleteWheelImage(savedImageId).catch(() => undefined);
-      }
-
-      setImageError(
-        error instanceof Error
-          ? error.message
-          : 'حدث خطأ أثناء معالجة الصورة وحفظها.',
-      );
+      if (savedImageId) await deleteWheelImage(savedImageId).catch(() => undefined);
+      setImageError(error instanceof Error ? error.message : 'حدث خطأ أثناء معالجة الصورة وحفظها.');
     } finally {
       setIsImageProcessing(false);
     }
   };
+
   const handleCloseWinner = () => {
     setShowWinnerModal(false);
   };
+
+  // 🆕 مشاركة العجلة (Base64 URL)
+  const shareWheel = useCallback(() => {
+    try {
+      const data = {
+        o: options.map((opt) => ({
+          l: opt.label,
+          c: opt.color,
+          w: opt.weight,
+        })),
+      };
+      const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
+      const url = `${window.location.origin}/tools/picker-wheel?data=${encoded}`;
+      navigator.clipboard.writeText(url).then(
+        () => showToast('✅ تم نسخ رابط العجلة! شاركه مع الآخرين'),
+        () => showToast('تعذر النسخ - انسخ الرابط يدوياً', 'error')
+      );
+    } catch {
+      showToast('حدث خطأ أثناء المشاركة', 'error');
+    }
+  }, [options, showToast]);
+
+  // 🆕 نسخ النتيجة كنص
+  const copyResult = useCallback(() => {
+    if (!winner) return;
+    const text = `🏆 الفائز: ${winner.label}`;
+    navigator.clipboard.writeText(text).then(
+      () => showToast('✅ تم نسخ النتيجة'),
+      () => showToast('تعذر النسخ', 'error')
+    );
+  }, [winner, showToast]);
 
   return (
     <section dir="rtl" className="mx-auto w-full max-w-6xl space-y-8">
@@ -171,20 +224,31 @@ export default function WheelController() {
             disabled={isSpinning || options.length < 2}
             className="inline-flex min-h-14 w-full max-w-sm items-center justify-center gap-3 rounded-2xl bg-orange-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-orange-600/20 transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <RotateCw
-              className={`h-6 w-6 ${isSpinning ? 'animate-spin' : ''}`}
-            />
+            <RotateCw className={`h-6 w-6 ${isSpinning ? 'animate-spin' : ''}`} />
             {isSpinning ? 'جاري الدوران...' : 'أدر العجلة'}
           </button>
 
-          <button
-            type="button"
-            onClick={reset}
-            disabled={isSpinning}
-            className="text-sm font-medium text-slate-500 transition hover:text-orange-600 disabled:opacity-40"
-          >
-            إعادة ضبط العجلة
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={reset}
+              disabled={isSpinning}
+              className="text-sm font-medium text-slate-500 transition hover:text-orange-600 disabled:opacity-40"
+            >
+              إعادة ضبط العجلة
+            </button>
+            <span className="text-slate-300">|</span>
+            {/* 🆕 زر المشاركة */}
+            <button
+              type="button"
+              onClick={shareWheel}
+              disabled={isSpinning || options.length < 2}
+              className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 transition hover:text-orange-700 disabled:opacity-40"
+            >
+              <Share2 className="h-4 w-4" />
+              مشاركة
+            </button>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -194,7 +258,13 @@ export default function WheelController() {
             disabled={isSpinning || isImageProcessing}
             imageUrls={imageUrls}
             onImageSelect={handleImageSelect}
-          />$2<label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-700"><input type="checkbox" checked={showImages}
+            onToast={showToast}
+          />
+
+          <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              checked={showImages}
               onChange={(event) => setShowImages(event.target.checked)}
               disabled={isSpinning}
               className="h-4 w-4 accent-orange-600"
@@ -203,10 +273,7 @@ export default function WheelController() {
           </label>
 
           {imageError && (
-            <div
-              role="alert"
-              className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700"
-            >
+            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
               {imageError}
             </div>
           )}
@@ -216,6 +283,7 @@ export default function WheelController() {
               جارٍ معالجة الصورة وحفظها...
             </p>
           )}
+
           <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-700">
             <input
               type="checkbox"
@@ -226,6 +294,46 @@ export default function WheelController() {
             تفعيل أصوات الدوران والفوز
           </label>
 
+          {/* 🆕 وضع الإقصاء */}
+          <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-orange-200 bg-orange-50 p-4 text-sm font-bold text-orange-800">
+            <input
+              type="checkbox"
+              checked={eliminationMode}
+              onChange={(event) => {
+                setEliminationMode(event.target.checked);
+                showToast(event.target.checked ? '🎯 وضع الإقصاء مفعّل' : 'وضع الإقصاء معطّل', 'info');
+              }}
+              className="h-4 w-4 accent-orange-600"
+            />
+            <div>
+              <p>🎯 إقصاء الفائز تلقائياً</p>
+              <p className="text-xs font-normal text-orange-700 mt-0.5">
+                يُزال الفائز من العجلة بعد كل دورة (مفيد للمسابقات)
+              </p>
+            </div>
+          </label>
+
+          {/* 🆕 التحكم في السرعة */}
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <label className="flex items-center justify-between text-sm font-bold text-slate-700 mb-2">
+              <span>⏱️ سرعة الدوران</span>
+              <span className="text-orange-600">{spinDuration} ثانية</span>
+            </label>
+            <input
+              type="range"
+              min="3"
+              max="15"
+              value={spinDuration}
+              onChange={(e) => setSpinDuration(Number(e.target.value))}
+              disabled={isSpinning}
+              className="w-full accent-orange-600"
+            />
+            <div className="flex justify-between text-xs text-slate-500 mt-1">
+              <span>سريع (3ث)</span>
+              <span>بطيء (15ث)</span>
+            </div>
+          </div>
+
           {winner && !showWinnerModal && (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center">
               <Trophy className="mx-auto mb-2 h-8 w-8 text-amber-500" />
@@ -233,27 +341,43 @@ export default function WheelController() {
               <p className="mt-1 break-words text-2xl font-extrabold text-slate-900">
                 {winner.label}
               </p>
-              <button
-                type="button"
-                onClick={() => setShowWinnerModal(true)}
-                className="mt-3 text-sm font-bold text-orange-700 hover:text-orange-800"
-              >
-                عرض الاحتفال
-              </button>
+              <div className="mt-3 flex justify-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setShowWinnerModal(true)}
+                  className="text-sm font-bold text-orange-700 hover:text-orange-800"
+                >
+                  عرض الاحتفال
+                </button>
+                <span className="text-slate-300">|</span>
+                <button
+                  type="button"
+                  onClick={copyResult}
+                  className="inline-flex items-center gap-1 text-sm font-bold text-orange-700 hover:text-orange-800"
+                >
+                  <Copy className="h-3 w-3" /> نسخ
+                </button>
+              </div>
             </div>
           )}
 
           {error && (
-            <div
-              role="alert"
-              className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
-            >
+            <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
               <p>{error}</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* 🆕 Toast */}
+      {toast && (
+        <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] rounded-full px-6 py-3 font-bold shadow-2xl text-sm text-white ${
+          toast.type === 'success' ? 'bg-green-600' : toast.type === 'error' ? 'bg-red-600' : 'bg-slate-800'
+        }`}>
+          {toast.message}
+        </div>
+      )}
 
       {winner && showWinnerModal && (
         <div
@@ -290,7 +414,6 @@ export default function WheelController() {
                   }}
                 />
               ))}
-
               <span className="winner-balloon absolute left-[8%] top-[20%] text-4xl">🎈</span>
               <span className="winner-balloon absolute right-[8%] top-[25%] text-4xl">🎈</span>
               <span className="winner-balloon absolute bottom-[12%] left-[12%] text-3xl">🎊</span>
@@ -301,104 +424,66 @@ export default function WheelController() {
               <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full border-4 border-amber-300 bg-gradient-to-br from-amber-300 to-orange-500 shadow-xl shadow-orange-500/30">
                 <Trophy className="h-14 w-14 text-white drop-shadow-md" />
               </div>
-
               <div className="mb-3 flex items-center justify-center gap-2 text-orange-600">
                 <PartyPopper className="h-6 w-6" />
                 <p className="text-lg font-extrabold">تهانينا!</p>
                 <PartyPopper className="h-6 w-6 -scale-x-100" />
               </div>
-
-              <h2
-                id="winner-title"
-                className="mb-4 text-3xl font-black text-slate-900 sm:text-4xl"
-              >
+              <h2 id="winner-title" className="mb-4 text-3xl font-black text-slate-900 sm:text-4xl">
                 لدينا فائز!
               </h2>
-
-              <p className="mb-3 text-base font-semibold text-amber-800">
-                الفائز في هذه الجولة هو
-              </p>
-
+              <p className="mb-3 text-base font-semibold text-amber-800">الفائز في هذه الجولة هو</p>
               <div className="rounded-2xl border-2 border-amber-300 bg-white/90 px-4 py-6 shadow-inner">
                 <p className="break-words text-3xl font-black leading-relaxed text-orange-600 sm:text-4xl">
                   {winner.label}
                 </p>
               </div>
-
               <p className="mt-5 text-sm font-medium text-slate-600">
                 🎉 مبروك للفائز، حظاً سعيداً للجميع في الجولة القادمة!
               </p>
-
-              <button
-                type="button"
-                onClick={handleCloseWinner}
-                className="mt-7 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 px-8 py-4 text-lg font-extrabold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:from-orange-700 hover:to-amber-600"
-              >
-                <Trophy className="h-5 w-5" />
-                رائع، متابعة
-              </button>
+              <div className="mt-7 flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleCloseWinner}
+                  className="inline-flex flex-1 min-h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-4 text-lg font-extrabold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:from-orange-700 hover:to-amber-600"
+                >
+                  <Trophy className="h-5 w-5" />
+                  رائع، متابعة
+                </button>
+                <button
+                  type="button"
+                  onClick={copyResult}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-orange-600 px-4 py-4 text-orange-700 shadow-lg transition hover:bg-orange-50"
+                  title="نسخ النتيجة"
+                >
+                  <Copy className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
       <style jsx>{`
-        .winner-celebration {
-          animation: winner-appear 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        }
-
-        .winner-confetti {
-          animation-name: winner-fall;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-        }
-
-        .winner-balloon {
-          animation: balloon-float 2.5s ease-in-out infinite alternate;
-        }
-
+        .winner-celebration { animation: winner-appear 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+        .winner-confetti { animation-name: winner-fall; animation-timing-function: linear; animation-iteration-count: infinite; }
+        .winner-balloon { animation: balloon-float 2.5s ease-in-out infinite alternate; }
         @keyframes winner-appear {
-          from {
-            opacity: 0;
-            transform: translateY(25px) scale(0.85);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
+          from { opacity: 0; transform: translateY(25px) scale(0.85); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         @keyframes winner-fall {
-          0% {
-            transform: translateY(-20px) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(650px) rotate(720deg);
-            opacity: 0;
-          }
+          0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(650px) rotate(720deg); opacity: 0; }
         }
-
         @keyframes balloon-float {
-          from {
-            transform: translateY(0) rotate(-8deg);
-          }
-          to {
-            transform: translateY(-14px) rotate(8deg);
-          }
+          from { transform: translateY(0) rotate(-8deg); }
+          to { transform: translateY(-14px) rotate(8deg); }
         }
-
         @media (prefers-reduced-motion: reduce) {
-          .winner-celebration,
-          .winner-confetti,
-          .winner-balloon {
-            animation: none;
-          }
+          .winner-celebration, .winner-confetti, .winner-balloon { animation: none; }
         }
       `}</style>
     </section>
   );
 }
-
-
-

@@ -2,22 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import {
-  Plus,
-  Trash2,
-  Pencil,
-  Check,
-  X,
-  ListPlus,
-  RotateCcw,
-  Users,
-  ImagePlus,
+  Plus, Trash2, Pencil, Check, X, ListPlus, RotateCcw,
+  Users, ImagePlus, Shuffle, Sparkles, ChevronDown
 } from 'lucide-react';
 import type { WheelOption } from '@/lib/picker-wheel/types';
 import {
-  MAX_OPTIONS,
-  MAX_WEIGHT,
-  MIN_WEIGHT,
-  WHEEL_COLORS,
+  MAX_OPTIONS, MAX_WEIGHT, MIN_WEIGHT, WHEEL_COLORS,
 } from '@/lib/picker-wheel/constants';
 
 interface WheelOptionsProps {
@@ -26,6 +16,7 @@ interface WheelOptionsProps {
   disabled?: boolean;
   imageUrls?: Record<string, string>;
   onImageSelect?: (optionId: string, file: File | null) => void;
+  onToast?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 interface OptionDraft {
@@ -38,9 +29,19 @@ const createId = () => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     return crypto.randomUUID();
   }
-
   return `option-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 };
+
+// 🆕 قائمة القوالب الجاهزة
+const TEMPLATES = [
+  { id: 'yes-no', name: '✅ نعم / لا', items: ['نعم', 'لا'] },
+  { id: 'numbers', name: '🔢 أرقام 1-10', items: ['1','2','3','4','5','6','7','8','9','10'] },
+  { id: 'days', name: '📅 أيام الأسبوع', items: ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'] },
+  { id: 'meals', name: '🍕 وجبات', items: ['بيتزا','برجر','شاورما','مكرونة','سوشي','دجاج','كبسة','مندي'] },
+  { id: 'students', name: '👨‍🎓 أسماء طلاب', items: ['أحمد','محمد','علي','سارة','فاطمة','خالد','نور','ليلى','عمر','ياسمين'] },
+  { id: 'movies', name: '🎬 أفلام', items: ['أكشن','كوميدي','دراما','رعب','خيال علمي','أنيميشن'] },
+  { id: 'travel', name: '✈️ سفر', items: ['مكة','دبي','إستانبول','القاهرة','لندن','باريس','طوكيو'] },
+];
 
 export default function WheelOptions({
   options,
@@ -48,15 +49,15 @@ export default function WheelOptions({
   disabled = false,
   imageUrls = {},
   onImageSelect,
+  onToast,
 }: WheelOptionsProps) {
   const [newLabel, setNewLabel] = useState('');
   const [bulkText, setBulkText] = useState('');
   const [bulkOpen, setBulkOpen] = useState(false);
+  const [templatesOpen, setTemplatesOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<OptionDraft>({
-    label: '',
-    color: WHEEL_COLORS[0],
-    weight: 1,
+    label: '', color: WHEEL_COLORS[0], weight: 1,
   });
   const [error, setError] = useState('');
 
@@ -65,30 +66,14 @@ export default function WheelOptions({
     [options],
   );
 
-  const updateOption = (
-    id: string,
-    updates: Partial<WheelOption>,
-  ) => {
-    onChange(
-      options.map((option) =>
-        option.id === id ? { ...option, ...updates } : option,
-      ),
-    );
+  const updateOption = (id: string, updates: Partial<WheelOption>) => {
+    onChange(options.map((option) => option.id === id ? { ...option, ...updates } : option));
   };
 
   const addOption = () => {
     const label = newLabel.trim();
-
-    if (!label) {
-      setError('اكتب اسم الخيار أولاً.');
-      return;
-    }
-
-    if (options.length >= MAX_OPTIONS) {
-      setError(`الحد الأقصى هو ${MAX_OPTIONS} خياراً.`);
-      return;
-    }
-
+    if (!label) { setError('اكتب اسم الخيار أولاً.'); return; }
+    if (options.length >= MAX_OPTIONS) { setError(`الحد الأقصى هو ${MAX_OPTIONS} خياراً.`); return; }
     onChange([
       ...options,
       {
@@ -99,86 +84,47 @@ export default function WheelOptions({
         winCount: 0,
       },
     ]);
-
     setNewLabel('');
     setError('');
+    onToast?.(`تمت إضافة "${label}"`, 'success');
   };
 
   const startEditing = (option: WheelOption) => {
     setEditingId(option.id);
-    setDraft({
-      label: option.label,
-      color: option.color,
-      weight: option.weight,
-    });
+    setDraft({ label: option.label, color: option.color, weight: option.weight });
     setError('');
   };
 
   const saveEditing = () => {
     if (!editingId) return;
-
     const label = draft.label.trim();
     const weight = Number(draft.weight);
-
-    if (!label) {
-      setError('اسم الخيار لا يمكن أن يكون فارغاً.');
-      return;
-    }
-
-    if (
-      !Number.isFinite(weight) ||
-      weight < MIN_WEIGHT ||
-      weight > MAX_WEIGHT
-    ) {
+    if (!label) { setError('اسم الخيار لا يمكن أن يكون فارغاً.'); return; }
+    if (!Number.isFinite(weight) || weight < MIN_WEIGHT || weight > MAX_WEIGHT) {
       setError(`الوزن يجب أن يكون بين ${MIN_WEIGHT} و${MAX_WEIGHT}.`);
       return;
     }
-
-    updateOption(editingId, {
-      label,
-      color: draft.color,
-      weight,
-    });
-
+    updateOption(editingId, { label, color: draft.color, weight });
     setEditingId(null);
     setError('');
+    onToast?.('تم حفظ التعديل', 'success');
   };
 
   const deleteOption = (id: string) => {
-    if (options.length <= 2) {
-      setError('يجب الاحتفاظ بخيارين على الأقل.');
-      return;
-    }
-
+    if (options.length <= 2) { setError('يجب الاحتفاظ بخيارين على الأقل.'); return; }
+    const deletedLabel = options.find(o => o.id === id)?.label;
     onChange(options.filter((option) => option.id !== id));
-
-    if (editingId === id) {
-      setEditingId(null);
-    }
-
+    if (editingId === id) setEditingId(null);
     setError('');
+    if (deletedLabel) onToast?.(`تم حذف "${deletedLabel}"`, 'info');
   };
 
   const addBulkOptions = () => {
-    const labels = bulkText
-      .split(/\r?\n/)
-      .map((label) => label.trim())
-      .filter(Boolean);
-
-    if (labels.length === 0) {
-      setError('أدخل خياراً واحداً على الأقل، كل خيار في سطر.');
-      return;
-    }
-
+    const labels = bulkText.split(/\r?\n/).map((label) => label.trim()).filter(Boolean);
+    if (labels.length === 0) { setError('أدخل خياراً واحداً على الأقل.'); return; }
     const available = MAX_OPTIONS - options.length;
-
-    if (available <= 0) {
-      setError(`وصلت إلى الحد الأقصى وهو ${MAX_OPTIONS} خياراً.`);
-      return;
-    }
-
+    if (available <= 0) { setError(`وصلت إلى الحد الأقصى (${MAX_OPTIONS}).`); return; }
     const accepted = labels.slice(0, available);
-
     const added: WheelOption[] = accepted.map((label, index) => ({
       id: createId(),
       label,
@@ -186,48 +132,69 @@ export default function WheelOptions({
       weight: 1,
       winCount: 0,
     }));
-
     onChange([...options, ...added]);
     setBulkText('');
     setBulkOpen(false);
-
-    setError(
-      labels.length > accepted.length
-        ? `تمت إضافة ${accepted.length} خياراً فقط بسبب الحد الأقصى.`
-        : '',
-    );
+    setError('');
+    onToast?.(`تمت إضافة ${accepted.length} خياراً`, 'success');
   };
 
   const resetWinCounts = () => {
+    onChange(options.map((option) => ({ ...option, winCount: 0 })));
+    onToast?.('تم تصفير مرات الفوز', 'info');
+  };
+
+  // 🆕 عجلة عشوائية فورية
+  const fillRandom = () => {
+    const names = ['أحمد','سارة','محمد','فاطمة','علي','نور','خالد','ليلى','عمر','ياسمين','حسن','مريم'];
+    const shuffled = [...names].sort(() => Math.random() - 0.5).slice(0, 5);
     onChange(
-      options.map((option) => ({
-        ...option,
+      shuffled.map((name, i) => ({
+        id: createId(),
+        label: name,
+        color: WHEEL_COLORS[i % WHEEL_COLORS.length],
+        weight: 1,
         winCount: 0,
-      })),
+      }))
     );
+    onToast?.('🎲 تم إنشاء عجلة عشوائية بـ 5 أسماء', 'success');
+  };
+
+  // 🆕 تطبيق قالب جاهز
+  const applyTemplate = (template: typeof TEMPLATES[0]) => {
+    const available = MAX_OPTIONS - options.length;
+    if (available < template.items.length) {
+      setError(`لا توجد مساحة كافية (متاح: ${available})`);
+      return;
+    }
+    const added: WheelOption[] = template.items.map((label, i) => ({
+      id: createId(),
+      label,
+      color: WHEEL_COLORS[(options.length + i) % WHEEL_COLORS.length],
+      weight: 1,
+      winCount: 0,
+    }));
+    onChange([...options, ...added]);
+    setTemplatesOpen(false);
+    onToast?.(`✅ تم تطبيق قالب "${template.name}"`, 'success');
   };
 
   return (
-    <section
-      dir="rtl"
-      className="w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
-    >
+    <section dir="rtl" className="w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900">
             <Users className="h-5 w-5 text-orange-600" />
             خيارات العجلة
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            أضف المشاركين أو الخيارات التي تريد الاختيار بينها.
-          </p>
+          <p className="mt-1 text-sm text-slate-500">أضف المشاركين أو الخيارات التي تريد الاختيار بينها.</p>
         </div>
-
         <span className="shrink-0 rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-orange-700">
           {options.length} من {MAX_OPTIONS}
         </span>
       </div>
 
+      {/* إدخال سريع */}
       <div className="mb-4 flex flex-col gap-2 sm:flex-row">
         <input
           type="text"
@@ -235,39 +202,52 @@ export default function WheelOptions({
           disabled={disabled || options.length >= MAX_OPTIONS}
           onChange={(event) => setNewLabel(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              addOption();
-            }
+            if (event.key === 'Enter') { event.preventDefault(); addOption(); }
           }}
           placeholder="اكتب اسماً أو خياراً جديداً..."
           maxLength={80}
           className="min-w-0 flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100 disabled:bg-slate-100"
         />
-
         <button
           type="button"
           onClick={addOption}
           disabled={disabled || options.length >= MAX_OPTIONS}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Plus className="h-4 w-4" />
-          إضافة
+          <Plus className="h-4 w-4" /> إضافة
         </button>
       </div>
 
+      {/* أزرار المساعدة */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <button
           type="button"
-          onClick={() => {
-            setBulkOpen((open) => !open);
-            setError('');
-          }}
+          onClick={() => { setBulkOpen((o) => !o); setError(''); }}
           disabled={disabled || options.length >= MAX_OPTIONS}
           className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm font-semibold text-orange-700 transition hover:bg-orange-100 disabled:opacity-50"
         >
-          <ListPlus className="h-4 w-4" />
-          إضافة قائمة كاملة
+          <ListPlus className="h-4 w-4" /> إضافة قائمة كاملة
+        </button>
+
+        {/* 🆕 القوالب الجاهزة */}
+        <button
+          type="button"
+          onClick={() => setTemplatesOpen((o) => !o)}
+          disabled={disabled}
+          className="inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-100 disabled:opacity-50"
+        >
+          <Sparkles className="h-4 w-4" /> قوالب جاهزة
+          <ChevronDown className={`h-3 w-3 transition ${templatesOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {/* 🆕 عجلة عشوائية */}
+        <button
+          type="button"
+          onClick={fillRandom}
+          disabled={disabled}
+          className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
+        >
+          <Shuffle className="h-4 w-4" /> عجلة عشوائية
         </button>
 
         <button
@@ -276,17 +256,39 @@ export default function WheelOptions({
           disabled={disabled || !options.some((option) => option.winCount > 0)}
           className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-50 disabled:opacity-40"
         >
-          <RotateCcw className="h-4 w-4" />
-          تصفير مرات الفوز
+          <RotateCcw className="h-4 w-4" /> تصفير مرات الفوز
         </button>
       </div>
 
+      {/* القوالب */}
+      {templatesOpen && (
+        <div className="mb-4 rounded-xl border border-purple-200 bg-purple-50/50 p-3">
+          <p className="mb-2 text-xs font-bold text-purple-800">اختر قالباً لإضافته فوراً:</p>
+          <div className="grid grid-cols-2 gap-2">
+            {TEMPLATES.map((template) => (
+              <button
+                key={template.id}
+                type="button"
+                onClick={() => applyTemplate(template)}
+                disabled={disabled}
+                className="rounded-lg border border-purple-200 bg-white p-2 text-right text-xs font-semibold text-slate-700 transition hover:border-purple-400 hover:bg-purple-50 disabled:opacity-50"
+              >
+                {template.name}
+                <span className="block text-[10px] font-normal text-slate-500 mt-0.5">
+                  {template.items.length} خيارات
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* القائمة الكاملة */}
       {bulkOpen && (
         <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50/50 p-3">
           <label className="mb-2 block text-sm font-bold text-slate-800">
             أدخل كل خيار في سطر مستقل
           </label>
-
           <textarea
             value={bulkText}
             onChange={(event) => setBulkText(event.target.value)}
@@ -295,13 +297,10 @@ export default function WheelOptions({
             placeholder={'أحمد\nمحمد\nعلي\nعمر'}
             className="w-full resize-y rounded-lg border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
           />
-
           <div className="mt-2 flex flex-wrap justify-between gap-2">
             <span className="text-xs text-slate-500">
-              {bulkText.split(/\r?\n/).filter((line) => line.trim()).length} خيار
-              جديد
+              {bulkText.split(/\r?\n/).filter((line) => line.trim()).length} خيار جديد
             </span>
-
             <div className="flex gap-2">
               <button
                 type="button"
@@ -310,7 +309,6 @@ export default function WheelOptions({
               >
                 إلغاء
               </button>
-
               <button
                 type="button"
                 onClick={addBulkOptions}
@@ -325,10 +323,7 @@ export default function WheelOptions({
       )}
 
       {error && (
-        <p
-          role="alert"
-          className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
-        >
+        <p role="alert" className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {error}
         </p>
       )}
@@ -341,26 +336,19 @@ export default function WheelOptions({
       <div className="space-y-2">
         {options.map((option, index) => {
           const isEditing = editingId === option.id;
-
           return (
-            <div
-              key={option.id}
-              className="rounded-xl border border-slate-100 bg-slate-50/70 p-3 transition hover:border-orange-200"
-            >
+            <div key={option.id} className="rounded-xl border border-slate-100 bg-slate-50/70 p-3 transition hover:border-orange-200">
               {isEditing ? (
                 <div className="space-y-3">
                   <input
                     type="text"
                     value={draft.label}
-                    onChange={(event) =>
-                      setDraft({ ...draft, label: event.target.value })
-                    }
+                    onChange={(event) => setDraft({ ...draft, label: event.target.value })}
                     maxLength={80}
                     disabled={disabled}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-orange-500"
                     aria-label="اسم الخيار"
                   />
-
                   <div className="flex flex-wrap items-center gap-3">
                     <label className="flex items-center gap-2 text-xs text-slate-600">
                       الوزن
@@ -370,30 +358,21 @@ export default function WheelOptions({
                         max={MAX_WEIGHT}
                         step="0.1"
                         value={draft.weight}
-                        onChange={(event) =>
-                          setDraft({
-                            ...draft,
-                            weight: Number(event.target.value),
-                          })
-                        }
+                        onChange={(event) => setDraft({ ...draft, weight: Number(event.target.value) })}
                         disabled={disabled}
                         className="w-20 rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm"
                       />
                     </label>
-
                     <label className="flex items-center gap-2 text-xs text-slate-600">
                       اللون
                       <input
                         type="color"
                         value={draft.color}
-                        onChange={(event) =>
-                          setDraft({ ...draft, color: event.target.value })
-                        }
+                        onChange={(event) => setDraft({ ...draft, color: event.target.value })}
                         disabled={disabled}
                         className="h-9 w-12 cursor-pointer rounded border-0 bg-transparent"
                       />
                     </label>
-
                     <div className="ms-auto flex gap-2">
                       <button
                         type="button"
@@ -404,13 +383,9 @@ export default function WheelOptions({
                       >
                         <Check className="h-4 w-4" />
                       </button>
-
                       <button
                         type="button"
-                        onClick={() => {
-                          setEditingId(null);
-                          setError('');
-                        }}
+                        onClick={() => { setEditingId(null); setError(''); }}
                         aria-label="إلغاء التعديل"
                         className="rounded-lg bg-slate-200 p-2 text-slate-700 hover:bg-slate-300"
                       >
@@ -421,28 +396,21 @@ export default function WheelOptions({
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span className="w-6 shrink-0 text-center text-xs text-slate-400">
-                    {index + 1}
-                  </span>
-
+                  <span className="w-6 shrink-0 text-center text-xs text-slate-400">{index + 1}</span>
                   <span
                     className="h-4 w-4 shrink-0 rounded-full border border-black/10"
                     style={{ backgroundColor: option.color }}
                     aria-label="لون القطاع"
                   />
-
                   <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-800">
                     {option.label}
                   </span>
-
                   <span className="hidden shrink-0 rounded-md bg-white px-2 py-1 text-xs text-slate-500 sm:inline">
                     وزن {option.weight}
                   </span>
-
                   <span className="shrink-0 rounded-lg bg-white px-2 py-1 text-xs font-bold tabular-nums text-slate-700">
                     {option.winCount} فوز
                   </span>
-
                   <button
                     type="button"
                     onClick={() => startEditing(option)}
@@ -452,7 +420,6 @@ export default function WheelOptions({
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
-
                   <button
                     type="button"
                     onClick={() => deleteOption(option.id)}
@@ -477,7 +444,6 @@ export default function WheelOptions({
                     <ImagePlus className="h-5 w-5" />
                   </div>
                 )}
-
                 <label className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border border-orange-200 bg-white px-3 py-2 text-xs font-semibold text-orange-700 transition hover:bg-orange-50 ${disabled ? 'pointer-events-none opacity-50' : ''}`}>
                   <ImagePlus className="h-4 w-4" />
                   {imageUrls[option.id] ? 'تغيير الصورة' : 'إضافة صورة'}
@@ -493,7 +459,6 @@ export default function WheelOptions({
                     }}
                   />
                 </label>
-
                 {imageUrls[option.id] && (
                   <button
                     type="button"
@@ -511,15 +476,9 @@ export default function WheelOptions({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-xs text-slate-500">
-        <span>
-          إجمالي الأوزان: {Number(totalWeight.toFixed(2))}
-        </span>
+        <span>إجمالي الأوزان: {Number(totalWeight.toFixed(2))}</span>
         <span>يؤثر الوزن في مساحة القطاع واحتمال الفوز.</span>
       </div>
     </section>
   );
 }
-
-
-
-
