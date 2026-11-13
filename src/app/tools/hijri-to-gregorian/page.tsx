@@ -19,6 +19,8 @@ import HijriCalendar from '@/components/hijri/HijriCalendar';
 import DateDifference from '@/components/hijri/DateDifference';
 import AddSubtractDays from '@/components/hijri/AddSubtractDays';
 import IslamicEvents from '@/components/hijri/IslamicEvents';
+import DocumentExpiry from '@/components/hijri/DocumentExpiry';
+import ShareResult from '@/components/hijri/ShareResult';
 
 type Direction = 'hijri-to-gregorian' | 'gregorian-to-hijri';
 
@@ -271,6 +273,15 @@ export default function HijriPage() {
                     <p className="font-mono text-sm font-bold text-slate-900" dir="ltr">{displayValue(result.gregorianNumeric || '')}</p>
                   </div>
                 </div>
+
+                {/* زر المشاركة */}
+                <div className="mt-3 text-center">
+                  <ShareResult
+                    hijriText={result.hijriFormatted || ''}
+                    gregorianText={result.gregorianFormatted || ''}
+                    direction={direction}
+                  />
+                </div>
               </div>
             ) : (
               <div className="rounded-2xl border border-red-200 bg-red-50 p-4 flex items-start gap-3">
@@ -300,6 +311,10 @@ export default function HijriPage() {
 
         <div className="mt-6">
           <IslamicEvents />
+        </div>
+
+        <div className="mt-6">
+          <DocumentExpiry />
         </div>
 
         {/* ===== SEO CONTENT ===== */}
