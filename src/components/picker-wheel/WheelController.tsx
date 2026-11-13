@@ -15,11 +15,26 @@ const confettiColors = [
   '#ec4899', '#a855f7', '#14b8a6', '#ef4444',
 ];
 
-// 🆕 Toast System
 type Toast = { message: string; type: 'success' | 'error' | 'info' };
 
-export default function WheelController() {
-  const [options, setOptions] = useState<WheelOption[]>(DEFAULT_OPTIONS);
+// 🆕 Props لدعم Multi-Wheel
+interface WheelControllerProps {
+  wheelId?: string;
+  initialOptions?: WheelOption[];
+  onOptionsChange?: (options: WheelOption[]) => void;
+  onToast?: (message: string, type?: Toast['type']) => void;
+}
+
+export default function WheelController({
+  wheelId,
+  initialOptions,
+  onOptionsChange,
+  onToast: externalToast,
+}: WheelControllerProps = {}) {
+  // 🆕 استخدام initialOptions إذا وُجدت
+  const [options, setOptions] = useState<WheelOption[]>(
+    initialOptions && initialOptions.length > 0 ? initialOptions : DEFAULT_OPTIONS
+  );
   const [showImages, setShowImages] = useState(DEFAULT_WHEEL_SETTINGS.showImages);
   const [soundEnabled, setSoundEnabled] = useState(DEFAULT_WHEEL_SETTINGS.soundEnabled);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
@@ -28,7 +43,6 @@ export default function WheelController() {
   const [isImageProcessing, setIsImageProcessing] = useState(false);
   const imageUrlsRef = useRef<Set<string>>(new Set());
 
-  // 🆕 الميزات الجديدة
   const [eliminationMode, setEliminationMode] = useState(DEFAULT_WHEEL_SETTINGS.removeWinnerAfterSpin);
   const [spinDuration, setSpinDuration] = useState(DEFAULT_WHEEL_SETTINGS.spinDuration);
   const [toast, setToast] = useState<Toast | null>(null);
@@ -36,7 +50,8 @@ export default function WheelController() {
   const showToast = useCallback((message: string, type: Toast['type'] = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  }, []);
+    externalToast?.(message, type);
+  }, [externalToast]);
 
   const {
     rotation,
@@ -52,9 +67,16 @@ export default function WheelController() {
     soundEnabled,
   });
 
-  // 🆕 استعادة العجلة المشتركة من sessionStorage
+  // 🆕 إشعار تغيير الخيارات للـ Parent
+  useEffect(() => {
+    onOptionsChange?.(options);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
+
+  // استعادة العجلة المشتركة
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (initialOptions && initialOptions.length > 0) return; // لا تستعد إذا كان هناك initialOptions
     try {
       const shared = sessionStorage.getItem("intooly-shared-wheel");
       if (shared) {
@@ -75,13 +97,11 @@ export default function WheelController() {
     } catch (e) {
       console.warn("فشل استعادة العجلة", e);
     }
-  }, [showToast]);
+  }, [showToast, initialOptions]);
 
   useEffect(() => {
     if (winner) {
       setShowWinnerModal(true);
-
-      // 🆕 وضع الإقصاء: احذف الفائز بعد ثانيتين
       if (eliminationMode) {
         const winnerId = winner.id;
         const winnerLabel = winner.label;
@@ -174,7 +194,6 @@ export default function WheelController() {
     setShowWinnerModal(false);
   };
 
-  // 🆕 مشاركة العجلة (Base64 URL)
   const shareWheel = useCallback(() => {
     try {
       const data = {
@@ -195,7 +214,6 @@ export default function WheelController() {
     }
   }, [options, showToast]);
 
-  // 🆕 نسخ النتيجة كنص
   const copyResult = useCallback(() => {
     if (!winner) return;
     const text = `🏆 الفائز: ${winner.label}`;
@@ -238,7 +256,6 @@ export default function WheelController() {
               إعادة ضبط العجلة
             </button>
             <span className="text-slate-300">|</span>
-            {/* 🆕 زر المشاركة */}
             <button
               type="button"
               onClick={shareWheel}
@@ -294,7 +311,6 @@ export default function WheelController() {
             تفعيل أصوات الدوران والفوز
           </label>
 
-          {/* 🆕 وضع الإقصاء */}
           <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-orange-200 bg-orange-50 p-4 text-sm font-bold text-orange-800">
             <input
               type="checkbox"
@@ -313,7 +329,6 @@ export default function WheelController() {
             </div>
           </label>
 
-          {/* 🆕 التحكم في السرعة */}
           <div className="rounded-xl border border-slate-200 bg-white p-4">
             <label className="flex items-center justify-between text-sm font-bold text-slate-700 mb-2">
               <span>⏱️ سرعة الدوران</span>
@@ -370,7 +385,6 @@ export default function WheelController() {
         </div>
       </div>
 
-      {/* 🆕 Toast */}
       {toast && (
         <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] rounded-full px-6 py-3 font-bold shadow-2xl text-sm text-white ${
           toast.type === 'success' ? 'bg-green-600' : toast.type === 'error' ? 'bg-red-600' : 'bg-slate-800'

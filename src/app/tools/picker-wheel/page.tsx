@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useState } from 'react';
-import WheelController from '@/components/picker-wheel/WheelController';
+import MultiWheelController from '@/components/picker-wheel/MultiWheelController';
 
 function useShareData() {
   const [ready, setReady] = useState(false);
@@ -76,7 +76,7 @@ export default function PickerWheelPage() {
         </header>
 
         <div className="mb-10">
-          <WheelController />
+          <MultiWheelController />
         </div>
 
         <article className="space-y-12">
