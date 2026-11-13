@@ -8,7 +8,9 @@ import {
   Calculator,
   HeartPulse,
   Clock,
-  Scale
+  Scale,
+  Shuffle,
+  History,
 } from 'lucide-react';
 
 export const metadata = {
@@ -34,6 +36,18 @@ const tools = [
     title: 'حاسبة النسبة المئوية',
     description: 'أداة سريعة ودقيقة لحساب النسب المئوية، الزيادة، النقصان، والفرق بين قيمتين بسهولة.',
     href: '/tools/percentage-calculator',
+  },
+  {
+    icon: History,
+    title: 'محول التاريخ الهجري والميلادي',
+    description: 'حوّل التاريخ من هجري إلى ميلادي أو من ميلادي إلى هجري بدقة (أم القرى) مع اسم اليوم.',
+    href: '/tools/hijri-to-gregorian',
+  },
+  {
+    icon: Shuffle,
+    title: 'عجلة الحظ',
+    description: 'أدر عجلة الحظ لاختيار اسم أو فائز عشوائياً. أضف خياراتك وخصص الألوان والأوزان.',
+    href: '/tools/picker-wheel',
   },
 ];
 
