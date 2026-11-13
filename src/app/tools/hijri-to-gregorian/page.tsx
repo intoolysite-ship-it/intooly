@@ -13,6 +13,8 @@ import {
   type ConversionResult,
 } from '@/lib/hijri/convert';
 import { faqQuestions } from './faq-data';
+import LiveClock from '@/components/hijri/LiveClock';
+import ConversionHistory, { saveConversion } from '@/components/hijri/ConversionHistory';
 
 type Direction = 'hijri-to-gregorian' | 'gregorian-to-hijri';
 
@@ -52,16 +54,28 @@ export default function HijriPage() {
   }, []);
 
   useEffect(() => {
+    let res: ConversionResult | null = null;
     if (direction === 'hijri-to-gregorian') {
       if (hYear && hMonth && hDay) {
-        setResult(hijriToGregorian({ year: hYear, month: hMonth, day: hDay }));
+        res = hijriToGregorian({ year: hYear, month: hMonth, day: hDay });
+        setResult(res);
       }
     } else {
       if (gYear && gMonth && gDay) {
-        setResult(gregorianToHijri({ year: gYear, month: gMonth, day: gDay }));
+        res = gregorianToHijri({ year: gYear, month: gMonth, day: gDay });
+        setResult(res);
       }
     }
     setCopied(false);
+
+    // حفظ في السجل عند نجاح التحويل
+    if (res && res.success && res.hijriFormatted && res.gregorianFormatted) {
+      saveConversion({
+        direction,
+        hijriText: res.hijriFormatted,
+        gregorianText: res.gregorianFormatted,
+      });
+    }
   }, [direction, hYear, hMonth, hDay, gYear, gMonth, gDay]);
 
   const fillToday = () => {
@@ -105,6 +119,8 @@ export default function HijriPage() {
   return (
     <main id="top" dir="rtl" className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+
+        <LiveClock />
         <nav className="mb-5 text-sm text-slate-500">
           <Link href="/tools" className="font-medium transition hover:text-orange-600">الأدوات</Link>
           <span className="mx-2">/</span>
@@ -264,6 +280,8 @@ export default function HijriPage() {
           </div>
         )}
 
+        <ConversionHistory />
+
         {/* ===== SEO CONTENT ===== */}
         <article className="space-y-12 max-w-4xl mx-auto text-right border-t border-slate-200 pt-10 mt-10">
 
@@ -402,7 +420,6 @@ export default function HijriPage() {
           </section>
 
         </article>
-
       </div>
     </main>
   );
