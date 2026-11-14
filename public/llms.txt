@@ -1,15 +1,28 @@
-# Intooly
-Intooly is a platform providing free online tools for images, video, audio, PDF, SEO, and calculations.
+# Intooly - أدوات مجانية احترافية
 
-## Core Tools
-- [Broken Link Checker](https://intooly.com/tools/broken-link-checker)
-- [EXIF Viewer & Privacy Checker](https://intooly.com/tools/exif-viewer)
-- [Calculators (BMI, Age, Calories)](https://intooly.com/tools/calculators)
-- [Health & Fitness Tools](https://intooly.com/tools/health-fitness)
-- [SEO Tools](https://intooly.com/tools/seo)
-- [Image Tools](https://intooly.com/tools/images)
-- [PDF Tools](https://intooly.com/tools/pdf)
+Intooly هي منصة أدوات مجانية تعمل محلياً في المتصفح (Client-Side).
+جميع الأدوات مجانية 100% ولا تتطلب تسجيل حساب.
 
-## About
-All tools are 100% free, process data locally in the browser when possible, and respect user privacy.
-Price: Free (0 USD)
+## الأدوات الرئيسية
+
+- [قص الأغاني](https://intooly.com/tools/song-cutter): قص وتقطيع الملفات الصوتية، دمج المقاطع، إنشاء نغمات رنين.
+- [تحويل الفيديو](https://intooly.com/tools/video-converter): تحويل صيغ الفيديو (MP4, MOV, MKV, WebM, AVI, GIF) مع التحكم في الجودة والدقة.
+- [عجلة الحظ](https://intooly.com/tools/picker-wheel): اختيار عشوائي، قرعة، إنشاء نغمات، عجلات متعددة.
+- [تحويل التاريخ](https://intooly.com/tools/hijri-to-gregorian): تحويل بين التقويم الهجري (أم القرى) والميلادي في الاتجاهين.
+- [حاسبة العمر](https://intooly.com/tools/age-calculator): حساب العمر بالسنوات والأشهر والأيام.
+- [ضغط الصور](https://intooly.com/tools/image-compressor): تقليل حجم الصور مع الحفاظ على الجودة.
+- [إزالة الخلفية](https://intooly.com/tools/background-remover): إزالة خلفية الصور بالذكاء الاصطناعي.
+- [أدوات PDF](https://intooly.com/tools/pdf): دمج، تقسيم، ضغط، تدوير، تحويل PDF.
+
+## الاتصال
+
+- البريد الإلكتروني: support@intooly.com
+- الموقع: https://intooly.com
+- المدونة: https://blog.intooly.com
+
+## مزايا Intooly
+
+- 100% مجاني
+- معالجة محلية (خصوصية تامة)
+- لا يتطلب تسجيل
+- يعمل على جميع الأجهزة

@@ -389,50 +389,19 @@ function ColoredToolGrid({
 }
 
 export default function Home() {
+  // ✅ FAQPage فقط (Organization و WebSite موجودان في layout.tsx)
   const structuredData = {
     '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebSite',
-        '@id': 'https://intooly.com/#website',
-        url: 'https://intooly.com/',
-        name: 'Intooly',
-        description:
-          'أدوات عبر الإنترنت للصور والفيديو والصوت وملفات PDF والمستندات والكلمات المفتاحية والإنتاجية.',
-        inLanguage: 'ar',
-        publisher: {
-          '@id': 'https://intooly.com/#organization',
-        },
+    '@type': 'FAQPage',
+    '@id': 'https://intooly.com/#faq',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
       },
-      {
-        '@type': 'Organization',
-        '@id': 'https://intooly.com/#organization',
-        name: 'Intooly',
-        url: 'https://intooly.com/',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://intooly.com/favicon.svg',
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          email: 'support@intooly.com',
-          contactType: 'customer support',
-          availableLanguage: ['Arabic', 'English'],
-        },
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': 'https://intooly.com/#faq',
-        mainEntity: faqs.map((faq) => ({
-          '@type': 'Question',
-          name: faq.q,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.a,
-          },
-        })),
-      },
-    ],
+    })),
   };
 
   return (

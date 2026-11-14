@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import localFont from 'next/font/local';
 import './globals.css';
@@ -43,38 +43,29 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      'max-video-preview': -1,
       'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'oOXc7sK6VZPHb2T_EnFtgjFQxi1Q0wKpIaOBl5U0JG8',
+  alternates: {
+    canonical: 'https://intooly.com',
   },
   openGraph: {
     type: 'website',
-    locale: 'ar_SA',
     url: 'https://intooly.com',
     siteName: 'Intooly',
-    title: 'Intooly - أدوات مجانية احترافية',
-    description:
-      'منصة أدوات مجانية احترافية تعمل محلياً في متصفحك لضمان خصوصيتك الكاملة.',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Intooly',
-      },
-    ],
+    title: 'Intooly - أدوات مجانية احترافية تعمل محلياً',
+    description: 'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً في المتصفح.',
+    locale: 'ar_SA',
   },
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
-      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
-      { url: '/favicon-144x144.png', type: 'image/png', sizes: '144x144' },
-    ],
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
-    shortcut: '/favicon.ico',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Intooly - أدوات مجانية احترافية',
+    description: 'منصة أدوات مجانية احترافية تعمل محلياً في المتصفح.',
+  },
+  verification: {
+    google: 'YOUR_GOOGLE_VERIFICATION_CODE',
   },
 };
 
@@ -84,32 +75,69 @@ export const viewport: Viewport = {
   themeColor: '#111827',
 };
 
-const organizationSchema = {
+// ✅ Schema موحّد (Organization + WebSite + Offer)
+const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Intooly',
-  url: 'https://intooly.com',
-  logo: 'https://intooly.com/web-app-manifest-512x512.png',
-  description:
-    'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً في المتصفح',
-  contactPoint: {
-    '@type': 'ContactPoint',
-    email: 'support@intooly.com',
-    contactType: 'customer support',
-    availableLanguage: ['Arabic', 'English'],
-  },
-  sameAs: [],
-};
-
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Intooly',
-  alternateName: 'أدوات مجانية احترافية',
-  url: 'https://intooly.com',
-  inLanguage: 'ar',
-  description:
-    'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والملفات',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://intooly.com/#organization',
+      'name': 'Intooly',
+      'url': 'https://intooly.com',
+      'logo': 'https://intooly.com/web-app-manifest-512x512.png',
+      'description': 'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً في المتصفح.',
+      'email': 'support@intooly.com',
+      'address': {
+        '@type': 'PostalAddress',
+        'addressCountry': 'EG',
+      },
+      'contactPoint': {
+        '@type': 'ContactPoint',
+        'email': 'support@intooly.com',
+        'contactType': 'customer support',
+        'availableLanguage': ['Arabic', 'English'],
+        'areaServed': 'Global',
+      },
+      'makesOffer': {
+        '@type': 'Offer',
+        'name': 'Free Online Tools',
+        'price': '0',
+        'priceCurrency': 'USD',
+        'availability': 'https://schema.org/InStock',
+        'url': 'https://intooly.com/tools',
+      },
+      'sameAs': [
+        'https://twitter.com/intooly',
+        'https://www.linkedin.com/company/intooly',
+        'https://github.com/intoolysite-ship-it/intooly',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://intooly.com/#website',
+      'name': 'Intooly',
+      'alternateName': 'أدوات مجانية احترافية',
+      'url': 'https://intooly.com',
+      'inLanguage': 'ar',
+      'description': 'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والملفات.',
+      'publisher': { '@id': 'https://intooly.com/#organization' },
+      'potentialAction': {
+        '@type': 'SearchAction',
+        'target': 'https://intooly.com/tools?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Offer',
+      '@id': 'https://intooly.com/#offer',
+      'name': 'Free Online Tools',
+      'price': '0',
+      'priceCurrency': 'USD',
+      'availability': 'https://schema.org/InStock',
+      'url': 'https://intooly.com/tools',
+      'seller': { '@id': 'https://intooly.com/#organization' },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -120,89 +148,44 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${cairo.variable} overflow-x-hidden`}>
       <head>
-        {/* Schema.org: Organization */}
+        {/* Schema.org (موحّد) */}
         <script
           id="schema-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
+            __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
           }}
         />
 
-        {/* Schema.org: WebSite */}
-        <script
-          id="schema-website"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
-        />
+        {/* رابط بديل Markdown للوكلاء */}
+        <link rel="alternate" type="text/markdown" href="/llms.txt" />
 
-        {/* Preconnect: blog.intooly.com (لتحسين LCP) */}
+        {/* Preconnect: blog.intooly.com */}
         <link rel="preconnect" href="https://blog.intooly.com" />
 
-        {/* Google Analytics 4 — مع Cookie Consent Mode (lazyOnload) */}
-        <Script
-          id="google-analytics-consent"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                wait_for_update: 500,
-              });
-              try {
-                if (localStorage.getItem('cookie-consent') === 'accepted') {
-                  gtag('consent', 'update', {
-                    analytics_storage: 'granted',
-                  });
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
+        {/* Google Analytics 4 */}
         <Script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-GB8VLXYS9Z"
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
           strategy="lazyOnload"
         />
-        <Script
-          id="google-analytics"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-GB8VLXYS9Z', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXXXXX');
+          `}
+        </Script>
 
-        {/* Google AdSense (lazyOnload) */}
+        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7439471977682480"
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-              <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-      "@type": "Organization",
-      "@id": "https://intooly.com/#organization",
-      "name": "Intooly",
-      "url": "https://intooly.com",
-      "logo": "https://intooly.com/icon.png",
-      "contactPoint": { "@type": "ContactPoint", "telephone": "+1-000-000-0000", "contactType": "customer support", "areaServed": "Global", "availableLanguage": ["Arabic", "English"] },
-      "address": { "@type": "PostalAddress", "addressCountry": "EG" },
-      "sameAs": ["https://twitter.com/intooly", "https://www.linkedin.com/company/intooly", "https://github.com/intoolysite-ship-it/intooly"],
-      "makesOffer": { "@type": "Offer", "name": "Free Online Tools", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://intooly.com/tools" }
-    }).replace(/</g, "\\u003c") }} />
-  </head>
+      </head>
       <body className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden bg-ink-50 text-ink-800">
         <Header />
         <main className="flex-grow w-full max-w-full overflow-x-hidden">
@@ -211,107 +194,7 @@ export default function RootLayout({
         <Footer />
         <CookieConsent />
         <ScrollToTop />
-              
-              <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": "https://intooly.com/#organization",
-              "name": "Intooly",
-              "url": "https://intooly.com",
-              "logo": "https://intooly.com/icon.png",
-              "contactPoint": { "@type": "ContactPoint", "telephone": "+1-000-000-0000", "contactType": "customer support", "areaServed": "Global", "availableLanguage": ["Arabic", "English"] },
-              "address": { "@type": "PostalAddress", "addressCountry": "EG" },
-              "sameAs": ["https://twitter.com/intooly", "https://www.linkedin.com/company/intooly", "https://github.com/intoolysite-ship-it/intooly"],
-              "makesOffer": { "@type": "Offer", "name": "Free Online Tools", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://intooly.com/tools" }
-            }).replace(/</g, "\\u003c")
-          }}
-        />
-            <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof navigator !== 'undefined' && navigator.modelContext) {
-                navigator.modelContext.registerTool({
-                  name: "get_intooly_info",
-                  description: "Get general information about Intooly's free online tools",
-                  inputSchema: { type: "object", properties: {} },
-                  execute: async () => {
-                    return { content: "Intooly provides 100% free online tools for images, video, audio, PDF, SEO, and calculations. All tools prioritize user privacy with local browser processing where possible." };
-                  }
-                });
-              }
-            `
-          }}
-        />
-              <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": "https://intooly.com/#organization",
-              "name": "Intooly",
-              "url": "https://intooly.com",
-              "logo": "https://intooly.com/icon.png",
-              "description": "Intooly is a free online platform providing tools for images, video, audio, PDF, SEO, and calculations. All tools are 100% free and process data locally in the browser to protect user privacy.",
-              "sameAs": []
-            }).replace(/</g, "\\u003c")
-          }}
-        />
-              <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": "https://intooly.com/#organization",
-              "name": "Intooly",
-              "url": "https://intooly.com",
-              "logo": "https://intooly.com/icon.png",
-              "description": "Intooly is a free online platform providing tools for images, video, audio, PDF, SEO, and calculations.",
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+20-100-000-0000",
-                "contactType": "customer support",
-                "areaServed": "Global",
-                "availableLanguage": ["Arabic", "English"]
-              },
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "EG",
-                "addressLocality": "Cairo"
-              },
-              "sameAs": [
-                "https://twitter.com/intooly",
-                "https://www.linkedin.com/company/intooly"
-              ],
-              "makesOffer": {
-                "@type": "Offer",
-                "name": "Free Online Tools",
-                "price": "0",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://intooly.com/tools"
-              }
-            }).replace(/</g, "\\u003c")
-          }}
-        />
-          <Script
-      id="microsoft-clarity"
-      strategy="afterInteractive"
-      dangerouslySetInnerHTML={{
-        __html: `
-          (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "za1fi4mh0g");
-        `
-      }}
-    />
-  </body>
+      </body>
     </html>
   );
 }
