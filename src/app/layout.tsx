@@ -93,6 +93,7 @@ const structuredData = {
       },
       'contactPoint': {
         '@type': 'ContactPoint',
+        'telephone': '+201130303820',
         'email': 'support@intooly.com',
         'contactType': 'customer support',
         'availableLanguage': ['Arabic', 'English'],
