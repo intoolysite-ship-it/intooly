@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
@@ -316,7 +316,7 @@ export default function VideoConverterPage() {
   // ✅ بداية الواجهة
   // ============================================================
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
+    <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden relative" dir="rtl">
       {toast.visible && (
         <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full font-semibold shadow-2xl z-50 max-w-lg text-center ${toast.isError ? 'bg-red-600 text-white' : 'bg-slate-900 text-white'}`}>
           {toast.message}
@@ -324,7 +324,7 @@ export default function VideoConverterPage() {
       )}
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative overflow-hidden border-b border-slate-200 bg-white">
+      <section className="relative overflow-hidden border-b border-slate-200 bg-white isolate">
         <div className="container relative mx-auto px-4 py-10 md:py-14 max-w-6xl">
           <Link href="/tools/video" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-700">
             <ArrowLeft className="h-4 w-4" /> جميع أدوات الفيديو
@@ -348,7 +348,7 @@ export default function VideoConverterPage() {
       {/* ===== MAIN TOOL ===== */}
       <section className="py-6 md:py-8">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="bg-white border border-slate-200 rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8">
+          <div className="bg-white border border-slate-200 rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8 overflow-hidden">
 
             {!video.file ? (
               <label htmlFor="video-upload"
@@ -403,7 +403,7 @@ export default function VideoConverterPage() {
                         {video.convertedUrl ? (
                           <video src={video.convertedUrl} controls className="w-full h-48 md:h-72 object-contain rounded-lg bg-slate-900" />
                         ) : (
-                          <div className="w-full h-48 md:h-72 flex items-center justify-center rounded-lg bg-orange-50 border-2 border-dashed border-orange-200">
+                          <div className="w-full h-48 md:h-72 flex items-center justify-center rounded-lg bg-orange-50 border-2 border-dashed border-orange-200 relative overflow-hidden">
                             {video.status === 'converting' || video.status === 'loading-ffmpeg' ?
                               <Loader2 className="w-8 h-8 text-orange-500 animate-spin" /> :
                               <Film className="w-8 h-8 text-orange-400" />
