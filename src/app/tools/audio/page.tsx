@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Mic,
+  Music,
   Volume2,
   Scissors,
   FileAudio,
@@ -35,6 +36,12 @@ const tools = [
     title: 'قص الأغاني',
     description: 'قص ملفات MP3 وتقطيع الأغاني بدقة، وإنشاء نغمات رنين، ومعاينة الموجة الصوتية مباشرة من المتصفح.',
     href: '/tools/song-cutter',
+  },
+  {
+    icon: Music,
+    title: 'قص ودمج الملفات الصوتية',
+    description: 'قص ودمج ملفات MP3 وWAV بسهولة مع معاينة الموجة الصوتية.',
+    href: '/tools/audio-trimmer',
   },{
     icon: Mic,
     title: 'تحويل الصوت الى نص',
