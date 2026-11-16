@@ -248,6 +248,19 @@ const featuredTools = [
       shadow: 'rgba(8,145,178,0.15)',
     },
   },
+  {
+    icon: Music,
+    title: 'قص ودمج الصوت',
+    description: 'قص ودمج ملفات MP3 وWAV بسهولة من المتصفح.',
+    href: '/tools/audio-trimmer',
+    color: {
+      bg: '#fdf2f8',
+      border: '#fbcfe8',
+      iconBg: '#fce7f3',
+      iconColor: '#db2777',
+      shadow: 'rgba(219,39,119,0.15)',
+    },
+  },
 ];
 
 const faqs = [
