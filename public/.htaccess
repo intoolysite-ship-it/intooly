@@ -1,11 +1,16 @@
-<IfModule mod_headers.c>
-  # Emit RFC 8288 Link header pointing to llms.txt
-  Header set Link '<https://intooly.com/llms.txt>; rel="alternate"; type="text/plain"'
-</IfModule>
+# إعادة كتابة الروابط لتعمل صفحات Next.js الثابتة على Apache
+RewriteEngine On
 
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  # Serve Markdown when an agent asks for it (Accept: text/markdown)
-  RewriteCond %{HTTP_ACCEPT} text/markdown [NC]
-  RewriteRule ^/?$ /agent-summary.md [L,T=text/markdown]
-</IfModule>
+# إذا كان الملف أو المجلد موجوداً بالفعل، لا تفعل شيئاً
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# إذا لم يكن هناك امتداد .html، حاول إضافة .html
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule !.*\.html$ %{REQUEST_FILENAME}.html [L]
+
+# إذا كان الرابط ينتهي بشرطة مائلة، ابحث عن index.html داخل المجلد
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ $1/index.html [L]
