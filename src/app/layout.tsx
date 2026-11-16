@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import AhrefsAnalytics from '@/components/AhrefsAnalytics';
 import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/Header';
@@ -163,6 +164,7 @@ export default function RootLayout({
 
         {/* Preconnect: blog.intooly.com */}
         <link rel="preconnect" href="https://blog.intooly.com" />
+        <AhrefsAnalytics />
 
         {/* Google Analytics 4 */}
         <Script
