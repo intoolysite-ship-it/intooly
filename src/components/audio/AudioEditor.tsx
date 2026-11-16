@@ -28,6 +28,9 @@ export default function AudioEditor() {
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
+  const [fadeIn, setFadeIn] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [fadeDuration, setFadeDuration] = useState(2);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -297,6 +300,16 @@ export default function AudioEditor() {
       const clipDuration = endTime - startTime;
       
       let args: string[] = ['-i', inputName, '-ss', startTime.toString(), '-t', clipDuration.toString()];
+      
+      // إضافة فلاتر Fade In / Fade Out
+      const filters: string[] = [];
+      if (fadeIn) filters.push(`afade=t=in:st=0:d=${fadeDuration}`);
+      if (fadeOut) filters.push(`afade=t=out:st=${Math.max(0, clipDuration - fadeDuration)}:d=${fadeDuration}`);
+      
+      if (filters.length > 0) {
+        args.push('-af', filters.join(','));
+      }
+      
       if (targetFormat === 'mp3') args.push('-c:a', 'libmp3lame', '-q:a', '2');
       else if (targetFormat === 'wav') args.push('-c:a', 'pcm_s16le');
       else if (targetFormat === 'flac') args.push('-c:a', 'flac');
