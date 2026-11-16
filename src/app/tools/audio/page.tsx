@@ -48,12 +48,6 @@ const tools = [
     href: '/tools/audio-denoise', // أداة مستقبلية
   },
   {
-    icon: Scissors,
-    title: 'قص ودمج الملفات الصوتية',
-    description: 'أداة بسيطة وسريعة لقص المقاطع غير المرغوب فيها أو دمج عدة ملفات صوتية.',
-    href: '/tools/audio-trimmer', // أداة مستقبلية
-  },
-  {
     icon: FileAudio,
     title: 'تحويل صيغ الملفات الصوتية',
     description: 'حوّل ملفاتك بين الصيغ الشائعة مثل MP3, WAV, M4A, و OGG بسهولة.',
