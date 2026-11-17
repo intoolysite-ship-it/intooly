@@ -75,7 +75,7 @@ export default function AudioEditor() {
       barGap: 1,
       barRadius: 2,
       height: 120,
-      max: true, // ✅ الحل: الموجة تتناسب مع عرض الحاوية بدون تمرير أفقي
+      autoScroll: false, // ✅ الحل: الموجة تتناسب مع عرض الحاوية بدون تمرير أفقي
       plugins: [regions],
     });
 
