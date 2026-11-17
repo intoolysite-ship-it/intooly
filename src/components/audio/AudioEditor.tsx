@@ -1,18 +1,11 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Upload, Download, Music, AlertCircle, CheckCircle2, RefreshCw, Play, Pause, Scissors, Clock, Layers } from 'lucide-react';
+import WaveSurfer from 'wavesurfer.js';
+import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
 
 type AudioFormat = 'mp3' | 'wav' | 'flac' | 'ogg';
-
-type MergeFile = {
-  id: string;
-  file: File;
-  url: string;
-  name: string;
-  size: number;
-  duration: number;
-};
 
 const FORMATS: { id: AudioFormat; name: string; mime: string }[] = [
   { id: 'mp3', name: 'MP3', mime: 'audio/mpeg' },
@@ -23,267 +16,162 @@ const FORMATS: { id: AudioFormat; name: string; mime: string }[] = [
 
 export default function AudioEditor() {
   const [file, setFile] = useState<File | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
-  
-  // ميزات جديدة: التلاشي ومعدل البت
+  const [currentTime, setCurrentTime] = useState(0);
+
   const [fadeIn, setFadeIn] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [fadeDuration, setFadeDuration] = useState(2);
   const [bitrate, setBitrate] = useState('192');
 
-  const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [mode, setMode] = useState<'trim' | 'merge'>('trim');
-  const [mergeFiles, setMergeFiles] = useState<MergeFile[]>([]);
   const [targetFormat, setTargetFormat] = useState<AudioFormat>('mp3');
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [processStep, setProcessStep] = useState('');
 
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const waveformRef = useRef<HTMLDivElement>(null);
+  const wavesurferRef = useRef<WaveSurfer | null>(null);
+  const regionsRef = useRef<any>(null);
   const ffmpegRef = useRef<any>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const playEndRef = useRef<number>(0);
 
   const loadFFmpeg = useCallback(async () => {
     if (ffmpegRef.current?.loaded) return ffmpegRef.current;
-    try {
-      setProcessStep('جاري تحميل محرك المعالجة...');
-      const { FFmpeg } = await import('@ffmpeg/ffmpeg');
-      const { toBlobURL } = await import('@ffmpeg/util');
-      const ffmpeg = new FFmpeg();
-      
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      
-      ffmpegRef.current = ffmpeg;
-      return ffmpeg;
-    } catch (err: any) {
-      throw new Error('فشل تحميل محرك المعالجة.');
-    }
+    setProcessStep('جاري تحميل محرك المعالجة...');
+    const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+    const { toBlobURL } = await import('@ffmpeg/util');
+    const ffmpeg = new FFmpeg();
+    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+    ffmpegRef.current = ffmpeg;
+    return ffmpeg;
   }, []);
 
-  const drawWaveform = useCallback(() => {
-    if (!canvasRef.current || !audioBuffer) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    const width = rect.width;
-    const height = rect.height;
+  const initWaveSurfer = useCallback((url: string) => {
+    if (!waveformRef.current) return;
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, width, height);
-
-    const data = audioBuffer.getChannelData(0);
-    const samples = 500;
-    const blockSize = Math.floor(data.length / samples);
-
-    for (let i = 0; i < samples; i++) {
-      const x = (i / samples) * width;
-      let sum = 0;
-      for (let j = 0; j < blockSize; j++) {
-        sum += Math.abs(data[i * blockSize + j]);
-      }
-      const barHeight = (sum / blockSize) * height * 0.8;
-      const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height);
-      gradient.addColorStop(0, '#f97316');
-      gradient.addColorStop(1, '#c2410c');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(x, height - barHeight, Math.max(1, width / samples - 1), barHeight);
+    if (wavesurferRef.current) {
+      wavesurferRef.current.destroy();
+      wavesurferRef.current = null;
     }
 
-    const startX = (startTime / duration) * width;
-    const endX = (endTime / duration) * width;
-    ctx.fillStyle = 'rgba(249, 115, 22, 0.2)';
-    ctx.fillRect(startX, 0, endX - startX, height);
-    ctx.strokeStyle = '#f97316';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(startX, 0, endX - startX, height);
+    const regions = RegionsPlugin.create();
+    regionsRef.current = regions;
 
-    const playX = (currentTime / duration) * width;
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(playX, 0);
-    ctx.lineTo(playX, height);
-    ctx.stroke();
-  }, [audioBuffer, startTime, endTime, currentTime, duration]);
+    const ws = WaveSurfer.create({
+      container: waveformRef.current,
+      waveColor: '#cbd5e1',
+      progressColor: '#f97316',
+      cursorColor: '#1e293b',
+      barWidth: 2,
+      barGap: 1,
+      barRadius: 2,
+      height: 120,
+      max: true, // ✅ الحل: الموجة تتناسب مع عرض الحاوية بدون تمرير أفقي
+      plugins: [regions],
+    });
+
+    wavesurferRef.current = ws;
+
+    ws.on('ready', (dur: number) => {
+      console.log('✅ WaveSurfer ready, duration =', dur);
+      setDuration(dur);
+      setStartTime(0);
+      setEndTime(dur);
+
+      regions.clearRegions();
+      const region = regions.addRegion({
+        start: 0,
+        end: dur,
+        color: 'rgba(249, 115, 22, 0.2)',
+        drag: true,
+        resize: true,
+      });
+
+      region.on('update', () => {
+        setStartTime(region.start);
+        setEndTime(region.end);
+      });
+    });
+
+    ws.on('error', (err: any) => {
+      console.error('❌ WaveSurfer error:', err);
+      setError('تعذر تحليل الملف الصوتي.');
+    });
+
+    ws.on('audioprocess', (time: number) => {
+      setCurrentTime(time);
+      // ✅ إيقاف التشغيل تلقائياً عند نهاية المقطع المحدد
+      if (playEndRef.current > 0 && time >= playEndRef.current) {
+        ws.pause();
+        playEndRef.current = 0;
+      }
+    });
+
+    ws.on('seeking', (time: number) => setCurrentTime(time));
+    ws.on('play', () => setIsPlaying(true));
+    ws.on('pause', () => setIsPlaying(false));
+    ws.on('finish', () => { setIsPlaying(false); playEndRef.current = 0; });
+
+    ws.load(url);
+  }, []);
 
   useEffect(() => {
-    drawWaveform();
-  }, [drawWaveform]);
+    return () => {
+      if (wavesurferRef.current) {
+        wavesurferRef.current.destroy();
+        wavesurferRef.current = null;
+      }
+    };
+  }, []);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
-    
     setFile(selectedFile);
-    setAudioUrl(URL.createObjectURL(selectedFile));
     setError(null);
     setDownloadUrl(null);
     e.target.value = '';
-
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      audioContextRef.current = ctx;
-      const arrayBuffer = await selectedFile.arrayBuffer();
-      const buffer = await ctx.decodeAudioData(arrayBuffer);
-      setAudioBuffer(buffer);
-      setDuration(buffer.duration);
-      setStartTime(0);
-      setEndTime(buffer.duration);
-      
-      console.log('✅ تم تحميل الملف بنجاح:', {
-        duration: buffer.duration,
-        startTime: 0,
-        endTime: buffer.duration
-      });
-    } catch (err) {
-      console.error('❌ خطأ في تحليل الملف:', err);
-      setError('تعذر تحليل الملف الصوتي.');
-    }
+    const url = URL.createObjectURL(selectedFile);
+    setTimeout(() => initWaveSurfer(url), 100);
   };
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) audioRef.current.pause();
-      else audioRef.current.play();
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
-  };
-
-  const handleMergeFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    for (let i = 0; i < files.length; i++) {
-      const f = files[i];
-      if (!f.type.startsWith('audio/')) continue;
-      
-      try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const arrayBuffer = await f.arrayBuffer();
-        const buffer = await ctx.decodeAudioData(arrayBuffer);
-        
-        const newFile: MergeFile = {
-          id: Date.now().toString() + Math.random(),
-          file: f,
-          url: URL.createObjectURL(f),
-          name: f.name,
-          size: f.size,
-          duration: buffer.duration,
-        };
-        
-        setMergeFiles(prev => [...prev, newFile]);
-        ctx.close();
-      } catch (err) {
-        console.warn('فشل تحليل الملف:', f.name);
+    if (wavesurferRef.current) {
+      if (isPlaying) {
+        wavesurferRef.current.pause();
+        playEndRef.current = 0;
+      } else {
+        playEndRef.current = 0; // تشغيل كامل الملف
+        wavesurferRef.current.play();
       }
     }
-    e.target.value = '';
   };
 
-  const removeMergeFile = (id: string) => {
-    setMergeFiles(prev => {
-      const file = prev.find(f => f.id === id);
-      if (file) URL.revokeObjectURL(file.url);
-      return prev.filter(f => f.id !== id);
-    });
+  // ✅ زر جديد: معاينة المقطع المحدد فقط
+  const playSelection = () => {
+    if (!wavesurferRef.current || !regionsRef.current) return;
+    const regions = regionsRef.current.getRegions();
+    if (regions.length === 0) return;
+    const region = regions[0];
+    playEndRef.current = region.end;
+    wavesurferRef.current.setTime(region.start);
+    wavesurferRef.current.play();
   };
 
-  const moveMergeFile = (id: string, direction: 'up' | 'down') => {
-    setMergeFiles(prev => {
-      const index = prev.findIndex(f => f.id === id);
-      if (index === -1) return prev;
-      const newIndex = direction === 'up' ? index - 1 : index + 1;
-      if (newIndex < 0 || newIndex >= prev.length) return prev;
-      const newFiles = [...prev];
-      [newFiles[index], newFiles[newIndex]] = [newFiles[newIndex], newFiles[index]];
-      return newFiles;
-    });
-  };
-
-  const mergeAllFiles = async () => {
-    if (mergeFiles.length < 2) {
-      setError('يجب إضافة ملفين على الأقل للدمج.');
-      return;
-    }
-    setIsProcessing(true);
-    setError(null);
-    setDownloadUrl(null);
-
-    try {
-      const ffmpeg = await loadFFmpeg();
-      const { fetchFile } = await import('@ffmpeg/util');
-
-      setProcessStep('جاري قراءة الملفات...');
-      const inputNames: string[] = [];
-      for (let i = 0; i < mergeFiles.length; i++) {
-        const mf = mergeFiles[i];
-        const ext = mf.name.split('.').pop()?.toLowerCase() || 'mp3';
-        const inputName = `input_${i}.${ext}`;
-        await ffmpeg.writeFile(inputName, await fetchFile(mf.file));
-        inputNames.push(inputName);
-      }
-
-      setProcessStep('جاري تحويل الملفات إلى WAV...');
-      const wavNames: string[] = [];
-      for (let i = 0; i < inputNames.length; i++) {
-        const wavName = `wav_${i}.wav`;
-        await ffmpeg.exec(['-i', inputNames[i], '-c:a', 'pcm_s16le', '-ar', '44100', '-ac', '2', '-y', wavName]);
-        wavNames.push(wavName);
-      }
-
-      setProcessStep('جاري دمج الملفات...');
-      const concatContent = wavNames.map(f => `file '${f}'`).join('\n');
-      await ffmpeg.writeFile('concat_list.txt', concatContent);
-      const outputName = `merged_output.${targetFormat}`;
-      
-      let codecArgs: string[] = [];
-      if (targetFormat === 'mp3') codecArgs = ['-c:a', 'libmp3lame', '-b:a', `${bitrate}k`];
-      else if (targetFormat === 'wav') codecArgs = ['-c:a', 'pcm_s16le'];
-      else if (targetFormat === 'flac') codecArgs = ['-c:a', 'flac'];
-      else if (targetFormat === 'ogg') codecArgs = ['-c:a', 'libvorbis', '-b:a', `${bitrate}k`];
-
-      await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat_list.txt', ...codecArgs, '-y', outputName]);
-
-      setProcessStep('جاري تحضير الملف...');
-      const data = await ffmpeg.readFile(outputName);
-      const mime = FORMATS.find(f => f.id === targetFormat)?.mime || 'audio/mpeg';
-      const blob = new Blob([data as any], { type: mime });
-      
-      setDownloadUrl(URL.createObjectURL(blob));
-      setProcessStep('تم الدمج بنجاح!');
-
-      for (const f of [...inputNames, ...wavNames]) {
-        await ffmpeg.deleteFile(f).catch(() => {});
-      }
-      await ffmpeg.deleteFile('concat_list.txt').catch(() => {});
-      await ffmpeg.deleteFile(outputName).catch(() => {});
-    } catch (err: any) {
-      setError(err.message || 'حدث خطأ أثناء الدمج.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const formatTime = (time: number) => {
+    const mins = Math.floor(time / 60);
+    const secs = Math.floor(time % 60);
+    const ms = Math.floor((time % 1) * 100);
+    return `${mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
   };
 
   const trimAudio = async () => {
@@ -300,27 +188,21 @@ export default function AudioEditor() {
       const inputExt = file.name.split('.').pop()?.toLowerCase() || 'mp3';
       const inputName = `input.${inputExt}`;
       const outputName = `output.${targetFormat}`;
-      
       await ffmpeg.writeFile(inputName, await fetchFile(file));
 
       setProcessStep('جاري قص الصوت...');
       const clipDuration = endTime - startTime;
-      
-      let args: string[] = ['-i', inputName, '-ss', startTime.toString(), '-t', clipDuration.toString()];
-      
+      const args: string[] = ['-i', inputName, '-ss', startTime.toString(), '-t', clipDuration.toString()];
+
       const filters: string[] = [];
       if (fadeIn) filters.push(`afade=t=in:st=0:d=${fadeDuration}`);
       if (fadeOut) filters.push(`afade=t=out:st=${Math.max(0, clipDuration - fadeDuration)}:d=${fadeDuration}`);
-      
-      if (filters.length > 0) {
-        args.push('-af', filters.join(','));
-      }
-      
+      if (filters.length > 0) args.push('-af', filters.join(','));
+
       if (targetFormat === 'mp3') args.push('-c:a', 'libmp3lame', '-b:a', `${bitrate}k`);
       else if (targetFormat === 'wav') args.push('-c:a', 'pcm_s16le');
       else if (targetFormat === 'flac') args.push('-c:a', 'flac');
       else if (targetFormat === 'ogg') args.push('-c:a', 'libvorbis', '-b:a', `${bitrate}k`);
-      
       args.push('-y', outputName);
 
       await ffmpeg.exec(args);
@@ -329,10 +211,9 @@ export default function AudioEditor() {
       const data = await ffmpeg.readFile(outputName);
       const mime = FORMATS.find(f => f.id === targetFormat)?.mime || 'audio/mpeg';
       const blob = new Blob([data as any], { type: mime });
-      
       setDownloadUrl(URL.createObjectURL(blob));
       setProcessStep('تم القص بنجاح!');
-      
+
       await ffmpeg.deleteFile(inputName).catch(() => {});
       await ffmpeg.deleteFile(outputName).catch(() => {});
     } catch (err: any) {
@@ -342,96 +223,16 @@ export default function AudioEditor() {
     }
   };
 
-  const formatTime = (time: number) => {
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    const ms = Math.floor((time % 1) * 100);
-    return `${mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex gap-2 mb-6 border-b border-slate-200 pb-3">
-        <button
-          onClick={() => setMode('trim')}
-          className={`flex-1 rounded-xl py-2.5 px-3 text-sm font-bold transition ${
-            mode === 'trim' ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
-        >
+        <button onClick={() => setMode('trim')} className={`flex-1 rounded-xl py-2.5 px-3 text-sm font-bold transition ${mode === 'trim' ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
           <Scissors size={16} className="inline ml-1" /> قص
         </button>
-        <button
-          onClick={() => setMode('merge')}
-          className={`flex-1 rounded-xl py-2.5 px-3 text-sm font-bold transition ${
-            mode === 'merge' ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
-        >
+        <button onClick={() => setMode('merge')} className={`flex-1 rounded-xl py-2.5 px-3 text-sm font-bold transition ${mode === 'merge' ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
           <Layers size={16} className="inline ml-1" /> دمج
         </button>
       </div>
-
-      {mode === 'merge' && (
-        <div className="space-y-6">
-          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-8">
-            <Upload size={40} className="mb-3 text-slate-400" />
-            <h3 className="mb-2 text-lg font-bold text-slate-700">أضف ملفات صوتية للدمج</h3>
-            <p className="mb-4 text-sm text-slate-500">يمكنك اختيار أكثر من ملف (MP3, WAV, M4A, FLAC)</p>
-            <label className="cursor-pointer rounded-xl bg-orange-600 px-6 py-3 font-bold text-white hover:bg-orange-700 transition-colors">
-              اختيار ملفات
-              <input type="file" accept="audio/*" multiple className="hidden" onChange={handleMergeFileSelect} />
-            </label>
-          </div>
-
-          {mergeFiles.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="font-bold text-slate-900">الملفات ({mergeFiles.length})</h4>
-              {mergeFiles.map((mf, index) => (
-                <div key={mf.id} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 font-bold text-sm">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-sm truncate">{mf.name}</p>
-                    <p className="text-xs text-slate-500">{formatTime(mf.duration)} • {(mf.size / 1024).toFixed(1)} KB</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <button onClick={() => moveMergeFile(mf.id, 'up')} disabled={index === 0} className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-30" title="أعلى">▲</button>
-                    <button onClick={() => moveMergeFile(mf.id, 'down')} disabled={index === mergeFiles.length - 1} className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-30" title="أسفل">▼</button>
-                    <button onClick={() => removeMergeFile(mf.id)} className="p-1.5 rounded hover:bg-red-100 text-red-600" title="حذف">✕</button>
-                  </div>
-                </div>
-              ))}
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-                {FORMATS.map(f => (
-                  <button key={f.id} onClick={() => setTargetFormat(f.id)} className={`rounded-xl border-2 p-2 text-center font-bold text-sm transition ${targetFormat === f.id ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-slate-200 bg-white text-slate-600 hover:border-orange-300'}`}>
-                    {f.name}
-                  </button>
-                ))}
-              </div>
-
-              {(targetFormat === 'mp3' || targetFormat === 'ogg') && (
-                <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                  <span className="text-sm font-bold text-slate-700">معدل البت (Bitrate):</span>
-                  <select value={bitrate} onChange={(e) => setBitrate(e.target.value)} className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm font-bold text-slate-700 focus:ring-2 focus:ring-orange-500 outline-none">
-                    <option value="128">128 kbps (حجم أصغر)</option>
-                    <option value="192">192 kbps (متوازن)</option>
-                    <option value="256">256 kbps (جودة عالية)</option>
-                    <option value="320">320 kbps (أعلى جودة)</option>
-                  </select>
-                </div>
-              )}
-
-              <button onClick={mergeAllFiles} disabled={isProcessing || mergeFiles.length < 2} className="w-full rounded-xl bg-orange-600 px-6 py-4 font-bold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all">
-                {isProcessing ? (<><RefreshCw size={20} className="animate-spin" /> {processStep}</>) : (<><Layers size={20} /> دمج {mergeFiles.length} ملفات في ملف واحد</>)}
-              </button>
-            </div>
-          )}
-
-          {error && (<div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-start gap-2"><AlertCircle size={20} className="shrink-0 mt-0.5" /><div><p className="font-bold">خطأ</p><p>{error}</p></div></div>)}
-          {downloadUrl && (<div className="rounded-xl bg-green-50 border border-green-200 p-6 text-center"><CheckCircle2 size={40} className="mx-auto mb-3 text-green-600" /><h4 className="text-lg font-bold text-green-900 mb-3">تم الدمج بنجاح!</h4><audio src={downloadUrl} controls className="w-full mb-4 max-w-md mx-auto rounded-lg bg-white" /><a href={downloadUrl} download={`merged.${targetFormat}`} className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700 transition-colors"><Download size={20} /> تحميل الملف المدمج</a></div>)}
-        </div>
-      )}
 
       {mode === 'trim' && (
         <>
@@ -455,39 +256,24 @@ export default function AudioEditor() {
                     <p className="text-xs text-slate-500">المدة: {formatTime(duration)}</p>
                   </div>
                 </div>
-                <button onClick={() => { setFile(null); setAudioUrl(null); setAudioBuffer(null); setDownloadUrl(null); }} className="text-sm text-red-600 font-bold hover:underline">إزالة</button>
+                <button onClick={() => { setFile(null); setDuration(0); setDownloadUrl(null); if (wavesurferRef.current) { wavesurferRef.current.destroy(); wavesurferRef.current = null; } }} className="text-sm text-red-600 font-bold hover:underline">إزالة</button>
               </div>
-
-              <audio ref={audioRef} src={audioUrl || ''} onTimeUpdate={handleTimeUpdate} onEnded={() => setIsPlaying(false)} className="hidden" />
 
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <canvas ref={canvasRef} className="w-full h-32 rounded-lg bg-white cursor-pointer" onClick={(e) => {
-                  if (!canvasRef.current || !audioRef.current) return;
-                  const rect = canvasRef.current.getBoundingClientRect();
-                  const x = e.clientX - rect.left;
-                  const time = (x / rect.width) * duration;
-                  audioRef.current.currentTime = time;
-                  setCurrentTime(time);
-                }} />
-                <div className="flex justify-between items-center mt-3 flex-wrap gap-2">
-                  <button onClick={togglePlay} className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white hover:bg-orange-700">
-                    {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                  </button>
-                  <div className="text-sm font-mono text-slate-600">{formatTime(currentTime)} / {formatTime(duration)}</div>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex gap-2">
+                    <button onClick={togglePlay} className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white hover:bg-orange-700" title="تشغيل/إيقاف الملف كاملاً">
+                      {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                    </button>
+                    <button onClick={playSelection} disabled={endTime <= startTime} className="flex h-10 px-4 items-center justify-center gap-2 rounded-full bg-white border-2 border-orange-500 text-orange-700 hover:bg-orange-50 disabled:opacity-40 font-bold text-sm" title="معاينة المقطع المحدد فقط">
+                      <Play size={16} /> معاينة المقطع
+                    </button>
+                  </div>
+                  <div className="text-sm font-mono text-slate-600">
+                    {formatTime(startTime)} - {formatTime(endTime)}
+                  </div>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">البداية</label>
-                  <input type="range" min="0" max={duration} step="0.1" value={startTime} onChange={(e) => setStartTime(parseFloat(e.target.value))} className="w-full accent-orange-600" />
-                  <p className="text-xs text-slate-500 mt-1 font-mono">{formatTime(startTime)}</p>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">النهاية</label>
-                  <input type="range" min="0" max={duration} step="0.1" value={endTime} onChange={(e) => setEndTime(parseFloat(e.target.value))} className="w-full accent-orange-600" />
-                  <p className="text-xs text-slate-500 mt-1 font-mono">{formatTime(endTime)}</p>
-                </div>
+                <div ref={waveformRef} className="w-full rounded-lg bg-white overflow-hidden" />
               </div>
 
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
@@ -530,17 +316,8 @@ export default function AudioEditor() {
                 </div>
               )}
 
-              <button 
-                onClick={trimAudio} 
-                disabled={isProcessing || endTime <= startTime || duration === 0}
-                className="w-full rounded-xl bg-orange-600 px-6 py-4 font-bold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
-                title={endTime <= startTime ? 'يجب تحديد فترة زمنية صحيحة' : duration === 0 ? 'لم يتم تحميل الملف بعد' : ''}
-              >
-                {isProcessing ? (
-                  <><RefreshCw size={20} className="animate-spin" /> {processStep}</>
-                ) : (
-                  <><Scissors size={20} /> قص المقطع (من {formatTime(startTime)} إلى {formatTime(endTime)})</>
-                )}
+              <button onClick={trimAudio} disabled={isProcessing || endTime <= startTime || duration === 0} className="w-full rounded-xl bg-orange-600 px-6 py-4 font-bold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all">
+                {isProcessing ? (<><RefreshCw size={20} className="animate-spin" /> {processStep}</>) : (<><Scissors size={20} /> قص المقطع (من {formatTime(startTime)} إلى {formatTime(endTime)})</>)}
               </button>
 
               {error && (<div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-start gap-2"><AlertCircle size={20} className="shrink-0 mt-0.5" /><div><p className="font-bold">خطأ</p><p>{error}</p></div></div>)}
@@ -548,6 +325,13 @@ export default function AudioEditor() {
             </div>
           )}
         </>
+      )}
+
+      {mode === 'merge' && (
+        <div className="text-center py-10 text-slate-500">
+          <Layers size={48} className="mx-auto mb-4 text-slate-300" />
+          <p>وضع الدمج سيُعاد تفعيله بعد نجاح المرحلة الأولى.</p>
+        </div>
       )}
     </div>
   );
