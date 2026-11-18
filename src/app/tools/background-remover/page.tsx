@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
@@ -185,38 +185,46 @@ export default function BackgroundRemoverPage() {
   // ✅ عجلة الفأرة على Canvas
   // ============================================================
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (selectedImage?.status !== 'done') return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      setZoom(prev => Math.max(0.1, Math.min(8, prev * delta)));
-    };
-
-    canvas.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      canvas.removeEventListener('wheel', handleWheel);
-    };
-  }, [selectedImage?.status, selectedImage?.finalUrl]);
-
-  useEffect(() => {
     const container = canvasContainerRef.current;
-    if (!container) return;
-    if (selectedImage?.status !== 'done') return;
+    if (!container || selectedImage?.status !== 'done') return;
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      setZoom(prev => Math.max(0.1, Math.min(8, prev * delta)));
+
+      const canvas = canvasRef.current;
+      if (!canvas || !zoom) return;
+
+      const rect = container.getBoundingClientRect();
+      const nextZoom = Math.max(0.1, Math.min(8, zoom * (e.deltaY > 0 ? 0.9 : 1.1)));
+      if (nextZoom === zoom) return;
+
+      const ratio = nextZoom / zoom;
+      const anchorX = e.clientX - rect.left - rect.width / 2;
+      const anchorY = e.clientY - rect.top - rect.height / 2;
+
+      const nextPanX = anchorX - (anchorX - panX) * ratio;
+      const nextPanY = anchorY - (anchorY - panY) * ratio;
+
+      const availableWidth = Math.max(1, container.clientWidth - 32);
+      const availableHeight = Math.max(1, container.clientHeight - 32);
+      const fitScale = Math.min(
+        availableWidth / canvas.width,
+        availableHeight / canvas.height,
+        1
+      );
+
+      const maxPanX = Math.max(0, (canvas.width * fitScale * nextZoom - availableWidth) / 2);
+      const maxPanY = Math.max(0, (canvas.height * fitScale * nextZoom - availableHeight) / 2);
+
+      setZoom(nextZoom);
+      setPanX(Math.max(-maxPanX, Math.min(maxPanX, nextPanX)));
+      setPanY(Math.max(-maxPanY, Math.min(maxPanY, nextPanY)));
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
     return () => container.removeEventListener('wheel', handleWheel);
-  }, [selectedImage?.status, selectedImage?.finalUrl]);
+  }, [selectedImage?.status, selectedImage?.finalUrl, zoom, panX, panY]);
 
   const bgPresets: BgPreset[] = [
     { name: 'أبيض', type: 'color', value: '#ffffff' },
@@ -438,10 +446,15 @@ export default function BackgroundRemoverPage() {
         shadowCanvas.width = canvas.width + 40;
         shadowCanvas.height = canvas.height + 40;
         const shadowCtx = shadowCanvas.getContext('2d');
+
         if (shadowCtx) {
+          // Preserve the existing background and image
+          shadowCtx.drawImage(canvas, 20, 20);
+
           const shadowBlur = (settings.shadowIntensity / 100) * 25;
           const shadowOffset = (settings.shadowIntensity / 100) * 12;
           let offsetX = 20, offsetY = 20;
+
           switch (settings.shadowDirection) {
             case 'bottom': offsetY += shadowOffset; break;
             case 'bottom-right': offsetX += shadowOffset; offsetY += shadowOffset; break;
@@ -452,17 +465,39 @@ export default function BackgroundRemoverPage() {
             case 'left': offsetX -= shadowOffset; break;
             case 'bottom-left': offsetX -= shadowOffset; offsetY += shadowOffset; break;
           }
+
           shadowCtx.shadowColor = 'rgba(0, 0, 0, 0.5)';
           shadowCtx.shadowBlur = shadowBlur;
           shadowCtx.shadowOffsetX = offsetX - 20;
           shadowCtx.shadowOffsetY = offsetY - 20;
+
+          // Draw the shadow
           shadowCtx.drawImage(processedImg, 20, 20);
+
+          // Draw the original image again above the shadow
+          shadowCtx.shadowColor = 'transparent';
+          shadowCtx.shadowBlur = 0;
+          shadowCtx.shadowOffsetX = 0;
+          shadowCtx.shadowOffsetY = 0;
+          shadowCtx.drawImage(processedImg, 20, 20);
+
           URL.revokeObjectURL(processedUrl);
           if (img.finalUrl) URL.revokeObjectURL(img.finalUrl);
-          const finalBlob = await new Promise<Blob>((resolve) => {
-            shadowCanvas.toBlob((b) => resolve(b!), 'image/png');
+
+          const finalBlob = await new Promise<Blob>((resolve, reject) => {
+            shadowCanvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error('Shadow canvas export failed'));
+            }, 'image/png');
           });
-          return { ...img, finalUrl: URL.createObjectURL(finalBlob), processedSize: finalBlob.size, status: 'done', progress: 100 };
+
+          return {
+            ...img,
+            finalUrl: URL.createObjectURL(finalBlob),
+            processedSize: finalBlob.size,
+            status: 'done',
+            progress: 100
+          };
         }
       }
 
@@ -642,11 +677,6 @@ export default function BackgroundRemoverPage() {
       const originalHeight = imageBitmap.height;
 
       const inputSize = RMBG_INPUT_SIZE;
-      const scale = Math.min(inputSize / originalWidth, inputSize / originalHeight);
-      const scaledW = Math.round(originalWidth * scale);
-      const scaledH = Math.round(originalHeight * scale);
-      const padX = Math.floor((inputSize - scaledW) / 2);
-      const padY = Math.floor((inputSize - scaledH) / 2);
 
       const canvas = document.createElement('canvas');
       canvas.width = inputSize;
@@ -654,11 +684,9 @@ export default function BackgroundRemoverPage() {
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('Canvas failed');
 
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, inputSize, inputSize);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(imageBitmap, padX, padY, scaledW, scaledH);
+      ctx.drawImage(imageBitmap, 0, 0, inputSize, inputSize);
 
       const imageData = ctx.getImageData(0, 0, inputSize, inputSize);
       const planeSize = inputSize * inputSize;
@@ -676,6 +704,31 @@ export default function BackgroundRemoverPage() {
       const results = await sessionRef.current!.run(feeds);
       const outputTensor = results[sessionRef.current!.outputNames[0]];
       const outputData = outputTensor.data as Float32Array;
+            let maskMin = Infinity;
+      let maskMax = -Infinity;
+      let maskSum = 0;
+
+      for (let i = 0; i < outputData.length; i++) {
+        const value = outputData[i];
+        if (value < maskMin) maskMin = value;
+        if (value > maskMax) maskMax = value;
+        maskSum += value;
+      }
+
+      const maskMean = maskSum / outputData.length;
+
+      console.log('[RMBG] Mask statistics:', {
+        min: maskMin,
+        max: maskMax,
+        mean: maskMean,
+        firstValues: Array.from(outputData.slice(0, 10))
+      });
+
+      console.log('[RMBG] Output metadata:', {
+        dims: outputTensor.dims,
+        type: outputTensor.type,
+        length: outputData.length
+      });
 
       setImages(prev => prev.map(i => i.id === img.id ? { ...i, progress: 70 } : i));
 
@@ -726,7 +779,7 @@ export default function BackgroundRemoverPage() {
       }
       smallCtx.putImageData(maskImageData, 0, 0);
 
-      maskCtx.drawImage(smallCanvas, padX, padY, scaledW, scaledH, 0, 0, originalWidth, originalHeight);
+      maskCtx.drawImage(smallCanvas, 0, 0, inputSize, inputSize, 0, 0, originalWidth, originalHeight);
 
       const finalCanvas = document.createElement('canvas');
       finalCanvas.width = originalWidth;
@@ -893,7 +946,7 @@ export default function BackgroundRemoverPage() {
     }
   }, [selectedImage?.finalUrl, selectedImage?.status]);
 
-  const getCanvasCoordinates = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const getCanvasCoordinates = (e: React.MouseEvent) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
@@ -902,12 +955,33 @@ export default function BackgroundRemoverPage() {
     return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
   };
 
+  const getPanLimits = (scale: number) => {
+    const container = canvasContainerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return { maxX: 0, maxY: 0 };
+
+    const availableWidth = Math.max(1, container.clientWidth - 32);
+    const availableHeight = Math.max(1, container.clientHeight - 32);
+    const fitScale = Math.min(
+      availableWidth / canvas.width,
+      availableHeight / canvas.height,
+      1
+    );
+
+    return {
+      maxX: Math.max(0, (canvas.width * fitScale * scale - availableWidth) / 2),
+      maxY: Math.max(0, (canvas.height * fitScale * scale - availableHeight) / 2),
+    };
+  };
+
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (activeTool === 'pan' || e.button === 1) {
+      e.preventDefault();
       setIsPanning(true);
       setPanStart({ x: e.clientX - panX, y: e.clientY - panY });
       return;
     }
+
     setIsDrawing(true);
     const { x, y } = getCanvasCoordinates(e);
     const canvas = canvasRef.current;
@@ -928,16 +1002,31 @@ export default function BackgroundRemoverPage() {
     }
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isPanning) {
-      setPanX(e.clientX - panStart.x);
-      setPanY(e.clientY - panStart.y);
+      const nextX = e.clientX - panStart.x;
+      const nextY = e.clientY - panStart.y;
+      const limits = getPanLimits(zoom);
+
+      setPanX(Math.max(-limits.maxX, Math.min(limits.maxX, nextX)));
+      setPanY(Math.max(-limits.maxY, Math.min(limits.maxY, nextY)));
       return;
     }
+
     if (!isDrawing) return;
-    const { x, y } = getCanvasCoordinates(e);
+
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    ) return;
+
+    const { x, y } = getCanvasCoordinates(e);
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.lineTo(x, y);
@@ -945,8 +1034,12 @@ export default function BackgroundRemoverPage() {
   };
 
   const stopDrawing = () => {
-    if (isPanning) { setIsPanning(false); return; }
+    if (isPanning) {
+      setIsPanning(false);
+      return;
+    }
     if (!isDrawing) return;
+
     setIsDrawing(false);
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -960,8 +1053,22 @@ export default function BackgroundRemoverPage() {
     setHistoryIndex(newHistory.length - 1);
   };
 
-  const zoomIn = () => setZoom(prev => Math.min(8, prev * 1.2));
-  const zoomOut = () => setZoom(prev => Math.max(0.1, prev / 1.2));
+  const applyZoom = (nextZoom: number) => {
+    const boundedZoom = Math.max(0.1, Math.min(8, nextZoom));
+    if (boundedZoom === zoom) return;
+
+    const ratio = boundedZoom / zoom;
+    const nextPanX = panX * ratio;
+    const nextPanY = panY * ratio;
+    const limits = getPanLimits(boundedZoom);
+
+    setZoom(boundedZoom);
+    setPanX(Math.max(-limits.maxX, Math.min(limits.maxX, nextPanX)));
+    setPanY(Math.max(-limits.maxY, Math.min(limits.maxY, nextPanY)));
+  };
+
+  const zoomIn = () => applyZoom(zoom * 1.2);
+  const zoomOut = () => applyZoom(zoom / 1.2);
   const resetView = () => { setZoom(1); setPanX(0); setPanY(0); };
 
   const undo = () => {
@@ -1218,6 +1325,9 @@ export default function BackgroundRemoverPage() {
                       <div
                         ref={canvasContainerRef}
                         className="p-4 overflow-hidden relative bg-ink-100"
+                        onMouseMove={draw}
+                        onMouseUp={stopDrawing}
+                        onMouseLeave={stopDrawing}
                         style={{
                           backgroundImage: globalBgType === 'transparent' ? 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)' : 'none',
                           backgroundSize: '20px 20px',
@@ -1242,9 +1352,6 @@ export default function BackgroundRemoverPage() {
                           <canvas
                             ref={canvasRef}
                             onMouseDown={startDrawing}
-                            onMouseMove={draw}
-                            onMouseUp={stopDrawing}
-                            onMouseLeave={stopDrawing}
                               draggable={false}
                             className="shadow-lg"
                             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
