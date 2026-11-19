@@ -12,6 +12,8 @@ interface Props {
   pricePerGram: number | null;
   gram24Price: number | null;
   karat: GoldKarat;
+  currency: string;
+  exchangeRate: number | null;
 }
 
 const karats: GoldKarat[] = [24, 22, 21, 18, 14];
@@ -65,19 +67,32 @@ function InputField({
 function ResultCard({
   label,
   value,
+  currency = 'USD',
+  exchangeRate = 1,
   dark = false,
 }: {
   label: string;
   value: number;
+  currency?: string;
+  exchangeRate?: number | null;
   dark?: boolean;
 }) {
+  const formatted = exchangeRate === null
+    ? 'غير متاح'
+    : new Intl.NumberFormat('ar-EG', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value * exchangeRate);
+
   return (
     <div className={`rounded-2xl p-4 ${dark ? 'bg-slate-900 text-white' : 'border border-amber-200 bg-amber-50'}`}>
       <p className={`text-sm font-semibold ${dark ? 'text-slate-300' : 'text-amber-800'}`}>
         {label}
       </p>
       <p className="mt-2 text-2xl font-extrabold" dir="ltr">
-        ${money(value)}
+        {formatted}
       </p>
     </div>
   );
@@ -88,7 +103,27 @@ export function GoldAdvancedTabs({
   pricePerGram,
   gram24Price,
   karat,
+  currency,
+  exchangeRate,
 }: Props) {
+  const formatLocalMoney = (value: number): string => {
+    if (
+      exchangeRate === null ||
+      !Number.isFinite(exchangeRate) ||
+      exchangeRate <= 0 ||
+      !Number.isFinite(value)
+    ) {
+      return 'غير متاح';
+    }
+
+    return new Intl.NumberFormat('ar-EG', {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value * exchangeRate);
+  };
+
   const [buyWeight, setBuyWeight] = useState('10');
   const [buyMaking, setBuyMaking] = useState('0');
   const [buyFees, setBuyFees] = useState('0');
@@ -157,10 +192,14 @@ export function GoldAdvancedTabs({
 
   const buyResult = useMemo(() => {
     const weight = numeric(buyWeight);
-    const making = numeric(buyMaking);
-    const fees = numeric(buyFees);
+    const exchangeRateValid = exchangeRate !== null &&
+      Number.isFinite(exchangeRate) && exchangeRate > 0;
+    const makingLocal = numeric(buyMaking);
+    const feesLocal = numeric(buyFees);
+    const making = exchangeRateValid ? makingLocal / exchangeRate : 0;
+    const fees = exchangeRateValid ? feesLocal / exchangeRate : 0;
     const taxRate = numeric(buyTax);
-    const valid = pricePerGram !== null &&
+    const valid = pricePerGram !== null && exchangeRateValid &&
       [buyWeight, buyMaking, buyFees, buyTax].every((v) =>
         v.trim() !== '' && Number.isFinite(Number(v)) && Number(v) >= 0
       ) &&
@@ -178,13 +217,17 @@ export function GoldAdvancedTabs({
       tax,
       total: gold + makingCost + fees + tax,
     };
-  }, [buyWeight, buyMaking, buyFees, buyTax, pricePerGram]);
+  }, [buyWeight, buyMaking, buyFees, buyTax, pricePerGram, exchangeRate]);
 
   const sellResult = useMemo(() => {
     const weight = numeric(sellWeight);
-    const deduction = numeric(sellDeduction);
-    const fees = numeric(sellFees);
-    const valid = pricePerGram !== null &&
+    const exchangeRateValid = exchangeRate !== null &&
+      Number.isFinite(exchangeRate) && exchangeRate > 0;
+    const deductionLocal = numeric(sellDeduction);
+    const feesLocal = numeric(sellFees);
+    const deduction = exchangeRateValid ? deductionLocal / exchangeRate : 0;
+    const fees = exchangeRateValid ? feesLocal / exchangeRate : 0;
+    const valid = pricePerGram !== null && exchangeRateValid &&
       [sellWeight, sellDeduction, sellFees].every((v) =>
         v.trim() !== '' && Number.isFinite(Number(v)) && Number(v) >= 0
       ) && weight > 0;
@@ -198,12 +241,17 @@ export function GoldAdvancedTabs({
       deductions,
       net: gross - deductions,
     };
-  }, [sellWeight, sellDeduction, sellFees, pricePerGram]);
+  }, [sellWeight, sellDeduction, sellFees, pricePerGram, exchangeRate]);
 
   const profitResult = useMemo(() => {
     const weight = numeric(profitWeight);
-    const costPerGram = numeric(purchasePrice);
-    const valid = pricePerGram !== null &&
+    const exchangeRateValid = exchangeRate !== null &&
+      Number.isFinite(exchangeRate) && exchangeRate > 0;
+    const purchasePriceLocal = numeric(purchasePrice);
+    const costPerGram = exchangeRateValid
+      ? purchasePriceLocal / exchangeRate
+      : 0;
+    const valid = pricePerGram !== null && exchangeRateValid &&
       [profitWeight, purchasePrice].every((v) =>
         v.trim() !== '' && Number.isFinite(Number(v)) && Number(v) >= 0
       ) && weight > 0 && costPerGram > 0;
@@ -219,7 +267,7 @@ export function GoldAdvancedTabs({
       amount,
       percentage: cost > 0 ? amount / cost * 100 : 0,
     };
-  }, [profitWeight, purchasePrice, pricePerGram]);
+  }, [profitWeight, purchasePrice, pricePerGram, exchangeRate]);
 
   const portfolioSummary = useMemo(() => {
     const cost = portfolio.reduce(
@@ -256,12 +304,18 @@ export function GoldAdvancedTabs({
 
   function addPortfolioItem() {
     const weight = Number(itemWeight);
-    const purchase = Number(itemPurchasePrice);
+    const purchaseLocal = Number(itemPurchasePrice);
+    const exchangeRateValid = exchangeRate !== null &&
+      Number.isFinite(exchangeRate) && exchangeRate > 0;
+    const purchase = exchangeRateValid
+      ? purchaseLocal / exchangeRate
+      : 0;
 
     if (
       !itemName.trim() ||
       !Number.isFinite(weight) || weight <= 0 ||
-      !Number.isFinite(purchase) || purchase <= 0
+      !Number.isFinite(purchaseLocal) || purchaseLocal <= 0 ||
+      !exchangeRateValid
     ) return;
 
     setPortfolio((items) => [...items, {
@@ -293,19 +347,19 @@ export function GoldAdvancedTabs({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <InputField id="buy-weight" label="وزن الذهب بالجرام" value={buyWeight} onChange={setBuyWeight} />
-          <InputField id="buy-making" label="المصنعية لكل جرام (دولار)" value={buyMaking} onChange={setBuyMaking} />
-          <InputField id="buy-fees" label="رسوم إضافية (دولار)" value={buyFees} onChange={setBuyFees} />
+          <InputField id="buy-making" label={`المصنعية لكل جرام (${currency})`} value={buyMaking} onChange={setBuyMaking} />
+          <InputField id="buy-fees" label={`رسوم إضافية (${currency})`} value={buyFees} onChange={setBuyFees} />
           <InputField id="buy-tax" label="الضريبة (%)" value={buyTax} onChange={setBuyTax} step="0.1" />
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <ResultCard label="قيمة الذهب" value={buyResult.gold} />
-          <ResultCard label="تكلفة المصنعية" value={buyResult.makingCost} />
-          <ResultCard label="الرسوم الإضافية" value={buyResult.fees} />
-          <ResultCard label="الضريبة" value={buyResult.tax} />
+          <ResultCard currency={currency} exchangeRate={exchangeRate} label="قيمة الذهب" value={buyResult.gold} />
+          <ResultCard currency={currency} exchangeRate={exchangeRate} label="تكلفة المصنعية" value={buyResult.makingCost} />
+          <ResultCard currency={currency} exchangeRate={exchangeRate} label="الرسوم الإضافية" value={buyResult.fees} />
+          <ResultCard currency={currency} exchangeRate={exchangeRate} label="الضريبة" value={buyResult.tax} />
         </div>
 
-        <ResultCard label="إجمالي تكلفة الشراء التقديرية" value={buyResult.total} dark />
+        <ResultCard currency={currency} exchangeRate={exchangeRate} label="إجمالي تكلفة الشراء التقديرية" value={buyResult.total} dark />
         {!buyResult.valid && <p className="text-xs text-red-600">أدخل وزناً موجباً وجميع القيم بصورة صحيحة بعد توفر السعر.</p>}
         <p className="text-xs leading-6 text-slate-500">الحساب لا يمثل عرض سعر من تاجر، ولا يشمل أي رسوم غير مدخلة.</p>
       </div>
@@ -321,8 +375,8 @@ export function GoldAdvancedTabs({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <InputField id="sell-weight" label="وزن الذهب بالجرام" value={sellWeight} onChange={setSellWeight} />
-          <InputField id="sell-deduction" label="خصم لكل جرام (دولار)" value={sellDeduction} onChange={setSellDeduction} />
-          <InputField id="sell-fees" label="رسوم أو خصومات إضافية (دولار)" value={sellFees} onChange={setSellFees} />
+          <InputField id="sell-deduction" label={`خصم لكل جرام (${currency})`} value={sellDeduction} onChange={setSellDeduction} />
+          <InputField id="sell-fees" label={`رسوم أو خصومات إضافية (${currency})`} value={sellFees} onChange={setSellFees} />
         </div>
 
         {pricePerGram === null ? (
@@ -330,10 +384,10 @@ export function GoldAdvancedTabs({
         ) : (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <ResultCard label="القيمة قبل الخصم" value={sellResult.gross} />
-              <ResultCard label="إجمالي الخصومات" value={sellResult.deductions} />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="القيمة قبل الخصم" value={sellResult.gross} />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="إجمالي الخصومات" value={sellResult.deductions} />
             </div>
-            <ResultCard label="صافي حصيلة البيع التقديرية" value={sellResult.net} dark />
+            <ResultCard currency={currency} exchangeRate={exchangeRate} label="صافي حصيلة البيع التقديرية" value={sellResult.net} dark />
           </>
         )}
 
@@ -352,7 +406,7 @@ export function GoldAdvancedTabs({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <InputField id="profit-weight" label="الوزن بالجرام" value={profitWeight} onChange={setProfitWeight} />
-          <InputField id="purchase-price" label="سعر الشراء لكل جرام (دولار)" value={purchasePrice} onChange={setPurchasePrice} />
+          <InputField id="purchase-price" label={`سعر الشراء لكل جرام (${currency})`} value={purchasePrice} onChange={setPurchasePrice} />
         </div>
 
         {pricePerGram === null ? (
@@ -360,15 +414,15 @@ export function GoldAdvancedTabs({
         ) : (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <ResultCard label="إجمالي تكلفة الشراء" value={profitResult.cost} />
-              <ResultCard label="القيمة الحالية التقديرية" value={profitResult.current} />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="إجمالي تكلفة الشراء" value={profitResult.cost} />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="القيمة الحالية التقديرية" value={profitResult.current} />
             </div>
             <div className={`rounded-2xl p-5 text-white ${profitResult.amount >= 0 ? 'bg-emerald-700' : 'bg-red-700'}`}>
               <p className="text-sm font-semibold text-white/80">
                 {profitResult.amount >= 0 ? 'الربح التقديري' : 'الخسارة التقديرية'}
               </p>
               <p className="mt-2 text-3xl font-extrabold" dir="ltr">
-                {profitResult.amount < 0 ? '-' : '+'}${money(Math.abs(profitResult.amount))}
+                {profitResult.amount < 0 ? '-' : '+'}{formatLocalMoney(Math.abs(profitResult.amount))}
               </p>
               <p className="mt-2 text-sm" dir="ltr">
                 {profitResult.percentage >= 0 ? '+' : ''}{money(profitResult.percentage)}%
@@ -401,7 +455,7 @@ export function GoldAdvancedTabs({
               {karats.map((k) => <option key={k} value={k}>عيار {k}</option>)}
             </select>
           </div>
-          <InputField id="portfolio-price" label="سعر الشراء لكل جرام (دولار)" value={itemPurchasePrice} onChange={setItemPurchasePrice} />
+          <InputField id="portfolio-price" label={`سعر الشراء لكل جرام (${currency})`} value={itemPurchasePrice} onChange={setItemPurchasePrice} />
         </div>
 
         <button type="button" onClick={addPortfolioItem} className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-3 font-bold text-white transition hover:opacity-90">
@@ -409,16 +463,16 @@ export function GoldAdvancedTabs({
         </button>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <ResultCard label="إجمالي تكلفة المقتنيات" value={portfolioSummary.cost} />
+          <ResultCard currency={currency} exchangeRate={exchangeRate} label="إجمالي تكلفة المقتنيات" value={portfolioSummary.cost} />
           {portfolioSummary.current === null
             ? <div className="rounded-2xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">القيمة الحالية غير متاحة</div>
-            : <ResultCard label="القيمة الحالية التقديرية" value={portfolioSummary.current} dark />}
+            : <ResultCard currency={currency} exchangeRate={exchangeRate} label="القيمة الحالية التقديرية" value={portfolioSummary.current} dark />}
         </div>
 
         {portfolioSummary.profit !== null && (
           <p className={`rounded-xl p-3 text-sm font-bold ${portfolioSummary.profit >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
             {portfolioSummary.profit >= 0 ? 'الربح التقديري: ' : 'الخسارة التقديرية: '}
-            ${money(Math.abs(portfolioSummary.profit))}
+            {formatLocalMoney(Math.abs(portfolioSummary.profit))}
           </p>
         )}
 
@@ -437,10 +491,10 @@ export function GoldAdvancedTabs({
                   <div>
                     <p className="font-bold text-slate-800">{item.name}</p>
                     <p className="mt-1 text-xs text-slate-500">
-                      {item.weight} جرام · عيار {item.karat} · شراء ${money(cost)}
+                      {item.weight} جرام · عيار {item.karat} · شراء {formatLocalMoney(cost)}
                     </p>
                     {current !== null && (
-                      <p className="mt-1 text-xs text-slate-600">القيمة الحالية: ${money(current)}</p>
+                      <p className="mt-1 text-xs text-slate-600">القيمة الحالية: {formatLocalMoney(current)}</p>
                     )}
                   </div>
                   <button type="button" onClick={() => setPortfolio((items) => items.filter((x) => x.id !== item.id))} className="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">
@@ -467,8 +521,8 @@ export function GoldAdvancedTabs({
         ) : (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <ResultCard label="قيمة النصاب التقديرية (85 جرام عيار 24)" value={zakat.nisab} />
-              <ResultCard label="قيمة محفظتك الحالية" value={zakat.value} dark />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="قيمة النصاب التقديرية (85 جرام عيار 24)" value={zakat.nisab} />
+              <ResultCard currency={currency} exchangeRate={exchangeRate} label="قيمة محفظتك الحالية" value={zakat.value} dark />
             </div>
 
             <div className="rounded-xl border border-slate-200 p-4">
@@ -488,7 +542,7 @@ export function GoldAdvancedTabs({
                     : 'مقدار الزكاة التقديري (2.5%)'}
               </p>
               <p className="mt-2 text-3xl font-extrabold text-slate-900" dir="ltr">
-                ${money(zakat.amount)}
+                {formatLocalMoney(zakat.amount)}
               </p>
             </div>
           </>

@@ -10,6 +10,8 @@ import {
 } from '../lib/gold';
 import type { GoldKarat, GoldTabKey } from '../lib/types';
 import { GoldAdvancedTabs } from './GoldAdvancedTabs';
+import { useExchangeRate } from '../hooks/useExchangeRate';
+import { ARAB_COUNTRIES, DEFAULT_COUNTRY } from '../lib/currencies';
 
 interface TabDef {
   key: GoldTabKey;
@@ -39,6 +41,7 @@ export function GoldCalculator() {
   const [activeTab, setActiveTab] = useState<GoldTabKey>('calculator');
   const [weight, setWeight] = useState('10');
   const [karat, setKarat] = useState<GoldKarat>(21);
+  const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY);
 
   const {
     price,
@@ -49,6 +52,21 @@ export function GoldCalculator() {
     isLoading,
     isRefreshing,
   } = useGoldPrice();
+
+  const { rates, updatedAt: exchangeUpdatedAt, status: exchangeStatus, refresh: refreshExchangeRate } = useExchangeRate();
+  const selectedCountry = ARAB_COUNTRIES.find((country) => country.code === countryCode) ?? ARAB_COUNTRIES[0];
+  const exchangeRate = rates[selectedCountry.currency];
+  const hasExchangeRate = Number.isFinite(exchangeRate) && exchangeRate > 0;
+
+  const formatLocal = (usdValue: number): string => {
+    if (!hasExchangeRate) return 'غير متاح';
+    return new Intl.NumberFormat('ar-EG', {
+      style: 'currency',
+      currency: selectedCountry.currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(usdValue * exchangeRate);
+  };
 
   const activeTabInfo = TABS.find((tab) => tab.key === activeTab);
 
@@ -105,6 +123,46 @@ export function GoldCalculator() {
           حسابات تقديرية لأسعار الذهب العالمية
         </span>
       </div>
+
+      <section className="rounded-2xl border border-amber-200 bg-gradient-to-l from-orange-50 via-amber-50 to-white p-4 shadow-sm">
+        <label htmlFor="gold-country" className="mb-3 block font-extrabold text-slate-800">
+          🌍 اختر الدولة والعملة
+        </label>
+        <select
+          id="gold-country"
+          value={countryCode}
+          onChange={(event) => setCountryCode(event.target.value)}
+          className="w-full rounded-xl border border-amber-300 bg-white px-4 py-3 font-bold text-slate-800 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+        >
+          {ARAB_COUNTRIES.map((country) => (
+            <option key={country.code} value={country.code}>
+              {country.flag} {country.name} — {country.currencyName} ({country.currency})
+            </option>
+          ))}
+        </select>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span className="font-bold text-slate-700">
+            العملة المختارة: {selectedCountry.currency}
+          </span>
+          <span className={hasExchangeRate ? 'text-emerald-700' : 'text-red-600'}>
+            {hasExchangeRate
+              ? exchangeStatus === 'live' ? 'سعر صرف محدث' : 'سعر صرف محفوظ أو سابق'
+              : 'سعر الصرف غير متاح لهذه العملة'}
+          </span>
+        </div>
+        {!hasExchangeRate && (
+          <button
+            type="button"
+            onClick={() => void refreshExchangeRate()}
+            className="mt-3 rounded-lg bg-orange-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-orange-700"
+          >
+            تحديث أسعار الصرف
+          </button>
+        )}
+        {exchangeUpdatedAt && (
+          <p className="mt-2 text-xs text-slate-500">تاريخ بيانات الصرف: {exchangeUpdatedAt}</p>
+        )}
+      </section>
 
       <LiveGoldTicker
         price={price}
@@ -201,7 +259,7 @@ export function GoldCalculator() {
                       سعر جرام عيار {karat}
                     </p>
                     <p className="mt-2 text-2xl font-extrabold text-slate-900" dir="ltr">
-                      ${formatNumber(calculations.selectedPrice)}
+                      {formatLocal(calculations.selectedPrice)}
                     </p>
                   </div>
 
@@ -210,7 +268,7 @@ export function GoldCalculator() {
                       القيمة التقديرية للذهب
                     </p>
                     <p className="mt-2 text-2xl font-extrabold" dir="ltr">
-                      ${calculations.validWeight ? formatNumber(calculations.total) : '—'}
+                      {calculations.validWeight ? formatLocal(calculations.total) : '—'}
                     </p>
                   </div>
                 </div>
@@ -225,7 +283,7 @@ export function GoldCalculator() {
                   <div className="rounded-xl border border-slate-200 p-3">
                     <p className="text-xs text-slate-500">سعر جرام عيار 24</p>
                     <p className="mt-1 font-extrabold text-slate-800" dir="ltr">
-                      ${formatNumber(calculations.gram24)}
+                      {formatLocal(calculations.gram24)}
                     </p>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3">
@@ -253,7 +311,7 @@ export function GoldCalculator() {
                         <tr key={item.karat} className={item.karat === karat ? 'bg-amber-50 font-bold' : 'border-b border-slate-100'}>
                           <td className="p-3">عيار {item.karat}</td>
                           <td className="p-3">{(item.purity * 100).toFixed(2)}%</td>
-                          <td className="p-3 text-left" dir="ltr">${formatNumber(item.pricePerGram)}</td>
+                          <td className="p-3 text-left" dir="ltr">{formatLocal(item.pricePerGram)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -271,7 +329,7 @@ export function GoldCalculator() {
             )}
 
             <p className="rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs leading-6 text-blue-900">
-              السعر المعروض تقديري بالدولار، محسوب من سعر أوقية الذهب العالمية.
+              السعر المعروض تقديري بعملة {selectedCountry.currency}، ومحوّل من سعر أوقية الذهب العالمية بالدولار.
               لا يمثل بالضرورة سعر السوق المحلي، ولا يشمل المصنعية أو الضرائب
               أو فروق التجار.
             </p>
@@ -282,12 +340,14 @@ export function GoldCalculator() {
             pricePerGram={calculations ? calculations.selectedPrice : null}
             gram24Price={calculations ? calculations.gram24 : null}
             karat={karat}
+            currency={selectedCountry.currency}
+            exchangeRate={hasExchangeRate ? exchangeRate : null}
           />
         )}
       </section>
 
       <p className="pt-2 text-center text-xs text-slate-400">
-        الأسعار العالمية بالدولار، وقد تختلف الأسعار المحلية بسبب فروق
+        الأسعار محوّلة إلى {selectedCountry.currency}، وقد تختلف الأسعار المحلية بسبب فروق
         السوق والعملة والمصنعية والضرائب.
       </p>
     </div>
