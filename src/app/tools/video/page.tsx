@@ -1,160 +1,124 @@
-import type { Metadata } from 'next';
+﻿'use client';
 import Link from 'next/link';
-import {
-  Archive,
-  Share2,
-  Music,
-  Film,
-  ArrowLeft,
-  BookOpen,
-  Image as ImageIcon,
-Video,
-} from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'أدوات الفيديو أونلاين مجانًا: قص وضغط وتحويل الفيديو | Intooly',
-  description: 'اكتشف أدوات الفيديو لقص المقاطع وضغطها وتحويلها واستخراج الصوت وإنشاء صور مصغرة وGIF.',
-  alternates: { canonical: 'https://intooly.com/tools/video' },
-  openGraph: {
-    title: 'أدوات الفيديو أونلاين مجانًا | Intooly',
-    description: 'قص الفيديو وضغطه وتحويل صيغته واستخراج الصوت وإنشاء صور مصغرة وGIF متحركة.',
-    url: 'https://intooly.com/tools/video',
-    siteName: 'Intooly',
-    locale: 'ar_EG',
-    type: 'website',
-  },
-};
-
-const tools = [{
-    icon: ImageIcon,
-    title: 'تحميل الصورة المصغرة',
-    description: 'استخراج وتنزيل الصور المصغرة لفيديوهات يوتيوب بجميع الجودات المتاحة (HD, Full HD) بضغطة زر.',
-    href: '/tools/youtube-thumbnail-downloader',
-  },{ icon: ImageIcon, title: 'صانع الصور المصغرة للفيديو', description: 'أنشئ صوراً مصغرة جذابة لفيديوهاتك على يوتيوب ومنصات التواصل.', href: '/tools/video-thumbnail-maker' },
-  { icon: Archive, title: 'ضغط الفيديو', description: 'قلّل حجم ملفات الفيديو لتسهيل رفعها ومشاركتها.', href: '/tools/video-compressor' },
-  { icon: Share2, title: 'تحويل صيغ الفيديو', description: 'حوّل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.', href: '/tools/video-converter' },
-  { icon: Music, title: 'تحويل الفيديو إلى صوت', description: 'استخرج المسار الصوتي من ملفات الفيديو.', href: '/tools/video-to-audio' },
-  { icon: Film, title: 'قص الفيديو', description: 'حدّد بداية ونهاية المقطع لقص الجزء المطلوب.', href: '/tools/video-trimmer' },
-  { icon: Film, title: 'تحويل الفيديو إلى GIF', description: 'حوّل جزءًا من الفيديو إلى صورة GIF متحركة.', href: '/tools/video-to-gif' },
-];
-
-const faqs = [
-  { q: 'هل أدوات الفيديو مجانية؟', a: 'يمكنك استخدام الأدوات المتاحة مجانًا وفقًا للوظائف والقيود الموضحة في صفحة كل أداة.' },
-  { q: 'ما الصيغ المدعومة؟', a: 'تختلف الصيغ المدعومة حسب الأداة. راجع صفحة كل أداة لمعرفة الصيغ التي تدعمها.' },
-  { q: 'كم يستغرق معالجة الفيديو؟', a: 'تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح.' },
-  { q: 'هل يمكنني استخدام الأدوات على الجوال؟', a: 'نعم، مع مراعاة أن معالجة الملفات الكبيرة قد تحتاج موارد أكبر.' },
-];
-
-const softwareAppSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'أدوات الفيديو — Intooly',
-  url: 'https://intooly.com/tools/video',
-  applicationCategory: 'MultimediaApplication',
-  operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  description: 'مجموعة أدوات مجانية لتحويل الفيديو وضغطه وقصه واستخراج الصوت منه وإنشاء صور مصغرة داخل المتصفح.',
-  inLanguage: 'ar',
-};
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://intooly.com' },
-    { '@type': 'ListItem', position: 2, name: 'الأدوات', item: 'https://intooly.com/tools' },
-    { '@type': 'ListItem', position: 3, name: 'أدوات الفيديو', item: 'https://intooly.com/tools/video' },
-  ],
-};
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.q,
-    acceptedAnswer: { '@type': 'Answer', text: faq.a },
-  })),
-};
+import { ArrowLeft, Download, FileVideo, Scissors, Music, RotateCcw, Film, Image as ImageIcon, Zap } from 'lucide-react';
 
 export default function VideoToolsPage() {
+  const videoTools = [
+    {
+      icon: Download,
+      title: 'تنزيل فيديوهات تيك توك',
+      description: 'تنزيل فيديوهات تيك توك بدون علامة مائية بجودة عالية MP4 أو استخراج الصوت MP3',
+      href: '/tools/tiktok-downloader',
+      badge: 'جديد',
+    },
+    {
+      icon: Scissors,
+      title: 'قص الفيديو',
+      description: 'قص وتحرير مقاطع الفيديو بدقة وسهولة مباشرة من المتصفح',
+      href: '/tools/video-trimmer',
+    },
+    {
+      icon: FileVideo,
+      title: 'ضغط الفيديو',
+      description: 'تقليل حجم ملفات الفيديو مع الحفاظ على أعلى جودة ممكنة',
+      href: '/tools/video-compressor',
+    },
+    {
+      icon: RotateCcw,
+      title: 'تحويل صيغ الفيديو',
+      description: 'تحويل الفيديوهات بين الصيغ المختلفة مثل MP4, AVI, MOV',
+      href: '/tools/video-converter',
+    },
+    {
+      icon: Music,
+      title: 'تحويل الفيديو إلى صوت',
+      description: 'استخراج المقطع الصوتي من أي فيديو وحفظه بصيغة MP3',
+      href: '/tools/video-to-audio',
+    },
+    {
+      icon: Film,
+      title: 'تحويل الفيديو إلى GIF',
+      description: 'إنشاء صور متحركة (GIF) احترافية من مقاطع الفيديو',
+      href: '/tools/video-to-gif',
+    },
+    {
+      icon: ImageIcon,
+      title: 'صانع الصور المصغرة',
+      description: 'تصميم صور مصغرة (Thumbnails) جذابة وعالية الجودة للفيديوهات',
+      href: '/tools/video-thumbnail-maker',
+    },
+  ];
+
   return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <main dir="rtl" className="min-h-screen bg-gradient-to-b from-ink-50 to-white">
-        <section className="relative overflow-hidden border-b border-ink-100 shadow-[0_8px_30px_-8px_rgba(31,41,55,0.1)]">
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #1f2937 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-          <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
-          <div className="container relative mx-auto px-4 py-12 md:py-16">
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-300 bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">
-              <BookOpen className="h-4 w-4" />
-              Intooly Video Suite
-            </span>
-            <h1 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-black tracking-tight text-ink-900">
-              أدوات الفيديو أونلاين لقص المقاطع وضغطها وتحويلها
-            </h1>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-ink-600 sm:text-lg">
-              استكشف أدوات لقص الفيديو وضغطه وتحويل صيغته أو استخراج الصوت وإنشاء صور مصغرة وGIF متحركة.
-            </p>
-          </div>
-        </section>
-
-        <section className="container mx-auto px-4 py-10 md:py-14">
-          <div className="mb-8 text-center">
-            <h2 className="text-xl font-black text-ink-900 md:text-2xl">جميع أدوات الفيديو المتاحة</h2>
-            <p className="mt-3 text-base text-ink-600 max-w-3xl mx-auto leading-8">اختر الأداة المناسبة لمهمتك.</p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {tools.map((tool) => {
-              const IconComp = tool.icon;
-              return (
-                <Link key={tool.href} href={tool.href} className="group flex items-start gap-3 rounded-xl border border-ink-200 bg-white p-4 text-right transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-100 transition-transform group-hover:scale-110">
-                    <IconComp className="h-5 w-5 text-brand-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-bold text-ink-900 transition-colors group-hover:text-brand-600">{tool.title}</h3>
-                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink-600">{tool.description}</p>
-                    <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
-                      استخدام الأداة
-                      <ArrowLeft className="h-3 w-3" />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="border-t border-ink-100 bg-white">
-          <article className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
-            <div className="text-right">
-              <h2 className="mb-6 text-xl font-black text-ink-900 md:text-2xl">قص الفيديو وتحويله وتقليل حجمه أونلاين</h2>
-              <p className="mb-4 leading-8 text-ink-700">
-                توفّر أدوات الفيديو على Intooly مجموعة من الوظائف التي تساعدك على التعامل مع مقاطع الفيديو عبر الإنترنت. يمكنك قص جزء محدد من الفيديو، وتقليل حجم الملف ليكون مناسبًا للرفع، وتحويل الفيديو بين الصيغ المدعومة مثل MP4 وWebM وMOV.
-              </p>
-              <p className="mb-4 leading-8 text-ink-700">
-                تشمل أدوات الفيديو أيضًا إمكانية استخراج المسار الصوتي من الفيديو وتحويله إلى ملف صوتي، وتحويل جزء من الفيديو إلى صورة GIF متحركة، وإنشاء صور مصغرة احترافية. هذه الوظائف مفيدة لصنّاع المحتوى والمسوقين وأصحاب المشاريع.
-              </p>
-              <p className="mb-4 leading-8 text-ink-700">
-                تعتمد مدة المعالجة على حجم الملف وصيغته وقدرات الجهاز والمتصفح. قبل معالجة المقاطع الكبيرة، تحقق من متطلبات الأداة وحدود حجم الملف والصيغ التي تدعمها.
-              </p>
-
-              <h3 className="mb-4 mt-10 text-xl font-bold text-ink-900 md:text-2xl">الأسئلة الشائعة</h3>
-              <div className="space-y-5">
-                {faqs.map((faq) => (
-                  <div key={faq.q}>
-                    <h4 className="mb-2 text-base font-bold text-ink-900 md:text-lg">{faq.q}</h4>
-                    <p className="leading-8 text-ink-700">{faq.a}</p>
-                  </div>
-                ))}
-              </div>
+    <main className="min-h-screen bg-ink-50 text-ink-900" dir="rtl">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b border-ink-100">
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #1f2937 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl pointer-events-none" />
+        
+        <div className="container relative mx-auto px-4 py-10 md:py-14 max-w-5xl">
+          <Link href="/tools" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
+            <ArrowLeft className="h-4 w-4" /> جميع الأدوات
+          </Link>
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100 sm:h-12 sm:w-12">
+              <FileVideo className="h-5 w-5 text-brand-600 sm:h-6 sm:w-6" />
             </div>
-          </article>
-        </section>
-      </main>
-    </>
+            <div>
+              <h1 className="text-lg font-black text-ink-900 sm:text-xl md:text-2xl lg:text-3xl">أدوات الفيديو</h1>
+              <p className="mt-2 text-sm leading-7 text-brand-700 sm:text-base">
+                مجموعة متكاملة من الأدوات المجانية لتعديل، ضغط، تحويل، وتنزيل الفيديوهات بسهولة وأمان مباشرة من متصفحك.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tools Grid */}
+      <section className="py-12">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {videoTools.map((tool, index) => (
+              <Link
+                key={index}
+                href={tool.href}
+                className="bg-white border border-ink-200 rounded-2xl p-5 md:p-6 hover:shadow-lg hover:border-brand-400 transition-all group cursor-pointer block"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <tool.icon className="w-6 h-6" />
+                  </div>
+                  {tool.badge && (
+                    <span className="bg-brand-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
+                      {tool.badge}
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-ink-900 mb-2">{tool.title}</h3>
+                <p className="text-sm text-ink-600 leading-relaxed mb-4">{tool.description}</p>
+                <span className="text-brand-600 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                  جرّب الأداة <ArrowLeft className="w-4 h-4" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Content */}
+      <section className="py-12 bg-white border-t border-ink-100">
+        <div className="container mx-auto px-4 max-w-4xl text-right">
+          <h2 className="text-xl font-black text-ink-900 md:text-2xl mb-4">أدوات الفيديو المجانية من Intooly</h2>
+          <p className="leading-8 text-ink-700 mb-4">
+            نقدم لك مجموعة متكاملة من <strong>أدوات الفيديو</strong> المجانية التي تساعدك في التعامل مع الفيديوهات بسهولة واحترافية. 
+            سواء كنت تريد تنزيل فيديوهات من منصات التواصل الاجتماعي، أو قص مقاطع، أو ضغط الملفات لتقليل حجمها، 
+            فإن أدواتنا توفر لك كل ما تحتاجه في مكان واحد.
+          </p>
+          <p className="leading-8 text-ink-700">
+            جميع أدواتنا تعمل مباشرة من المتصفح دون الحاجة لتثبيت برامج، وتحافظ على خصوصيتك حيث تتم المعالجة محلياً أو عبر خوادم آمنة ومشفرة.
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }
