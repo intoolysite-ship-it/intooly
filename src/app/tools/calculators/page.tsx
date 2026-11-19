@@ -6,6 +6,7 @@ import {
   Percent,
   ArrowLeft,
   Calculator,
+  Coins,
   HeartPulse,
   Clock,
   Scale,
@@ -48,6 +49,12 @@ const tools = [
     title: 'عجلة الحظ',
     description: 'أدر عجلة الحظ لاختيار اسم أو فائز عشوائياً. أضف خياراتك وخصص الألوان والأوزان.',
     href: '/tools/picker-wheel',
+  },
+  {
+    icon: Coins,
+    title: 'حاسبة الذهب',
+    description: 'احسب قيمة الذهب بالجرام والعيار، وتابع سعر أوقية الذهب عالمياً بالدولار مع أدوات تقدير الشراء والبيع.',
+    href: '/tools/gold-calculator',
   },
 ];
 

@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/gold-price',
+          destination: 'https://intooly.com/gold-price-api.php',
+        },
+      ];
+    }
+
+    return [];
+  },
   distDir: 'out',
   images: {
     unoptimized: true,

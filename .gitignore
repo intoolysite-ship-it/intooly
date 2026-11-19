@@ -50,3 +50,6 @@ lighthouse-report.json
 
 # Backup files
 *.bak
+
+# Local backup archives
+/backups/
