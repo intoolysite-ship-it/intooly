@@ -4,6 +4,7 @@ import Script from 'next/script';
 export const metadata = {
   title: 'من نحن | intooly - أدوات مجانية احترافية تعمل محلياً',
   description: 'تعرف على قصة وأهداف موقع intooly. نحن نقدم أدوات مجانية لمعالجة الصور والفيديو والنصوص تعمل محلياً 100% في متصفحك لضمان خصوصيتك وسرعتك.',
+  alternates: { canonical: 'https://intooly.com/about' },
 };
 
 export default function AboutPage() {

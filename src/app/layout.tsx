@@ -49,9 +49,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  alternates: {
-    canonical: 'https://intooly.com',
-  },
   openGraph: {
     type: 'website',
     url: 'https://intooly.com',

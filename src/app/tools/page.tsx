@@ -77,6 +77,9 @@ const categories = [
 export const metadata = {
   title: "جميع الأدوات المجانية أونلاين | Intooly",
   description: "اكتشف مجموعة أدوات Intooly المجانية: أدوات الفيديو، الصور، PDF، الصوت، SEO، الإنتاجية، والصحة واللياقة البدنية. جميعها تعمل مباشرة من المتصفح.",
+  alternates: {
+    canonical: "https://intooly.com/tools",
+  },
 };
 
 export default function ToolsPage() {
