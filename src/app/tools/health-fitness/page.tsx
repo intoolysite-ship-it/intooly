@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity , Baby } from "lucide-react";
+import { Activity, Baby, CalendarDays } from "lucide-react";
 
 const tools = [
   
@@ -8,7 +8,15 @@ const tools = [
     title: 'حاسبة الحمل',
     description: 'احسبي عمر الحمل بالأسابيع والأيام، وموعد الولادة المتوقع بالتقويم الهجري والميلادي بدقة.',
     href: '/tools/pregnancy-calculator',
-  },{
+  },
+  {
+    icon: CalendarDays,
+    title: "حاسبة التبويض",
+    description: "احسبي موعد الإباضة ونطاق الخصوبة التقديري حسب طول الدورة، مع عرض التاريخ الهجري والميلادي.",
+    href: "/tools/ovulation-calculator",
+    status: "متاح",
+  },
+  {
     icon: Activity,
     title: "حاسبة مؤشر كتلة الجسم BMI",
     description: "احسب مؤشر كتلة الجسم مجانًا مع نطاق الوزن الصحي وBMI Prime وسجل الحسابات.",
@@ -50,9 +58,11 @@ export default function HealthFitnessPage() {
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-slate-900">{tool.title}</h3>
                 <p className="text-sm leading-6 text-slate-600">{tool.description}</p>
-                <span className="mt-4 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                  {tool.status}
-                </span>
+                {tool.status && (
+                  <span className="mt-4 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    {tool.status}
+                  </span>
+                )}
               </Link>
             ))}
           </div>
