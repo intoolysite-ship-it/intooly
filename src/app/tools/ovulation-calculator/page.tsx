@@ -82,6 +82,9 @@ export default function OvulationCalculatorPage() {
 
   const [cycleType, setCycleType] = useState<CycleType>("regular");
   const [lastPeriodStart, setLastPeriodStart] = useState("");
+  const [dateDay, setDateDay] = useState("");
+  const [dateMonth, setDateMonth] = useState("");
+  const [dateYear, setDateYear] = useState("");
   const [cycleLength, setCycleLength] = useState("28");
   const [shortestCycleLength, setShortestCycleLength] = useState("25");
   const [longestCycleLength, setLongestCycleLength] = useState("35");
@@ -93,6 +96,63 @@ export default function OvulationCalculatorPage() {
     () => (calendarMonth ? getCalendarDays(calendarMonth) : []),
     [calendarMonth]
   );
+
+  function updateLastPeriodDate(day: string, month: string, year: string) {
+    const normalizeDigits = (value: string) =>
+      value.replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+        .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
+
+    const normalizedDay = normalizeDigits(day);
+    const normalizedMonth = normalizeDigits(month);
+    const normalizedYear = normalizeDigits(year);
+
+    setDateDay(day);
+    setDateMonth(month);
+    setDateYear(year);
+
+    if (!normalizedDay || !normalizedMonth || !normalizedYear) {
+      setLastPeriodStart("");
+      setResult(null);
+      return;
+    }
+
+    const d = Number(normalizedDay);
+    const m = Number(normalizedMonth);
+    const y = Number(normalizedYear);
+
+    if (
+      !Number.isInteger(d) ||
+      !Number.isInteger(m) ||
+      !Number.isInteger(y) ||
+      y < 1900 ||
+      y > Number(today.slice(0, 4)) ||
+      m < 1 ||
+      m > 12 ||
+      d < 1 ||
+      d > 31
+    ) {
+      setLastPeriodStart("");
+      setResult(null);
+      return;
+    }
+
+    const date = new Date(Date.UTC(y, m - 1, d));
+
+    if (
+      date.getUTCFullYear() !== y ||
+      date.getUTCMonth() !== m - 1 ||
+      date.getUTCDate() !== d
+    ) {
+      setLastPeriodStart("");
+      setResult(null);
+      return;
+    }
+
+    setLastPeriodStart(
+      `${String(y).padStart(4, "0")}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+    );
+    setResult(null);
+  }
 
   function handleCalculate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -137,6 +197,9 @@ export default function OvulationCalculatorPage() {
 
   function resetCalculator() {
     setLastPeriodStart("");
+    setDateDay("");
+    setDateMonth("");
+    setDateYear("");
     setCycleType("regular");
     setCycleLength("28");
     setShortestCycleLength("25");
@@ -275,24 +338,68 @@ export default function OvulationCalculatorPage() {
 
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="last-period"
-                  className="mb-2 block text-sm font-bold text-slate-700"
-                >
+                <p className="mb-2 block text-sm font-bold text-slate-700">
                   أول يوم من آخر دورة شهرية
-                </label>
-                <input
-                  id="last-period"
-                  type="date"
-                  required
-                  max={today}
-                  value={lastPeriodStart}
-                  onChange={(event) => {
-                    setLastPeriodStart(event.target.value);
-                    setResult(null);
-                  }}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-                />
+                </p>
+                <div className="grid grid-cols-3 gap-2" dir="rtl">
+                  <div>
+                    <label htmlFor="last-period-day" className="mb-2 block text-xs font-semibold text-slate-600">
+                      اليوم
+                    </label>
+                    <input
+                      id="last-period-day"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="يوم"
+                      maxLength={2}
+                      required
+                      value={dateDay}
+                      onChange={(event) =>
+                        updateLastPeriodDate(event.target.value, dateMonth, dateYear)
+                      }
+                      className="w-full rounded-xl border border-slate-300 bg-white px-2 py-3 text-center text-slate-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="last-period-month" className="mb-2 block text-xs font-semibold text-slate-600">
+                      الشهر
+                    </label>
+                    <input
+                      id="last-period-month"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="شهر"
+                      maxLength={2}
+                      required
+                      value={dateMonth}
+                      onChange={(event) =>
+                        updateLastPeriodDate(dateDay, event.target.value, dateYear)
+                      }
+                      className="w-full rounded-xl border border-slate-300 bg-white px-2 py-3 text-center text-slate-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="last-period-year" className="mb-2 block text-xs font-semibold text-slate-600">
+                      السنة
+                    </label>
+                    <input
+                      id="last-period-year"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="سنة"
+                      maxLength={4}
+                      required
+                      value={dateYear}
+                      onChange={(event) =>
+                        updateLastPeriodDate(dateDay, dateMonth, event.target.value)
+                      }
+                      className="w-full rounded-xl border border-slate-300 bg-white px-2 py-3 text-center text-slate-900 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                    />
+                  </div>
+                </div>
                 <p className="mt-2 text-xs leading-5 text-slate-500">
                   اختاري اليوم الأول لنزول دم الدورة، وليس آخر يوم منها.
                 </p>
@@ -644,87 +751,129 @@ export default function OvulationCalculatorPage() {
         <section className="mx-auto mt-12 max-w-4xl space-y-8 border-t border-slate-200 pt-10 text-right print:hidden">
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">
-              ما هي حاسبة التبويض؟
+              ما هي حاسبة التبويض والإباضة والخصوبة؟
             </h2>
             <p className="mt-3 leading-8 text-slate-600">
-              حاسبة التبويض هي أداة تقديرية تساعد على تحديد الفترة المحتملة
-              لخروج البويضة من المبيض خلال الدورة الشهرية، وتقدير الأيام التي
-              قد تكون فيها فرص حدوث الحمل أعلى. تعتمد الحاسبة على تاريخ بداية
-              آخر دورة شهرية وطول الدورة المعتاد أو نطاق أطوال الدورات.
+              حاسبة التبويض أو حاسبة الإباضة أداة تقديرية تساعد على حساب موعد
+              التبويض وأيام الخصوبة بعد الدورة الشهرية. تعتمد على تاريخ أول يوم
+              من آخر دورة وطول الدورة المعتاد، لتقدير الفترة التي قد ترتفع فيها
+              احتمالية الحمل. وتُعرف أيضًا باسم حاسبة أيام التبويض أو حاسبة
+              التبويض والحمل، لكن نتائجها تقويمية ولا تؤكد حدوث الإباضة فعليًا.
             </p>
           </article>
 
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">
-              كيف يتم حساب أيام التبويض؟
+              كيفية حساب التبويض وأيام التبويض بعد الدورة
             </h2>
             <p className="mt-3 leading-8 text-slate-600">
-              يُقدّر موعد الإباضة تقويميًا بالرجوع نحو 14 يومًا من موعد الدورة
-              التالية المتوقع. وتُقدّر نافذة الخصوبة بالأيام الخمسة السابقة
-              للإباضة ويوم الإباضة نفسه. وعند اختلاف طول الدورة، يمثل النطاق المعروض تقديرًا واسعًا يجمع الاحتمالات التقويمية، وليس تحديدًا مؤكدًا لأيام الخصوبة. هذه طريقة تقريبية، لأن توقيت الإباضة
-              قد يختلف بين النساء وبين الدورات الشهرية.
+              من الطرق التقويمية الشائعة تقدير موعد الإباضة بالرجوع نحو 14 يومًا
+              من موعد الدورة التالية المتوقع. وتُقدّر نافذة الخصوبة بالأيام
+              الخمسة السابقة للإباضة ويوم الإباضة نفسه. أدخلي أول يوم من آخر
+              دورة شهرية وطول دورتك لمعرفة التقدير. تختلف النتيجة حسب طول الدورة
+              وانتظامها، ولا توجد طريقة تقويمية تضمن معرفة يوم التبويض بالضبط.
             </p>
           </article>
 
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">
-              ما الفرق بين الدورة المنتظمة وغير المنتظمة؟
+              حساب أيام التبويض لدورة 28 يومًا
             </h2>
             <p className="mt-3 leading-8 text-slate-600">
-              تكون الدورة منتظمة نسبيًا عندما تتقارب مدتها من شهر لآخر. أما
-              الدورة غير المنتظمة فيختلف طولها بين دورة وأخرى. عند اختلاف
-              المدة، تعرض الحاسبة نطاقًا تقديريًا لمواعيد الإباضة والخصوبة
-              بدلًا من تاريخ واحد.
+              في الدورة التي تبلغ مدتها 28 يومًا، يكون موعد الإباضة التقديري
+              غالبًا بالقرب من اليوم الرابع عشر عند استخدام طريقة حسابية
+              تقويمية، وقد تبدأ نافذة الخصوبة قبل ذلك بعدة أيام. هذا تقدير عام
+              وليس موعدًا ثابتًا يناسب جميع النساء؛ فقد يختلف توقيت الإباضة من
+              دورة لأخرى حتى لدى المرأة نفسها.
             </p>
           </article>
 
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">
-              كيف يمكن متابعة التبويض؟
+              طريقة حساب التبويض للحمل وفترة الخصوبة والجماع
             </h2>
             <p className="mt-3 leading-8 text-slate-600">
-              يمكن الاستفادة من تسجيل مواعيد الدورة وملاحظة التغيرات في إفرازات
-              عنق الرحم، كما قد تساعد اختبارات التبويض المنزلية التي تقيس
-              الارتفاع في الهرمون اللوتيني LH على توقع اقتراب الإباضة. وقد
-              تختلف العلامات من امرأة لأخرى، ولا تكفي الملاحظات وحدها لتأكيد
-              حدوث الإباضة.
+              تُقدّر فترة الخصوبة عادةً بالأيام الخمسة السابقة للإباضة ويوم
+              الإباضة نفسه. لذلك قد تساعد معرفة أيام التبويض والجماع في فهم
+              الفترة التي يُحتمل أن تكون فيها الخصوبة أعلى عند الرغبة في الحمل.
+              ومع ذلك، فإن حاسبة التبويض للحمل لا تضمن حدوث الحمل ولا تقيس
+              احتمالية حدوثه بدقة، إذ تتأثر الخصوبة بعوامل متعددة.
             </p>
           </article>
 
           <article>
             <h2 className="text-2xl font-extrabold text-slate-900">
-              الأسئلة الشائعة حول حاسبة التبويض
+              حساب التبويض عند عدم انتظام الدورة الشهرية
+            </h2>
+            <p className="mt-3 leading-8 text-slate-600">
+              عند عدم انتظام الدورة، يمكنك إدخال أقصر دورة وأطول دورة معتادتين
+              للحصول على نطاق تقويمي تقديري بدلًا من تاريخ واحد. كلما زاد الفرق
+              بين طول الدورات اتسع نطاق الاحتمالات وأصبحت طريقة التقويم أقل
+              موثوقية في تحديد موعد الإباضة أو احتساب فترة التبويض. لا يُعد هذا
+              النطاق تأكيدًا لأيام الخصوبة الفعلية.
+            </p>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              كيف يمكن متابعة التبويض بطرق أخرى؟
+            </h2>
+            <p className="mt-3 leading-8 text-slate-600">
+              إلى جانب برنامج حساب التبويض، يمكن تسجيل مواعيد الدورة وملاحظة
+              تغيرات إفرازات عنق الرحم. كما قد تساعد اختبارات التبويض المنزلية
+              التي تقيس الارتفاع في الهرمون اللوتيني LH على توقع اقتراب الإباضة،
+              لكنها لا تجعل الحساب التقويمي تأكيدًا طبيًا لحدوثها. استشيري
+              مختصًا صحيًا إذا كان عدم انتظام الدورة مستمرًا أو كان لديك قلق
+              بشأن الخصوبة.
+            </p>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              الأسئلة الشائعة حول حاسبة التبويض وأيام الخصوبة
             </h2>
 
             <div className="mt-4 space-y-4">
               {[
                 {
                   q: "كيف أحسب أيام التبويض بعد الدورة الشهرية؟",
-                  a: "أدخلي أول يوم من آخر دورة شهرية وطول دورتك المعتاد. تعرض الحاسبة موعد الإباضة ونافذة الخصوبة بصورة تقديرية.",
+                  a: "أدخلي أول يوم من آخر دورة شهرية وطول دورتك المعتاد. تقدّر الحاسبة موعد الإباضة ونافذة الخصوبة بالاعتماد على طول الدورة، والنتائج ليست تأكيدًا لموعد الإباضة الفعلي.",
                 },
                 {
                   q: "متى يكون التبويض في دورة مدتها 28 يومًا؟",
-                  a: "تقدّر الحاسبة موعد الإباضة بالرجوع نحو 14 يومًا من موعد الدورة التالية المتوقع. وقد يختلف الموعد الفعلي من دورة لأخرى.",
+                  a: "في دورة مدتها 28 يومًا، يكون موعد الإباضة التقديري غالبًا بالقرب من اليوم الرابع عشر عند استخدام طريقة حسابية تقويمية. وقد يختلف الموعد الفعلي من امرأة لأخرى ومن دورة لأخرى.",
+                },
+                {
+                  q: "كيف أحسب فترة التبويض والخصوبة للحمل؟",
+                  a: "تُقدّر نافذة الخصوبة عادةً بالأيام الخمسة السابقة للإباضة ويوم الإباضة نفسه. تساعد الحاسبة على تقدير هذه الفترة، لكنها لا تضمن حدوث الحمل أو تحدد فرصه بدقة.",
                 },
                 {
                   q: "هل يمكن حساب التبويض إذا كانت الدورة غير منتظمة؟",
-                  a: "يمكن إدخال أقصر وأطول دورة شهرية للحصول على نطاق تقديري، لكن الحساب التقويمي يكون أقل موثوقية عند عدم انتظام الدورة.",
+                  a: "يمكن إدخال أقصر وأطول دورة شهرية للحصول على نطاق تقويمي تقديري. كلما زاد اختلاف طول الدورة، اتسع نطاق الاحتمالات وأصبحت طريقة التقويم أقل موثوقية.",
                 },
                 {
-                  q: "ما مدة نافذة الخصوبة؟",
-                  a: "تُقدّر نافذة الخصوبة عادةً بالأيام الخمسة السابقة للإباضة ويوم الإباضة، لكن توقيت الخصوبة الفعلي قد يختلف.",
+                  q: "هل حاسبة التبويض دقيقة ومضمونة 100%؟",
+                  a: "لا توجد حاسبة تقويمية تضمن تحديد يوم الإباضة بدقة 100%. تعتمد النتائج على أطوال الدورة السابقة، وقد يتغير موعد الإباضة الفعلي لأسباب متعددة.",
+                },
+                {
+                  q: "هل يمكن استخدام حاسبة التبويض للحمل بولد أو بنت؟",
+                  a: "لا يمكن لحساب أيام التبويض أو توقيت الجماع ضمان الحمل بولد أو بنت. جنس الجنين لا يمكن تحديده بهذه الطريقة التقويمية.",
                 },
                 {
                   q: "هل يمكن الاعتماد على الحاسبة لمنع الحمل؟",
-                  a: "لا. هذه الحاسبة أداة تقديرية وليست وسيلة لمنع الحمل، ولا يمكن الاعتماد على التقويم وحده لتجنب الحمل.",
+                  a: "لا. هذه الحاسبة أداة تقديرية للتوعية بموعد الخصوبة المحتمل وليست وسيلة لمنع الحمل. لا تعتمدي على الحساب التقويمي وحده لتجنب الحمل.",
                 },
                 {
-                  q: "هل نتائج حاسبة التبويض دقيقة 100%؟",
-                  a: "لا. تعتمد النتائج على متوسطات وتقويم الدورة الشهرية، وقد يتغير موعد الإباضة بسبب عوامل متعددة.",
+                  q: "ما الفرق بين حاسبة التبويض بالهجري والميلادي؟",
+                  a: "تعرض الحاسبة المواعيد المقدرة بالتقويمين الميلادي والهجري لتسهيل المتابعة. يتم إدخال تاريخ بداية آخر دورة بالتاريخ الميلادي، وقد يختلف التاريخ الهجري يومًا حسب التقويم المعتمد.",
                 },
                 {
-                  q: "هل تعرض الحاسبة التاريخ الهجري؟",
-                  a: "نعم، تعرض الحاسبة التواريخ الميلادية والهجرية لتسهيل متابعة المواعيد، وقد يختلف التاريخ الهجري يومًا حسب التقويم المعتمد.",
+                  q: "ما مدة أيام التبويض بعد الدورة بكم يوم؟",
+                  a: "يختلف توقيت الإباضة حسب طول الدورة الشهرية. في دورة 28 يومًا قد يكون الموعد التقديري قرب اليوم الرابع عشر، لكن لا يوجد عدد ثابت من الأيام يناسب جميع النساء.",
+                },
+                {
+                  q: "كيف أتابع التبويض إلى جانب الحساب التقويمي؟",
+                  a: "يمكن تسجيل مواعيد الدورة وملاحظة تغيرات إفرازات عنق الرحم، كما قد تساعد اختبارات التبويض المنزلية التي تقيس الهرمون اللوتيني LH على توقع اقتراب الإباضة، لكنها لا تجعل التقدير التقويمي تأكيدًا طبيًا.",
                 },
               ].map((item, index) => (
                 <details
@@ -743,14 +892,49 @@ export default function OvulationCalculatorPage() {
             </div>
           </article>
 
+          <article>
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              أدوات صحية ذات صلة
+            </h2>
+            <p className="mt-3 leading-8 text-slate-600">
+              يمكنك استخدام أدوات صحية أخرى على Intooly للمساعدة في متابعة
+              المعلومات والحسابات الصحية العامة:
+            </p>
+            <ul className="mt-3 flex flex-col gap-3">
+              <li>
+                <Link
+                  href="/tools/pregnancy-calculator"
+                  className="font-bold text-orange-700 underline decoration-orange-300 underline-offset-4 transition hover:text-orange-800"
+                >
+                  حاسبة الحمل
+                </Link>
+                <span className="text-slate-600">
+                  {" "}— لتقدير مراحل الحمل والمواعيد المرتبطة به.
+                </span>
+              </li>
+              <li>
+                <Link
+                  href="/tools/bmi-calculator"
+                  className="font-bold text-orange-700 underline decoration-orange-300 underline-offset-4 transition hover:text-orange-800"
+                >
+                  حاسبة مؤشر كتلة الجسم BMI
+                </Link>
+                <span className="text-slate-600">
+                  {" "}— لحساب مؤشر كتلة الجسم بصورة تقديرية.
+                </span>
+              </li>
+            </ul>
+          </article>
+
           <article className="rounded-2xl border border-orange-200 bg-orange-50 p-6">
             <h2 className="mb-3 text-xl font-extrabold text-orange-900">
               الخصوصية والتنبيه الصحي
             </h2>
             <p className="text-sm leading-8 text-orange-900">
               تتم عمليات الحساب داخل المتصفح ولا تتطلب إرسال بيانات الدورة
-              الشهرية إلى الخادم. النتائج للتوعية والتقدير فقط، ولا تمثل تشخيصًا
-              طبيًا أو بديلًا عن استشارة الطبيب.
+              الشهرية إلى الخادم. النتائج للتوعية والتقدير فقط، ولا تمثل
+              تشخيصًا طبيًا أو بديلًا عن استشارة الطبيب، ولا تضمن حدوث الحمل
+              أو تحدد جنس الجنين. لا تستخدمي الحاسبة وسيلةً لمنع الحمل.
             </p>
           </article>
         </section>
