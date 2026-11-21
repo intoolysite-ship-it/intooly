@@ -173,20 +173,7 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "za1fi4mh0g");
           `}
         </Script>
-        {/* Google Analytics 4 */}
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `}
-        </Script>
+
 
         {/* Google AdSense */}
         <Script

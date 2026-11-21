@@ -3,29 +3,61 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const GA_ID = 'G-GB8VLXYS9Z';
+
+type GoogleAnalyticsWindow = Window & {
+  dataLayer: unknown[];
+  gtag?: (...args: unknown[]) => void;
+};
+
+function loadGoogleAnalytics() {
+  if (typeof window === 'undefined') return;
+
+  const w = window as unknown as GoogleAnalyticsWindow;
+
+  if (w.gtag) return;
+
+  w.dataLayer = w.dataLayer || [];
+  w.gtag = (...args: unknown[]) => {
+    w.dataLayer.push(args);
+  };
+
+  w.gtag('js', new Date());
+  w.gtag('config', GA_ID);
+
+  if (!document.getElementById('google-analytics-script')) {
+    const script = document.createElement('script');
+    script.id = 'google-analytics-script';
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    document.head.appendChild(script);
+  }
+}
+
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
+
+    if (consent === 'accepted') {
+      loadGoogleAnalytics();
+      return;
+    }
+
     if (!consent) {
-      // ✅ تأخير 1.2 ثانية لتحسين تجربة المستخدم
       const timer = setTimeout(() => {
         setVisible(true);
       }, 1200);
+
       return () => clearTimeout(timer);
     }
   }, []);
 
   const accept = () => {
     localStorage.setItem('cookie-consent', 'accepted');
+    loadGoogleAnalytics();
     setVisible(false);
-    // تفعيل GA بعد الموافقة
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
-        analytics_storage: 'granted',
-      });
-    }
   };
 
   const reject = () => {
