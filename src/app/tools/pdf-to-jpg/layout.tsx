@@ -2,6 +2,8 @@
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
+  title: "تحويل PDF إلى JPG أونلاين مجاناً | Intooly",
+  description: "حوّل صفحات ملفات PDF إلى صور JPG، واختر الصفحات وجودة الصور المطلوبة ثم نزّلها بسهولة. التحويل يتم مباشرة داخل المتصفح.",
   alternates: {
     canonical: "https://intooly.com/tools/pdf-to-jpg",
   },

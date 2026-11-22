@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://intooly.com'),
   title: {
     default: 'Intooly - أدوات مجانية احترافية تعمل محلياً',
-    template: '%s | Intooly',
+    template: '%s',
   },
   description:
     'منصة أدوات مجانية احترافية لمعالجة الصور والفيديو والنصوص تعمل محلياً 100% في متصفحك لضمان خصوصيتك وسرعتك.',
